@@ -1,3 +1,7 @@
+"""models.py"""
 from django.db import models
 
-# Create your models here.
+
+class Paper(models.Model):
+    """Paper"""
+    title = models.TextField(default=None)
