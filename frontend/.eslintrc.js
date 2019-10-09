@@ -4,7 +4,7 @@ module.exports = {
         "es6": true,
         "node": true
     },
-    "extends": ["eslint:recommended", "plugin:react/recommended"],
+    "extends": ["airbnb"],
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
@@ -17,8 +17,9 @@ module.exports = {
         "sourceType": "module"
     },
     "plugins": [
-        "react", "react-props"
+        "react", "jsx-a11y", "import"
     ],
+    "parser": "babel-eslint",
     "rules": {
         "indent": [
             "error",
@@ -38,11 +39,15 @@ module.exports = {
             "error"
         ],
         "react/jsx-uses-react": 1,
-        "react/jsx-uses-vars": 1
+        "react/jsx-uses-vars": 1,
+        "react/jsx-filename-extension": 0,
+        "react/destructuring-assignment": 0,
+        "react/jsx-indent": 0,
+        "react/jsx-one-expression-per-line": 0
     },
     "settings" : {
         "react": {
             "version" : "detect"
         }
-    }
+    },
 };
