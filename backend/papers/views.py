@@ -12,7 +12,7 @@ from django.http import HttpResponse, UnreadablePostError
 from django.views.decorators.csrf import csrf_exempt
 
 # Internal Modules
-from application.utils import ApiError
+from papers.utils import ApiError
 from . import apis
 from . import constants
 
@@ -75,7 +75,7 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
     else:
         status_code = 404
 
-    response = HttpResponse(json.dumps(response_data), 'application/json; charset=UTF-8')
+    response = HttpResponse(json.dumps(response_data), 'papers/json; charset=UTF-8')
     response.status_code = status_code
 
     return response

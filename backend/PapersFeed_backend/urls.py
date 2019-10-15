@@ -1,4 +1,4 @@
-"""backend_python URL Configuration
+"""PapersFeed_backend URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.2/topics/http/urls/
@@ -19,5 +19,5 @@ from django.conf.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('application.urls'))
+    path('papers/', include('papers.urls'))
 ]
