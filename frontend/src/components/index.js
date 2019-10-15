@@ -1,5 +1,5 @@
-//import components here
+import SideBar from "./SideBar/SideBar";
 
 export {
-    //put components here 
+    SideBar,
 };
