@@ -1,11 +1,13 @@
 import SideBar from "./SideBar/SideBar";
-import CollectionCard from "./CollectionCard/CollectionCard";
-import PaperCard from "./PaperCard/PaperCard";
-import ReviewCard from "./ReviewCard/ReviewCard";
+import CollectionCard from "./Collection/CollectionCard/CollectionCard";
+import PaperCard from "./Paper/PaperCard/PaperCard";
+import ReviewCard from "./Review/ReviewCard/ReviewCard";
+import Header from "./Header/Header";
 
 export {
     SideBar,
     CollectionCard,
     PaperCard,
     ReviewCard,
+    Header,
 };

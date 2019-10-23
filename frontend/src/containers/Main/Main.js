@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 
 import {
-    SideBar, CollectionCard, ReviewCard, PaperCard,
+    SideBar, CollectionCard, ReviewCard, PaperCard, Header,
 } from "../../components";
-import Header from "../Header/Header";
 import "./Main.css";
 
 class Main extends Component {
@@ -59,15 +58,13 @@ class Main extends Component {
                 return (
                     <ReviewCard
                       source={feed.source}
-                      paper_id={feed.paper_id}
+                      paperId={feed.paperId}
                       author={feed.author}
                       key={feed.id}
                       id={feed.id}
                       title={feed.title}
                       user={feed.user}
                       date={feed.date}
-                      is_like={feed.is_like}
-                      clicked={() => this.handleLike(feed)}
                     />
                 );
             }
@@ -85,7 +82,6 @@ class Main extends Component {
                     />
                 );
             }
-            return 0;
         });
 
         const feedsRight = this.state.feeds.filter((x) => this.state.feeds.indexOf(x) % 2 === 1).map((feed) => {
@@ -106,7 +102,7 @@ class Main extends Component {
                 return (
                     <ReviewCard
                       source={feed.source}
-                      paper_id={feed.paper_id}
+                      paperId={feed.paperId}
                       key={feed.id}
                       author={feed.author}
                       id={feed.id}
@@ -131,7 +127,6 @@ class Main extends Component {
                     />
                 );
             }
-            return "";
         });
 
         return (

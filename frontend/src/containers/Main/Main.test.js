@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React from "react";
 import { shallow, mount } from "enzyme";
 import Main from "./Main";
@@ -9,7 +10,7 @@ describe("<Main />", () => {
         expect(wrapper.length).toBe(1);
     });
 
-    it("should make feedsLeft and feedsWrite well", () => {
+    it("should make feedsLeft and feedsRight well", () => {
         const component = mount(<Main />);
         component.setState(
             {
@@ -17,6 +18,22 @@ describe("<Main />", () => {
                     type: "Collection",
                     source: "liked",
                     id: 1,
+                    title: "dfad",
+                    user: "Dfafdaf",
+                    numPapers: 14,
+                    numReplies: 15,
+                }, {
+                    type: "Collection",
+                    source: "liked",
+                    id: 1,
+                    title: "dfad",
+                    user: "Dfafdaf",
+                    numPapers: 14,
+                    numReplies: 15,
+                }, {
+                    type: "Paper",
+                    source: "liked",
+                    id: 2,
                     title: "dfad",
                     user: "Dfafdaf",
                     numPapers: 14,
@@ -37,11 +54,24 @@ describe("<Main />", () => {
                     user: "Dfafdaf",
                     numPapers: 14,
                     numReplies: 15,
-                }],
+                }, {
+                    type: "Review",
+                    source: "liked",
+                    id: 3,
+                    title: "dfad",
+                    user: "Dfafdaf",
+                    numPapers: 14,
+                    numReplies: 15,
+                },
+                ],
             },
         );
-        expect(component.find("CollectionCard").length).toBe(1);
-        expect(component.find("ReviewCard").length).toBe(1);
-        expect(component.find("PaperCard").length).toBe(1);
+        const wrapperLeft = component.find(".left");
+        const wrapperRight = component.find(".right");
+        expect(component.find("CollectionCard").length).toBe(2);
+        expect(component.find("ReviewCard").length).toBe(2);
+        expect(component.find("PaperCard").length).toBe(2);
+        expect(wrapperLeft.children().length).toBe(3);
+        expect(wrapperRight.children().length).toBe(3);
     });
 });

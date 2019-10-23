@@ -2,21 +2,21 @@ import React, { Component } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import PropTypes from "prop-types";
-import "./CollectionCard.css";
+import "./ReviewCard.css";
 
-class CollectionCard extends Component {
+class ReviewCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isLiked: false,
             numLikes: 0,
         };
-        this.clickCollectionCardUnlikeHandler = this.clickCollectionCardUnlikeHandler.bind(this);
-        this.clickCollectionCardLikeHandler = this.clickCollectionCardLikeHandler.bind(this);
+        this.clickReviewCardUnlikeHandler = this.clickReviewCardUnlikeHandler.bind(this);
+        this.clickReviewCardLikeHandler = this.clickReviewCardLikeHandler.bind(this);
     }
 
     // handle click 'Like' button
-    clickCollectionCardLikeHandler(collection_id, user_id) {
+    clickReviewCardLikeHandler(reviewId, userId) {
         const nextState = {
             isLiked: true,
             numLikes: this.state.numLikes + 1,
@@ -25,7 +25,7 @@ class CollectionCard extends Component {
     }
 
     // handle click 'Unlike' button
-    clickCollectionCardUnlikeHandler(collection_id, user_id) {
+    clickReviewCardUnlikeHandler(reviewId, userId) {
         const nextState = {
             isLiked: false,
             numLikes: this.state.numLikes - 1,
@@ -36,17 +36,18 @@ class CollectionCard extends Component {
     render() {
         return (
             <div className="wrapper">
-                <Card className="collection">
-                    <Card.Header>{`${this.props.user} ${this.props.source} this collection.`}</Card.Header>
+                <Card className="review">
+                    <Card.Header>{`${this.props.user} ${this.props.source} this review`}</Card.Header>
                     <Card.Body className="body">
                         <div className="title">
-                            <Card.Link className="text" href={`/collections/${this.props.id}`}>{this.props.title}</Card.Link>
+                            <Card.Link href={`/paper/${this.props.id}`} className="text">{this.props.title}</Card.Link>
                         </div>
-                        <Card.Text>{this.props.numPapers}</Card.Text>
+                        <Card.Text>{this.props.date}</Card.Text>
+                        <Card.Text>{this.props.author}</Card.Text>
                     </Card.Body>
                     <Card.Footer>
-                        <Button id="like-button" className="like-button" onClick={this.state.isLiked ? this.clickCollectionCardUnlikeHandler : this.clickCollectionCardLikeHandler}>{this.state.numLikes}</Button>
-                        <Button href={`/collections/${this.props.id}`}>{this.props.numReplies}</Button>
+                        <Button className="like-button" onClick={this.state.isLiked ? this.clickReviewCardUnlikeHandler : this.clickReviewCardLikeHandler}>{this.state.numLikes}</Button>
+                        <Button href={`/papers/${this.props.paperId}/${this.props.id}`}>{this.props.numReplies}</Button>
                     </Card.Footer>
                 </Card>
             </div>
@@ -54,22 +55,26 @@ class CollectionCard extends Component {
     }
 }
 
-CollectionCard.propTypes = {
+ReviewCard.propTypes = {
+    author: PropTypes.string,
+    paperId: PropTypes.number,
     source: PropTypes.string,
     id: PropTypes.number,
     user: PropTypes.string,
     title: PropTypes.string,
-    numPapers: PropTypes.number,
+    date: PropTypes.string,
     numReplies: PropTypes.number,
 };
 
-CollectionCard.defaultProps = {
+ReviewCard.defaultProps = {
+    author: "",
+    paperId: 0,
     source: "",
     id: 0,
     user: "",
     title: "",
-    numPapers: 0,
+    date: "",
     numReplies: 0,
 };
 
-export default CollectionCard;
+export default ReviewCard;

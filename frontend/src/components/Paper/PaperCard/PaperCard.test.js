@@ -1,16 +1,17 @@
+/* eslint-disable no-undef */
 import React from "react";
 import { shallow, mount } from "enzyme";
-import ReviewCard from "./ReviewCard";
+import PaperCard from "./PaperCard";
 
-describe("<ReviewCard />", () => {
+describe("<PaperCard />", () => {
     it("should render without errors", () => {
-        const component = shallow(<ReviewCard />);
+        const component = shallow(<PaperCard />);
         const wrapper = component.find(".wrapper");
         expect(wrapper.length).toBe(1);
     });
 
     it("should handle Like/Unlike Button", () => {
-        const component = mount(<ReviewCard />);
+        const component = mount(<PaperCard />);
         const wrapper = component.find(".like-button").hostNodes();
         expect(wrapper.length).toBe(1);
 
