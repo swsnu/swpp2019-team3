@@ -8,10 +8,9 @@ from .publisher import Publisher
 class Publication(models.Model):
     """Publication Model"""
     name = models.CharField(max_length=200)
-    publication_type = EnumField(choices=['journal'])
+    publication_type = EnumField(choices=['journal', 'book', 'series', 'patent'])
     publisher = models.ForeignKey(
         Publisher,
         null=False,
         on_delete=models.CASCADE,
     )
-    

@@ -17,10 +17,10 @@ class PaperPublication(models.Model):
         null=False,
         on_delete=models.CASCADE,
     )
-    volume = models.PositiveIntegerField()
-    issue = models.PositiveIntegerField()
-    date = models.DateTimeField('time paper was published')
-    beginning_page = models.PositiveIntegerField()
-    ending_page = models.PositiveIntegerField()
-    ISSN = models.DecimalField(max_digits=19, decimal_places=10)
+    volume = models.CharField(max_length=20, null=True)
+    issue = models.CharField(max_length=20, null=True)
+    date = models.DateField('date paper was published', null=True)
+    beginning_page = models.PositiveIntegerField(null=True)
+    ending_page = models.PositiveIntegerField(null=True)
+    ISBN = models.CharField(max_length=20)
     
