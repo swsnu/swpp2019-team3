@@ -1,5 +1,6 @@
 """paper_author.py"""
 from django.db import models
+from django_mysql.models import EnumField
 
 from .paper import Paper
 from .author import Author
@@ -17,4 +18,5 @@ class PaperAuthor(models.Model):
         null=False,
         on_delete=models.CASCADE,
     )
+    author_type = EnumField(choices=['general', 'corresponding'])
     rank = models.PositiveSmallIntegerField()
