@@ -19,5 +19,6 @@ from django.conf.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('papersfeed/', include('papersfeed.urls')),
     path('papers/', include('papers.urls'))
 ]

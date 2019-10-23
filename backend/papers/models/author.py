@@ -9,3 +9,4 @@ class Author(models.Model):
     email = models.EmailField()
     address = models.CharField(max_length=100)
     researcher_id = models.DecimalField(max_digits=19, decimal_places=10)
+    

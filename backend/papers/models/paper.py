@@ -12,3 +12,4 @@ class Paper(models.Model):
     DOI = models.DecimalField(max_digits=19, decimal_places=10)
     file_url = models.URLField()
     download_url = models.URLField()
+    

@@ -23,3 +23,4 @@ class PaperPublication(models.Model):
     beginning_page = models.PositiveIntegerField()
     ending_page = models.PositiveIntegerField()
     ISSN = models.DecimalField(max_digits=19, decimal_places=10)
+    

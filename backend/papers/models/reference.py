@@ -18,3 +18,4 @@ class Reference(models.Model):
         on_delete=models.CASCADE,
         related_name="referenced_paper"
     )
+    

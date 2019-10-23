@@ -19,3 +19,4 @@ class PaperKeyword(models.Model):
         on_delete=models.CASCADE,
     )
     keyword_type = EnumField(choices=['author', 'web', 'abstract'])
+    

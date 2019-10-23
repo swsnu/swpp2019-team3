@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'papersfeed.apps.PapersfeedConfig',
     'papers.apps.PapersConfig',
     'django.contrib.admin',
     'django.contrib.auth',

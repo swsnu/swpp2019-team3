@@ -20,3 +20,4 @@ class PaperAuthor(models.Model):
     )
     author_type = EnumField(choices=['general', 'corresponding'])
     rank = models.PositiveSmallIntegerField()
+    
