@@ -1,6 +1,6 @@
 import React from "react";
 import Nav from "react-bootstrap/Nav";
-import "./Sidebar.css";
+import "./SideBar.css";
 
 const SideBar = () => (
     <Nav className="sidebar" defaultActiveKey="/main">

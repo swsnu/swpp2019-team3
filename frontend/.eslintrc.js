@@ -44,7 +44,8 @@ module.exports = {
         "react/destructuring-assignment": 0,
         "react/jsx-indent": 0,
         "react/jsx-one-expression-per-line": 0,
-        "quotes": ["error", "double"]
+        "quotes": ["error", "double"],
+        "import/no-extraneous-dependencies":["error", {"devDependencies":true}],
     },
     "settings" : {
         "react": {

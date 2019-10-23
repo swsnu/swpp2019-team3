@@ -19,7 +19,7 @@
 }
 
 .header .search .search-input {
-    width: 400px;
+    width: 500px;
     background:rgb(242,243,247);
 }
 
@@ -33,12 +33,12 @@
 
 }
 
-.header .myaccount-button {
-
+.header .buttons .myaccount-button {
+   margin-right: 20px;
 }
 
-.header .myaccount-modal .buttons {
+.header .buttons .myaccount-button .myaccount-menu {
     display: flex;
-    align-items: center;
-    flex-direction: column;
+    justify-content: flex-end;
+    
 }

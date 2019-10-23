@@ -1,7 +1,38 @@
+
 .feeds {
+    min-height: 1000px;
     background: rgb(242,243,247);
-    margin-left: 200px;
-    height: 100%;
+    margin-left: 250px;
+    position: relative;
+    display: flex;
+}
+
+.feeds .board {
     width: 100%;
-    position: absolute;
+    height:100%;
+    margin-top: 50px;
+    margin-left: 50px;
+    margin-right: 200px;
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: row wrap;
+    align-items: flex-start;
+}
+
+.feeds .board .left {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+
+
+}
+
+.feeds .board .right {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
 }

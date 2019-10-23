@@ -4,27 +4,28 @@
     flex-direction: column;
     align-items: flex-start;   
     height: 100%;
-    width: 200px;
+    width: 250px;
     position:absolute;
 }
 
 .sidebar .main-link {
-    font-weight: bold;
+    margin-top: 30px;
     color: black;
-    font-size: 20px;
-    padding: 20px;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 30px;
 }
 
 .sidebar .collection-link {
-    font-weight: bold;
     color: black;
-    font-size: 20px;
-    padding: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 30px;
 }
 
 .sidebar .history-link {
-    font-weight: bold;
     color: black;
-    font-size: 20px;
-    padding: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 30px;
 }
