@@ -20,3 +20,4 @@
       - pip install -r requirements.txt
       script:
       - python app/manage.py test
+      
