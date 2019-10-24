@@ -1,0 +1,13 @@
+# project_root/.travis.yml
+ matrix:
+   include:
+   - language: node_js # Your language e.g. node_js, python
+     node_js:
+     - '10'            # node_js version
+     before_install:   # Script to run before install
+     - cd frontend
+     install:          # Script to install required packages
+     - yarn install
+     script:           # Script to test your build
+     - ./node_modules/.bin/eslint src
+     - yarn test --coverage --watchAll=false
