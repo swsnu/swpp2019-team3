@@ -75,8 +75,12 @@ WSGI_APPLICATION = 'backend_python.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'PapersFeed_DB',
+        'USER': 'PapersFeed',
+        'PASSWORD': 'swpp2019team3',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
