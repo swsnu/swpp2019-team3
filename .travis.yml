@@ -16,7 +16,5 @@
      - "3.6"
      install:
      - pip install -r requirements.txt
-     after_install:
-     - cd backend 
      script:
-     - python manage.py test
+     - python backend/manage.py test
