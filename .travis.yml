@@ -19,4 +19,4 @@
      after_install:
      - cd backend 
      script:
-     - python app/manage.py test
+     - python manage.py test
