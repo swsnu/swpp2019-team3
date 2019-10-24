@@ -16,3 +16,6 @@ class Author(models.Model):
         through='PaperAuthor',
         through_fields=('author', 'paper')
     )
+
+    def __str__(self):
+        return self.first_name + ', ' + self.last_name

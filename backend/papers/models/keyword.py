@@ -12,3 +12,6 @@ class Keyword(models.Model):
         through='PaperKeyword',
         through_fields=('keyword', 'paper')
     )
+
+    def __str__(self):
+        return self.name

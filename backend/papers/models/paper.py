@@ -13,4 +13,6 @@ class Paper(models.Model):
     file_url = models.URLField()
     download_url = models.URLField()
     references = models.ManyToManyField("self", through='reference', symmetrical=False)
-    
+
+    def __str__(self):
+        return self.title

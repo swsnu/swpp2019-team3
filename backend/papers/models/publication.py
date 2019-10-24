@@ -20,3 +20,6 @@ class Publication(models.Model):
         through='PaperPublication',
         through_fields=('publication', 'paper')
     )
+
+    def __str__(self):
+        return self.name
