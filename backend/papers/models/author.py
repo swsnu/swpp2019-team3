@@ -1,6 +1,8 @@
 """author.py"""
 from django.db import models
 
+from .paper import Paper
+
 
 class Author(models.Model):
     """Author Model"""
@@ -9,4 +11,8 @@ class Author(models.Model):
     email = models.EmailField()
     address = models.CharField(max_length=300)
     researcher_id = models.CharField(max_length=20)
-    
+    papers = models.ManyToManyField(
+        Paper,
+        through='PaperAuthor',
+        through_fields=('author', 'paper')
+    )
