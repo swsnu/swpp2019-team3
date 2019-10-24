@@ -16,7 +16,7 @@ class PaperCard extends Component {
     }
 
     // handle click 'Like' button
-    clickPaperCardLikeHandler(paperId, userId) {
+    clickPaperCardLikeHandler() {
         const nextState = {
             isLiked: true,
             numLikes: this.state.numLikes + 1,
@@ -25,7 +25,7 @@ class PaperCard extends Component {
     }
 
     // handle click 'Unlike' button
-    clickPaperCardUnlikeHandler(paperId, userId) {
+    clickPaperCardUnlikeHandler() {
         const nextState = {
             isLiked: false,
             numLikes: this.state.numLikes - 1,
