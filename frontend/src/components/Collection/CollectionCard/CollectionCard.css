@@ -1,0 +1,20 @@
+.wrapper {
+    padding-bottom: 10%;
+}
+
+.collection {
+    width: 90%;
+    text-align: left;
+}
+
+.collection .body {
+    padding: 10%;
+}
+.collection .body .title {
+    padding-bottom: 10%;
+}
+.collection .body .title .text{
+    color: black;
+    font-weight: bold;
+    font-size: 130%;
+}

@@ -1,0 +1,29 @@
+.wrapper {
+    padding-bottom: 10%;
+}
+
+.paper {
+    width: 90%;
+    text-align: left;
+}
+
+.paper .body {
+    padding: 10%;
+}
+
+.paper .body .title {
+    padding-bottom: 10%;
+}
+
+.paper .body .title .text{
+    color: black;
+    font-weight: bold;
+    font-size: 130%;
+}
+
+.paper .footer {
+
+}
+.paper .footer .add-button{
+    margin-left: 50%;
+}

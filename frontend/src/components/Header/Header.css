@@ -1,0 +1,41 @@
+.header {
+    justify-content: space-between;
+    display: flex;
+    position: sticky;
+    border-bottom: 2px solid rgb(220,224,227);
+}
+
+.header .logo {
+    font-weight: bold;
+    text-decoration-color: #2f87ef;
+    font-size: 20px;
+    padding: 10px;
+    margin-right: auto;
+}
+
+.header .search {
+    display: flex;
+    align-items: stretch;
+}
+
+.header .search .search-input {
+    width: 500px;
+    background:rgb(242,243,247);
+}
+
+.header .buttons {
+    margin-left: auto;
+    display: flex;
+    flex-direction: row;
+
+}
+
+.header .buttons .myaccount-button {
+   margin-right: 20px;
+}
+
+.header .buttons .myaccount-button .myaccount-menu {
+    display: flex;
+    justify-content: flex-end;
+    
+}

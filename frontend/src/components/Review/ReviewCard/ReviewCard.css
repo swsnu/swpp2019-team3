@@ -1,0 +1,22 @@
+.wrapper {
+    padding-bottom: 10%;
+}
+
+.review {
+    width: 90%;
+    text-align: left;
+}
+
+.review .body {
+    padding: 10%;
+}
+
+.review .body .title {
+    padding-bottom: 10%;
+}
+
+.review .body .title .text{
+    color: black;
+    font-weight: bold;
+    font-size: 130%;
+}

@@ -2,9 +2,10 @@ module.exports = {
     "env": {
         "browser": true,
         "es6": true,
-        "node": true
+        "node": true,
+        "jest": true,
     },
-    "extends": ["airbnb"],
+    "extends": ["airbnb", "plugin:react/recommended"],
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
@@ -23,7 +24,10 @@ module.exports = {
     "rules": {
         "indent": [
             "error",
-            4
+            4,
+            { "ignoredNodes": [
+                "JSXAttribute"
+            ]}
         ],
         "semi": [
             "error",
@@ -43,7 +47,12 @@ module.exports = {
         "react/jsx-filename-extension": 0,
         "react/destructuring-assignment": 0,
         "react/jsx-indent": 0,
-        "react/jsx-one-expression-per-line": 0
+        "react/jsx-one-expression-per-line": 0,
+        "quotes": ["error", "double"],
+        "import/no-extraneous-dependencies":[
+            "error", 
+            {"devDependencies":true}
+        ]
     },
     "settings" : {
         "react": {
