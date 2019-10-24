@@ -16,7 +16,7 @@ class ReviewCard extends Component {
     }
 
     // handle click 'Like' button
-    clickReviewCardLikeHandler(reviewId, userId) {
+    clickReviewCardLikeHandler() {
         const nextState = {
             isLiked: true,
             numLikes: this.state.numLikes + 1,
@@ -25,7 +25,7 @@ class ReviewCard extends Component {
     }
 
     // handle click 'Unlike' button
-    clickReviewCardUnlikeHandler(reviewId, userId) {
+    clickReviewCardUnlikeHandler() {
         const nextState = {
             isLiked: false,
             numLikes: this.state.numLikes - 1,

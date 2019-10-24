@@ -1,7 +1,8 @@
 import React from "react";
 import "./App.css";
+import PropTypes from "prop-types";
 
-import { Route, Redirect, Switch } from "react-router-dom";
+import { Route, /* Redirect , */ Switch } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
 
 
@@ -18,5 +19,9 @@ function App(props) {
         </ConnectedRouter>
     );
 }
+
+App.propTypes = {
+    history: PropTypes.instanceOf(Route).isRequired,
+};
 
 export default App;

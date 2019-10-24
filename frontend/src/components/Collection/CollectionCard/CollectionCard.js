@@ -16,7 +16,7 @@ class CollectionCard extends Component {
     }
 
     // handle click 'Like' button
-    clickCollectionCardLikeHandler(collectionId, userId) {
+    clickCollectionCardLikeHandler() {
         const nextState = {
             isLiked: true,
             numLikes: this.state.numLikes + 1,
@@ -25,7 +25,7 @@ class CollectionCard extends Component {
     }
 
     // handle click 'Unlike' button
-    clickCollectionCardUnlikeHandler(collectionId, userId) {
+    clickCollectionCardUnlikeHandler() {
         const nextState = {
             isLiked: false,
             numLikes: this.state.numLikes - 1,
