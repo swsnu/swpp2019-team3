@@ -17,5 +17,6 @@
      install:
      - pip install -r requirements.txt
      script:
-     - python backend/manage.py test
      - pylint --rcfile=./backend/pylintrc backend
+     - coverage run --source='.' ./backend/manage.py test
+     - coverage report --fail-under=90

@@ -10,3 +10,4 @@ typed-ast==1.4.0
 wrapt==1.11.2
 mysqlclient==1.4.4
 django-mysql==3.2.0
+coverage==4.5.4
