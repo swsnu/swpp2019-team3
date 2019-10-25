@@ -8,14 +8,14 @@ import sys
 
 csv.field_size_limit(sys.maxsize)
 
-fixture_dir = '../fixtures'
-publication_type_dict = {
+FIXTURE_DIR = '../fixtures'
+PUBLICATION_TYPE_DICT = {
     'J': 'journal',
     'B': 'book',
     'S': 'series',
     'P': 'patent'
 }
-month_dict = {
+MONTH_DICT = {
     'JAN': '01',
     'FEB': '02',
     'MAR': '03',
@@ -33,9 +33,11 @@ month_dict = {
     'WIN': '12'
 }
 
+# pylint: disable=too-many-locals, too-many-statements
 def get_papers(filename):
     """parser"""
     reader = csv.DictReader(open(filename, 'r', encoding='utf-16'), dialect='excel-tab')
+    # pylint: disable=invalid-name
     pk = {
         "paper": 0,
         "author": 0,
@@ -44,6 +46,7 @@ def get_papers(filename):
         "publication": 0,
         "paper_publication": 0
     }
+    # pylint: enable=invalid-name
     papers = []
     authors = []
     paper_authors = []
@@ -137,7 +140,7 @@ def get_papers(filename):
         pk['publication'] += 1
         publication_fields = {
             "name": row['SO'],
-            "publication_type": publication_type_dict[row['PT']],
+            "publication_type": PUBLICATION_TYPE_DICT[row['PT']],
             "publisher": pk['publisher']
         }
         publication = {
@@ -149,7 +152,7 @@ def get_papers(filename):
 
         pk['paper_publication'] += 1
         month_day = row['PD'].split()
-        month = month_dict[month_day[0].split('-')[0].strip()] if month_day else '01'
+        month = MONTH_DICT[month_day[0].split('-')[0].strip()] if month_day else '01'
         day = "{0:0>2}".format(month_day[1]) if len(month_day) > 1 else '01'
         date = row['PY'] + '-' + month + '-' + day if row['PY'] else None
         paper_publication = {
@@ -170,10 +173,13 @@ def get_papers(filename):
 
     models = papers + authors + paper_authors + publishers + publications + paper_publications
     json_filename = filename.split('.')[0].strip() + '.json'
-    json.dump(models, open(os.path.join(fixture_dir, json_filename), 'w'), indent=4)
+    json.dump(models, open(os.path.join(FIXTURE_DIR, json_filename), 'w'), indent=4)
+# pylint: enable=too-many-locals, too-many-statements
 
 if __name__ == '__main__':
+    # pylint: disable=invalid-name
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_file', '-f', type=str, required=True, help="file to parse")
     args = parser.parse_args()
     get_papers(args.data_file)
+    # pylint: enable=invalid-name
