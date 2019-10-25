@@ -35,7 +35,11 @@ MONTH_DICT = {
 
 # pylint: disable=too-many-locals, too-many-statements
 def get_papers(filename):
-    """parser"""
+    """
+    Parser for tab separted text files downloaded from Web Of Science
+    Referencing cs_10.txt or cs_500.txt would be helpful for understanding this function
+    Also, you can check all field tags in https://images.webofknowledge.com/images/help/WOS/hs_wos_fieldtags.html
+    """
     reader = csv.DictReader(open(filename, 'r', encoding='utf-16'), dialect='excel-tab')
     # pylint: disable=invalid-name
     pk = {
@@ -57,7 +61,8 @@ def get_papers(filename):
     address_pattern = re.compile(r'(\[.*?\].*?)\;')
     address_author_pattern = re.compile(r'\[.*?\]')
 
-    for row in reader:
+    for row in reader: # one row for one paper information
+        # 1. create a Paper record
         pk['paper'] += 1
         paper_fields = {
             "title": row['TI'],
@@ -74,22 +79,25 @@ def get_papers(filename):
         }
         papers.append(paper)
 
+        # 2. create Author records
         authors_name = list(map(str.strip, row['AF'].split(';')))
         emails = row['EM'].split(';')
         addresses = list(filter(len, address_pattern.split(row['C1'])))
         researcher_ids = row['RI'].split(';')
 
         author_rank = 0
-        for author_name in authors_name:
+        for author_name in authors_name: # for one paper, there can be multiple authors
             pk['author'] += 1
             author_rank += 1
             address = ''
             researcher_id = ''
-            for addr in addresses:
+            for addr in addresses: # find corresponding address
+                # if matched address can't be found, it will be ''
                 if author_name.lower() in addr.lower():
                     address = re.sub(address_author_pattern, '', addr).strip()
                     break
-            for res_id in researcher_ids:
+            for res_id in researcher_ids: # find corresponding researcher_id
+                # if matched researcher_id can't be found, it will be ''
                 if author_name.lower() in res_id.lower():
                     researcher_id = res_id.split('/')[1].strip()
                     break
@@ -111,6 +119,7 @@ def get_papers(filename):
             }
             authors.append(author)
 
+            # 3. create PaperAuthor records
             pk['paper_author'] += 1
             paper_author = {
                 "model": "papers.paperauthor",
@@ -124,6 +133,7 @@ def get_papers(filename):
             }
             paper_authors.append(paper_author)
 
+        # 4. create a Publisher record
         pk['publisher'] += 1
         publisher_fields = {
             "name": row['PU'],
@@ -137,6 +147,7 @@ def get_papers(filename):
         }
         publishers.append(publisher)
 
+        # 5. create a Publication record
         pk['publication'] += 1
         publication_fields = {
             "name": row['SO'],
@@ -150,6 +161,7 @@ def get_papers(filename):
         }
         publications.append(publication)
 
+        # 6. create a PaperPublication record
         pk['paper_publication'] += 1
         month_day = row['PD'].split()
         month = MONTH_DICT[month_day[0].split('-')[0].strip()] if month_day else '01'
@@ -171,6 +183,7 @@ def get_papers(filename):
         }
         paper_publications.append(paper_publication)
 
+    # create one json file with all record information
     models = papers + authors + paper_authors + publishers + publications + paper_publications
     json_filename = filename.split('.')[0].strip() + '.json'
     json.dump(models, open(os.path.join(FIXTURE_DIR, json_filename), 'w'), indent=4)
