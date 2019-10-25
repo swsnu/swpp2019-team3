@@ -73,4 +73,30 @@ describe("<Main />", () => {
         expect(wrapperLeft.children().length).toBe(3);
         expect(wrapperRight.children().length).toBe(3);
     });
+
+    it("should not make feedsLeft and feedsRight if wrong type", () => {
+        const component = mount(<Main />);
+        component.setState(
+            {
+                feeds: [
+                    {
+                        type: "wrong type",
+                        source: "liked",
+                        id: 3,
+                        title: "dfad",
+                        user: "Dfafdaf",
+                        numPapers: 14,
+                        numReplies: 15,
+                    },
+                ],
+            },
+        );
+        const wrapperLeft = component.find(".left");
+        const wrapperRight = component.find(".right");
+        expect(component.find("CollectionCard").length).toBe(0);
+        expect(component.find("ReviewCard").length).toBe(0);
+        expect(component.find("PaperCard").length).toBe(0);
+        expect(wrapperLeft.children().length).toBe(0);
+        expect(wrapperRight.children().length).toBe(0);
+    });
 });

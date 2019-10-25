@@ -1,21 +1,32 @@
 # project_root/.travis.yml
- matrix:
-   include:
-   - language: node_js # Your language e.g. node_js, python
-     node_js:
-     - '10'            # node_js version
-     before_install:   # Script to run before install
-     - cd frontend
-     install:          # Script to install required packages
-     - yarn install
-     script:           # Script to test your build
-     - ./node_modules/.bin/eslint src
-     - yarn test --coverage --watchAll=false
-   - language: python
-     python: 
-     - "3.6"
-     install:
-     - pip install -r requirements.txt
-     script:
-     - python backend/manage.py test
-     - pylint --rcfile=./backend/pylintrc backend
+  matrix:
+    include:
+    - language: node_js # Your language e.g. node_js, python
+      cache:
+        yarn: true
+      node_js:
+      - '10'            # node_js version
+      before_install:   # Script to run before install
+      - cd frontend
+      install:          # Script to install required packages
+      - yarn install
+      script:           # Script to test your build
+      - ./node_modules/.bin/eslint src
+      - yarn test --coverage --watchAll=false
+    - language: python
+      cache:
+        pip: true
+      python:
+      - "3.6"
+      services:
+      - mysql
+      before_install:
+      - mysql -e "CREATE DATABASE PapersFeed_DB;"
+      - mysql -e "CREATE USER 'PapersFeed'@'localhost' IDENTIFIED WITH mysql_native_password BY 'swpp2019team3';"
+      - mysql -e "GRANT ALL PRIVILEGES ON PapersFeed_DB.* to 'PapersFeed'@'localhost';"
+      install:
+      - pip install -r requirements.txt
+      script:
+      - pylint --rcfile=./backend/.pylintrc backend --disable='fixme, duplicate-code'
+      - coverage run --source='.' ./backend/manage.py test
+      - coverage report --fail-under=90

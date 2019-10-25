@@ -1,0 +1,11 @@
+# misc
+_db.json
+.vscode
+.idea
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+.coverage
