@@ -36,7 +36,7 @@ MONTH_DICT = {
 # pylint: disable=too-many-locals, too-many-statements
 def get_papers(filename):
     """
-    Parser for tab separted text files downloaded from Web Of Science
+    Parser for tab seperated text files downloaded from Web Of Science
     Referencing cs_10.txt or cs_500.txt would be helpful for understanding this function
     Also, you can check all field tags in https://images.webofknowledge.com/images/help/WOS/hs_wos_fieldtags.html
     """
