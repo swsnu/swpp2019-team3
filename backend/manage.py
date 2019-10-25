@@ -5,6 +5,7 @@ import sys
 
 
 def main():
+    """main"""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend_python.settings')
     try:
         from django.core.management import execute_from_command_line
