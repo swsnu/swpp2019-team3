@@ -19,10 +19,10 @@
 
 def api_not_found():
     """api_not_found"""
-    #raise ApiError(404)
+    # FIXME: For now, this function print "API ERROR" unconditionally.
+    # raise ApiError(404)
 
-
-# please uncomment this function and remove 'pylint diable' after test is implemented
+# FIXME: please uncomment this function and remove 'pylint diable' after test is implemented
 # pylint: disable=pointless-string-statement
 """
 @csrf_exempt

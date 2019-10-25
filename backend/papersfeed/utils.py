@@ -4,4 +4,4 @@
 
 class ApiError(Exception):
     """raise ApiError"""
-    print('API ERROR(fixme)')
+    print('API ERROR')
