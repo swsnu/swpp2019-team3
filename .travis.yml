@@ -22,5 +22,5 @@
       - coverage report --fail-under=90
     - services:
       - mysql
-      before_install:
-      - mysql -e 'CREATE DATABASE PapersFeed_DB;'
+      before_script:
+      - mysql -u root -e 'CREATE DATABASE PapersFeed_DB;'
