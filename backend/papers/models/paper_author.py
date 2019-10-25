@@ -8,13 +8,11 @@ from .author import Author
 
 class PaperAuthor(models.Model):
     """PaperAuthor Model"""
-    # pylint: disable=duplicate-code
     paper = models.ForeignKey(
         Paper,
         null=False,
         on_delete=models.CASCADE,
     )
-    # pylint: enable=duplicate-code
     author = models.ForeignKey(
         Author,
         null=False,

@@ -3,28 +3,30 @@
 
 # Python Modules
 #import os
-import json
+#import json
 #import datetime
-import traceback
+#import traceback
 
 # Django Modules
-from django.http import HttpResponse, UnreadablePostError
-from django.views.decorators.csrf import csrf_exempt
+#from django.http import HttpResponse, UnreadablePostError
+#from django.views.decorators.csrf import csrf_exempt
 
 # Internal Modules
-from papersfeed.utils import ApiError
-from . import apis
-from . import constants
+#from papersfeed.utils import ApiError
+#from . import apis
+#from . import constants
 
 
 def api_not_found():
     """api_not_found"""
-    raise ApiError(404)
+    #raise ApiError(404)
 
 
+# please uncomment this function and remove 'pylint diable' after test is implemented
+# pylint: disable=pointless-string-statement
+"""
 @csrf_exempt
 def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
-    """api_entry"""
     # API 요청에 Return 할 Response Initialize
     response_data = {}
 
@@ -79,3 +81,5 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
     response.status_code = status_code
 
     return response
+"""
+# pylint: enable=pointless-string-statement

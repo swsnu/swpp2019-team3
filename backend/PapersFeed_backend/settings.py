@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 """
 Django settings for PapersFeed_backend project.
 
