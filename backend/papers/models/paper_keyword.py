@@ -8,11 +8,13 @@ from .keyword import Keyword
 
 class PaperKeyword(models.Model):
     """PaperKeyword Model"""
+    # pylint: disable=duplicate-code
     paper = models.ForeignKey(
         Paper,
         null=False,
         on_delete=models.CASCADE,
     )
+    # pylint: enable=duplicate-code
     keyword = models.ForeignKey(
         Keyword,
         null=False,

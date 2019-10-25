@@ -1,6 +1,7 @@
 """admin.py"""
 from django.contrib import admin
 
+# pylint: disable=unused-import
 from .models.author import Author
 from .models.keyword import Keyword
 from .models.paper_author import PaperAuthor
@@ -10,6 +11,7 @@ from .models.paper import Paper
 from .models.publication import Publication
 from .models.publisher import Publisher
 from .models.reference import Reference
+# pylint: enable=unused-import
 
 # Register your models here.
 admin.site.register(Author)
