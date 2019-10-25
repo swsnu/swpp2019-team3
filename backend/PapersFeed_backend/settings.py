@@ -1,4 +1,3 @@
-# pylint: skip-file
 """
 Django settings for PapersFeed_backend project.
 

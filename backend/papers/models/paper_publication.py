@@ -7,11 +7,13 @@ from .publication import Publication
 
 class PaperPublication(models.Model):
     """PaperPublication Model"""
+    # pylint: disable=duplicate-code
     paper = models.ForeignKey(
         Paper,
         null=False,
         on_delete=models.CASCADE,
     )
+    # pylint: enable=duplicate-code
     publication = models.ForeignKey(
         Publication,
         null=False,
