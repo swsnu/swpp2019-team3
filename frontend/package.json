@@ -62,7 +62,7 @@
       "!src/serviceWorker.js",
 
       "!src/store/store.js",
-      "!src/store/actions/Actiontypes.js",
+      "!src/store/actions/ActionTypes.js",
       "!src/store/reducers/index.js"
     ],
     "coverageThreshold": {
