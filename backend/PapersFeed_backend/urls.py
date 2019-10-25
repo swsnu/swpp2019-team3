@@ -17,8 +17,10 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include
 
+# pylint: disable=invalid-name
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('papersfeed/', include('papersfeed.urls')),
     path('papers/', include('papers.urls'))
 ]
+# pylint: enable=invalid-name

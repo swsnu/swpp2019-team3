@@ -1,0 +1,31 @@
+.sidebar {
+    display: flex;
+    margin-left: 10px;
+    flex-direction: column;
+    align-items: flex-start;   
+    height: 100%;
+    width: 250px;
+    position:absolute;
+}
+
+.sidebar .main-link {
+    margin-top: 30px;
+    color: black;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 30px;
+}
+
+.sidebar .collection-link {
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 30px;
+}
+
+.sidebar .history-link {
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 30px;
+}
