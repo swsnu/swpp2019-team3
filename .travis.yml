@@ -12,7 +12,8 @@
       - yarn install
       script:           # Script to test your build
       - ./node_modules/.bin/eslint src
-      - yarn test --coverage --watchAll=false
+      - yarn test --coverage --watchAll=false | coveralls
+
     - language: python
       cache:
         pip: true
@@ -30,3 +31,5 @@
       - pylint --rcfile=./backend/.pylintrc backend --disable='fixme, duplicate-code'
       - coverage run --source='.' ./backend/manage.py test
       - coverage report --fail-under=90
+      after_success:
+      - coveralls
