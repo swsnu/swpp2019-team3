@@ -40,9 +40,8 @@ class PaperSpec extends Component {
                 <h3 id="authors">{this.props.authors}</h3>
                 <h3 id="keywords">{this.props.keywords}</h3>
                 <div className="buttons">
-                    <Button className="like-button"
-                        onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
-                            {this.state.likeCount}
+                    <Button className="like-button" onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
+                        {this.props.likeCount}
                     </Button>
                     <Button className="reviewcount-button">{this.props.reviewCount}</Button>
                 </div>
@@ -56,22 +55,23 @@ class PaperSpec extends Component {
 }
 
 PaperSpec.propTypes = {
-    id: PropTypes.number,
     title: PropTypes.string,
     abstract: PropTypes.string,
     date: PropTypes.string,
     authors: PropTypes.string,
     keywords: PropTypes.string,
+    likeCount: PropTypes.number,
+    reviewCount: PropTypes.number,
 };
 
 PaperSpec.defaultProps = {
-    id: 0,
     title: "",
     abstract: "",
     date: "",
     authors: "",
     keywords: "",
-    reviewCount: 0
+    likeCount: 0,
+    reviewCount: 0,
 };
 
 export default PaperSpec;
