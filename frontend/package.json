@@ -7,6 +7,7 @@
     "bootstrap": "^4.3.1",
     "connected-react-router": "^6.5.2",
     "core-util-is": "^1.0.2",
+    "coveralls": "^3.0.7",
     "history": "^4.10.1",
     "react": "^16.10.1",
     "react-bootstrap": "^1.0.0-beta.14",
@@ -60,7 +61,6 @@
       "src/**/*.{js,jsx}",
       "!src/index.js",
       "!src/serviceWorker.js",
-
       "!src/store/store.js",
       "!src/store/actions/ActionTypes.js",
       "!src/store/reducers/index.js"

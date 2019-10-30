@@ -41,7 +41,6 @@ def get_papers(filename):
     Also, you can check all field tags in https://images.webofknowledge.com/images/help/WOS/hs_wos_fieldtags.html
     """
     reader = csv.DictReader(open(filename, 'r', encoding='utf-16'), dialect='excel-tab')
-    # pylint: disable=invalid-name
     pk = {
         "paper": 0,
         "author": 0,
@@ -50,7 +49,6 @@ def get_papers(filename):
         "publication": 0,
         "paper_publication": 0
     }
-    # pylint: enable=invalid-name
     papers = []
     authors = []
     paper_authors = []
