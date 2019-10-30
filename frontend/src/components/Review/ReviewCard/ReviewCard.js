@@ -36,7 +36,7 @@ class ReviewCard extends Component {
     render() {
         let header = null;
         if (this.props.headerExists) {
-            header = <Card.Header>{`${this.props.user} ${this.props.source} this review`}</Card.Header>;
+            header = <Card.Header className="header">{`${this.props.user} ${this.props.source} this review`}</Card.Header>;
         }
 
         return (
