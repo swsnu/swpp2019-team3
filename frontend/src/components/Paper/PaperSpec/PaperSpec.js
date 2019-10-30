@@ -34,16 +34,22 @@ class PaperSpec extends Component {
 
     render() {
         return (
-            <div className="PaperSpec">
+            <div className="paperspec">
                 <h2 id="title">{this.props.title}</h2>
-                <h3 id="authors">{this.props.authors}</h3>
                 <h3 id="date">{this.props.date}</h3>
-                <p id="abstract">{this.props.abstract}</p>
-                <h3 id="keyword">{this.props.keywords}</h3>
-                <Button className="like-button"
-                    onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
-                        {this.state.likeCount}
-                </Button>
+                <h3 id="authors">{this.props.authors}</h3>
+                <h3 id="keywords">{this.props.keywords}</h3>
+                <div className="buttons">
+                    <Button className="like-button"
+                        onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
+                            {this.state.likeCount}
+                    </Button>
+                    <Button className="reviewcount-button">{this.props.reviewCount}</Button>
+                </div>
+                <div className="abstract">
+                    <h3 id="abstract-title">abstract</h3>
+                    <p id="abstract-content">{this.props.abstract}</p>
+                </div>
             </div>
         );
     }
@@ -64,7 +70,8 @@ PaperSpec.defaultProps = {
     abstract: "",
     date: "",
     authors: "",
-    keywords: ""
+    keywords: "",
+    reviewCount: 0
 };
 
 export default PaperSpec;

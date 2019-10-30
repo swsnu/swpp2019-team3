@@ -34,10 +34,15 @@ class ReviewCard extends Component {
     }
 
     render() {
+        let header = null;
+        if (this.props.headerExists) {
+            header = <Card.Header>{`${this.props.user} ${this.props.source} this review`}</Card.Header>
+        }
+
         return (
             <div className="wrapper">
                 <Card className="review">
-                    <Card.Header>{`${this.props.user} ${this.props.source} this review`}</Card.Header>
+                    {header}
                     <Card.Body className="body">
                         <div className="title">
                             <Card.Link href={`/paper/${this.props.id}`} className="text">{this.props.title}</Card.Link>
@@ -64,6 +69,7 @@ ReviewCard.propTypes = {
     title: PropTypes.string,
     date: PropTypes.string,
     numReplies: PropTypes.number,
+    headerExists: PropTypes.bool
 };
 
 ReviewCard.defaultProps = {
@@ -75,6 +81,7 @@ ReviewCard.defaultProps = {
     title: "",
     date: "",
     numReplies: 0,
+    headerExists: true
 };
 
 export default ReviewCard;
