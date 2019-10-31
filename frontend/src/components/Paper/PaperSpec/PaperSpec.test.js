@@ -1,16 +1,16 @@
 import React from "react";
-import { shallow, mount } from "enzyme";
-import ReviewCard from "./ReviewCard";
+import { mount } from "enzyme";
+import PaperSpec from "./PaperSpec";
 
-describe("<ReviewCard />", () => {
+describe("<PaperSpec />", () => {
     it("should render without errors", () => {
-        const component = shallow(<ReviewCard />);
-        const wrapper = component.find(".wrapper");
+        const component = mount(<PaperSpec />);
+        const wrapper = component.find(".paperspec");
         expect(wrapper.length).toBe(1);
     });
 
     it("should handle Like/Unlike Button", () => {
-        const component = mount(<ReviewCard />);
+        const component = mount(<PaperSpec />);
         const wrapper = component.find(".like-button").hostNodes();
         expect(wrapper.length).toBe(1);
 
@@ -22,11 +22,5 @@ describe("<ReviewCard />", () => {
         wrapper.simulate("click");
         expect(component.state().likeCount).toBe(0);
         expect(component.state().isLiked).toBe(false);
-    });
-
-    it("if headerExists is false, then header should not exist", () => {
-        const component = mount(<ReviewCard headerExists={false} />);
-        const wrapper = component.find(".header");
-        expect(wrapper.length).toBe(0);
     });
 });

@@ -8,6 +8,7 @@ import {
     SideBar, Header,
 } from "../../../components";
 import * as actionCreators from "../../../store/actions/index";
+import "./ReviewEdit.css";
 
 
 class ReviewEdit extends Component {
@@ -18,6 +19,7 @@ class ReviewEdit extends Component {
             content: this.props.thisReview.content,
         };
         this.handleChange = this.handleChange.bind(this);
+        this.clickEditHandler = this.clickEditHandler.bind(this);
     }
 
     handleChange(e) {
@@ -42,15 +44,19 @@ class ReviewEdit extends Component {
             <div className="review-edit">
                 <Header />
                 <SideBar />
-                <Form.Group controlId="formReviewTitle">
-                    <Form.Label>Title</Form.Label>
-                    <Form.Control name="title" className="title-input" type="text" placeholder={this.props.thisReview.title} bsPrefix="title-input" value={this.state.title} onChange={this.handleChange} />
-                </Form.Group>
-                <Form.Group controlId="formReviewContent">
-                    <Form.Label>Content</Form.Label>
-                    <Form.Control name="content" className="content-input" rows="7" type="text" placeholder={this.props.thisReview.content} onChange={this.handleChange} />
-                </Form.Group>
-                <Button className="search-button" href="/">Edit</Button>
+                <div className="review-edit-page">
+                    <div className="board">
+                        <Form.Group className="form-title" controlId="formReviewTitle">
+                            <Form.Label>Title</Form.Label>
+                            <Form.Control name="title" className="title-input" as="textarea" rows="1" type="text" placeholder={this.props.thisReview.title} value={this.state.title} onChange={this.handleChange} />
+                        </Form.Group>
+                        <Form.Group className="form-content" controlId="formReviewContent">
+                            <Form.Label>Content</Form.Label>
+                            <Form.Control name="content" className="content-input" as="textarea" rows="7" type="text" placeholder={this.props.thisReview.content} onChange={this.handleChange} />
+                        </Form.Group>
+                        <Button className="edit-button" onClick={this.clickEditHandler}>Edit</Button>
+                    </div>
+                </div>
             </div>
         );
     }

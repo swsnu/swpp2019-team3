@@ -31,11 +31,12 @@ class Main extends Component {
                 type: "Paper",
                 source: "liked",
                 key: 1,
-                id: 2,
+                id: 3,
+                paperId: 1,
                 title: "dfad",
                 user: "Dfafdaf",
-                numPapers: 14,
-                numReplies: 15,
+                likeCount: 14,
+                replyCount: 15,
             }],
         };
     }
@@ -67,6 +68,8 @@ class Main extends Component {
                           title={feed.title}
                           user={feed.user}
                           date={feed.date}
+                          likeCount={feed.likeCount}
+                          replyCount={feed.replyCount}
                         />
                     );
                 }
@@ -112,7 +115,8 @@ class Main extends Component {
                           title={feed.title}
                           user={feed.user}
                           date={feed.date}
-                          numReplies={feed.numReplies}
+                          likeCount={feed.likeCount}
+                          replyCount={feed.replyCount}
                         />
                     );
                 }

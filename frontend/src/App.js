@@ -7,7 +7,7 @@ import { ConnectedRouter } from "connected-react-router";
 
 
 import {
-    Main, ReviewDetail, ReviewCreate, ReviewEdit,
+    Main, ReviewDetail, ReviewCreate, ReviewEdit, PaperDetail,
 } from "./containers";
 
 function App(props) {
@@ -19,6 +19,7 @@ function App(props) {
                     <Route path="/papers/:paper_id/create" exact component={ReviewCreate} />
                     <Route path="/papers/:paper_id/:review_id" exact component={ReviewDetail} />
                     <Route path="/papers/:paper_id/:review_id/edit" exact component={ReviewEdit} />
+                    <Route path="/papers/:id" exact component={PaperDetail} />
                 </Switch>
             </div>
         </ConnectedRouter>
