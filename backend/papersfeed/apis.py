@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Internal Modules
-from papersfeed.utils.papers import utils as papers_utils
+#from papersfeed.utils.papers import utils as papers_utils
 from papersfeed.utils.users import utils as users_utils
 
 
@@ -19,6 +19,11 @@ def delete_follow(args):
 def get_session(args):
     """Get Session"""
     return users_utils.select_session(args)
+
+
+def delete_session(args):
+    """Delete Session"""
+    return users_utils.delete_session(args)
 
 
 def post_user(args):

@@ -3,7 +3,8 @@
 import uuid
 import hashlib
 
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Exists, OuterRef, Count
 
 from papersfeed import constants
@@ -30,13 +31,15 @@ def select_session(args):
     try:
         user = User.objects.get(email=email)
     except ObjectDoesNotExist:
-        raise ApiError(NotExistObject)
+        raise ApiError(constants.NOT_EXIST_OBJECT)
     else:
         if not __is_correct_password(password, user):
             raise ApiError(AuthError)
 
         # Set Session Id
         request.session[constants.ID] = user.id
+
+    return {}
 
 
 def delete_session(args):
@@ -81,12 +84,10 @@ def insert_user(args):
 
     try:
         user = User.objects.create(
-            email=email, username=username, password=hashed, salt=salt
+            description=None, email=email, username=username, password=hashed, salt=salt
         )
     except IntegrityError:
         raise ApiError(constants.USERNAME_ALREADY_EXISTS)
-
-    return select_user({constants.ID: user.id})
 
 
 def update_user(args):
@@ -239,6 +240,10 @@ def insert_follow(args):
 
     # Following User
     following_user_id = args[constants.USER].id
+
+    # Self Follow
+    if followed_user_id == following_user_id:
+        raise ApiError(constants.PARAMETER_ERROR)
 
     # If Not Already Following, Create One
     if not UserFollow.objects.filter(following_user_id=following_user_id, followed_user_id=followed_user_id).exists():

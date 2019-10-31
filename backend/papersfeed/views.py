@@ -6,8 +6,9 @@ import json
 import traceback
 
 # Django Modules
-from django.http import JsonResponse, UnreadablePostError
+from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.csrf import csrf_exempt
 
 # Internal Modules
 from papersfeed.utils.base_utils import ApiError
@@ -21,6 +22,7 @@ def api_not_found():
     raise ApiError(404)
 
 
+@csrf_exempt
 def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
     """api_entry"""
     # API 요청에 Return 할 Response Initialize
@@ -55,8 +57,11 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
                 if isinstance(body, dict):
                     args = body
 
+            args[constants.REQUEST] = request
+
             # Session Check
-            __check_session(args, request)
+            if api_function not in ['get_session', 'post_user']:
+                __check_session(args, request)
 
             # Functions 실행
             data = handler(args)
@@ -64,18 +69,14 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
 
         except ApiError as error:
             status_code = error.args[0]
-        except UnreadablePostError:
-            status_code = 500
         except Exception as error:  # pylint: disable=broad-except
             status_code = 500
 
             response_data[constants.DEBUG] = {constants.ERROR: error, constants.DESCRIPTION: traceback.format_exc()}
         else:
             status_code = 200
-
     else:
         status_code = 404
-
     response = JsonResponse(response_data, safe=False)
     response.status_code = status_code
 
@@ -94,5 +95,4 @@ def __check_session(args, request):
     except ObjectDoesNotExist:
         raise ApiError(constants.AUTH_ERROR)
     else:
-        args[constants.REQUEST] = request
         args[constants.USER] = user
