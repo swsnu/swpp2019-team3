@@ -6,10 +6,18 @@ from .publisher import Publisher
 from .paper import Paper
 
 
+PUBLICATION_TYPE = [
+    'journal',
+    'book',
+    'series',
+    'patent'
+]
+
+
 class Publication(models.Model):
     """Publication Model"""
     name = models.CharField(max_length=200)
-    publication_type = EnumField(choices=['journal', 'book', 'series', 'patent'])
+    publication_type = EnumField(choices=PUBLICATION_TYPE)
     publisher = models.ForeignKey(
         Publisher,
         null=False,

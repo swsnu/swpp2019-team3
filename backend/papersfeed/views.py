@@ -2,30 +2,27 @@
 # -*- coding: utf-8 -*-
 
 # Python Modules
-#import os
-#import json
-#import datetime
-#import traceback
+import os
+import json
+import datetime
+import traceback
 
 # Django Modules
-#from django.http import HttpResponse, UnreadablePostError
-#from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse, UnreadablePostError
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 # Internal Modules
-#from papersfeed.utils import ApiError
-#from . import apis
-#from . import constants
+from papersfeed.utils import ApiError
+from . import apis
+from . import constants
 
 
 def api_not_found():
     """api_not_found"""
-    # FIXME: For now, this function print "API ERROR" unconditionally.
-    # raise ApiError(404)
+    raise ApiError(404)
 
-# FIXME: please uncomment this function and remove 'pylint diable' after test is implemented
-# pylint: disable=pointless-string-statement
-"""
-@csrf_exempt
+
+@ensure_csrf_cookie
 def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
     # API 요청에 Return 할 Response Initialize
     response_data = {}
@@ -59,6 +56,12 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
                 if isinstance(body, dict):
                     args = body
 
+            # Auth
+            if not request.user.is_authenticated:
+                raise ApiError(constants.AUTH_ERROR)
+            else:
+                args[constants.USER] = request.user
+
             # Functions 실행
             data = handler(args)
             response_data[constants.DATA] = {} if data is None else data
@@ -77,9 +80,7 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
     else:
         status_code = 404
 
-    response = HttpResponse(json.dumps(response_data), 'papersfeed/json; charset=UTF-8')
+    response = JsonResponse(response_data, safe=False)
     response.status_code = status_code
 
     return response
-"""
-# pylint: enable=pointless-string-statement

@@ -6,6 +6,13 @@ from .paper import Paper
 from .keyword import Keyword
 
 
+KEYWORD_TYPE = [
+    'author',
+    'web',
+    'abstract'
+]
+
+
 class PaperKeyword(models.Model):
     """PaperKeyword Model"""
     paper = models.ForeignKey(
@@ -18,5 +25,5 @@ class PaperKeyword(models.Model):
         null=False,
         on_delete=models.CASCADE,
     )
-    keyword_type = EnumField(choices=['author', 'web', 'abstract'])
+    keyword_type = EnumField(choices=KEYWORD_TYPE)
     
