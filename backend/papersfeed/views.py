@@ -92,6 +92,7 @@ def __check_session(args, request):
         # Get User By Id
         user = User.objects.get(id=user_id)
     except ObjectDoesNotExist:
-        ApiError(constants.AUTH_ERROR)
+        raise ApiError(constants.AUTH_ERROR)
     else:
+        args[constants.REQUEST] = request
         args[constants.USER] = user

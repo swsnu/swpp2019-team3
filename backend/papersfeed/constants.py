@@ -18,12 +18,23 @@ DESCRIPTION = 'description'
 ID = 'id'
 COUNT = 'count'
 SESSION = 'session'
+REQUEST = 'request'
+LIKED = 'liked'
 
 # User
 USER = 'user'
+USERS = 'users'
 EMAIL = 'email'
 USERNAME = 'username'
 PASSWORD = 'password'
 IS_FOLLOWING = 'is_following'
 IS_FOLLOWED = 'is_followed'
 FOLLOWER = 'follower'
+
+# Collection
+TITLE = 'title'
+TEXT = 'text'
+
+# Paper
+PAPER = 'paper'
+PAPERS = 'papers'
