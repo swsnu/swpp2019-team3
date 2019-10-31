@@ -5,7 +5,7 @@ import { Form, Button } from "react-bootstrap";
 import { Route } from "react-router-dom";
 
 import {
-    SideBar, Header,
+    SideBar, Header, PaperSpec,
 } from "../../../components";
 import * as actionCreators from "../../../store/actions/index";
 import "./ReviewCreate.css";
@@ -16,6 +16,16 @@ class ReviewCreate extends Component {
         this.state = {
             title: "",
             content: "",
+            paper: {
+                id: 1,
+                title: "paper_title",
+                abstract: "abstract abstract abstract abstract abstract abstract abstract abstract ",
+                date: "2019.10.30.",
+                authors: "paper_authors",
+                keywords: "paper_keywords",
+                likeCount: 101,
+                reviewCount: 3,
+            },
         };
         this.handleChange = this.handleChange.bind(this);
         this.clickCreateHandler = this.clickCreateHandler.bind(this);
@@ -46,6 +56,18 @@ class ReviewCreate extends Component {
                 <SideBar />
                 <div className="review-create-page">
                     <div className="board">
+                        <div className="paper-spec">
+                            <PaperSpec
+                              id={this.state.paper.id}
+                              title={this.state.paper.title}
+                              abstract={this.state.paper.abstract}
+                              date={this.state.paper.date}
+                              authors={this.state.paper.authors}
+                              keywords={this.state.paper.keywords}
+                              likeCount={this.state.paper.likeCount}
+                              reviewCount={this.state.paper.reviewCount}
+                            />
+                        </div>
                         <Form.Group className="form-title" controlId="formReviewTitle">
                             <Form.Label>Title</Form.Label>
                             <Form.Control name="title" className="title-input" as="textarea" rows="1" type="text" placeholder="Enter title" value={this.state.title} onChange={this.handleChange} />

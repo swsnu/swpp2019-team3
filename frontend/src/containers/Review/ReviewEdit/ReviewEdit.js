@@ -5,7 +5,7 @@ import { Form, Button } from "react-bootstrap";
 import { Route } from "react-router-dom";
 
 import {
-    SideBar, Header,
+    SideBar, Header, PaperSpec,
 } from "../../../components";
 import * as actionCreators from "../../../store/actions/index";
 import "./ReviewEdit.css";
@@ -17,6 +17,16 @@ class ReviewEdit extends Component {
         this.state = {
             title: this.props.thisReview.title,
             content: this.props.thisReview.content,
+            paper: {
+                id: 1,
+                title: "paper_title",
+                abstract: "abstract abstract abstract abstract abstract abstract abstract abstract ",
+                date: "2019.10.30.",
+                authors: "paper_authors",
+                keywords: "paper_keywords",
+                likeCount: 101,
+                reviewCount: 3,
+            },
         };
         this.handleChange = this.handleChange.bind(this);
         this.clickEditHandler = this.clickEditHandler.bind(this);
@@ -28,13 +38,14 @@ class ReviewEdit extends Component {
         this.setState(nextState);
     }
 
+    // -1 for paper id
     clickEditHandler() {
-        return this.onSetReviewContent(
+        return this.props.onSetReviewContent(
             this.props.thisReview.id, this.state.title, this.state.content,
         )
             .then(
                 () => {
-                    this.props.history.push(`/papers/${this.props.thisPaper.id}/${this.props.thisReview.id}`);
+                    this.props.history.push(`/papers/-1/${this.props.thisReview.id}`);
                 },
             );
     }
@@ -46,6 +57,18 @@ class ReviewEdit extends Component {
                 <SideBar />
                 <div className="review-edit-page">
                     <div className="board">
+                        <div className="paper-spec">
+                            <PaperSpec
+                              id={this.state.paper.id}
+                              title={this.state.paper.title}
+                              abstract={this.state.paper.abstract}
+                              date={this.state.paper.date}
+                              authors={this.state.paper.authors}
+                              keywords={this.state.paper.keywords}
+                              likeCount={this.state.paper.likeCount}
+                              reviewCount={this.state.paper.reviewCount}
+                            />
+                        </div>
                         <Form.Group className="form-title" controlId="formReviewTitle">
                             <Form.Label>Title</Form.Label>
                             <Form.Control name="title" className="title-input" as="textarea" rows="1" type="text" placeholder={this.props.thisReview.title} value={this.state.title} onChange={this.handleChange} />
@@ -64,7 +87,7 @@ class ReviewEdit extends Component {
 
 const mapStateToProps = (state) => ({
     // currentUserId: state.auth.currentUserId,
-    thisPaper: state.paper.selected.paper,
+    // thisPaper: state.paper.selected.paper,
     thisReview: state.review.selected.review,
 });
 
@@ -75,7 +98,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 ReviewEdit.propTypes = {
-    thisPaper: PropTypes.shape({
+    /* thisPaper: PropTypes.shape({
         id: PropTypes.number,
         authors: PropTypes.string,
         title: PropTypes.string,
@@ -84,7 +107,7 @@ ReviewEdit.propTypes = {
         likesCount: PropTypes.number,
         isLiked: PropTypes.bool,
         date_created: PropTypes.string,
-    }),
+    }), */
     thisReview: PropTypes.shape({
         id: PropTypes.number,
         author: PropTypes.number,
@@ -93,11 +116,13 @@ ReviewEdit.propTypes = {
         content: PropTypes.string,
     }),
     history: PropTypes.instanceOf(Route).isRequired,
+    onSetReviewContent: PropTypes.func,
 };
 
 ReviewEdit.defaultProps = {
-    thisPaper: {},
+    // thisPaper: {},
     thisReview: {},
+    onSetReviewContent: () => {},
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReviewEdit);
