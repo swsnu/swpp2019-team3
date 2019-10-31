@@ -1,11 +1,12 @@
 import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
 
-// import reducers here
+import ReviewReducer from "./Review/ReviewReducer";
+import ReviewReplyReducer from "./Review/ReviewReplyReducer";
 
 const rootReducer = (history) => combineReducers({
-    // put reducers here
-
+    review: ReviewReducer,
+    reviewReply: ReviewReplyReducer,
     router: connectRouter(history),
 });
 

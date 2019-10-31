@@ -1,0 +1,31 @@
+.review-create .review-create-page{
+    background: rgb(242,243,247);
+    margin-left: 18%;
+    display: flex;
+    min-height: 1000px;
+}
+
+.review-create .review-create-page .board{
+    width: 80%;
+    margin-top: 5%;
+    margin-left: 5%;
+    margin-right: 10%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+.review-create .board .form-title{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.review-create .board .form-content{
+    margin-top: 5%;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
