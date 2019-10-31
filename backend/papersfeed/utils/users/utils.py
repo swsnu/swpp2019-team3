@@ -133,6 +133,25 @@ def update_user(args):
     user.save()
 
 
+def remove_user(args):
+    """Resign"""
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Request
+    request = args[constants.REQUEST]
+
+    # Delete Session
+    try:
+        del request.session[constants.ID]
+    except KeyError:
+        pass
+
+    # Delete User
+    request_user.delete()
+
+
 def select_user(args):
     """Get Single User"""
     is_parameter_exists([

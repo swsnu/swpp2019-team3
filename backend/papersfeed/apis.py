@@ -21,6 +21,11 @@ def get_session(args):
     return users_utils.select_session(args)
 
 
+def post_user(args):
+    """Post User"""
+    return users_utils.insert_user(args)
+
+
 def get_user(args):
     """Get User"""
     return users_utils.select_user(args)
@@ -29,3 +34,8 @@ def get_user(args):
 def put_user(args):
     """Put User"""
     return users_utils.update_user(args)
+
+
+def delete_user(args):
+    """Delete User"""
+    return users_utils.remove_user(args)
