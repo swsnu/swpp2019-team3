@@ -38,13 +38,13 @@ matrix:
     env:
     - COVERALLS_PARALLEL=true
     before_install:
-    - cd backend
     - mysql -e "CREATE DATABASE PapersFeed_DB;"
     - mysql -e "CREATE USER 'PapersFeed'@'localhost' IDENTIFIED WITH mysql_native_password BY 'swpp2019team3';"
     - mysql -e "GRANT ALL PRIVILEGES ON PapersFeed_DB.* to 'PapersFeed'@'localhost';"
     install:
     - pip install -r requirements.txt
     script:
+    - cd backend
     - pylint --rcfile=./.pylintrc backend --disable='fixme, duplicate-code'
     - coverage run --source='.' ./manage.py test
     - coverage report --fail-under=90
