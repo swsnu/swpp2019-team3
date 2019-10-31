@@ -20,7 +20,7 @@ class Publication(BaseModel):
     name = models.CharField(max_length=200)
 
     # Publication Type
-    publication_type = EnumField(choices=PUBLICATION_TYPE)
+    type = EnumField(choices=PUBLICATION_TYPE)
 
     # Publisher
     publisher = models.ForeignKey(

@@ -7,7 +7,7 @@ from .author import Author
 from papersfeed.models.base_models import BaseModel
 
 # Author Type
-AUTHOR_TYPE = [
+PAPER_AUTHOR_TYPE = [
     'general',
     'corresponding'
 ]
@@ -31,7 +31,7 @@ class PaperAuthor(BaseModel):
     )
 
     # Author Type
-    author_type = EnumField(choices=AUTHOR_TYPE)
+    type = EnumField(choices=PAPER_AUTHOR_TYPE)
 
     # Rank
     rank = models.PositiveSmallIntegerField()

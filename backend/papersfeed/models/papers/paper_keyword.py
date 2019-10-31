@@ -6,7 +6,7 @@ from .paper import Paper
 from .keyword import Keyword
 from papersfeed.models.base_models import BaseModel
 
-KEYWORD_TYPE = [
+PAPER_KEYWORD_TYPE = [
     'author',
     'web',
     'abstract'
@@ -31,7 +31,7 @@ class PaperKeyword(BaseModel):
     )
 
     # Keyword Type
-    keyword_type = EnumField(choices=KEYWORD_TYPE)
+    type = EnumField(choices=PAPER_KEYWORD_TYPE)
 
     class Meta:
         """Table Meta"""
