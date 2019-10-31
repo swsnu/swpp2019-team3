@@ -27,8 +27,7 @@
       cache:
         pip: true
       python:
-      - "3.6"
-      dist: trusty
+      - '3.6'
       services:
       - mysql
       before_install:
