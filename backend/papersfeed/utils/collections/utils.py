@@ -1,0 +1,237 @@
+"""utils.py"""
+# -*- coding: utf-8 -*-
+
+from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q, Exists, OuterRef, Count
+
+from papersfeed import constants
+from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
+from papersfeed.models.collections.collection import Collection
+from papersfeed.models.collections.collection_like import CollectionLike
+from papersfeed.models.collections.collection_user import CollectionUser, COLLECTION_USER_TYPE
+from papersfeed.models.collections.collection_paper import CollectionPaper
+
+
+def insert_collection(args):
+    is_parameter_exists([
+        constants.TITLE, constants.TEXT
+    ], args)
+
+    # User Id
+    user_id = args[constants.USER].id
+
+    # Title
+    title = args[constants.TITLE]
+
+    # Text
+    text = args[constants.TEXT]
+
+    # Check Valid
+    if not title or not text:
+        raise ApiError(constants.PARAMETER_ERROR)
+
+    # Create New Collection
+    collection = Collection.objects.create(title=title, text=text)
+
+    # Add User To Collection
+    CollectionUser.objects.create(collection_id=collection.id, user_id=user_id, type=COLLECTION_USER_TYPE[0])
+
+
+def update_collection(args):
+    """Update Collection"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Collection Id
+    collection_id = args[constants.ID]
+
+    # Get Collection
+    try:
+        collection = Collection.objects.get(id=collection_id)
+    except ObjectDoesNotExist:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    # Check Collection User Id
+    if not request_user or not CollectionUser.objects.filter(collection_id=collection_id, user_id=request_user.id).exists():
+        raise ApiError(constants.AUTH_ERROR)
+
+    # Title
+    title = args[constants.TITLE]
+
+    # Text
+    text = args[constants.TEXT]
+
+    # Update Title
+    if title:
+        collection.title = title
+
+    # Update Text
+    if text:
+        collection.text = text
+
+    collection.save()
+
+
+def remove_collection(args):
+    """Remove Collection"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Collection Id
+    collection_id = args[constants.ID]
+
+    # Get Collection
+    try:
+        collection = Collection.objects.get(id=collection_id)
+    except ObjectDoesNotExist:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    # Check Collection User Id
+    if not request_user or not CollectionUser.objects.filter(collection_id=collection_id, user_id=request_user.id).exists():
+        raise ApiError(constants.AUTH_ERROR)
+
+    collection.delete()
+
+
+def select_collection(args):
+    """Select Collection"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Collection Id
+    collection_id = args[constants.ID]
+
+    # Collections
+    collections, _, _ = __get_collections(Q(id=collection_id), request_user, None)
+
+    # Does Not Exist
+    if not collections:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    collection = collections[0]
+
+    return collection
+
+
+def select_collection_user(args):
+    """Select User's Collections"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # User Id
+    user_id = args[constants.ID]
+
+    # User's Collections
+    collection_ids = CollectionUser.objects.filter(user_id=user_id).values_list('collection_id', flat=True)
+
+    # Filter Query
+    filter_query = Q(id__in=collection_ids)
+
+    # Collections
+    collections, _, _ = __get_collections(filter_query, request_user, None)
+
+    return collections
+
+
+def __get_collections(filter_query, request_user, count):
+    """Get Collections By Query"""
+    queryset = Collection.objects.filter(
+        filter_query
+    ).annotate(
+        is_liked=__is_collection_liked('id', request_user)
+    )
+
+    collections = get_results_from_queryset(queryset, count)
+
+    pagination_value = collections[len(collections) - 1].id if collections else 0
+
+    is_finished = len(collections) < count if count and pagination_value != 0 else True
+
+    collections = __pack_collections(collections, request_user)
+
+    return collections, pagination_value, is_finished
+
+
+def __pack_collections(collections, request_user):
+    """Pack Collections"""
+    packed = []
+
+    collection_ids = [collection.id for collection in collections]
+
+    # User Count
+    user_counts = __get_collection_user_count(collection_ids, 'collection_id')
+
+    # Paper Count
+    paper_counts = __get_collection_paper_count(collection_ids, 'collection_id')
+
+    for collection in collections:
+        collection_id = collection.id
+
+        packed_collection = {
+            constants.ID: collection_id,
+            constants.TITLE: collection.title,
+            constants.TEXT: collection.text,
+            constants.LIKED: collection.is_liked,
+            constants.COUNT: {
+                constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0,
+                constants.PAPERS: paper_counts[collection_id] if collection_id in paper_counts else 0
+            }
+        }
+
+        packed.append(packed_collection)
+
+    return packed
+
+
+def __is_collection_liked(outerRef, request_user):
+    """Check If Collection is Liked by User"""
+    return Exists(
+        CollectionLike.objects.filter(collection_id=OuterRef(outerRef), user_id=request_user.id if request_user else None)
+    )
+
+
+def __get_collection_user_count(collection_ids, group_by_field):
+    """Get Number of Users in Collections"""
+    collection_users = CollectionUser.objects.filter(
+        collection_id__in=collection_ids
+    ).values(
+        group_by_field
+    ).annotate(
+        count=Count(group_by_field)
+    ).order_by(
+        group_by_field
+    )
+
+    return {collection_user[group_by_field]: collection_user['count'] for collection_user in collection_users}
+
+
+def __get_collection_paper_count(collection_ids, group_by_field):
+    """Get Number of Papers in Collections"""
+    collection_papers = CollectionPaper.objects.filter(
+        collection_id__in=collection_ids
+    ).values(
+        group_by_field
+    ).annotate(
+        count=Count(group_by_field)
+    ).order_by(
+        group_by_field
+    )
+
+    return {collection_paper[group_by_field]: collection_paper['count'] for collection_paper in collection_papers}

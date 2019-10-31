@@ -4,6 +4,7 @@
 # Internal Modules
 #from papersfeed.utils.papers import utils as papers_utils
 from papersfeed.utils.users import utils as users_utils
+from papersfeed.utils.collections import utils as collections_utils
 
 
 def post_follow(args):
@@ -44,3 +45,28 @@ def put_user(args):
 def delete_user(args):
     """Delete User"""
     return users_utils.remove_user(args)
+
+
+def get_collection(args):
+    """Get Collection"""
+    return collections_utils.select_collection(args)
+
+
+def post_collection(args):
+    """Post Collection"""
+    return collections_utils.insert_collection(args)
+
+
+def put_collection(args):
+    """Put Collection"""
+    return collections_utils.update_collection(args)
+
+
+def delete_collection(args):
+    """Delete Collection"""
+    return collections_utils.remove_collection(args)
+
+
+def get_collection_user(args):
+    """Get Collection User"""
+    return collections_utils.select_collection_user(args)
