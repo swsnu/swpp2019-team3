@@ -2,9 +2,9 @@
 from django.db import models
 from django_mysql.models import EnumField
 
+from papersfeed.models.base_models import BaseModel
 from .paper import Paper
 from .keyword import Keyword
-from papersfeed.models.base_models import BaseModel
 
 PAPER_KEYWORD_TYPE = [
     'author',

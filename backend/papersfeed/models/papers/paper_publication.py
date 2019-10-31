@@ -1,10 +1,9 @@
 """paper_publication.py"""
 from django.db import models
 
+from papersfeed.models.base_models import BaseModel
 from .paper import Paper
 from .publication import Publication
-
-from papersfeed.models.base_models import BaseModel
 
 
 class PaperPublication(BaseModel):

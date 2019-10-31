@@ -1,6 +1,6 @@
 """user.py"""
-
 from django.db import models
+
 from papersfeed.models.base_models import BaseModel
 
 
@@ -25,4 +25,3 @@ class User(BaseModel):
         """Table Meta"""
         db_table = 'swpp_user'  # Table 이름
         ordering = ['-pk']  # Default Order
-
