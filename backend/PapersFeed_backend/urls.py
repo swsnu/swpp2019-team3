@@ -20,6 +20,6 @@ from django.conf.urls import include
 # pylint: disable=invalid-name
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api_urls'))
+    path('api/', include('papersfeed.urls'))
 ]
 # pylint: enable=invalid-name

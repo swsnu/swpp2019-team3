@@ -2,17 +2,16 @@
 # -*- coding: utf-8 -*-
 
 # Python Modules
-import os
 import json
-import datetime
 import traceback
 
 # Django Modules
 from django.http import JsonResponse, UnreadablePostError
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.core.exceptions import ObjectDoesNotExist
 
 # Internal Modules
-from papersfeed.utils import ApiError
+from papersfeed.utils.base_utils import ApiError
+from papersfeed.models.users.user import User
 from . import apis
 from . import constants
 
@@ -22,8 +21,8 @@ def api_not_found():
     raise ApiError(404)
 
 
-@ensure_csrf_cookie
 def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
+    """api_entry"""
     # API 요청에 Return 할 Response Initialize
     response_data = {}
 
@@ -56,11 +55,8 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
                 if isinstance(body, dict):
                     args = body
 
-            # Auth
-            if not request.user.is_authenticated:
-                raise ApiError(constants.AUTH_ERROR)
-            else:
-                args[constants.USER] = request.user
+            # Session Check
+            __check_session(args, request)
 
             # Functions 실행
             data = handler(args)
@@ -84,3 +80,18 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
     response.status_code = status_code
 
     return response
+
+
+def __check_session(args, request):
+    # User Id
+    user_id = request.session.get(constants.ID, None)
+    if not user_id:
+        raise ApiError(constants.AUTH_ERROR)
+
+    try:
+        # Get User By Id
+        user = User.objects.get(id=user_id)
+    except ObjectDoesNotExist:
+        ApiError(constants.AUTH_ERROR)
+    else:
+        args[constants.USER] = user
