@@ -19,4 +19,3 @@ class PaperLike(BaseModel):
         """Table Meta"""
         db_table = 'swpp_paper_like'  # Table 이름
         ordering = ['-pk']  # Default Order
-

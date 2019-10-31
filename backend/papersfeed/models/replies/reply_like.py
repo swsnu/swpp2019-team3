@@ -19,4 +19,3 @@ class ReplyLike(BaseModel):
         """Table Meta"""
         db_table = 'swpp_reply_like'  # Table 이름
         ordering = ['-pk']  # Default Order
-
