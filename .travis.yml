@@ -1,4 +1,3 @@
-sudo: required
 notifications:
   webhooks: https://coveralls.io/webhook
 
@@ -46,7 +45,7 @@ matrix:
     script:
     - pylint --rcfile=./backend/.pylintrc backend --disable='fixme, duplicate-code'
     - coverage run --source='.' ./backend/manage.py test
-    - coverage report --fail-under=90
+    - coverage report --fail-under=80
     after_success:
     - coveralls
 
