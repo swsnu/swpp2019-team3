@@ -18,7 +18,9 @@
       - yarn install
       script:           # Script to test your build
       - ./node_modules/.bin/eslint src
-      - yarn test --coverage --watchAll=false --coverageReporters=text-lcov | coveralls
+      - yarn test --coverage --watchAll=false
+      after_success:
+      - cat ./coverage/lcov.info | coveralls
       - sonar-scanner
 
     - language: python
