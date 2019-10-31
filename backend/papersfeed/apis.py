@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Internal Modules
-#from papersfeed.utils.papers import utils as papers_utils
+from papersfeed.utils.papers import utils as papers_utils
 from papersfeed.utils.users import utils as users_utils
 from papersfeed.utils.collections import utils as collections_utils
 
@@ -70,3 +70,8 @@ def delete_collection(args):
 def get_collection_user(args):
     """Get Collection User"""
     return collections_utils.select_collection_user(args)
+
+
+def get_paper(args):
+    """Get Paper"""
+    return papers_utils.select_paper(args)
