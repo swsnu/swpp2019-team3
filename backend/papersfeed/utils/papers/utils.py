@@ -18,6 +18,7 @@ from papersfeed.models.papers.publication import Publication
 from papersfeed.models.papers.publisher import Publisher
 from papersfeed.models.papers.reference import Reference
 from papersfeed.models.reviews.review_paper import ReviewPaper
+from papersfeed.models.collections.collection_paper import CollectionPaper
 
 
 def select_paper(args):
@@ -42,6 +43,30 @@ def select_paper(args):
     paper = papers[0]
 
     return paper
+
+
+def select_paper_collection(args):
+    """Select Collections' Paper"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Collection Id
+    collection_id = args[constants.ID]
+
+    # Papers
+    collection_papers = CollectionPaper.objects.filter(
+        collection_id=collection_id
+    )
+
+    paper_ids = [collection_paper.paper_id for collection_paper in collection_papers]
+
+    papers, _, _ = __get_papers(Q(id__in=paper_ids), request_user, None)
+
+    return papers
 
 
 def __get_papers(filter_query, request_user, count):
@@ -76,13 +101,13 @@ def __pack_papers(papers, request_user):
     like_counts = __get_paper_like_count(paper_ids, 'paper_id')
 
     # Paper Authors
-    authors = __get_authors_paper(Q(paper_id__in=paper_ids))
+    authors, _, _ = __get_authors_paper(Q(paper_id__in=paper_ids))
 
     # Paper Keywords
-    keywords = __get_keywords_paper(Q(paper_id__in=paper_ids))
+    keywords, _, _ = __get_keywords_paper(Q(paper_id__in=paper_ids))
 
     # Paper Publications
-    paper_publications = __get_paper_publications(Q(paper_id__in=paper_ids))
+    paper_publications, _, _ = __get_paper_publications(Q(paper_id__in=paper_ids))
 
     for paper in papers:
         paper_id = paper.id
@@ -301,7 +326,7 @@ def __pack_paper_publications(paper_publications):
     publication_ids = [paper_publication.publication_id for paper_publication in paper_publications]
 
     # Publications
-    publications = __get_publications(Q(id__in=publication_ids))
+    publications, _, _ = __get_publications(Q(id__in=publication_ids))
 
     # {publication_id: publication}
     publications = {publication[constants.ID]: publication for publication in publications}
