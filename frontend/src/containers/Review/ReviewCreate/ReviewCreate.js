@@ -28,35 +28,39 @@ class ReviewCreate extends Component {
         this.clickCreateHandler = this.clickCreateHandler.bind(this);
     }
 
+    clickCreateHandler() {
+        this.props.history.push(`/papers/${this.state.paper.id}/${this.state.id}`);
+    }
+
     handleChange(e) {
         const nextState = {};
         nextState[e.target.name] = e.target.value;
         this.setState(nextState);
     }
 
-    clickCreateHandler() {
-        this.props.history.push(`/papers/${this.state.paper.id}/${this.state.id}`);
-    }
-
     render() {
+        const paperSpec = () => (
+            <div className="paper-spec">
+                <PaperSpec
+                  id={this.state.paper.id}
+                  title={this.state.paper.title}
+                  abstract={this.state.paper.abstract}
+                  date={this.state.paper.date}
+                  authors={this.state.paper.authors}
+                  keywords={this.state.paper.keywords}
+                  likeCount={this.state.paper.likeCount}
+                  reviewCount={this.state.paper.reviewCount}
+                />
+            </div>
+        );
+
         return (
             <div className="review-create">
                 <Header />
                 <SideBar />
                 <div className="review-create-page">
                     <div className="board">
-                        <div className="paper-spec">
-                            <PaperSpec
-                              id={this.state.paper.id}
-                              title={this.state.paper.title}
-                              abstract={this.state.paper.abstract}
-                              date={this.state.paper.date}
-                              authors={this.state.paper.authors}
-                              keywords={this.state.paper.keywords}
-                              likeCount={this.state.paper.likeCount}
-                              reviewCount={this.state.paper.reviewCount}
-                            />
-                        </div>
+                        {paperSpec}
                         <Form.Group className="form-title" controlId="formReviewTitle">
                             <Form.Label>Title</Form.Label>
                             <Form.Control name="title" className="title-input" as="textarea" rows="1" type="text" placeholder="Enter title" value={this.state.title} onChange={this.handleChange} />

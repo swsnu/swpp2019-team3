@@ -41,24 +41,28 @@ class ReviewEdit extends Component {
     }
 
     render() {
+        const paperSpec = () => (
+            <div className="paper-spec">
+                <PaperSpec
+                  id={this.state.paper.id}
+                  title={this.state.paper.title}
+                  abstract={this.state.paper.abstract}
+                  date={this.state.paper.date}
+                  authors={this.state.paper.authors}
+                  keywords={this.state.paper.keywords}
+                  likeCount={this.state.paper.likeCount}
+                  reviewCount={this.state.paper.reviewCount}
+                />
+            </div>
+        );
+
         return (
             <div className="review-edit">
                 <Header />
                 <SideBar />
                 <div className="review-edit-page">
                     <div className="board">
-                        <div className="paper-spec">
-                            <PaperSpec
-                              id={this.state.paper.id}
-                              title={this.state.paper.title}
-                              abstract={this.state.paper.abstract}
-                              date={this.state.paper.date}
-                              authors={this.state.paper.authors}
-                              keywords={this.state.paper.keywords}
-                              likeCount={this.state.paper.likeCount}
-                              reviewCount={this.state.paper.reviewCount}
-                            />
-                        </div>
+                        {paperSpec}
                         <Form.Group className="form-title" controlId="formReviewTitle">
                             <Form.Label>Title</Form.Label>
                             <Form.Control name="title" className="title-input" as="textarea" rows="1" type="text" placeholder={this.state.title} value={this.state.title} onChange={this.handleChange} />
