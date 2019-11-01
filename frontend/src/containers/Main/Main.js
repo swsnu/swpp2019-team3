@@ -18,16 +18,17 @@ class Main extends Component {
                 numPapers: 14,
                 numReplies: 15,
             }, {
-                type: "Paper",
+                type: "Review",
                 source: "liked",
                 key: 1,
-                id: 2,
+                id: 3,
                 title: "dfad",
                 user: "Dfafdaf",
                 numPapers: 14,
                 numReplies: 15,
-            }, {
-                type: "Review",
+            },
+            {
+                type: "Paper",
                 source: "liked",
                 key: 1,
                 id: 3,
