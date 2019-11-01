@@ -36,6 +36,7 @@ FOLLOWER = 'follower'
 FOLLOWING = 'following'
 
 # Collection
+COLLECTION_IDS = 'collection_ids'
 TITLE = 'title'
 TEXT = 'text'
 

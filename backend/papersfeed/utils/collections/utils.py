@@ -1,5 +1,6 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
+import json
 
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
@@ -148,6 +149,66 @@ def select_collection_user(args):
     collections, _, _ = __get_collections(filter_query, request_user, None)
 
     return collections
+
+
+def update_paper_collection(args):
+    """Update Paper Collection"""
+    is_parameter_exists([
+        constants.ID, constants.COLLECTION_IDS
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Paper Id
+    paper_id = args[constants.ID]
+
+    # Collection IDs
+    collection_ids = json.loads(args[constants.COLLECTION_IDS])
+
+    # Containing Collections
+    containing_collection_ids = __get_collections_contains_paper(paper_id, request_user)
+
+    # Add To Collections
+    __add_paper_to_collections(paper_id, list(set(collection_ids) - set(containing_collection_ids)))
+
+    # Remove From Collections
+    __remove_paper_from_collections(paper_id, list(set(containing_collection_ids) - set(collection_ids)))
+
+
+def __get_collections_contains_paper(paper_id, request_user):
+    """Get Collections Containing paper"""
+    collections = CollectionUser.objects.filter(
+        user_id=request_user.id  # User's Collections
+    ).annotate(
+        exists=Exists(
+            CollectionPaper.objects.filter(
+                paper_id=paper_id,
+                collection_id=OuterRef('collection_id')
+            )
+        )  # Containing Paper
+    ).filter(
+        exists=True
+    )
+
+    return [collection.id for collection in collections]
+
+
+def __remove_paper_from_collections(paper_id, collection_ids):
+    """Remove Paper From Collections"""
+
+    if collection_ids:
+        CollectionPaper.objects.filter(
+            collection_id__in=collection_ids, paper_id=paper_id
+        ).delete()
+
+
+def __add_paper_to_collections(paper_id, collection_ids):
+    """Add Paper To Collections"""
+    for collection_id in collection_ids:
+        CollectionPaper.objects.update_or_create(
+            collection_id=collection_id, paper_id=paper_id, defaults={}
+        )
 
 
 def __get_collections(filter_query, request_user, count):

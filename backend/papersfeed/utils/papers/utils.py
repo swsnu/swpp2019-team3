@@ -1,6 +1,8 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
 
+import json
+
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Exists, OuterRef, Count
@@ -101,13 +103,13 @@ def __pack_papers(papers, request_user):
     like_counts = __get_paper_like_count(paper_ids, 'paper_id')
 
     # Paper Authors
-    authors, _, _ = __get_authors_paper(Q(paper_id__in=paper_ids))
+    authors = __get_authors_paper(Q(paper_id__in=paper_ids))
 
     # Paper Keywords
-    keywords, _, _ = __get_keywords_paper(Q(paper_id__in=paper_ids))
+    keywords = __get_keywords_paper(Q(paper_id__in=paper_ids))
 
     # Paper Publications
-    paper_publications, _, _ = __get_paper_publications(Q(paper_id__in=paper_ids))
+    paper_publications = __get_paper_publications(Q(paper_id__in=paper_ids))
 
     for paper in papers:
         paper_id = paper.id
@@ -115,7 +117,6 @@ def __pack_papers(papers, request_user):
         packed_paper = {
             constants.ID: paper_id,
             constants.TITLE: paper.title,
-            constants.TEXT: paper.text,
             constants.LIKED: paper.is_liked,
             constants.LANGUAGE: paper.language,
             constants.ABSTRACT: paper.abstract,
@@ -177,6 +178,9 @@ def __get_authors_paper(filter_query):
 
             result[paper_id].append(author)
 
+    # Sort By Authors' Rank
+    result = {key: sorted(value, key=lambda element: element[constants.RANK]) for key, value in result.items()}
+
     return result
 
 
@@ -227,15 +231,11 @@ def __get_authors(filter_query):
         filter_query
     )
 
-    authors = get_results_from_queryset(queryset, count)
-
-    pagination_value = authors[len(authors) - 1].id if authors else 0
-
-    is_finished = len(authors) < count if count and pagination_value != 0 else True
+    authors = get_results_from_queryset(queryset, None)
 
     authors = __pack_authors(authors)
 
-    return authors, pagination_value, is_finished
+    return authors
 
 
 def __pack_authors(authors):
@@ -268,15 +268,11 @@ def __get_keywords(filter_query):
         filter_query
     )
 
-    keywords = get_results_from_queryset(queryset, count)
-
-    pagination_value = keywords[len(keywords) - 1].id if keywords else 0
-
-    is_finished = len(keywords) < count if count and pagination_value != 0 else True
+    keywords = get_results_from_queryset(queryset, None)
 
     keywords = __pack_keywords(keywords)
 
-    return keywords, pagination_value, is_finished
+    return keywords
 
 
 def __pack_keywords(keywords):
@@ -305,15 +301,11 @@ def __get_paper_publications(filter_query):
         filter_query
     )
 
-    paper_publications = get_results_from_queryset(queryset, count)
-
-    pagination_value = paper_publications[len(paper_publications) - 1].id if paper_publications else 0
-
-    is_finished = len(paper_publications) < count if count and pagination_value != 0 else True
+    paper_publications = get_results_from_queryset(queryset, None)
 
     paper_publications = __pack_paper_publications(paper_publications)
 
-    return paper_publications, pagination_value, is_finished
+    return paper_publications
 
 
 def __pack_paper_publications(paper_publications):
@@ -326,7 +318,7 @@ def __pack_paper_publications(paper_publications):
     publication_ids = [paper_publication.publication_id for paper_publication in paper_publications]
 
     # Publications
-    publications, _, _ = __get_publications(Q(id__in=publication_ids))
+    publications = __get_publications(Q(id__in=publication_ids))
 
     # {publication_id: publication}
     publications = {publication[constants.ID]: publication for publication in publications}
@@ -342,13 +334,26 @@ def __pack_paper_publications(paper_publications):
             constants.PUBLICATION: publications[publication_id] if publication_id in publications else {},
             constants.VOLUME: paper_publication.volume,
             constants.ISSUE: paper_publication.issue,
-            constants.DATE: paper_publication.date.strptime('%Y-%m-%d'),
+            constants.DATE: paper_publication.date,
             constants.BEGINNING_PAGE: paper_publication.beginning_page,
             constants.ENDING_PAGE: paper_publication.ending_page,
             constants.ISBN: paper_publication.ISBN
         }
 
     return result
+
+
+def __get_publications(filter_query):
+    """Get Publications"""
+    queryset = Publication.objects.filter(
+        filter_query
+    )
+
+    publications = get_results_from_queryset(queryset, None)
+
+    publications = __pack_publications(publications)
+
+    return publications
 
 
 def __pack_publications(publications):
@@ -388,15 +393,9 @@ def __get_publishers(filter_query):
         filter_query
     )
 
-    publishers = get_results_from_queryset(queryset, count)
+    publishers = get_results_from_queryset(queryset, None)
 
-    pagination_value = publishers[len(publishers) - 1].id if publishers else 0
-
-    is_finished = len(publishers) < count if count and pagination_value != 0 else True
-
-    publishers = __pack_publishers(publishers)
-
-    return publishers, pagination_value, is_finished
+    return publishers
 
 
 def __pack_publisher(publishers):
