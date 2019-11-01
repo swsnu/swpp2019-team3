@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-// import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Form, Button } from "react-bootstrap";
 
 import {
     SideBar, Header, PaperSpec,
 } from "../../../components";
-// import * as actionCreators from "../../../store/actions/index";
 import "./ReviewEdit.css";
 
 
@@ -16,8 +14,7 @@ class ReviewEdit extends Component {
         this.state = {
             title: "review_title1",
             content: "review content",
-            // title: "this.props.thisReview.title",
-            // content: this.props.thisReview.content,
+            id: 5,
             paper: {
                 id: 1,
                 title: "paper_title",
@@ -39,17 +36,8 @@ class ReviewEdit extends Component {
         this.setState(nextState);
     }
 
-    // 1 for paper id, 5 for review if
     clickEditHandler() {
-        /* return this.props.onSetReviewContent(
-            this.props.thisReview.id, this.state.title, this.state.content,
-        )
-            .then(
-                () => {
-                    this.props.history.push("/papers/1/5");
-                },
-            ); */
-        this.props.history.push("/papers/1/5");
+        this.props.history.push(`papers/${this.state.paper.id}/${this.state.id}`);
     }
 
     render() {
@@ -87,48 +75,12 @@ class ReviewEdit extends Component {
     }
 }
 
-/*
-const mapStateToProps = (state) => ({
-    // currentUserId: state.auth.currentUserId,
-    // thisPaper: state.paper.selected.paper,
-    thisReview: state.review.selected.review,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-    onSetReviewContent: (review, title, content) => dispatch(
-        actionCreators.setReviewContent(review, title, content),
-    ),
-});
-*/
 ReviewEdit.propTypes = {
-    /* thisPaper: PropTypes.shape({
-        id: PropTypes.number,
-        authors: PropTypes.string,
-        title: PropTypes.string,
-        publication: PropTypes.string,
-        abstract: PropTypes.string,
-        likeCount: PropTypes.number,
-        isLiked: PropTypes.bool,
-        date_created: PropTypes.string,
-    }),
-    thisReview: PropTypes.shape({
-        id: PropTypes.number,
-        author: PropTypes.number,
-        paper: PropTypes.number,
-        title: PropTypes.string,
-        content: PropTypes.string,
-    }),
-    onSetReviewContent: PropTypes.func, */
     history: PropTypes.objectOf(PropTypes.any),
-
 };
 
 ReviewEdit.defaultProps = {
-    /* thisPaper: {},
-    thisReview: {},
-    onSetReviewContent: () => {}, */
     history: null,
 };
 
 export default ReviewEdit;
-// export default connect(mapStateToProps, mapDispatchToProps)(ReviewEdit);
