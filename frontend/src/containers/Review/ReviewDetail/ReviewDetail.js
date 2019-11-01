@@ -1,24 +1,42 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
+// import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Form, Button, Card } from "react-bootstrap";
-import { Route } from "react-router-dom";
 
 import {
     SideBar, Header, ReviewReply,
 } from "../../../components";
-import * as actionCreators from "../../../store/actions/index";
+// import * as actionCreators from "../../../store/actions/index";
 import "./ReviewDetail.css";
 
 class ReviewDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            authorId: 0,
+            title: "review_title1",
+            content: "review content",
+            author: "review_author1",
+            likeCount: 5,
             newReply: "",
             isLiked: false,
-            likesCount: 0,
-            replies: this.props.thisReplies,
-            repliesCount: this.props.thisReplies.length,
+            replies: [{
+                id: 1,
+                authorId: 0,
+                author: "dfdf",
+                review: 5,
+                content: "dffffffffffffff",
+            },
+            {
+                id: 2,
+                authorId: 1,
+                author: "dfdffer",
+                review: 5,
+                content: "dffffffffffffff",
+            }],
+            repliesCount: 2,
+            // replies: this.props.thisReplies,
+            // repliesCount: this.props.thisReplies.length,
         };
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
         this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
@@ -37,7 +55,7 @@ class ReviewDetail extends Component {
     clickLikeButtonHandler() {
         const nextState = {
             isLiked: true,
-            likesCount: this.state.likesCount + 1,
+            likeCount: this.state.likeCount + 1,
         };
         this.setState(nextState);
     }
@@ -45,28 +63,29 @@ class ReviewDetail extends Component {
     clickUnlikeButtonHandler() {
         const nextState = {
             isLiked: false,
-            likesCount: this.state.likesCount - 1,
+            likeCount: this.state.likeCount - 1,
         };
         this.setState(nextState);
     }
 
-    // -1 for paper id
+    // 1 for paper id, 5 for review id
     clickEditButtonHandler() {
-        this.props.history.push(`papers/-1/${this.props.thisReview.id}/edit`);
+        this.props.history.push("papers/1/5/edit");
     }
 
     clickDeleteButtonHandler() {
-        return this.props.onDeleteReview(this.props.thisReview.id).then(
+        /* return this.props.onDeleteReview(this.props.thisReview.id).then(
             () => {
                 this.props.history.push("papers/-1");
             },
-        );
+        ); */
+        this.props.history.push("papers/1");
     }
 
-    // 0 is for current User Id, -1 for paper id
+    // 0 is for current User Id, 1 for paper id
     clickReplyAddButtonHandler() {
-        return this.props.onMakeNewReply(
-            this.props.thisReview.id, -1, 0,
+        /* return this.props.onMakeNewReply(
+            this.props.thisReview.id, 1, 0,
         )
             .then(
                 () => {
@@ -76,7 +95,11 @@ class ReviewDetail extends Component {
                         repliesCount: this.props.thisReplies.length,
                     });
                 },
-            );
+            ); */
+        const nextState = ({
+            repliesCount: this.state.repliesCount + 1,
+        });
+        this.setState(nextState);
     }
 
     render() {
@@ -98,14 +121,21 @@ class ReviewDetail extends Component {
                     <Card className="review-reply">
                         <Card.Body>
                             <div className="review">
-                                <Card.Text className="author">{this.props.thisReview.author}</Card.Text>
-                                <Card.Title className="title">{this.props.thisReview.title}</Card.Title>
-                                <Card.Text calssName="content">{this.props.thisReview.content}</Card.Text>
+                                <Card.Text className="author">{this.state.author}</Card.Text>
+                                <Card.Title className="title">{this.state.title}</Card.Title>
+                                <Card.Text className="content">{this.state.content}</Card.Text>
                             </div>
                             <div className="reply">
                                 <div className="review-extra">
-                                    <Button className="like-button" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}>{this.state.likesCount}</Button>
+                                    <Button className="like-button" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}>{this.state.likeCount}</Button>
                                     <Button className="replyCount-button" disabled>{this.state.repliesCount}</Button>
+                                    {this.state.authorId === 0
+                                        ? <Button className="edit-button" onClick={this.clickEditButtonHandler}>Edit</Button>
+
+                                        : null}
+                                    {this.state.authorId === 0 ? (
+                                        <Button className="delete-button" onClick={this.clickDeleteButtonHandler}>Delete</Button>
+                                    ) : null}
                                 </div>
                                 <Form className="new-reply">
                                     <Form.Label className="username">Username </Form.Label>
@@ -124,6 +154,7 @@ class ReviewDetail extends Component {
     }
 }
 
+/*
 const mapStateToProps = (state) => ({
     // currentUserId: state.auth.userInfo,
     thisReview: state.review.selected.review,
@@ -160,6 +191,7 @@ const mapDispatchToProps = (dispatch) => ({
         actionCreators.consumeReview(review, user),
     ),
 });
+*/
 
 ReviewDetail.propTypes = {
     // currentUserId: PropTypes.number,
@@ -169,10 +201,10 @@ ReviewDetail.propTypes = {
         title: PropTypes.string,
         publication: PropTypes.string,
         abstract: PropTypes.string,
-        likesCount: PropTypes.number,
+        likeCount: PropTypes.number,
         isLiked: PropTypes.bool,
         date_created: PropTypes.string,
-    }), */
+    }),
     thisReview: PropTypes.shape({
         id: PropTypes.number,
         author: PropTypes.number,
@@ -187,7 +219,6 @@ ReviewDetail.propTypes = {
         review: PropTypes.number,
         content: PropTypes.string,
     }]),
-    history: PropTypes.instanceOf(Route).isRequired,
     onGetReview: PropTypes.func,
     onGetReplies: PropTypes.func,
     onGetReviewLikesCount: PropTypes.func,
@@ -196,12 +227,14 @@ ReviewDetail.propTypes = {
     onRemoveReviewLike: PropTypes.func,
     onMakeNewReply: PropTypes.func,
     onDeleteReview: PropTypes.func,
-    onConsumeReview: PropTypes.func,
+    onConsumeReview: PropTypes.func, */
+    history: PropTypes.objectOf(PropTypes.any),
+
 };
 
 ReviewDetail.defaultProps = {
-    // currentUserId: 0,
-    // thisPaper: {},
+    /* currentUserId: 0,
+     thisPaper: {},
     thisReview: {},
     thisReplies: [],
     onGetReview: () => {},
@@ -212,8 +245,9 @@ ReviewDetail.defaultProps = {
     onRemoveReviewLike: () => {},
     onMakeNewReply: () => {},
     onDeleteReview: () => {},
-    onConsumeReview: () => {},
+    onConsumeReview: () => {}, */
+    history: null,
 };
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(ReviewDetail);
+export default ReviewDetail;
+// export default connect(mapStateToProps, mapDispatchToProps)(ReviewDetail);

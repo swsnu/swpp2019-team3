@@ -1,4 +1,5 @@
-import axios from "axios";
+/* eslint-disable max-len */
+/* import axios from "axios";
 import * as actionTypes from "../ActionTypes";
 
 // makeNewReply(review_id: number, user_id: number, content: string)
@@ -62,3 +63,4 @@ export const getReplyIsLiked = (replyId, userId) => (dispatch) => axios.get("lik
     .then((res) => dispatch({
         type: actionTypes.GET_REVIEW_REPLY_IS_LIKED, data: res.data,
     }));
+*/

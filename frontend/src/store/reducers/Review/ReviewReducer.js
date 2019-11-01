@@ -1,4 +1,4 @@
-import * as actionTypes from "../../actions/ActionTypes";
+/* import * as actionTypes from "../../actions/ActionTypes";
 
 const initialState = {
     reviews: [],
@@ -108,4 +108,4 @@ const ReviewReducer = (state = initialState, action) => {
     }
 };
 
-export default ReviewReducer;
+export default ReviewReducer; */

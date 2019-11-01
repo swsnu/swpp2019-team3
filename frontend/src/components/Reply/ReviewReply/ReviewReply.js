@@ -13,7 +13,7 @@ class ReviewReply extends Component {
             content: this.props.content,
             tempContent: "",
             isLiked: this.props.isLiked,
-            likesCount: this.props.likesCount,
+            likeCount: this.props.likeCount,
             // content: this.props.content,
             // isLiked: this.props.isLiked,
             // likesCount: this.props.likesCount,
@@ -23,10 +23,11 @@ class ReviewReply extends Component {
         this.clickReplyEditButtonHandler = this.clickReplyEditButtonHandler.bind(this);
         this.clickReplyDeleteButtonHandler = this.clickReplyDeleteButtonHandler.bind(this);
         this.clickReplyLikeButtonHandler = this.clickReplyLikeButtonHandler.bind(this);
-        this.clickReplyUnlikeBUttonHandler = this.clickReplyUnlikeBUttonHandler.bind(this);
+        this.clickReplyUnlikeButtonHandler = this.clickReplyUnlikeButtonHandler.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.clickConfirmButtonHandler = this.clickConfirmButtonHandler.bind(this);
-        this.clickCloseButtonHandler = this.clickCloseButtonHandler.bind(this);
+        this.clickCancelButtonHandler = this.clickCancelButtonHandler.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     clickReplyEditButtonHandler() {
@@ -46,16 +47,16 @@ class ReviewReply extends Component {
         // return this.props.onAddReplyLike(this.props.id, 0);
         const nextState = {
             isLiked: true,
-            likesCount: this.state.likesCount + 1,
+            likeCount: this.state.likeCount + 1,
         };
         this.setState(nextState);
     }
 
-    clickReplyUnlikeBUttonHandler() {
+    clickReplyUnlikeButtonHandler() {
         // return this.props.onRemoveReplyLike(this.props.id, 0);
         const nextState = {
-            isLiked: true,
-            likesCount: this.state.likesCount + 1,
+            isLiked: false,
+            likeCount: this.state.likeCount - 1,
         };
         this.setState(nextState);
     }
@@ -76,15 +77,21 @@ class ReviewReply extends Component {
             tempContent: "",
         };
         this.setState(nextState);
-        this.handleCloseModal();
+        this.handleClose();
     }
 
-    clickCloseButtonHandler() {
+    clickCancelButtonHandler() {
         const nextState = {
             tempContent: "",
         };
         this.setState(nextState);
-        this.handleCloseModal();
+        this.handleClose();
+    }
+
+    handleClose() {
+        this.setState({
+            isModalOpen: false,
+        });
     }
 
     render() {
@@ -96,7 +103,7 @@ class ReviewReply extends Component {
                             <div className="author">{this.props.author}</div>
                             <div className="content">{this.props.content}</div>
                             <div className="buttons">
-                                <Button className="like-button" onClick={this.state.isLiked ? this.clickReplyUnlikeBUttonHandler : this.clickReplyLikeButtonHandler}>{this.state.likeCount}</Button>
+                                <Button className="like-button" onClick={this.state.isLiked ? this.clickReplyUnlikeButtonHandler : this.clickReplyLikeButtonHandler}>{this.state.likeCount}</Button>
                                 {this.props.authorId === 0
                                     ? <Button className="edit-button" onClick={this.clickReplyEditButtonHandler}>Edit</Button> : null }
                                 {this.props.authorId === 0
@@ -107,7 +114,7 @@ class ReviewReply extends Component {
                 { this.state.isExisting
                     ? (
                         <div className="edit-modal">
-                            <Modal show={this.state.isModalOpen} onHide={() => this.clickCloseButtonHandler || this.clickConfirmButtonHandler} className="edit-modal" centered>
+                            <Modal show={this.state.isModalOpen} onHide={() => this.handleClose} className="edit-modals" centered>
                                 <Modal.Header>Edit Reply</Modal.Header>
                                 <Modal.Body>
                                     <FormControl
@@ -119,11 +126,11 @@ class ReviewReply extends Component {
                                       onChange={this.handleChange}
                                     />
                                 </Modal.Body>
-                                <Modal.Footer>
+                                <Modal.Footer className="modal-footer">
                                     <Button onClick={this.clickConfirmButtonHandler}>
                                         Confirm
                                     </Button>
-                                    <Button onClick={this.clickCloseButtonHandler}>Cancel</Button>
+                                    <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
                                 </Modal.Footer>
                             </Modal>
                         </div>
@@ -187,7 +194,7 @@ ReviewReply.propTypes = {
     author: PropTypes.string,
     authorId: PropTypes.number,
     isLiked: PropTypes.bool,
-    likesCount: PropTypes.number,
+    likeCount: PropTypes.number,
     /* onSetReplyContent: PropTypes.func,
     onDeleteReply: PropTypes.func,
     onAddReplyLike: PropTypes.func,
@@ -202,7 +209,7 @@ ReviewReply.defaultProps = {
     author: "",
     authorId: 0,
     isLiked: false,
-    likesCount: 0,
+    likeCount: 0,
     /* thisPaper: {},
     thisReview: {},
     onSetReplyContent: () => {},

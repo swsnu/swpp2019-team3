@@ -1,13 +1,11 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
+// import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Form, Button } from "react-bootstrap";
-import { Route } from "react-router-dom";
-
 import {
     SideBar, Header, PaperSpec,
 } from "../../../components";
-import * as actionCreators from "../../../store/actions/index";
+// import * as actionCreators from "../../../store/actions/index";
 import "./ReviewCreate.css";
 
 class ReviewCreate extends Component {
@@ -37,16 +35,18 @@ class ReviewCreate extends Component {
         this.setState(nextState);
     }
 
-    // 0 is for current user id, -1 for user id
+    // 1 for paper id, 4 for review id
     clickCreateHandler() {
-        return this.props.onMakeNewReview(
+        /* return this.props.onMakeNewReview(
             -1, 0, this.state.title, this.state.content,
         )
             .then(
                 () => {
                     this.props.history.push(`/papers/-1/${this.props.thisReview.id}`);
                 },
-            );
+            ); */
+        // eslint-disable-next-line react/prop-types
+        this.props.history.push("/papers/1/4");
     }
 
     render() {
@@ -84,6 +84,7 @@ class ReviewCreate extends Component {
     }
 }
 
+/*
 const mapStateToProps = (state) => ({
     // currentUserId: state.auth.currentUserId,
     // thisPaper: state.paper.selected.paper,
@@ -95,7 +96,7 @@ const mapDispatchToProps = (dispatch) => ({
         actionCreators.makeNewReview(paper, author, title, content),
     ),
 });
-
+*/
 ReviewCreate.propTypes = {
     // currentUserId: PropTypes.number,
     /* thisPaper: PropTypes.shape({
@@ -104,10 +105,10 @@ ReviewCreate.propTypes = {
         title: PropTypes.string,
         publication: PropTypes.string,
         abstract: PropTypes.string,
-        likesCount: PropTypes.number,
+        likeCount: PropTypes.number,
         isLiked: PropTypes.bool,
         date_created: PropTypes.string,
-    }), */
+    }),
     thisReview: PropTypes.shape({
         id: PropTypes.number,
         author: PropTypes.number,
@@ -115,15 +116,17 @@ ReviewCreate.propTypes = {
         title: PropTypes.string,
         content: PropTypes.string,
     }),
-    onMakeNewReview: PropTypes.func,
-    history: PropTypes.instanceOf(Route).isRequired,
+    onMakeNewReview: PropTypes.func, */
+    history: PropTypes.objectOf(PropTypes.any),
 };
 
 ReviewCreate.defaultProps = {
     // currentUserId: 0,
     // thisPaper: {},
-    thisReview: {},
-    onMakeNewReview: () => {},
+    // thisReview: {},
+    // onMakeNewReview: () => {},
+    history: null,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReviewCreate);
+export default ReviewCreate;
+// export default connect(mapStateToProps, mapDispatchToProps)(ReviewCreate);

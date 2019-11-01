@@ -27,7 +27,11 @@ function App(props) {
 }
 
 App.propTypes = {
-    history: PropTypes.instanceOf(Route).isRequired,
+    history: PropTypes.objectOf(PropTypes.any),
+};
+
+App.defaultProps = {
+    history: null,
 };
 
 export default App;

@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
+// import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Form, Button } from "react-bootstrap";
-import { Route } from "react-router-dom";
 
 import {
     SideBar, Header, PaperSpec,
 } from "../../../components";
-import * as actionCreators from "../../../store/actions/index";
+// import * as actionCreators from "../../../store/actions/index";
 import "./ReviewEdit.css";
 
 
@@ -15,8 +14,10 @@ class ReviewEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: this.props.thisReview.title,
-            content: this.props.thisReview.content,
+            title: "review_title1",
+            content: "review content",
+            // title: "this.props.thisReview.title",
+            // content: this.props.thisReview.content,
             paper: {
                 id: 1,
                 title: "paper_title",
@@ -38,16 +39,17 @@ class ReviewEdit extends Component {
         this.setState(nextState);
     }
 
-    // -1 for paper id
+    // 1 for paper id, 5 for review if
     clickEditHandler() {
-        return this.props.onSetReviewContent(
+        /* return this.props.onSetReviewContent(
             this.props.thisReview.id, this.state.title, this.state.content,
         )
             .then(
                 () => {
-                    this.props.history.push(`/papers/-1/${this.props.thisReview.id}`);
+                    this.props.history.push("/papers/1/5");
                 },
-            );
+            ); */
+        this.props.history.push("/papers/1/5");
     }
 
     render() {
@@ -71,11 +73,11 @@ class ReviewEdit extends Component {
                         </div>
                         <Form.Group className="form-title" controlId="formReviewTitle">
                             <Form.Label>Title</Form.Label>
-                            <Form.Control name="title" className="title-input" as="textarea" rows="1" type="text" placeholder={this.props.thisReview.title} value={this.state.title} onChange={this.handleChange} />
+                            <Form.Control name="title" className="title-input" as="textarea" rows="1" type="text" placeholder={this.state.title} value={this.state.title} onChange={this.handleChange} />
                         </Form.Group>
                         <Form.Group className="form-content" controlId="formReviewContent">
                             <Form.Label>Content</Form.Label>
-                            <Form.Control name="content" className="content-input" as="textarea" rows="7" type="text" placeholder={this.props.thisReview.content} onChange={this.handleChange} />
+                            <Form.Control name="content" className="content-input" as="textarea" rows="7" type="text" placeholder={this.state.content} value={this.state.content} onChange={this.handleChange} />
                         </Form.Group>
                         <Button className="edit-button" onClick={this.clickEditHandler}>Edit</Button>
                     </div>
@@ -85,6 +87,7 @@ class ReviewEdit extends Component {
     }
 }
 
+/*
 const mapStateToProps = (state) => ({
     // currentUserId: state.auth.currentUserId,
     // thisPaper: state.paper.selected.paper,
@@ -96,7 +99,7 @@ const mapDispatchToProps = (dispatch) => ({
         actionCreators.setReviewContent(review, title, content),
     ),
 });
-
+*/
 ReviewEdit.propTypes = {
     /* thisPaper: PropTypes.shape({
         id: PropTypes.number,
@@ -104,10 +107,10 @@ ReviewEdit.propTypes = {
         title: PropTypes.string,
         publication: PropTypes.string,
         abstract: PropTypes.string,
-        likesCount: PropTypes.number,
+        likeCount: PropTypes.number,
         isLiked: PropTypes.bool,
         date_created: PropTypes.string,
-    }), */
+    }),
     thisReview: PropTypes.shape({
         id: PropTypes.number,
         author: PropTypes.number,
@@ -115,14 +118,17 @@ ReviewEdit.propTypes = {
         title: PropTypes.string,
         content: PropTypes.string,
     }),
-    history: PropTypes.instanceOf(Route).isRequired,
-    onSetReviewContent: PropTypes.func,
+    onSetReviewContent: PropTypes.func, */
+    history: PropTypes.objectOf(PropTypes.any),
+
 };
 
 ReviewEdit.defaultProps = {
-    // thisPaper: {},
+    /* thisPaper: {},
     thisReview: {},
-    onSetReviewContent: () => {},
+    onSetReviewContent: () => {}, */
+    history: null,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReviewEdit);
+export default ReviewEdit;
+// export default connect(mapStateToProps, mapDispatchToProps)(ReviewEdit);

@@ -1,4 +1,5 @@
-import axios from "axios";
+/* eslint-disable max-len */
+/* import axios from "axios";
 import * as actionTypes from "../ActionTypes";
 
 // setReviewContent(review_id:number, review_title: string, review_content: string)
@@ -69,3 +70,4 @@ export const consumeReview = (reviewId, userId) => (dispatch) => axios.post("/co
 // getReviewsByPaperId(paper_id: number) -> Promise<{status: number, data: Review[]}>
 // getReviewsByUserId(user_id: number) -> Promise<{status: number, data: Review[]}>
 // getRecentReviewsByUserId(user_id: number) -> Promise<{status: number, data: Review[]}>
+*/
