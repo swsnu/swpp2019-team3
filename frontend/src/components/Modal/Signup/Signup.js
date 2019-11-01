@@ -11,13 +11,13 @@ class Signup extends Component {
             id: "",
             password: "",
             email: "",
-        }
+        };
         this.openModalHandler = this.openModalHandler.bind(this);
         this.clickSignupButtonHandler = this.clickSignupButtonHandler.bind(this);
     }
 
     openModalHandler() {
-        this.setState({ isOpen: true })
+        this.setState({ isOpen: true });
     }
 
     clickSignupButtonHandler() {
@@ -37,25 +37,25 @@ class Signup extends Component {
                     <div className="modal-content">
                         <h2 id="create-account">Create account</h2>
                         <FormControl
-                        className="id-input"
-                        type="text"
-                        placeholder="ID"
-                        value={this.state.id}
-                        onChange={(e) => this.setState({id: e.target.value })}
+                          className="id-input"
+                          type="text"
+                          placeholder="ID"
+                          value={this.state.id}
+                          onChange={(e) => this.setState({ id: e.target.value })}
                         />
                         <FormControl
-                        className="password-input"
-                        type="text"
-                        placeholder="password"
-                        value={this.state.password}
-                        onChange={(e) => this.setState({password: e.target.value })}
+                          className="password-input"
+                          type="text"
+                          placeholder="password"
+                          value={this.state.password}
+                          onChange={(e) => this.setState({ password: e.target.value })}
                         />
                         <FormControl
-                        className="email-input"
-                        type="text"
-                        placeholder="email"
-                        value={this.state.email}
-                        onChange={(e) => this.setState({email: e.target.value })}
+                          className="email-input"
+                          type="text"
+                          placeholder="email"
+                          value={this.state.email}
+                          onChange={(e) => this.setState({  email: e.target.value })}
                         />
                         <Button className="signup-button" onClick={this.clickSignupButtonHandler}>Sign Up</Button>
                     </div>
@@ -72,4 +72,4 @@ Signup.propTypes = {
 
 Signup.defaultProps = {
     history: null,
-}
+};

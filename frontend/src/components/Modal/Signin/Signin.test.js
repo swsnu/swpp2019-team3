@@ -23,7 +23,7 @@ describe("<Signin />", () => {
         expect(wrapper.length).toBe(0);
 
         openButton.simulate("click");
-        
+
         wrapper = component.find(".signin-button").hostNodes();
         expect(wrapper.length).toBe(1);
     });
@@ -56,9 +56,9 @@ describe("<Signin />", () => {
         expect(signinInstance.state.isOpen).toBe(true);
 
         let wrapper = component.find(".id-input").hostNodes();
-        wrapper.simulate('change', { target: { value: "my_id" } });
+        wrapper.simulate("change", { target: { value: "my_id" } });
         wrapper = component.find(".password-input").hostNodes();
-        wrapper.simulate('change', { target: { value: "my_password" } });
+        wrapper.simulate("change", { target: { value: "my_password" } });
         expect(signinInstance.state.id).toBe("my_id");
         expect(signinInstance.state.password).toBe("my_password");
     });

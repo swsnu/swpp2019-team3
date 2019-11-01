@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import { Signup, Signin } from "../../components";
 import "./Intro.css";
@@ -6,10 +7,6 @@ import "./Intro.css";
 class Intro extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            signupOpen: false,
-            signInOpen: false,
-        }
     }
 
     render() {
@@ -24,4 +21,13 @@ class Intro extends Component {
         );
     }
 }
+
+Intro.propTypes = {
+    history: PropTypes.objectOf(PropTypes.any),
+};
+
+Intro.defaultProps = {
+    history: null,
+};
+
 export default Intro;

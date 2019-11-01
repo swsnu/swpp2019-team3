@@ -10,14 +10,13 @@ class Signin extends Component {
             isOpen: false,
             id: "",
             password: "",
-            email: "",
-        }
+        };
         this.openModalHandler = this.openModalHandler.bind(this);
         this.clickSigninButtonHandler = this.clickSigninButtonHandler.bind(this);
     }
 
     openModalHandler() {
-        this.setState({ isOpen: true })
+        this.setState({ isOpen: true });
     }
 
     clickSigninButtonHandler() {
@@ -40,14 +39,14 @@ class Signin extends Component {
                       type="text"
                       placeholder="ID"
                       value={this.state.id}
-                      onChange={(e) => this.setState({id: e.target.value })}
+                      onChange={(e) => this.setState({ id: e.target.value })}
                     />
                     <FormControl
                       className="password-input"
                       type="text"
                       placeholder="password"
                       value={this.state.password}
-                      onChange={(e) => this.setState({password: e.target.value })}
+                      onChange={(e) => this.setState({ password: e.target.value })}
                     />
                     <Button className="signin-button" onClick={this.clickSigninButtonHandler}>Sign In</Button>
                 </Modal>
@@ -63,4 +62,4 @@ Signin.propTypes = {
 
 Signin.defaultProps = {
     history: null,
-}
+};

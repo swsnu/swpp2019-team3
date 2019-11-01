@@ -23,7 +23,7 @@ describe("<Signup />", () => {
         expect(wrapper.length).toBe(0);
 
         openButton.simulate("click");
-        
+
         wrapper = component.find(".signup-button").hostNodes();
         expect(wrapper.length).toBe(1);
     });
@@ -56,11 +56,11 @@ describe("<Signup />", () => {
         expect(signupInstance.state.isOpen).toBe(true);
 
         let wrapper = component.find(".id-input").hostNodes();
-        wrapper.simulate('change', { target: { value: "my_id" } });
+        wrapper.simulate("change", { target: { value: "my_id" } });
         wrapper = component.find(".password-input").hostNodes();
-        wrapper.simulate('change', { target: { value: "my_password" } });
+        wrapper.simulate("change", { target: { value: "my_password" } });
         wrapper = component.find(".email-input").hostNodes();
-        wrapper.simulate('change', { target: { value: "my_email" } });
+        wrapper.simulate("change", { target: { value: "my_email" } });
         expect(signupInstance.state.id).toBe("my_id");
         expect(signupInstance.state.password).toBe("my_password");
         expect(signupInstance.state.email).toBe("my_email");
