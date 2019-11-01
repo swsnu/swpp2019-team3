@@ -6,6 +6,8 @@ from papersfeed.utils.papers import utils as papers_utils
 from papersfeed.utils.users import utils as users_utils
 from papersfeed.utils.collections import utils as collections_utils
 
+from . import constants
+
 
 def post_follow(args):
     """Post Follow"""
@@ -34,7 +36,7 @@ def post_user(args):
 
 def get_user(args):
     """Get User"""
-    return users_utils.select_user(args)
+    return {constants.USER: users_utils.select_user(args)}
 
 
 def put_user(args):
@@ -49,7 +51,7 @@ def delete_user(args):
 
 def get_collection(args):
     """Get Collection"""
-    return collections_utils.select_collection(args)
+    return {constants.COLLECTION: collections_utils.select_collection(args)}
 
 
 def post_collection(args):
@@ -69,9 +71,19 @@ def delete_collection(args):
 
 def get_collection_user(args):
     """Get Collection User"""
-    return collections_utils.select_collection_user(args)
+    return {constants.USERS: collections_utils.select_collection_user(args)}
 
 
 def get_paper(args):
     """Get Paper"""
-    return papers_utils.select_paper(args)
+    return {constants.PAPER: papers_utils.select_paper(args)}
+
+
+def get_paper_collection(args):
+    """Get Paper Collection"""
+    return {constants.PAPERS: papers_utils.select_paper_collection(args)}
+
+
+def put_paper_collection(args):
+    """Put Paper Collection"""
+    return collections_utils.update_paper_collection(args)
