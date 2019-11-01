@@ -11,17 +11,17 @@ describe("<ReviewReply />", () => {
     });
 
     it("should handle Like/Unlike Button", () => {
-        const component = mount(<ReviewReply isLiked={false} likesCount={0} />);
+        const component = mount(<ReviewReply isLiked={false} likeCount={0} />);
         const wrapper = component.find(".like-button").hostNodes();
         expect(wrapper.length).toBe(1);
 
         wrapper.simulate("click");
 
-        expect(component.state().likesCount).toEqual(1);
+        expect(component.state().likeCount).toEqual(1);
         expect(component.state().isLiked).toBe(true);
 
         wrapper.simulate("click");
-        expect(component.state().likesCount).toBe(0);
+        expect(component.state().likeCount).toBe(0);
         expect(component.state().isLiked).toBe(false);
     });
 
