@@ -1,11 +1,11 @@
-.review-edit .review-edit-page{
+.review-control .review-control-page{
     background: rgb(242,243,247);
     margin-left: 18%;
     display: flex;
     min-height: 1000px;
 }
 
-.review-edit .review-edit-page .board{
+.review-control .review-control-page .board{
     width: 80%;
     margin-top: 5%;
     margin-left: 5%;
@@ -17,7 +17,7 @@
     flex-direction: column;
 }
 
-.review-edit .review-edit-page .board .paper-spec {
+.review-control .review-control-page .board .paper-spec{
     width: 80%;
     background: white;
     display: flex;
@@ -26,9 +26,9 @@
     margin-bottom: 3%;
     border-radius: 0.5em;
     border-bottom: 2px solid  rgb(242,243,247);
-}
+} 
 
-.review-edit .board .form-title{
+.review-control .board .form-title{
     width: 80%;
     display: flex;
     flex-direction: column;
@@ -37,7 +37,7 @@
     font-weight: bold;
 }
 
-.review-edit .board .form-content{
+.review-control .board .form-content{
     margin-top: 5%;
     width: 80%;
     display: flex;

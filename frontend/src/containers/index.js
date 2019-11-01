@@ -1,14 +1,12 @@
 /* eslint-disable */
 import Main from "./Main/Main";
-import ReviewCreate from "./Review/ReviewCreate/ReviewCreate";
-import ReviewEdit from "./Review/ReviewEdit/ReviewEdit";
 import ReviewDetail from "./Review/ReviewDetail/ReviewDetail";
-import PaperDetail from "./PaperDetail/PaperDetail"
+import PaperDetail from "./PaperDetail/PaperDetail";
+import ReviewControl from "./Review/ReviewControl/ReviewControl";
 
 export {
     Main,
-    ReviewCreate,
-    ReviewEdit,
     ReviewDetail,
     PaperDetail,
+    ReviewControl,
 };
