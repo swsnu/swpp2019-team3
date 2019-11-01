@@ -1,0 +1,22 @@
+#welcome {
+    margin-top: 25%;
+    text-align: center;
+}
+
+.buttons {
+    margin-left: 43%;
+    
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: row wrap;
+    align-items: flex-start;
+}
+
+.signup {
+    display: flex;
+    margin-right: 2%;
+}
+
+.signin {
+    display: flex;
+}

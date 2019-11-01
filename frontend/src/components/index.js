@@ -4,6 +4,8 @@ import PaperSpec from "./Paper/PaperSpec/PaperSpec";
 import PaperCard from "./Paper/PaperCard/PaperCard";
 import ReviewCard from "./Review/ReviewCard/ReviewCard";
 import Header from "./Header/Header";
+import Signup from "./Modal/Signup/Signup";
+import Signin from "./Modal/Signin/Signin";
 
 export {
     SideBar,
@@ -12,4 +14,6 @@ export {
     PaperCard,
     ReviewCard,
     Header,
+    Signup,
+    Signin,
 };
