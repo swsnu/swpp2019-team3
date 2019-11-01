@@ -4,11 +4,8 @@ import PropTypes from "prop-types";
 import { Signup, Signin } from "../../components";
 import "./Intro.css";
 
+/* eslint-disable react/prefer-stateless-function */
 class Intro extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <div className="intro-page">

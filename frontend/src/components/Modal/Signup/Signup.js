@@ -55,7 +55,7 @@ class Signup extends Component {
                           type="text"
                           placeholder="email"
                           value={this.state.email}
-                          onChange={(e) => this.setState({  email: e.target.value })}
+                          onChange={(e) => this.setState({ email: e.target.value })}
                         />
                         <Button className="signup-button" onClick={this.clickSignupButtonHandler}>Sign Up</Button>
                     </div>

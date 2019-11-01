@@ -22,11 +22,11 @@ matrix:
     install:          # Script to install required packages
     - yarn install
     script:           # Script to test your build
-    - sonar-scanner
     - ./node_modules/.bin/eslint src
     - yarn test --coverage --watchAll=false
     after_success:
     - cat ./coverage/lcov.info | coveralls
+    - sonar-scanner
 
   - language: python
     cache:
