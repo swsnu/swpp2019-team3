@@ -1,5 +1,4 @@
 """collection_like.py"""
-
 from django.db import models
 
 from papersfeed.models.base_models import BaseModel
@@ -11,7 +10,11 @@ class CollectionLike(BaseModel):
     """Collection Like"""
 
     # Collection
-    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, default=None, related_name='collection_like_collection')
+    collection = models.ForeignKey(
+        Collection,
+        on_delete=models.CASCADE,
+        default=None,
+        related_name='collection_like_collection')
 
     # User
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name='collection_like_user')

@@ -1,6 +1,6 @@
 """review.py"""
-
 from django.db import models
+
 from papersfeed.models.base_models import BaseModel
 from papersfeed.models.users.user import User
 

@@ -1,5 +1,4 @@
 """reply_like.py"""
-
 from django.db import models
 
 from papersfeed.models.base_models import BaseModel
@@ -20,4 +19,3 @@ class ReplyLike(BaseModel):
         """Table Meta"""
         db_table = 'swpp_reply_like'  # Table 이름
         ordering = ['-pk']  # Default Order
-

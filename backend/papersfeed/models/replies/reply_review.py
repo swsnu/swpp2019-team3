@@ -1,5 +1,4 @@
 """reply_review.py"""
-
 from django.db import models
 
 from papersfeed.models.base_models import BaseModel

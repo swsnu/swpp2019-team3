@@ -1,5 +1,4 @@
 """collection_user.py"""
-
 from django.db import models
 from django_mysql.models import EnumField
 
@@ -18,7 +17,11 @@ class CollectionUser(BaseModel):
     """Collection User"""
 
     # Collection
-    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, default=None, related_name='collection_user_collection')
+    collection = models.ForeignKey(
+        Collection,
+        on_delete=models.CASCADE,
+        default=None,
+        related_name='collection_user_collection')
 
     # User
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name='collection_user_user')
