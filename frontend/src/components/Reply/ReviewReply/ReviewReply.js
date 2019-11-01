@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-// import { connect } from "react-redux";
 import { Modal, FormControl, Button } from "react-bootstrap";
 // import * as actionCreators from "../../../store/actions/index";
 
