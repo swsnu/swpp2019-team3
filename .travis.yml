@@ -4,51 +4,52 @@ notifications:
 
 matrix:
   include:
-  - language: node_js # Your language e.g. node_js, python
-    cache:
-      yarn: true
-    node_js:
-    - '10'            # node_js version
-    env:
-    - COVERALLS_PARALLEL=true
-    before_install:   # Script to run before install
-    - cd frontend
-    install:          # Script to install required packages
-    - yarn install
-    script:           # Script to test your build
-    - ./node_modules/.bin/eslint src
-    - yarn test --coverage --watchAll=false
-    after_success:
-    - cat ./coverage/lcov.info | coveralls
-
   - language: python
     cache:
       pip: true
+      yarn: true
     python:
     - '3.6'
+    node_js:
+    - '10'    
+    dist:
+    - trusty
     services:
     - mysql
     env:
     - COVERALLS_PARALLEL=true
-    before_install:
-    - mysql -e "CREATE DATABASE PapersFeed_DB;"
-    - mysql -e "CREATE USER 'PapersFeed'@'localhost' IDENTIFIED BY 'swpp2019team3';"
-    - mysql -e "GRANT ALL PRIVILEGES ON *.* to 'PapersFeed'@'localhost';"
-    install:
-    - pip install -r requirements.txt
-    script:
-    - pylint --rcfile=./backend/.pylintrc backend --disable='fixme, duplicate-code'
-    - cd backend
-    - coverage run --source='.' ./manage.py test
-    - coverage report --fail-under=85
-    after_success:
-    - coveralls
-
-  - dist: trusty
     addons:
       sonarcloud:
         organization: "swsnu"
         token:
           secure: "noY4L8OXZLjMCVPaeUernI+gxBcC9Nh8fQbW5MN5dw1UtnJXbLnl+Br1SK6Dip8i+Z7ETSm4QTrkuPyvBSSRfUwJH4jo5cZ+ZA8+d/pKab96iQdUr4riTuEXuT4hKSdj2tdBJtVQLt7CTbGVyJP43UDwJHxDbPIh721sbT4e2DcCoA1D2H2S5OGcbjWdD4Z8av6kPpaeEybCbr22x6nPLfxC/veBul+mEbwZKciiV6NDDbYbgfrq398RMe67ZcmaJoLtOf0WvNeppI3y87o/N2JVQkVbPAz4qCQN68m7KDpU3cA28vrKVBa+xr7a7OSsHdcGwVek7H+Hte5JA8K0slfX/4SbmWTH7R8QzZMnN/LRcwKMJyzQV6icfgNGRvQtdg7z192Krb1IpiCrAKXToXTUNom/RVufqbWc5Mf6KU3sHVrbLJJx7sDXYKY9rhROpdZitdN0fhw3lH3IUByGsDHElMTr4z3aqaYv03OOiQG1R9JsURbEYl1qMb5n/JIl9qtAkFQ/c0pFYa0rEppGzsZwX9yLf8e3XnjkuZXQLmmPkYqD2ix4cksFQMJK94ZjR2hkN/K4Vljz0Z1EAOiFhnGWW/H3tt4Q0z50QB2WY3y+HMzEpLQ11qmKHZ9eT8BYmlDXwglejcC9KTTwICO/TvjM5rPLccYa/hzLY5yEQN0="
+    before_install:
+    # backend
+    - mysql -e "CREATE DATABASE PapersFeed_DB;"
+    - mysql -e "CREATE USER 'PapersFeed'@'localhost' IDENTIFIED BY 'swpp2019team3';"
+    - mysql -e "GRANT ALL PRIVILEGES ON *.* to 'PapersFeed'@'localhost';"
+    install:
+    # backend
+    - pip install -r requirements.txt
+    # frontend
+    - cd frontend
+    - yarn install
     script:
+    # frontend
+    - ./node_modules/.bin/eslint src
+    - yarn test --coverage --watchAll=false
+    - cd ..
+    # backend
+    - pylint --rcfile=./backend/.pylintrc backend --disable='fixme, duplicate-code'
+    - cd backend
+    - coverage run --source='.' ./manage.py test
+    - coverage report --fail-under=85
+    after_success:
+    # backend
+    - coveralls
+    # frontend
+    - cd ../frontend
+    - cat ./coverage/lcov.info | coveralls
+    # sonarcloud
+    - cd ..
     - sonar-scanner
