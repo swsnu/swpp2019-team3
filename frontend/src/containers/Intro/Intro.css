@@ -17,21 +17,3 @@
 .welcome-sentence #exclamation-mark {
     display: inline-block;
 }
-
-.buttons {
-    margin-left: 43%;
-    
-    display: flex;
-    justify-content: flex-start;
-    flex-flow: row wrap;
-    align-items: flex-start;
-}
-
-.signup {
-    display: flex;
-    margin-right: 2%;
-}
-
-.signin {
-    display: flex;
-}

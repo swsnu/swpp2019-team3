@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { Signup, Signin } from "../../components";
+import { IntroModal } from "../../components";
 import "./Intro.css";
 
 /* eslint-disable react/prefer-stateless-function */
@@ -14,10 +14,7 @@ class Intro extends Component {
                     <h1 id="papersfeed">PAPERSFEED</h1>
                     <h1 id="exclamation-mark">!</h1>
                 </div>
-                <div className="buttons">
-                    <Signup className="signup" history={this.props.history} />
-                    <Signin className="signin" history={this.props.history} />
-                </div>
+                <IntroModal className="signup" history={this.props.history} />
             </div>
         );
     }
