@@ -5,9 +5,8 @@ import PropTypes from "prop-types";
 import { Route, /* Redirect , */ Switch } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
 
-
 import {
-    Main, ReviewDetail, PaperDetail, ReviewControl,
+    Intro, Main, ReviewDetail, PaperDetail, ReviewControl,
 } from "./containers";
 
 function App(props) {
@@ -15,6 +14,7 @@ function App(props) {
         <ConnectedRouter history={props.history}>
             <div className="App">
                 <Switch>
+                    <Route path="/" exact component={Intro} />
                     <Route path="/main" exact component={Main} />
                     <Route
                       path="/papers/:paper_id/create"
