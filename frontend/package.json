@@ -61,9 +61,7 @@
       "src/**/*.{js,jsx}",
       "!src/index.js",
       "!src/serviceWorker.js",
-      "!src/store/store.js",
-      "!src/store/actions/ActionTypes.js",
-      "!src/store/reducers/index.js"
+      "!src/store/actions/actionTypes.js"
     ],
     "coverageThreshold": {
       "global": {
