@@ -10,6 +10,7 @@ import { SideBar, Header } from "../../../components";
 import CollectionCard from "../../../components/Collection/CollectionCard/CollectionCard";
 import ReviewCard from "../../../components/Review/ReviewCard/ReviewCard";
 
+import "./ProfileDetail.css";
 // import * as actionCreators from "../../../store/actions/index";
 
 class ProfileDetail extends Component {
@@ -17,7 +18,6 @@ class ProfileDetail extends Component {
         super(props);
         this.state = {
             doIFollow: this.props.thisUser.doIFollow,
-            seletedTab: "collection",
         };
     }
 

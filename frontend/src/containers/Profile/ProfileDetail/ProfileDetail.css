@@ -1,0 +1,86 @@
+.ProfileDetailContent {
+    min-height: 1000px;
+    background: rgb(242,243,247);
+    margin-left: 250px;
+    position: relative;
+    display: flex;
+}
+
+.userInfo {
+
+}
+.userInfo #userPhoto {
+    display: flex;
+}
+
+.userStatistic {
+    display: flex;
+    justify-content: center;
+}
+
+#collectionStat {
+    
+}
+#collectionCount {
+
+}
+
+#collectionText {
+
+}
+
+#reviewStat {
+    
+}
+
+#reviewCount {
+
+}
+
+#reviewText {
+
+}
+
+#followerStat {
+    display: flex;
+}
+
+#followerCount {
+
+}
+
+#followerText {
+
+}
+
+#followingStat {
+    display: flex;
+}
+
+#followingCount {
+
+}
+
+#followingText {
+
+}
+
+.userText {
+    display: flex;
+}
+
+#userName {
+    text-align: left;
+}
+
+#buttonDisplayed {
+    align-items: flex-end;
+}
+
+#userDescription {
+    text-align: left;
+}
+
+.itemTabSection {
+    
+}
