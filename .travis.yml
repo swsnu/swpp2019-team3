@@ -10,7 +10,7 @@ matrix:
     node_js:
     - '10'    
     dist:
-    - trusty
+    - xenial
     services:
     - mysql
     env:
