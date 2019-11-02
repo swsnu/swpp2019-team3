@@ -4,6 +4,8 @@ import Main from "./Main/Main";
 import ReviewDetail from "./Review/ReviewDetail/ReviewDetail";
 import PaperDetail from "./PaperDetail/PaperDetail";
 import ReviewControl from "./Review/ReviewControl/ReviewControl";
+import ProfileDetail from "./Profile/ProfileDetail/ProfileDetail";
+import ProfileEdit from "./Profile/ProfileEdit/ProfileEdit";
 
 export {
     Intro,
@@ -11,4 +13,6 @@ export {
     ReviewDetail,
     PaperDetail,
     ReviewControl,
+    ProfileDetail,
+    ProfileEdit,
 };

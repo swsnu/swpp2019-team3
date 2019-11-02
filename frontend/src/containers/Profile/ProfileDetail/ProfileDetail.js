@@ -6,9 +6,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 // import { connect } from "react-redux";
 
-import { SideBar, Header } from "../../../components";
-import CollectionCard from "../../../components/Collection/CollectionCard/CollectionCard";
-import ReviewCard from "../../../components/Review/ReviewCard/ReviewCard";
+import { SideBar, Header, CollectionCard, ReviewCard } from "../../../components";
 
 import "./ProfileDetail.css";
 import SamplePhoto from "./sample.jpg";
@@ -50,7 +48,7 @@ class ProfileDetail extends Component {
                   user={collection.user}
                   title={collection.title}
                   paperCount={collection.paperCount}
-                  repliesCount={collection.repliesCount}
+                  replyCount={collection.replyCount}
                 />
             ));
 
@@ -64,7 +62,7 @@ class ProfileDetail extends Component {
                   user={collection.user}
                   title={collection.title}
                   paperCount={collection.paperCount}
-                  repliesCount={collection.repliesCount}
+                  replyCount={collection.replyCount}
                 />
             ));
         const reviewCardsLeft = this.props.thisUserReviews
@@ -79,7 +77,7 @@ class ProfileDetail extends Component {
                   user={review.user}
                   title={review.title}
                   date={review.date}
-                  repliesCount={review.repliesCount}
+                  replyCount={review.replyCount}
                 />
             ));
 
@@ -95,7 +93,7 @@ class ProfileDetail extends Component {
                   user={review.user}
                   title={review.title}
                   date={review.date}
-                  repliesCount={review.repliesCount}
+                  replyCount={review.replyCount}
                 />
             ));
 
@@ -171,7 +169,7 @@ ProfileDetail.propTypes = {
         user: PropTypes.string,
         title: PropTypes.string,
         paperCount: PropTypes.number,
-        repliesCount: PropTypes.number,
+        replyCount: PropTypes.number,
     })),
     // thisUserCollections: PropTypes.arrayOf(PropTypes.instanceOf(Review))
     thisUserReviews: PropTypes.arrayOf(PropTypes.shape({
@@ -182,7 +180,7 @@ ProfileDetail.propTypes = {
         user: PropTypes.string,
         title: PropTypes.string,
         date: PropTypes.string,
-        repliesCount: PropTypes.number,
+        replyCount: PropTypes.number,
     })),
 };
 
@@ -203,7 +201,7 @@ ProfileDetail.defaultProps = {
             user: "Girin",
             title: "Girin's Paper Collection",
             paperCount: 32,
-            repliesCount: 13,
+            replyCount: 13,
         },
         {
             source: "tasted",
@@ -211,7 +209,7 @@ ProfileDetail.defaultProps = {
             user: "Girin",
             title: "Papers for tasty cat cans",
             paperCount: 4,
-            repliesCount: 1,
+            replyCount: 1,
         },
         {
             source: "hated",
@@ -219,7 +217,7 @@ ProfileDetail.defaultProps = {
             user: "Girin",
             title: "Butler's Bad joke collection",
             paperCount: 62,
-            repliesCount: 23,
+            replyCount: 23,
         },
     ],
     thisUserReviews: [
@@ -231,7 +229,7 @@ ProfileDetail.defaultProps = {
             user: "Girin",
             title: "Ciao Churu is my favorite snack!",
             date: "Jan 24th, 2019",
-            repliesCount: 6,
+            replyCount: 6,
         },
         {
             author: "Girin",
@@ -241,7 +239,7 @@ ProfileDetail.defaultProps = {
             user: "Kamui",
             title: "Kamui is my brother!",
             date: "Feb 14, 2018",
-            repliesCount: 7,
+            replyCount: 7,
         },
         {
             author: "Girin",
@@ -251,7 +249,7 @@ ProfileDetail.defaultProps = {
             user: "Butler",
             title: "Bring me tasty food Ningen!",
             date: "March 7, 2018",
-            repliesCount: 8,
+            replyCount: 8,
         },
     ],
 };

@@ -6,10 +6,8 @@ import { Route, /* Redirect , */ Switch } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
 
 import {
-    Intro, Main, ReviewDetail, PaperDetail, ReviewControl,
+    Intro, Main, ReviewDetail, PaperDetail, ReviewControl, ProfileDetail, ProfileEdit
 } from "./containers";
-import ProfileDetail from "./containers/Profile/ProfileDetail/ProfileDetail";
-import ProfileEdit from "./containers/Profile/ProfileEdit/ProfileEdit";
 
 function App(props) {
     return (
