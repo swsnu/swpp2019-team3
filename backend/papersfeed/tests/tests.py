@@ -3,6 +3,7 @@ from django.test import TestCase, Client
 
 class ApiEntryTestCase(TestCase):
     """api_entry test"""
+
     def test_notfound(self):
         """response status should be 404 if wrong url"""
         client = Client()
