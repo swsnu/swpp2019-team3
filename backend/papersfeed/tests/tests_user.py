@@ -15,7 +15,7 @@ class UserTestCase(TestCase):
 
         client = Client()
 
-        """ Sign Up"""
+        # Sign Up
         client.post('/api/user',
                     json.dumps({
                         constants.EMAIL: 'swpp@snu.ac.kr',
@@ -44,7 +44,7 @@ class UserTestCase(TestCase):
         """ SIGN UP """
         client = Client()
 
-        """ Sign Up"""
+        # Sign Up
         response = client.post('/api/user',
                                json.dumps({
                                    constants.EMAIL: 'swpptest@snu.ac.kr',

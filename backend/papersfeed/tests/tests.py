@@ -9,4 +9,3 @@ class ApiEntryTestCase(TestCase):
         client = Client()
         response = client.get('/api/wrong')
         self.assertEqual(response.status_code, 404)
-

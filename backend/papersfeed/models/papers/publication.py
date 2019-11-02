@@ -5,7 +5,6 @@ from django_mysql.models import EnumField
 from papersfeed.models.base_models import BaseModel
 from .publisher import Publisher
 from .paper import Paper
-from papersfeed.models.base_models import BaseModel
 
 PUBLICATION_TYPE = [
     'journal',

@@ -3,7 +3,7 @@
 import uuid
 import hashlib
 
-from django.db import IntegrityError, transaction
+from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Exists, OuterRef, Count
 
@@ -86,6 +86,8 @@ def insert_user(args):
         user = User.objects.create(
             description=None, email=email, username=username, password=hashed, salt=salt
         )
+
+        return user
     except IntegrityError:
         raise ApiError(constants.USERNAME_ALREADY_EXISTS)
 

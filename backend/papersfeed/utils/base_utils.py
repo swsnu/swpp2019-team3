@@ -1,7 +1,7 @@
 """base_utils.py"""
 # -*- coding: utf-8 -*-
-from papersfeed import constants
 from django.core.paginator import Paginator
+from papersfeed import constants
 
 
 class ApiError(Exception):

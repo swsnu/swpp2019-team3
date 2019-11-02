@@ -5,7 +5,6 @@ from django_mysql.models import EnumField
 from papersfeed.models.base_models import BaseModel
 from .paper import Paper
 from .author import Author
-from papersfeed.models.base_models import BaseModel
 
 # Author Type
 PAPER_AUTHOR_TYPE = [
