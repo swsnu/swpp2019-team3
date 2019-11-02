@@ -6,7 +6,9 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 // import { connect } from "react-redux";
 
-import { SideBar, Header, CollectionCard, ReviewCard } from "../../../components";
+import {
+    SideBar, Header, CollectionCard, ReviewCard,
+} from "../../../components";
 
 import "./ProfileDetail.css";
 import SamplePhoto from "./sample.jpg";
