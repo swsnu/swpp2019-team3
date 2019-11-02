@@ -34,7 +34,7 @@ def select_session(args):
         raise ApiError(constants.NOT_EXIST_OBJECT)
     else:
         if not __is_correct_password(password, user):
-            raise ApiError(AuthError)
+            raise ApiError(constants.AuthError)
 
         # Set Session Id
         request.session[constants.ID] = user.id
@@ -330,7 +330,7 @@ def __hash_password(password):
 # 비밀번호 확인
 def __is_correct_password(password, user):
     if user.salt is None:
-        raise ApiError(AuthError)
+        raise ApiError(constants.AuthError)
 
     hashed_password = hashlib.sha256(user.salt.encode() + password.encode()).hexdigest()
 
