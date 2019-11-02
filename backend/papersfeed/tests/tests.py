@@ -33,4 +33,4 @@ class ApiEntryTestCase(TestCase):
                                }),
                                content_type='application/json')
 
-        self.assertEqual(response.status_code, 207)
+        self.assertEqual(response.status_code, 403)
