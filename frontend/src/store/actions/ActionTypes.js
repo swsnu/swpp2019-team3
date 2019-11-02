@@ -3,7 +3,20 @@ export const SEARCH = "SEARCH";
 export const SEARCH_SUCCESS = "SEARCH_SUCCESS";
 export const SEARCH_FAILURE = "SEARCH_FAILURE";
 
-// Login
-export const LOGIN = "LOGIN";
-export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
-export const LOGIN_FAILURE = "LOGIN_FAILURE";
+const authConstants = {
+    // SignUp
+    SIGNUP_REQUEST: "SIGNUP_REQUEST",
+    SIGNUP_SUCCESS: "SIGNUP_SUCCESS",
+    SIGNUP_FAILURE: "SIGNUP_FAILURE",
+
+    // Signin
+    SIGNIN_REQUEST: "SIGNIN_REQUEST",
+    SIGNIN_SUCCESS: "SIGNIN_SUCCESS",
+    SIGNIN_FAILURE: "SIGNIN_FAILURE",
+
+    // Signout
+    SIGNOUT_REQUEST: "SIGNOUT_REQUEST",
+    SIGNOUT_SUCCESS: "SIGNOUT_SUCCESS",
+    SIGNOUT_FAILURE: "SIGNOUT_FAILURE",
+};
+export default authConstants;

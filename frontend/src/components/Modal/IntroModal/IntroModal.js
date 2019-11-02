@@ -1,12 +1,15 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Modal, FormControl, Button } from "react-bootstrap";
+import authActions from "../../../store/actions/index";
 import "./IntroModal.css";
 
 class IntroModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            signupSubmitted: false,
             isSignupOpen: false,
             isSigninOpen: false,
             id: "",
@@ -29,8 +32,13 @@ class IntroModal extends Component {
     }
 
     clickSignupButtonHandler() {
-        this.setState({ isSignupOpen: false });
-        this.props.history.push("/main");
+        const signingUpUser = {
+            username: this.state.id,
+            password: this.state.password,
+            email: this.state.email,
+        };
+        this.props.onSignup(signingUpUser);
+        this.setState({ signupSubmitted: true });
     }
 
     clickSigninButtonHandler() {
@@ -115,12 +123,23 @@ class IntroModal extends Component {
         );
     }
 }
-export default IntroModal;
+
+const mapStateToProps = (state) => ({
+    signedUp: state.auth.signedUp,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onSignup: (user) => dispatch(authActions.signup(user)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(IntroModal);
 
 IntroModal.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
+    onSignup: PropTypes.func,
 };
 
 IntroModal.defaultProps = {
     history: null,
+    onSignup: null,
 };
