@@ -16,13 +16,16 @@ class CollectionDetail extends Component {
     };
 
 // clickInviteButtonHandler(): Open ‘Invite to the collection’ popup.
-// clickRemovePaperButtonHandler(collection_id: number, paper_id: number): Call onRemoveCollectionPaper of CollectionDetail to remove the paper from the collection.
-// clickLikeButtonHandler(collection_id: number, user_id: number): Call onAddCollectionLike of CollectionDetail to change the like status between the user and the collection.
-// clickUnlikeButtonHandler(collection_id: number, user_id: number): Call onRemoveCollectionLike of CollectionDetail to change the like status between the user and the collection.
+// clickRemovePaperButtonHandler(collection_id: number, paper_id: number)
+// : Call onRemoveCollectionPaper of CollectionDetail to remove the paper from the collection.
+// clickLikeButtonHandler(collection_id: number, user_id: number)
+// : Call onAddCollectionLike of CollectionDetail to change the like status between the user and the collection.
+// clickUnlikeButtonHandler(collection_id: number, user_id: number)
+// : Call onRemoveCollectionLike of CollectionDetail to change the like status between the user and the collection.
     
-    addNewReplyHandler = () => {
+    // addNewReplyHandler = () => {
 
-    }
+    // }
 
     render(){
         let likeButton = <Button id="likeButton">Like</Button>;

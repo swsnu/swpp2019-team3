@@ -8,8 +8,6 @@ import { ConnectedRouter } from "connected-react-router";
 import {
     Intro, Main, ReviewDetail, PaperDetail, ReviewControl,
 } from "./containers";
-import ProfileDetail from "./containers/Profile/ProfileDetail/ProfileDetail";
-import ProfileEdit from "./containers/Profile/ProfileEdit/ProfileEdit";
 
 function App(props) {
     return (
@@ -38,8 +36,6 @@ function App(props) {
                       )}
                     />
                     <Route path="/papers/:id" exact component={PaperDetail} />
-                    <Route path="/profile/:id" exact component={ProfileDetail} />
-                    <Route path="/profile/:id/edit" exact component={ProfileEdit} />
                 </Switch>
             </div>
         </ConnectedRouter>

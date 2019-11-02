@@ -1,42 +1,73 @@
-import React, {Component} from 'react';
-import { CollectionCard, Header, SideBar } from '../../../components';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+
+import { CollectionCard, Header, SideBar } from "../../../components";
 
 class CollectionList extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
         };
-    };
+    }
 
-    render(){
-        let collectionCards = this.props.collections.map(collection => {
-            return(
+    render() {
+        const collectionCardsLeft = this.props.collections
+            .filter((x) => this.props.collections.indexOf(x) % 2 === 0)
+            .map((collection) => (
                 <CollectionCard
-                    source={collection.source}
-                    id={collection.id}
-                    user={collection.user}
-                    title={collection.title}
-                    numPapers={collection.numPapers}
-                    numReplies={collection.numReplies}
+                  key={collection.id}
+                  source={collection.source}
+                  id={collection.id}
+                  user={collection.user}
+                  title={collection.title}
+                  numPapers={collection.numPapers}
+                  numReplies={collection.numReplies}
                 />
-            );
-        });
+            ));
 
-        return(
+        const collectionCardsRight = this.props.collections
+            .filter((x) => this.props.collections.indexOf(x) % 2 === 1)
+            .map((collection) => (
+                <CollectionCard
+                  key={collection.id}
+                  source={collection.source}
+                  id={collection.id}
+                  user={collection.user}
+                  title={collection.title}
+                  numPapers={collection.numPapers}
+                  numReplies={collection.numReplies}
+                />
+            ));
+
+        return (
             <div className="CollectionList">
-                <Header/>
-                <SideBar/>
+                <Header />
+                <SideBar />
                 <div className="CollectionListContent">
-                    <h>Your Colletion List</h>
-                    {collectionCards}
+                    <div className="CollectinonListText"><h>Your Colletion List</h></div>
+                    <div id="colletionCards">
+                        <div id="collectionCardsLeft">{collectionCardsLeft}</div>
+                        <div id="collectionCardsRight">{collectionCardsRight}</div>
+                    </div>
                 </div>
             </div>
         );
-    };
+    }
+}
+
+CollectionList.propTypes = {
+    collections: PropTypes.arrayOf(PropTypes.shape({
+        source: PropTypes.string,
+        id: PropTypes.number,
+        user: PropTypes.string,
+        title: PropTypes.string,
+        numPapers: PropTypes.number,
+        numReplies: PropTypes.number,
+    })),
 };
 
 CollectionList.defaultProps = {
-    collections : [
+    collections: [
         {
             source: "testing",
             id: 1,
@@ -70,6 +101,6 @@ CollectionList.defaultProps = {
             numReplies: 47,
         },
     ],
-}
+};
 
 export default CollectionList;
