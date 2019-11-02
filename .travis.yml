@@ -25,8 +25,8 @@ matrix:
     - ./node_modules/.bin/eslint src
     - yarn test --coverage --watchAll=false
     after_success:
-    - cat ./coverage/lcov.info | coveralls
     - sonar-scanner
+    - cat ./coverage/lcov.info | coveralls
 
   - language: python
     cache:
@@ -56,5 +56,5 @@ matrix:
     - coverage report --fail-under=85
     - coverage xml
     after_success:
-    - coveralls
     - sonar-scanner
+    - coveralls
