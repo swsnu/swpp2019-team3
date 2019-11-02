@@ -66,7 +66,7 @@ PaperCard.propTypes = {
     authors: PropTypes.string,
     keywords: PropTypes.string,
     likeCount: PropTypes.number,
-    reviewount: PropTypes.number,
+    reviewCount: PropTypes.number,
 };
 
 PaperCard.defaultProps = {
