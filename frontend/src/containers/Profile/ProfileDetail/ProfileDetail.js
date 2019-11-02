@@ -123,7 +123,7 @@ ProfileDetail.propTypes = {
         doIFollow: false,
     }),
     // thisUserCollections: PropTypes.arrayOf(PropTypes.instanceOf(Collection))
-    thisUserCollections: PropTypes.arrayOf(PropTypes.objectOf({
+    thisUserCollections: PropTypes.arrayOf(PropTypes.shape({
         source: PropTypes.string,
         id: PropTypes.number,
         user: PropTypes.string,
@@ -132,7 +132,7 @@ ProfileDetail.propTypes = {
         numReplies: PropTypes.number,
     })),
     // thisUserCollections: PropTypes.arrayOf(PropTypes.instanceOf(Review))
-    thisUserReviews: PropTypes.arrayOf(PropTypes.objectOf({
+    thisUserReviews: PropTypes.arrayOf(PropTypes.shape({
         author: PropTypes.string,
         paperId: PropTypes.number,
         source: PropTypes.string,

@@ -13,7 +13,7 @@ describe("ProfileDetail Test", () => {
         expect(wrapper.length).toBe(1);
         wrapper = component.find("#SideBar");
         expect(wrapper.length).toBe(1);
-        wrapper = component.find("#collectionCards");
+        wrapper = component.find(".itemTabSection");
         expect(wrapper.length).toBe(1);
     });
 
@@ -32,7 +32,7 @@ describe("ProfileDetail Test", () => {
             description: "I used to think my life was a tragedy...",
             followersNum: 12,
             followingsNum: 47,
-            amIFollow: false,
+            doIFollow: false,
         };
         const component = shallow(<ProfileDetail currentUserID={2} thisUser={mockThisUser} />);
         const wrapper = component.find("#followButton");
@@ -50,7 +50,7 @@ describe("ProfileDetail Test", () => {
         wrapper = component.find("#followButton");
         expect(wrapper.length).toBe(1);
         component.setProps({ currentUserID: 2, thisUser: { id: 1 } });
-        component.setState({ amIFollow: true });
+        component.setState({ doIFollow: true });
         component.update();
         wrapper = component.find("#unfollowButton");
         expect(wrapper.length).toBe(1);
@@ -65,13 +65,9 @@ describe("ProfileDetail Test", () => {
         let wrapper = component.find("#followButton");
         expect(wrapper.length).toBe(1);
         wrapper.simulate("click");
-        expect(wrapper.setState).toHaveBeenCalled();
-        expect(wrapper.state("amIFollow")).toBe(true);
         wrapper = component.find("#unfollowButton");
         expect(wrapper.length).toBe(1);
         wrapper.simulate("click");
-        expect(wrapper.setState).toHaveBeenCalled();
-        expect(wrapper.state("amIFollow")).toBe(false);
         wrapper = component.find("#followButton");
         expect(wrapper.length).toBe(1);
     });
