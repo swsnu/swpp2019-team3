@@ -6,7 +6,7 @@ import { Route, /* Redirect , */ Switch } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
 
 import {
-    Main, ReviewDetail, PaperDetail, ReviewControl,
+    Intro, Main, ReviewDetail, PaperDetail, ReviewControl,
 } from "./containers";
 
 function App(props) {
