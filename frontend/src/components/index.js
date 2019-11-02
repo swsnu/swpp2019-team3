@@ -6,6 +6,7 @@ import ReviewCard from "./Review/ReviewCard/ReviewCard";
 import Header from "./Header/Header";
 import Signup from "./Modal/Signup/Signup";
 import Signin from "./Modal/Signin/Signin";
+import ReviewReply from "./Reply/ReviewReply/ReviewReply";
 
 export {
     SideBar,
@@ -16,4 +17,5 @@ export {
     Header,
     Signup,
     Signin,
+    ReviewReply,
 };

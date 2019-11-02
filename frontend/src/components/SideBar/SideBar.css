@@ -1,31 +1,31 @@
 .sidebar {
     display: flex;
-    margin-left: 10px;
+    margin-left: 1%;
     flex-direction: column;
     align-items: flex-start;   
     height: 100%;
-    width: 250px;
+    width: 18%;
     position:absolute;
 }
 
 .sidebar .main-link {
-    margin-top: 30px;
+    margin-top: 10%;
     color: black;
     font-weight: bold;
-    font-size: 18px;
-    padding: 30px;
+    font-size: 110%;
+    padding: 12%;
 }
 
 .sidebar .collection-link {
     color: black;
-    font-size: 18px;
+    font-size: 110%;
     font-weight: bold;
-    padding: 30px;
+    padding: 12%;
 }
 
 .sidebar .history-link {
     color: black;
-    font-size: 18px;
+    font-size: 110%;
     font-weight: bold;
-    padding: 30px;
+    padding: 12%;
 }
