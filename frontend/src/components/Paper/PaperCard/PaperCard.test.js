@@ -16,11 +16,11 @@ describe("<PaperCard />", () => {
 
         wrapper.simulate("click");
 
-        expect(component.state().numLikes).toEqual(1);
+        expect(component.state().likeCount).toEqual(1);
         expect(component.state().isLiked).toBe(true);
 
         wrapper.simulate("click");
-        expect(component.state().numLikes).toBe(0);
+        expect(component.state().likeCount).toBe(0);
         expect(component.state().isLiked).toBe(false);
     });
 });
