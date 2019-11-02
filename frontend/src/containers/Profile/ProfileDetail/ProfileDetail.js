@@ -49,8 +49,8 @@ class ProfileDetail extends Component {
                   id={collection.id}
                   user={collection.user}
                   title={collection.title}
-                  numPapers={collection.numPapers}
-                  numReplies={collection.numReplies}
+                  paperCount={collection.paperCount}
+                  repliesCount={collection.repliesCount}
                 />
             ));
 
@@ -63,8 +63,8 @@ class ProfileDetail extends Component {
                   id={collection.id}
                   user={collection.user}
                   title={collection.title}
-                  numPapers={collection.numPapers}
-                  numReplies={collection.numReplies}
+                  paperCount={collection.paperCount}
+                  repliesCount={collection.repliesCount}
                 />
             ));
         const reviewCardsLeft = this.props.thisUserReviews
@@ -79,7 +79,7 @@ class ProfileDetail extends Component {
                   user={review.user}
                   title={review.title}
                   date={review.date}
-                  numReplies={review.numReplies}
+                  repliesCount={review.repliesCount}
                 />
             ));
 
@@ -95,7 +95,7 @@ class ProfileDetail extends Component {
                   user={review.user}
                   title={review.title}
                   date={review.date}
-                  numReplies={review.numReplies}
+                  repliesCount={review.repliesCount}
                 />
             ));
 
@@ -119,11 +119,11 @@ class ProfileDetail extends Component {
                                 <h5 id="reviewText">Reviews</h5>
                             </div>
                             <Link id="followerStat" to={`/profile/${this.props.thisUser.id}/followers`}>
-                                <h5 id="followerCount">{this.props.thisUser.followersNum}</h5>
+                                <h5 id="followerCount">{this.props.thisUser.followersCount}</h5>
                                 <h5 id="followerText">Follower</h5>
                             </Link>
                             <Link id="followingStat" to={`/profile/${this.props.thisUser.id}/followings`}>
-                                <h5 id="followingCount">{this.props.thisUser.followingsNum}</h5>
+                                <h5 id="followingCount">{this.props.thisUser.followingsCount}</h5>
                                 <h5 id="followingText">Following</h5>
                             </Link>
                         </div>
@@ -160,8 +160,8 @@ ProfileDetail.propTypes = {
         id: PropTypes.number,
         name: PropTypes.string,
         description: PropTypes.string,
-        followersNum: PropTypes.number,
-        followingsNum: PropTypes.number,
+        followersCount: PropTypes.number,
+        followingsCount: PropTypes.number,
         doIFollow: false,
     }),
     // thisUserCollections: PropTypes.arrayOf(PropTypes.instanceOf(Collection))
@@ -170,8 +170,8 @@ ProfileDetail.propTypes = {
         id: PropTypes.number,
         user: PropTypes.string,
         title: PropTypes.string,
-        numPapers: PropTypes.number,
-        numReplies: PropTypes.number,
+        paperCount: PropTypes.number,
+        repliesCount: PropTypes.number,
     })),
     // thisUserCollections: PropTypes.arrayOf(PropTypes.instanceOf(Review))
     thisUserReviews: PropTypes.arrayOf(PropTypes.shape({
@@ -182,7 +182,7 @@ ProfileDetail.propTypes = {
         user: PropTypes.string,
         title: PropTypes.string,
         date: PropTypes.string,
-        numReplies: PropTypes.number,
+        repliesCount: PropTypes.number,
     })),
 };
 
@@ -192,8 +192,8 @@ ProfileDetail.defaultProps = {
         id: 1,
         name: "Girin",
         description: "Kneel before me human, as I am the mighty and cute cat!",
-        followersNum: 12,
-        followingsNum: 47,
+        followersCount: 12,
+        followingsCount: 47,
         doIFollow: false,
     },
     thisUserCollections: [
@@ -202,24 +202,24 @@ ProfileDetail.defaultProps = {
             id: 1,
             user: "Girin",
             title: "Girin's Paper Collection",
-            numPapers: 32,
-            numReplies: 13,
+            paperCount: 32,
+            repliesCount: 13,
         },
         {
             source: "tasted",
             id: 2,
             user: "Girin",
             title: "Papers for tasty cat cans",
-            numPapers: 4,
-            numReplies: 1,
+            paperCount: 4,
+            repliesCount: 1,
         },
         {
             source: "hated",
             id: 3,
             user: "Girin",
             title: "Butler's Bad joke collection",
-            numPapers: 62,
-            numReplies: 23,
+            paperCount: 62,
+            repliesCount: 23,
         },
     ],
     thisUserReviews: [
@@ -231,7 +231,7 @@ ProfileDetail.defaultProps = {
             user: "Girin",
             title: "Ciao Churu is my favorite snack!",
             date: "Jan 24th, 2019",
-            numReplies: 6,
+            repliesCount: 6,
         },
         {
             author: "Girin",
@@ -241,7 +241,7 @@ ProfileDetail.defaultProps = {
             user: "Kamui",
             title: "Kamui is my brother!",
             date: "Feb 14, 2018",
-            numReplies: 7,
+            repliesCount: 7,
         },
         {
             author: "Girin",
@@ -251,7 +251,7 @@ ProfileDetail.defaultProps = {
             user: "Butler",
             title: "Bring me tasty food Ningen!",
             date: "March 7, 2018",
-            numReplies: 8,
+            repliesCount: 8,
         },
     ],
 };

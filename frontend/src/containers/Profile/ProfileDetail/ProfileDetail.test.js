@@ -17,28 +17,6 @@ describe("ProfileDetail Test", () => {
         expect(wrapper.length).toBe(1);
     });
 
-    // it("click edit button and go to edit page", () => {
-    //     const component = shallow(<ProfileDetail currentUserID={1} thisUser={{id:1}}/>);
-    //     let wrapper = component.find("#editButton");
-    //     expect(wrapper.length).toBe(1);
-    //     wrapper.simulate("click");
-    //     expect(wrapper.find(Link).props().to).toBe("/profile/1/edit");
-    // });
-
-    it("if it is not my profile page and I am not following this user, follow button should exist", () => {
-        const mockThisUser = {
-            id: 1,
-            name: "Arthur",
-            description: "I used to think my life was a tragedy...",
-            followersNum: 12,
-            followingsNum: 47,
-            doIFollow: false,
-        };
-        const component = shallow(<ProfileDetail currentUserID={2} thisUser={mockThisUser} />);
-        const wrapper = component.find("#followButton");
-        expect(wrapper.length).toBe(1);
-    });
-
     it("button should be differ for whether the user is the owner of the profile", () => {
         const component = shallow(<ProfileDetail />);
         component.setProps({ currentUserID: 1, thisUser: { id: 1 } });
@@ -57,7 +35,6 @@ describe("ProfileDetail Test", () => {
     });
 
     it("follow / unfollow", () => {
-        // ProfileDetail.prototype.setState = jest.fn();
         const component = shallow(<ProfileDetail />);
         component.setProps({ currentUserID: 1, thisUser: { id: 2 } });
         component.update();
@@ -71,22 +48,6 @@ describe("ProfileDetail Test", () => {
         wrapper = component.find("#followButton");
         expect(wrapper.length).toBe(1);
     });
-
-    // it("if collectionTabButton is clicked, should render the user's collections", () => {
-    //     const component = shallow(<ProfileDetail />);
-    //     let wrapper = component.find("#collectionTabButton");
-    //     wrapper.simulate("click");
-    //     wrapper = component.find("#collectionCards");
-    //     expect(wrapper.length).toBe(1);
-    // });
-
-    // it("if reviewTabButton is clicked, should render the user's reviews", () => {
-    //     const component = shallow(<ProfileDetail />);
-    //     const wrapper = component.find("#reviewTabButton");
-    //     wrapper.simulate("click");
-    //     const wrapper2 = component.find("#reviewCards");
-    //     expect(wrapper2.length).toBe(1);
-    // });
 
     it("click follower number and moves to follower list page", () => {
         const component = shallow(<ProfileDetail />);
