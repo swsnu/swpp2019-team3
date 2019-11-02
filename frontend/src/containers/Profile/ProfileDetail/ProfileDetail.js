@@ -79,7 +79,9 @@ class ProfileDetail extends Component {
                   user={review.user}
                   title={review.title}
                   date={review.date}
+                  likeCount={review.likeCount}
                   replyCount={review.replyCount}
+                  headerExists={review.headerExists}
                 />
             ));
 
@@ -95,7 +97,9 @@ class ProfileDetail extends Component {
                   user={review.user}
                   title={review.title}
                   date={review.date}
+                  likeCount={review.likeCount}
                   replyCount={review.replyCount}
+                  headerExists={review.headerExists}
                 />
             ));
 
@@ -182,7 +186,9 @@ ProfileDetail.propTypes = {
         user: PropTypes.string,
         title: PropTypes.string,
         date: PropTypes.string,
+        likeCount: PropTypes.number,
         replyCount: PropTypes.number,
+        headerExists: PropTypes.bool,
     })),
 };
 
@@ -232,6 +238,8 @@ ProfileDetail.defaultProps = {
             title: "Ciao Churu is my favorite snack!",
             date: "Jan 24th, 2019",
             replyCount: 6,
+            likeCount: 56,
+            headerExists: false,
         },
         {
             author: "Girin",
@@ -242,6 +250,8 @@ ProfileDetail.defaultProps = {
             title: "Kamui is my brother!",
             date: "Feb 14, 2018",
             replyCount: 7,
+            likeCount: 84,
+            headerExists: false,
         },
         {
             author: "Girin",
@@ -252,6 +262,8 @@ ProfileDetail.defaultProps = {
             title: "Bring me tasty food Ningen!",
             date: "March 7, 2018",
             replyCount: 8,
+            likeCount: 35,
+            headerExists: false,
         },
     ],
 };
