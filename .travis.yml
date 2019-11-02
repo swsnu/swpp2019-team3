@@ -24,9 +24,9 @@ matrix:
     script:           # Script to test your build
     - ./node_modules/.bin/eslint src
     - yarn test --coverage --watchAll=false
-    - sonar-scanner
     after_success:
     - cat ./coverage/lcov.info | coveralls
+    - sonar-scanner
 
   - language: python
     cache:
@@ -54,6 +54,7 @@ matrix:
     - cd backend
     - coverage run --source='.' ./manage.py test
     - coverage report --fail-under=85
-    - sonar-scanner
+    - coverage xml
     after_success:
     - coveralls
+    - sonar-scanner
