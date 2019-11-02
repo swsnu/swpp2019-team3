@@ -171,7 +171,7 @@ def __get_collections(filter_query, request_user, count):
     return collections, pagination_value, is_finished
 
 
-def __pack_collections(collections, request_user):
+def __pack_collections(collections, request_user): # pylint: disable=unused-argument
     """Pack Collections"""
     packed = []
 
