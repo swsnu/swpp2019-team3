@@ -34,7 +34,7 @@ class ReviewDetail extends Component {
                 review: 5,
                 content: "dffffffffffffff",
             }],
-            repliesCount: 2,
+            replyCount: 2,
         };
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
         this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
@@ -76,7 +76,7 @@ class ReviewDetail extends Component {
 
     clickReplyAddButtonHandler() {
         const nextState = ({
-            repliesCount: this.state.repliesCount + 1,
+            replyCount: this.state.replyCount + 1,
         });
         this.setState(nextState);
     }
@@ -107,7 +107,7 @@ class ReviewDetail extends Component {
                             <div className="reply">
                                 <div className="review-extra">
                                     <Button className="like-button" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}>{this.state.likeCount}</Button>
-                                    <Button className="replyCount-button" disabled>{this.state.repliesCount}</Button>
+                                    <Button className="replyCount-button" disabled>{this.state.replyCount}</Button>
                                     {this.state.authorId === 0
                                         ? <Button className="edit-button" onClick={this.clickEditButtonHandler}>Edit</Button>
 
