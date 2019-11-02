@@ -43,69 +43,41 @@ class IntroModal extends Component {
     }
 
     render() {
-        let modalContent = null;
+        let modalHeader = null;
+        let emailInput = null;
+        let modalFooter = null;
         if (this.state.isSignupOpen) {
-            modalContent = (
-                <div className="signup-modal-content">
-                    <Modal.Header>
-                        <h2 id="create-account">Create account</h2>
-                        <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <FormControl
-                          className="id-input"
-                          type="text"
-                          placeholder="ID"
-                          value={this.state.id}
-                          onChange={(e) => this.setState({ id: e.target.value })}
-                        />
-                        <FormControl
-                          className="password-input"
-                          type="text"
-                          placeholder="password"
-                          value={this.state.password}
-                          onChange={(e) => this.setState({ password: e.target.value })}
-                        />
-                        <FormControl
-                          className="email-input"
-                          type="text"
-                          placeholder="email"
-                          value={this.state.email}
-                          onChange={(e) => this.setState({ email: e.target.value })}
-                        />
-                    </Modal.Body>
-                    <Modal.Footer className="modal-footer">
-                        <Button className="signup-button" onClick={this.clickSignupButtonHandler}>Sign Up</Button>
-                    </Modal.Footer>
-                </div>
+            modalHeader = (
+                <Modal.Header>
+                    <h2 id="create-account">Create account</h2>
+                    <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
+                </Modal.Header>
+            );
+            emailInput = (
+                <FormControl
+                  className="email-input"
+                  type="text"
+                  placeholder="email"
+                  value={this.state.email}
+                  onChange={(e) => this.setState({ email: e.target.value })}
+                />
+            );
+            modalFooter = (
+                <Modal.Footer className="modal-footer">
+                    <Button className="signup-button" onClick={this.clickSignupButtonHandler}>Sign Up</Button>
+                </Modal.Footer>
             );
         } else if (this.state.isSigninOpen) {
-            modalContent = (
-                <div className="signin-modal-content">
-                    <Modal.Header>
-                        <h2 id="welcome-back">Welcome back</h2>
-                        <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <FormControl
-                          className="id-input"
-                          type="text"
-                          placeholder="ID"
-                          value={this.state.id}
-                          onChange={(e) => this.setState({ id: e.target.value })}
-                        />
-                        <FormControl
-                          className="password-input"
-                          type="text"
-                          placeholder="password"
-                          value={this.state.password}
-                          onChange={(e) => this.setState({ password: e.target.value })}
-                        />
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button className="signin-button" onClick={this.clickSigninButtonHandler}>Sign In</Button>
-                    </Modal.Footer>
-                </div>
+            modalHeader = (
+                <Modal.Header>
+                    <h2 id="welcome-back">Welcome back</h2>
+                    <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
+                </Modal.Header>
+            );
+            modalFooter = (
+                <Modal.Footer>
+                    <Button className="signin-button" onClick={this.clickSigninButtonHandler}>Sign In</Button>
+                </Modal.Footer>
             );
         }
         return (
@@ -119,7 +91,25 @@ class IntroModal extends Component {
                   className="signup-modal"
                   centered
                 >
-                    {modalContent}
+                    {modalHeader}
+                    <Modal.Body>
+                        <FormControl
+                          className="id-input"
+                          type="text"
+                          placeholder="ID"
+                          value={this.state.id}
+                          onChange={(e) => this.setState({ id: e.target.value })}
+                        />
+                        <FormControl
+                          className="password-input"
+                          type="text"
+                          placeholder="password"
+                          value={this.state.password}
+                          onChange={(e) => this.setState({ password: e.target.value })}
+                        />
+                        {emailInput}
+                    </Modal.Body>
+                    {modalFooter}
                 </Modal>
             </div>
         );

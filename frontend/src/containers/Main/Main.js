@@ -40,107 +40,64 @@ class Main extends Component {
                 reviewCount: 15,
             }],
         };
+
+        this.feedMaker = this.feedMaker.bind(this);
+    }
+
+    feedMaker = (feed) => {
+        if (feed.type === "Collection") {
+            return (
+                <CollectionCard
+                  source={feed.source}
+                  key={feed.id}
+                  id={feed.id}
+                  title={feed.title}
+                  user={feed.user}
+                  replyCount={feed.replyCount}
+                  paperCount={feed.paperCount}
+                  likeCount={feed.likeCount}
+                />
+            );
+        }
+        if (feed.type === "Review") {
+            return (
+                <ReviewCard
+                  source={feed.source}
+                  paperId={feed.paperId}
+                  author={feed.author}
+                  key={feed.id}
+                  id={feed.id}
+                  title={feed.title}
+                  user={feed.user}
+                  date={feed.date}
+                  likeCount={feed.likeCount}
+                  replyCount={feed.replyCount}
+                />
+            );
+        }
+        if (feed.type === "Paper") {
+            return (
+                <PaperCard
+                  key={feed.id}
+                  id={feed.id}
+                  user={feed.user}
+                  title={feed.title}
+                  authors={feed.authors}
+                  date={feed.date}
+                  keywords={feed.keywords}
+                  likeCount={feed.likeCount}
+                  reviewCount={feed.reviewCount}
+                />
+            );
+        }
+        return null;
     }
 
     render() {
         const feedsLeft = this.state.feeds.filter((x) => this.state.feeds.indexOf(x) % 2 === 0)
-            .map((feed) => {
-                if (feed.type === "Collection") {
-                    return (
-                        <CollectionCard
-                          source={feed.source}
-                          key={feed.id}
-                          id={feed.id}
-                          title={feed.title}
-                          user={feed.user}
-                          replyCount={feed.replyCount}
-                          paperCount={feed.paperCount}
-                          likeCount={feed.likeCount}
-                        />
-                    );
-                }
-                if (feed.type === "Review") {
-                    return (
-                        <ReviewCard
-                          source={feed.source}
-                          paperId={feed.paperId}
-                          author={feed.author}
-                          key={feed.id}
-                          id={feed.id}
-                          title={feed.title}
-                          user={feed.user}
-                          date={feed.date}
-                          likeCount={feed.likeCount}
-                          replyCount={feed.replyCount}
-                        />
-                    );
-                }
-                if (feed.type === "Paper") {
-                    return (
-                        <PaperCard
-                          key={feed.id}
-                          id={feed.id}
-                          user={feed.user}
-                          title={feed.title}
-                          authors={feed.authors}
-                          date={feed.date}
-                          keywords={feed.keywords}
-                          likeCount={feed.likeCount}
-                          reviewCount={feed.reviewCount}
-                        />
-                    );
-                }
-                return 0;
-            });
+            .map((feed) => this.feedMaker(feed));
         const feedsRight = this.state.feeds.filter((x) => this.state.feeds.indexOf(x) % 2 === 1)
-            .map((feed) => {
-                if (feed.type === "Collection") {
-                    return (
-                        <CollectionCard
-                          source={feed.source}
-                          key={feed.id}
-                          id={feed.id}
-                          title={feed.title}
-                          user={feed.user}
-                          replyCount={feed.replyCount}
-                          paperCount={feed.paperCount}
-                          likeCount={feed.likeCount}
-                        />
-                    );
-                }
-                if (feed.type === "Review") {
-                    return (
-                        <ReviewCard
-                          source={feed.source}
-                          paperId={feed.paperId}
-                          key={feed.id}
-                          author={feed.author}
-                          id={feed.id}
-                          title={feed.title}
-                          user={feed.user}
-                          date={feed.date}
-                          likeCount={feed.likeCount}
-                          replyCount={feed.replyCount}
-                        />
-                    );
-                }
-                if (feed.type === "Paper") {
-                    return (
-                        <PaperCard
-                          key={feed.id}
-                          id={feed.id}
-                          user={feed.user}
-                          title={feed.title}
-                          authors={feed.authors}
-                          date={feed.date}
-                          keywords={feed.keywords}
-                          likeCount={feed.likeCount}
-                          reviewCount={feed.reviewCount}
-                        />
-                    );
-                }
-                return 0;
-            });
+            .map((feed) => this.feedMaker(feed));
 
         return (
             <div className="main">
@@ -156,5 +113,4 @@ class Main extends Component {
         );
     }
 }
-
 export default Main;
