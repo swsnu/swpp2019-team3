@@ -48,6 +48,11 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
         try:
             if request.method == 'GET' or request.method == 'DELETE':
                 # request.GET은 QueryDict을 리턴하므로 이를 Python dict으로 바꿔준다
+                if request.method == 'DELETE' and api == 'collection':
+                    print("!!!!!!!!!!!!HANSANGBEOM!!!!!!!!!!!!!!")
+                    print(request.GET.dict())
+                    print(request.body)
+                    print("!!!!!!!!!!!!HANSANGBEOM!!!!!!!!!!!!!!")
                 args = request.GET.dict()
             else:
                 args = request.POST

@@ -1,7 +1,6 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
 
-from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Exists, OuterRef, Count
 
@@ -14,6 +13,7 @@ from papersfeed.models.collections.collection_paper import CollectionPaper
 
 
 def insert_collection(args):
+    """Insert Collection"""
     is_parameter_exists([
         constants.TITLE, constants.TEXT
     ], args)
@@ -57,7 +57,8 @@ def update_collection(args):
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     # Check Collection User Id
-    if not request_user or not CollectionUser.objects.filter(collection_id=collection_id, user_id=request_user.id).exists():
+    if not request_user or not CollectionUser.objects.filter(collection_id=collection_id,
+                                                             user_id=request_user.id).exists():
         raise ApiError(constants.AUTH_ERROR)
 
     # Title
@@ -96,7 +97,8 @@ def remove_collection(args):
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     # Check Collection User Id
-    if not request_user or not CollectionUser.objects.filter(collection_id=collection_id, user_id=request_user.id).exists():
+    if not request_user or not CollectionUser.objects.filter(collection_id=collection_id,
+                                                             user_id=request_user.id).exists():
         raise ApiError(constants.AUTH_ERROR)
 
     collection.delete()
@@ -200,10 +202,11 @@ def __pack_collections(collections, request_user):
     return packed
 
 
-def __is_collection_liked(outerRef, request_user):
+def __is_collection_liked(outer_ref, request_user):
     """Check If Collection is Liked by User"""
     return Exists(
-        CollectionLike.objects.filter(collection_id=OuterRef(outerRef), user_id=request_user.id if request_user else None)
+        CollectionLike.objects.filter(collection_id=OuterRef(outer_ref),
+                                      user_id=request_user.id if request_user else None)
     )
 
 
