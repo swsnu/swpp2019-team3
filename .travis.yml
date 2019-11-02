@@ -27,7 +27,6 @@ matrix:
     - sonar-scanner
     after_success:
     - cat ./coverage/lcov.info | coveralls
-    - sonar-scanner
 
   - language: python
     cache:
