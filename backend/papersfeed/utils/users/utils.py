@@ -83,11 +83,9 @@ def insert_user(args):
     hashed, salt = __hash_password(password)
 
     try:
-        user = User.objects.create(
+        User.objects.create(
             description=None, email=email, username=username, password=hashed, salt=salt
         )
-
-        return user
     except IntegrityError:
         raise ApiError(constants.USERNAME_ALREADY_EXISTS)
 
