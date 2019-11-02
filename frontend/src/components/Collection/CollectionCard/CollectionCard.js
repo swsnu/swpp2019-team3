@@ -9,7 +9,7 @@ class CollectionCard extends Component {
         super(props);
         this.state = {
             isLiked: false,
-            numLikes: 0,
+            likeCount: 0,
         };
         this.clickCollectionCardUnlikeHandler = this.clickCollectionCardUnlikeHandler.bind(this);
         this.clickCollectionCardLikeHandler = this.clickCollectionCardLikeHandler.bind(this);
@@ -19,7 +19,7 @@ class CollectionCard extends Component {
     clickCollectionCardLikeHandler() {
         const nextState = {
             isLiked: true,
-            numLikes: this.state.numLikes + 1,
+            likeCount: this.state.likeCount + 1,
         };
         this.setState(nextState);
     }
@@ -28,7 +28,7 @@ class CollectionCard extends Component {
     clickCollectionCardUnlikeHandler() {
         const nextState = {
             isLiked: false,
-            numLikes: this.state.numLikes - 1,
+            likeCount: this.state.likeCount - 1,
         };
         this.setState(nextState);
     }
@@ -42,11 +42,11 @@ class CollectionCard extends Component {
                         <div className="title">
                             <Card.Link className="text" href={`/collections/${this.props.id}`}>{this.props.title}</Card.Link>
                         </div>
-                        <Card.Text>{this.props.numPapers}</Card.Text>
+                        <Card.Text>Number of papers: {this.props.paperCount}</Card.Text>
                     </Card.Body>
                     <Card.Footer>
-                        <Button id="like-button" className="like-button" onClick={this.state.isLiked ? this.clickCollectionCardUnlikeHandler : this.clickCollectionCardLikeHandler}>{this.state.numLikes}</Button>
-                        <Button href={`/collections/${this.props.id}`}>{this.props.numReplies}</Button>
+                        <Button id="like-button" className="like-button" onClick={this.state.isLiked ? this.clickCollectionCardUnlikeHandler : this.clickCollectionCardLikeHandler}>{this.state.likeCount}</Button>
+                        <Button href={`/collections/${this.props.id}`}>{this.props.replyCount}</Button>
                     </Card.Footer>
                 </Card>
             </div>
@@ -59,8 +59,8 @@ CollectionCard.propTypes = {
     id: PropTypes.number,
     user: PropTypes.string,
     title: PropTypes.string,
-    numPapers: PropTypes.number,
-    numReplies: PropTypes.number,
+    paperCount: PropTypes.number,
+    replyCount: PropTypes.number,
 };
 
 CollectionCard.defaultProps = {
@@ -68,8 +68,8 @@ CollectionCard.defaultProps = {
     id: 0,
     user: "",
     title: "",
-    numPapers: 0,
-    numReplies: 0,
+    paperCount: 0,
+    replyCount: 0,
 };
 
 export default CollectionCard;

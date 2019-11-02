@@ -15,8 +15,9 @@ class Main extends Component {
                 id: 1,
                 title: "dfad",
                 user: "Dfafdaf",
-                numPapers: 14,
-                numReplies: 15,
+                paperCount: 14,
+                replyCount: 15,
+                likeCount: 30,
             }, {
                 type: "Review",
                 source: "liked",
@@ -24,8 +25,8 @@ class Main extends Component {
                 id: 3,
                 title: "dfad",
                 user: "Dfafdaf",
-                numPapers: 14,
-                numReplies: 15,
+                likeCount: 14,
+                replyCount: 15,
             },
             {
                 type: "Paper",
@@ -36,7 +37,7 @@ class Main extends Component {
                 title: "dfad",
                 user: "Dfafdaf",
                 likeCount: 14,
-                replyCount: 15,
+                reviewCount: 15,
             }],
         };
     }
@@ -52,8 +53,9 @@ class Main extends Component {
                           id={feed.id}
                           title={feed.title}
                           user={feed.user}
-                          numReplies={feed.numReplies}
-                          numPapers={feed.numPapers}
+                          replyCount={feed.replyCount}
+                          paperCount={feed.paperCount}
+                          likeCount={feed.likeCount}
                         />
                     );
                 }
@@ -83,7 +85,8 @@ class Main extends Component {
                           authors={feed.authors}
                           date={feed.date}
                           keywords={feed.keywords}
-                          numReplies={feed.numReplies}
+                          likeCount={feed.likeCount}
+                          reviewCount={feed.reviewCount}
                         />
                     );
                 }
@@ -99,8 +102,9 @@ class Main extends Component {
                           id={feed.id}
                           title={feed.title}
                           user={feed.user}
-                          numPapers={feed.numPapers}
-                          numReplies={feed.numReplies}
+                          replyCount={feed.replyCount}
+                          paperCount={feed.paperCount}
+                          likeCount={feed.likeCount}
                         />
                     );
                 }
@@ -130,7 +134,8 @@ class Main extends Component {
                           authors={feed.authors}
                           date={feed.date}
                           keywords={feed.keywords}
-                          numReplies={feed.numReplies}
+                          likeCount={feed.likeCount}
+                          reviewCount={feed.reviewCount}
                         />
                     );
                 }
