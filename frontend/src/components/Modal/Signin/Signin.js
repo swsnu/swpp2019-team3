@@ -13,6 +13,7 @@ class Signin extends Component {
         };
         this.openModalHandler = this.openModalHandler.bind(this);
         this.clickSigninButtonHandler = this.clickSigninButtonHandler.bind(this);
+        this.clickCancelButtonHandler = this.clickCancelButtonHandler.bind(this);
     }
 
     openModalHandler() {
@@ -24,6 +25,10 @@ class Signin extends Component {
         this.props.history.push("/main");
     }
 
+    clickCancelButtonHandler() {
+        this.setState({ isOpen: false });
+    }
+
     render() {
         return (
             <div className="signin">
@@ -33,22 +38,29 @@ class Signin extends Component {
                   className="signin-modal"
                   centered
                 >
-                    <h2 id="welcome-back">Welcome back</h2>
-                    <FormControl
-                      className="id-input"
-                      type="text"
-                      placeholder="ID"
-                      value={this.state.id}
-                      onChange={(e) => this.setState({ id: e.target.value })}
-                    />
-                    <FormControl
-                      className="password-input"
-                      type="text"
-                      placeholder="password"
-                      value={this.state.password}
-                      onChange={(e) => this.setState({ password: e.target.value })}
-                    />
-                    <Button className="signin-button" onClick={this.clickSigninButtonHandler}>Sign In</Button>
+                    <Modal.Header>
+                        <h2 id="welcome-back">Welcome back</h2>
+                        <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <FormControl
+                          className="id-input"
+                          type="text"
+                          placeholder="ID"
+                          value={this.state.id}
+                          onChange={(e) => this.setState({ id: e.target.value })}
+                        />
+                        <FormControl
+                          className="password-input"
+                          type="text"
+                          placeholder="password"
+                          value={this.state.password}
+                          onChange={(e) => this.setState({ password: e.target.value })}
+                        />
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button className="signin-button" onClick={this.clickSigninButtonHandler}>Sign In</Button>
+                    </Modal.Footer>
                 </Modal>
             </div>
         );

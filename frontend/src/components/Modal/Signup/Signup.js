@@ -14,6 +14,7 @@ class Signup extends Component {
         };
         this.openModalHandler = this.openModalHandler.bind(this);
         this.clickSignupButtonHandler = this.clickSignupButtonHandler.bind(this);
+        this.clickCancelButtonHandler = this.clickCancelButtonHandler.bind(this);
     }
 
     openModalHandler() {
@@ -25,6 +26,10 @@ class Signup extends Component {
         this.props.history.push("/main");
     }
 
+    clickCancelButtonHandler() {
+        this.setState({ isOpen: false });
+    }
+
     render() {
         return (
             <div className="signup">
@@ -34,8 +39,11 @@ class Signup extends Component {
                   className="signup-modal"
                   centered
                 >
-                    <div className="modal-content">
+                    <Modal.Header>
                         <h2 id="create-account">Create account</h2>
+                        <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
+                    </Modal.Header>
+                    <Modal.Body>
                         <FormControl
                           className="id-input"
                           type="text"
@@ -57,8 +65,10 @@ class Signup extends Component {
                           value={this.state.email}
                           onChange={(e) => this.setState({ email: e.target.value })}
                         />
+                    </Modal.Body>
+                    <Modal.Footer className="modal-footer">
                         <Button className="signup-button" onClick={this.clickSignupButtonHandler}>Sign Up</Button>
-                    </div>
+                    </Modal.Footer>
                 </Modal>
             </div>
         );

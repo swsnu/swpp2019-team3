@@ -28,7 +28,7 @@ describe("<Signup />", () => {
         expect(wrapper.length).toBe(1);
     });
 
-    it("should be closed if signupButton is clicked", () => {
+    it("should be closed and redirect if signupButton is clicked", () => {
         const historyMock = { push: jest.fn() };
         const component = mount(<Signup history={historyMock} />);
         const signupInstance = component.find(Signup).instance();
@@ -44,6 +44,23 @@ describe("<Signup />", () => {
 
         expect(signupInstance.state.isOpen).toBe(false);
         expect(historyMock.push).toHaveBeenCalledTimes(1);
+    });
+
+    it("should be closed if cancelButton is clicked", () => {
+        const historyMock = { push: jest.fn() };
+        const component = mount(<Signup history={historyMock} />);
+        const signupInstance = component.find(Signup).instance();
+
+        const openButton = component.find(".open-button").hostNodes();
+        openButton.simulate("click");
+
+        expect(signupInstance.state.isOpen).toBe(true);
+
+        const signupButton = component.find(".cancel-button").hostNodes();
+        expect(signupButton.length).toBe(1);
+        signupButton.simulate("click");
+
+        expect(signupInstance.state.isOpen).toBe(false);
     });
 
     it("should set state properly on inputs", () => {
