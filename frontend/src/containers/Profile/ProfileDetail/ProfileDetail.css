@@ -4,83 +4,90 @@
     margin-left: 250px;
     position: relative;
     display: flex;
+    flex-direction: column;
 }
 
 .userInfo {
-
-}
-.userInfo #userPhoto {
     display: flex;
+    flex-direction: column;
+    margin: 20px;
 }
 
-.userStatistic {
+.userInfo .userStatistic {
+    display: inline-flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.userInfo .userDescAndButton {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
 }
 
-#collectionStat {
-    
-}
-#collectionCount {
-
+.userInfo .userDescAndButton #buttonDisplayed {
+    align-self: flex-end;
 }
 
-#collectionText {
-
-}
-
-#reviewStat {
-    
-}
-
-#reviewCount {
-
-}
-
-#reviewText {
-
-}
-
-#followerStat {
-    display: flex;
-}
-
-#followerCount {
-
-}
-
-#followerText {
-
-}
-
-#followingStat {
-    display: flex;
-}
-
-#followingCount {
-
-}
-
-#followingText {
-
-}
-
-.userText {
-    display: flex;
-}
-
-#userName {
-    text-align: left;
-}
-
-#buttonDisplayed {
-    align-items: flex-end;
-}
-
-#userDescription {
-    text-align: left;
+.userInfo .userDescAndButton #userDescription {
+    align-self: flex-start;
+    margin-left: 20px;
 }
 
 .itemTabSection {
+    margin: 20px;
+    background: rgb(255,255,255);
+}
+
+.itemTabSection #collectionCards {
+    width: 100%;
+    height: 100%;
+    margin: 15px;
     
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: row wrap;
+    align-items: flex-start;
+}
+
+.itemTabSection #collectionCardsLeft {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.itemTabSection #collectionCardsRight {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.itemTabSection #reviewCards {
+    width: 100%;
+    height: 100%;
+    margin: 15px;
+    
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: row wrap;
+    align-items: flex-start;
+}
+
+.itemTabSection #reviewCardsLeft {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.itemTabSection #reviewCardsRight {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
 }

@@ -11,6 +11,7 @@ import CollectionCard from "../../../components/Collection/CollectionCard/Collec
 import ReviewCard from "../../../components/Review/ReviewCard/ReviewCard";
 
 import "./ProfileDetail.css";
+import SamplePhoto from "./sample.jpg";
 // import * as actionCreators from "../../../store/actions/index";
 
 class ProfileDetail extends Component {
@@ -39,31 +40,65 @@ class ProfileDetail extends Component {
             buttonDisplayed = followButton;
         }
 
-        const collectionCards = this.props.thisUserCollections.map((collection) => (
-            <CollectionCard
-              key={collection.id}
-              source={collection.source}
-              id={collection.id}
-              user={collection.user}
-              title={collection.title}
-              numPapers={collection.numPapers}
-              numReplies={collection.numReplies}
-            />
-        ));
+        const collectionCardsLeft = this.props.thisUserCollections
+            .filter((x) => this.props.thisUserCollections.indexOf(x) % 2 === 0)
+            .map((collection) => (
+                <CollectionCard
+                  key={collection.id}
+                  source={collection.source}
+                  id={collection.id}
+                  user={collection.user}
+                  title={collection.title}
+                  numPapers={collection.numPapers}
+                  numReplies={collection.numReplies}
+                />
+            ));
 
-        const reviewCards = this.props.thisUserReviews.map((review) => (
-            <ReviewCard
-              key={review.id}
-              author={review.author}
-              paperId={review.paperId}
-              source={review.source}
-              id={review.id}
-              user={review.user}
-              title={review.title}
-              date={review.date}
-              numReplies={review.numReplies}
-            />
-        ));
+        const collectionCardsRight = this.props.thisUserCollections
+            .filter((x) => this.props.thisUserCollections.indexOf(x) % 2 === 1)
+            .map((collection) => (
+                <CollectionCard
+                  key={collection.id}
+                  source={collection.source}
+                  id={collection.id}
+                  user={collection.user}
+                  title={collection.title}
+                  numPapers={collection.numPapers}
+                  numReplies={collection.numReplies}
+                />
+            ));
+            
+        const reviewCardsLeft = this.props.thisUserReviews
+            .filter((x) => this.props.thisUserReviews.indexOf(x) % 2 === 0)
+            .map((review) => (
+                <ReviewCard
+                  key={review.id}
+                  author={review.author}
+                  paperId={review.paperId}
+                  source={review.source}
+                  id={review.id}
+                  user={review.user}
+                  title={review.title}
+                  date={review.date}
+                  numReplies={review.numReplies}
+                />
+            ));
+
+        const reviewCardsRight = this.props.thisUserReviews
+            .filter((x) => this.props.thisUserReviews.indexOf(x) % 2 === 1)
+            .map((review) => (
+                <ReviewCard
+                  key={review.id}
+                  author={review.author}
+                  paperId={review.paperId}
+                  source={review.source}
+                  id={review.id}
+                  user={review.user}
+                  title={review.title}
+                  date={review.date}
+                  numReplies={review.numReplies}
+                />
+            ));   
 
         return (
             <div className="ProfileDetail">
@@ -71,8 +106,11 @@ class ProfileDetail extends Component {
                 <SideBar id="SideBar" />
                 <div className="ProfileDetailContent">
                     <div className="userInfo">
-                        <Image id="userPhoto" src="sample.jpeg" rounded />
                         <div className="userStatistic">
+                            <div className="userPhotoName">
+                                <Image id="userPhoto" src={SamplePhoto} width={150} height={150} roundedCircle />
+                                <h2 id="userName">{this.props.thisUser.name}</h2>
+                            </div>
                             <div id="collectionStat">
                                 <h5 id="collectionCount">{this.props.thisUserCollections.length}</h5>
                                 <h5 id="collectionText">Collections</h5>
@@ -90,8 +128,7 @@ class ProfileDetail extends Component {
                                 <h5 id="followingText">Following</h5>
                             </Link>
                         </div>
-                        <div className="userText">
-                            <h2 id="userName">{this.props.thisUser.name}</h2>
+                        <div className="userDescAndButton">
                             <div id="buttonDisplayed">{buttonDisplayed}</div>
                             <p id="userDescription">{this.props.thisUser.description}</p>
                         </div>
@@ -99,10 +136,16 @@ class ProfileDetail extends Component {
                     <div className="itemTabSection">
                         <Tabs defaultActiveKey="collectionTab" id="itemTabs">
                             <Tab eventKey="collectionTab" title="Collections">
-                                {collectionCards}
+                                <div id="collectionCards">
+                                    <div id="collectionCardsLeft">{collectionCardsLeft}</div>
+                                    <div id="collectionCardsRight">{collectionCardsRight}</div>
+                                </div>
                             </Tab>
                             <Tab eventKey="reviewTab" title="Reviews">
-                                {reviewCards}
+                                <div id="reviewCards">
+                                    <div id="reviewCardsLeft">{reviewCardsLeft}</div>
+                                    <div id="reviewCardsRight">{reviewCardsRight}</div>
+                                </div>
                             </Tab>
                         </Tabs>
                     </div>
@@ -148,67 +191,67 @@ ProfileDetail.defaultProps = {
     currentUserID: 1,
     thisUser: {
         id: 1,
-        name: "Arthur",
-        description: "I used to think my life was a tragedy...",
+        name: "Girin",
+        description: "Kneel before me human, as I am the mighty and cute cat!",
         followersNum: 12,
         followingsNum: 47,
         doIFollow: false,
     },
     thisUserCollections: [
         {
-            source: "asdf",
+            source: "tested",
             id: 1,
-            user: "Arthur",
-            title: "Arthur's Joke Collection",
+            user: "Girin",
+            title: "Girin's Paper Collection",
             numPapers: 32,
             numReplies: 13,
         },
         {
-            source: "asdf",
+            source: "tasted",
             id: 2,
-            user: "Arthur",
-            title: "Bad jokes collection",
+            user: "Girin",
+            title: "Papers for tasty cat cans",
             numPapers: 4,
             numReplies: 1,
         },
         {
-            source: "asdf",
+            source: "hated",
             id: 3,
-            user: "Arthur",
-            title: "Murray show collection",
+            user: "Girin",
+            title: "Butler's Bad joke collection",
             numPapers: 62,
             numReplies: 23,
         },
     ],
     thisUserReviews: [
         {
-            author: "Arthur",
+            author: "Girin",
             paperId: 1,
-            source: "asdf",
+            source: "loved",
             id: 1,
-            user: "zxcv",
-            title: "why so serious?",
-            date: "111111",
+            user: "Girin",
+            title: "Ciao Churu is my favorite snack!",
+            date: "Jan 24th, 2019",
             numReplies: 6,
         },
         {
-            author: "Arthur",
+            author: "Girin",
             paperId: 12,
-            source: "qwer",
+            source: "liked",
             id: 2,
-            user: "1q2w3e4",
-            title: "the white knight",
-            date: "222222",
+            user: "Kamui",
+            title: "Kamui is my brother!",
+            date: "Feb 14, 2018",
             numReplies: 7,
         },
         {
-            author: "Arthur",
+            author: "Girin",
             paperId: 100,
-            source: "zxcv",
+            source: "reluctantly accepted",
             id: 3,
-            user: "asdfsad",
-            title: "killing joke",
-            date: "333333",
+            user: "Butler",
+            title: "Bring me tasty food Ningen!",
+            date: "March 7, 2018",
             numReplies: 8,
         },
     ],
