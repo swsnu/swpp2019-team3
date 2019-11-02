@@ -63,6 +63,6 @@ describe("<ReviewDetail />", () => {
         const component = mount(<ReviewDetail />);
         const button = component.find(".new-reply .new-reply-button").hostNodes();
         button.simulate("click");
-        expect(component.state().repliesCount).toBe(3);
+        expect(component.state().replyCount).toBe(3);
     });
 });
