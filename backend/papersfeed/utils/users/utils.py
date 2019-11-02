@@ -3,7 +3,7 @@
 import uuid
 import hashlib
 
-from django.db import IntegrityError, transaction
+from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Exists, OuterRef, Count
 
@@ -34,7 +34,7 @@ def select_session(args):
         raise ApiError(constants.NOT_EXIST_OBJECT)
     else:
         if not __is_correct_password(password, user):
-            raise ApiError(AuthError)
+            raise ApiError(constants.AUTH_ERROR)
 
         # Set Session Id
         request.session[constants.ID] = user.id
@@ -83,7 +83,7 @@ def insert_user(args):
     hashed, salt = __hash_password(password)
 
     try:
-        user = User.objects.create(
+        User.objects.create(
             description=None, email=email, username=username, password=hashed, salt=salt
         )
     except IntegrityError:
@@ -328,7 +328,7 @@ def __hash_password(password):
 # 비밀번호 확인
 def __is_correct_password(password, user):
     if user.salt is None:
-        raise ApiError(AuthError)
+        raise ApiError(constants.AUTH_ERROR)
 
     hashed_password = hashlib.sha256(user.salt.encode() + password.encode()).hexdigest()
 

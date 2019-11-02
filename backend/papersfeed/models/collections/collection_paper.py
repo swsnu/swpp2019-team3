@@ -1,5 +1,4 @@
 """collection_paper.py"""
-
 from django.db import models
 
 from papersfeed.models.base_models import BaseModel
@@ -11,7 +10,11 @@ class CollectionPaper(BaseModel):
     """Collection Paper"""
 
     # Collection
-    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, default=None, related_name='collection_paper_collection')
+    collection = models.ForeignKey(
+        Collection,
+        on_delete=models.CASCADE,
+        default=None,
+        related_name='collection_paper_collection')
 
     # Paper
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE, default=None, related_name='collection_paper_paper')

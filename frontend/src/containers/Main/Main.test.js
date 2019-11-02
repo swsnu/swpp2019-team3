@@ -88,6 +88,15 @@ describe("<Main />", () => {
                         numPapers: 14,
                         numReplies: 15,
                     },
+                    {
+                        type: "wrong type",
+                        source: "liked",
+                        id: 4,
+                        title: "dfad",
+                        user: "Dfafdaf",
+                        numPapers: 14,
+                        numReplies: 15,
+                    },
                 ],
             },
         );

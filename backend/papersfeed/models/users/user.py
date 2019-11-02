@@ -25,4 +25,3 @@ class User(BaseModel):
         """Table Meta"""
         db_table = 'swpp_user'  # Table 이름
         ordering = ['-pk']  # Default Order
-

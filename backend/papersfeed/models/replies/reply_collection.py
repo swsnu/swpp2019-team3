@@ -1,5 +1,4 @@
 """reply_collection.py"""
-
 from django.db import models
 
 from papersfeed.models.base_models import BaseModel
@@ -14,7 +13,11 @@ class ReplyCollection(BaseModel):
     reply = models.ForeignKey(Reply, on_delete=models.CASCADE, default=None, related_name='reply_collection_reply')
 
     # Collection
-    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, default=None, related_name='reply_collection_collection')
+    collection = models.ForeignKey(
+        Collection,
+        on_delete=models.CASCADE,
+        default=None,
+        related_name='reply_collection_collection')
 
     class Meta:
         """Table Meta"""
