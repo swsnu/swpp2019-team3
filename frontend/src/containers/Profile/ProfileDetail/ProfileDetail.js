@@ -67,7 +67,6 @@ class ProfileDetail extends Component {
                   numReplies={collection.numReplies}
                 />
             ));
-            
         const reviewCardsLeft = this.props.thisUserReviews
             .filter((x) => this.props.thisUserReviews.indexOf(x) % 2 === 0)
             .map((review) => (
@@ -98,7 +97,7 @@ class ProfileDetail extends Component {
                   date={review.date}
                   numReplies={review.numReplies}
                 />
-            ));   
+            ));
 
         return (
             <div className="ProfileDetail">

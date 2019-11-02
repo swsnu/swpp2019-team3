@@ -31,11 +31,11 @@ class ProfileEdit extends Component {
                     <div className="EditDescArea">
                         <h id="editDescTag">Your Description</h>
                         <textarea
-                        id="editDescription"
-                        rows="4"
-                        type="text"
-                        value={this.state.description}
-                        onChange={(event) => this.setState({ description: event.target.value })}
+                          id="editDescription"
+                          rows="4"
+                          type="text"
+                          value={this.state.description}
+                          onChange={(event) => this.setState({ description: event.target.value })}
                         />
                     </div>
                     <div className="ButtonArea">
