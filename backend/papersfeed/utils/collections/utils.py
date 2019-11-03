@@ -158,7 +158,7 @@ def update_paper_collection(args):
     is_parameter_exists([
         constants.ID, constants.COLLECTION_IDS
     ], args)
-        
+
     # Request User
     request_user = args[constants.USER]
                          
