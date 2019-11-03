@@ -40,13 +40,13 @@ class CollectionCard extends Component {
                     <Card.Header>{`${this.props.user} ${this.props.source} this collection.`}</Card.Header>
                     <Card.Body className="body">
                         <div className="title">
-                            <Card.Link className="text" href={`/collection/${this.props.id}`}>{this.props.title}</Card.Link>
+                            <Card.Link className="text" href={`/collections/${this.props.id}`}>{this.props.title}</Card.Link>
                         </div>
                         <Card.Text>Number of papers: {this.props.paperCount}</Card.Text>
                     </Card.Body>
                     <Card.Footer>
                         <Button id="like-button" className="like-button" onClick={this.state.isLiked ? this.clickCollectionCardUnlikeHandler : this.clickCollectionCardLikeHandler}>{this.state.likeCount}</Button>
-                        <Button href={`/collection/${this.props.id}`}>{this.props.replyCount}</Button>
+                        <Button href={`/collections/${this.props.id}`}>{this.props.replyCount}</Button>
                     </Card.Footer>
                 </Card>
             </div>
