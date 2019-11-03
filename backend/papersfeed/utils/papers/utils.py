@@ -71,7 +71,7 @@ def select_paper_collection(args):
 
 def get_paper_migration():
     """Paper Migration from json"""
-    with open('cs_500.json', 'r') as papers_json:
+    with open('papersfeed/fixtures/cs_500.json', 'r') as papers_json:
         paper_related_objects = json.load(papers_json)
 
         papers = []
