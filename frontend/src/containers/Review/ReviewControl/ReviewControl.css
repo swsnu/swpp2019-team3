@@ -1,0 +1,48 @@
+.review-control .review-control-page{
+    background: rgb(242,243,247);
+    margin-left: 18%;
+    display: flex;
+    min-height: 1000px;
+}
+
+.review-control .review-control-page .board{
+    width: 80%;
+    margin-top: 5%;
+    margin-left: 5%;
+    margin-right: 10%;
+    background: white;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
+.review-control .review-control-page .board .paper-spec{
+    width: 80%;
+    background: white;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    margin-bottom: 3%;
+    border-radius: 0.5em;
+    border-bottom: 2px solid  rgb(242,243,247);
+} 
+
+.review-control .board .form-title{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 120%;
+    font-weight: bold;
+}
+
+.review-control .board .form-content{
+    margin-top: 5%;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 120%;
+    font-weight: bold;
+}

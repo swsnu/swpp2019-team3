@@ -1,8 +1,6 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
-import json
 
-from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Exists, OuterRef, Count
 
@@ -15,6 +13,7 @@ from papersfeed.models.collections.collection_paper import CollectionPaper
 
 
 def insert_collection(args):
+    """Insert Collection"""
     is_parameter_exists([
         constants.TITLE, constants.TEXT
     ], args)
@@ -58,7 +57,8 @@ def update_collection(args):
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     # Check Collection User Id
-    if not request_user or not CollectionUser.objects.filter(collection_id=collection_id, user_id=request_user.id).exists():
+    if not request_user or not CollectionUser.objects.filter(collection_id=collection_id,
+                                                             user_id=request_user.id).exists():
         raise ApiError(constants.AUTH_ERROR)
 
     # Title
@@ -97,7 +97,8 @@ def remove_collection(args):
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     # Check Collection User Id
-    if not request_user or not CollectionUser.objects.filter(collection_id=collection_id, user_id=request_user.id).exists():
+    if not request_user or not CollectionUser.objects.filter(collection_id=collection_id,
+                                                             user_id=request_user.id).exists():
         raise ApiError(constants.AUTH_ERROR)
 
     collection.delete()
@@ -150,66 +151,64 @@ def select_collection_user(args):
 
     return collections
 
-
 def update_paper_collection(args):
     """Update Paper Collection"""
     is_parameter_exists([
-        constants.ID, constants.COLLECTION_IDS
-    ], args)
-
-    # Request User
-    request_user = args[constants.USER]
-
-    # Paper Id
-    paper_id = args[constants.ID]
-
-    # Collection IDs
-    collection_ids = json.loads(args[constants.COLLECTION_IDS])
-
-    # Containing Collections
-    containing_collection_ids = __get_collections_contains_paper(paper_id, request_user)
-
-    # Add To Collections
-    __add_paper_to_collections(paper_id, list(set(collection_ids) - set(containing_collection_ids)))
-
-    # Remove From Collections
+                         constants.ID, constants.COLLECTION_IDS
+                         ], args)
+        
+                         # Request User
+                         request_user = args[constants.USER]
+                         
+                         # Paper Id
+                         paper_id = args[constants.ID]
+                         
+                         # Collection IDs
+                         collection_ids = json.loads(args[constants.COLLECTION_IDS])
+                         
+                         # Containing Collections
+                         containing_collection_ids = __get_collections_contains_paper(paper_id, request_user)
+                         
+                         # Add To Collections
+                         __add_paper_to_collections(paper_id, list(set(collection_ids) - set(containing_collection_ids)))
+                         
+                         # Remove From Collections
     __remove_paper_from_collections(paper_id, list(set(containing_collection_ids) - set(collection_ids)))
 
 
 def __get_collections_contains_paper(paper_id, request_user):
     """Get Collections Containing paper"""
     collections = CollectionUser.objects.filter(
-        user_id=request_user.id  # User's Collections
-    ).annotate(
-        exists=Exists(
-            CollectionPaper.objects.filter(
-                paper_id=paper_id,
-                collection_id=OuterRef('collection_id')
-            )
-        )  # Containing Paper
-    ).filter(
-        exists=True
-    )
-
+                                                user_id=request_user.id  # User's Collections
+                                                ).annotate(
+                                                           exists=Exists(
+                                                                         CollectionPaper.objects.filter(
+                                                                                                        paper_id=paper_id,
+                                                                                                        collection_id=OuterRef('collection_id')
+                                                                                                        )
+                                                                         )  # Containing Paper
+                                                           ).filter(
+                                                                    exists=True
+                                                                    )
+                                                                    
     return [collection.id for collection in collections]
 
 
 def __remove_paper_from_collections(paper_id, collection_ids):
     """Remove Paper From Collections"""
-
+    
     if collection_ids:
         CollectionPaper.objects.filter(
-            collection_id__in=collection_ids, paper_id=paper_id
-        ).delete()
+                                       collection_id__in=collection_ids, paper_id=paper_id
+                                       ).delete()
 
 
 def __add_paper_to_collections(paper_id, collection_ids):
     """Add Paper To Collections"""
     for collection_id in collection_ids:
         CollectionPaper.objects.update_or_create(
-            collection_id=collection_id, paper_id=paper_id, defaults={}
-        )
-
+                                                 collection_id=collection_id, paper_id=paper_id, defaults={}
+                                                 )
 
 def __get_collections(filter_query, request_user, count):
     """Get Collections By Query"""
@@ -230,7 +229,7 @@ def __get_collections(filter_query, request_user, count):
     return collections, pagination_value, is_finished
 
 
-def __pack_collections(collections, request_user):
+def __pack_collections(collections, request_user): # pylint: disable=unused-argument
     """Pack Collections"""
     packed = []
 
@@ -261,10 +260,11 @@ def __pack_collections(collections, request_user):
     return packed
 
 
-def __is_collection_liked(outerRef, request_user):
+def __is_collection_liked(outer_ref, request_user):
     """Check If Collection is Liked by User"""
     return Exists(
-        CollectionLike.objects.filter(collection_id=OuterRef(outerRef), user_id=request_user.id if request_user else None)
+        CollectionLike.objects.filter(collection_id=OuterRef(outer_ref),
+                                      user_id=request_user.id if request_user else None)
     )
 
 

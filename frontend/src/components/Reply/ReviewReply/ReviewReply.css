@@ -1,0 +1,21 @@
+.review-reply-component .reply{
+    width: 100%;
+    text-align: left;
+    margin-bottom: 2%;
+    border-bottom: 2px solid rgb(242,243,247);
+}
+
+.review-reply-component .reply .author {
+    font-size: 100%;
+    font-weight: bold;
+    margin-bottom: 1%;
+}
+
+.review-reply-component .reply .buttons{
+    margin-top: 2%;
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 1%;
+}
+
+

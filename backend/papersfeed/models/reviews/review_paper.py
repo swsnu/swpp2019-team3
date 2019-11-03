@@ -1,5 +1,4 @@
 """review_paper.py"""
-
 from django.db import models
 
 from papersfeed.models.base_models import BaseModel
