@@ -170,7 +170,7 @@ def update_paper_collection(args):
                          
     # Containing Collections
     containing_collection_ids = __get_collections_contains_paper(paper_id, request_user)
-                         
+
     # Add To Collections
     __add_paper_to_collections(paper_id, list(set(collection_ids) - set(containing_collection_ids)))
                          
@@ -232,7 +232,7 @@ def __get_collections(filter_query, request_user, count):
     return collections, pagination_value, is_finished
 
 
-def __pack_collections(collections, request_user): # pylint: disable=unused-argument
+def __pack_collections(collections, request_user):  # pylint: disable=unused-argument
     """Pack Collections"""
     packed = []
 
