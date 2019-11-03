@@ -4,8 +4,6 @@
 import json
 import datetime
 
-from django.db import IntegrityError
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Exists, OuterRef, Count
 
 from papersfeed import constants
@@ -13,13 +11,12 @@ from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_qu
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.papers.author import Author
 from papersfeed.models.papers.keyword import Keyword
-from papersfeed.models.papers.paper_author import PaperAuthor, PAPER_AUTHOR_TYPE
+from papersfeed.models.papers.paper_author import PaperAuthor
 from papersfeed.models.papers.paper_keyword import PaperKeyword
 from papersfeed.models.papers.paper_like import PaperLike
 from papersfeed.models.papers.paper_publication import PaperPublication
 from papersfeed.models.papers.publication import Publication
 from papersfeed.models.papers.publisher import Publisher
-from papersfeed.models.papers.reference import Reference
 from papersfeed.models.reviews.review_paper import ReviewPaper
 from papersfeed.models.collections.collection_paper import CollectionPaper
 

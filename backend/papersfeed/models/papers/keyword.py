@@ -3,7 +3,6 @@ from django.db import models
 
 from papersfeed.models.base_models import BaseModel
 from .paper import Paper
-from papersfeed.models.base_models import BaseModel
 
 
 class Keyword(BaseModel):

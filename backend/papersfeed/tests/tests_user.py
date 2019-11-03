@@ -129,9 +129,8 @@ class UserTestCase(TestCase):
         # Unfollow Success
         response = client.delete('/api/follow',
                                  json.dumps({
-                                   constants.ID: follow_id
-                                 }),
-                                 content_type='application/json')
+                                     constants.ID: follow_id
+                                 }), content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
 

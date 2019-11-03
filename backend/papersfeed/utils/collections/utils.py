@@ -161,19 +161,19 @@ def update_paper_collection(args):
 
     # Request User
     request_user = args[constants.USER]
-                         
+
     # Paper Id
     paper_id = args[constants.ID]
-                         
+
     # Collection IDs
     collection_ids = json.loads(args[constants.COLLECTION_IDS])
-                         
+
     # Containing Collections
     containing_collection_ids = __get_collections_contains_paper(paper_id, request_user)
 
     # Add To Collections
     __add_paper_to_collections(paper_id, list(set(collection_ids) - set(containing_collection_ids)))
-                         
+
     # Remove From Collections
     __remove_paper_from_collections(paper_id, list(set(containing_collection_ids) - set(collection_ids)))
 
@@ -192,7 +192,7 @@ def __get_collections_contains_paper(paper_id, request_user):
     ).filter(
         exists=True
     )
-                                                                    
+
     return [collection.id for collection in collections]
 
 

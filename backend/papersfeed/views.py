@@ -46,24 +46,8 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
 
     if handler is not api_not_found:
         try:
-            if request.method == 'GET':
-                # request.GET은 QueryDict을 리턴하므로 이를 Python dict으로 바꿔준다
-                args = request.GET.dict()
-            elif request.method == 'DELETE':
-                # request.GET은 QueryDict을 리턴하므로 이를 Python dict으로 바꿔준다
-                args = request.GET.dict()
-
-                # DELETE의 경우 request.body 상의 json data를 arg로 넘겨주어야한다
-                body = json.loads(request.body.decode()) if request.body else None
-                if isinstance(body, dict):
-                    args = body
-            else:
-                args = request.POST
-
-                # POST의 경우 request.body 상의 json data를 arg로 넘겨주어야한다
-                body = json.loads(request.body.decode()) if request.body else None
-                if isinstance(body, dict):
-                    args = body
+            # Get args with request
+            args = __get_args(request)
 
             args[constants.REQUEST] = request
 
@@ -90,6 +74,31 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
     response.status_code = status_code
 
     return response
+
+
+def __get_args(request):
+    if request.method == 'GET':
+        # request.GET은 QueryDict을 리턴하므로 이를 Python dict으로 바꿔준다
+        args = request.GET.dict()
+        return args
+    elif request.method == 'DELETE':
+        # request.GET은 QueryDict을 리턴하므로 이를 Python dict으로 바꿔준다
+        args = request.GET.dict()
+
+        # DELETE의 경우 request.body 상의 json data를 arg로 넘겨주어야한다
+        body = json.loads(request.body.decode()) if request.body else None
+        if isinstance(body, dict):
+            args = body
+        return args
+    else:
+        args = request.POST
+
+        # POST의 경우 request.body 상의 json data를 arg로 넘겨주어야한다
+        body = json.loads(request.body.decode()) if request.body else None
+        if isinstance(body, dict):
+            args = body
+
+        return args
 
 
 def __check_session(args, request):
