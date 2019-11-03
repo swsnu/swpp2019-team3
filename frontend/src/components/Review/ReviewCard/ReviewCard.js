@@ -45,14 +45,14 @@ class ReviewCard extends Component {
                     {header}
                     <Card.Body className="body">
                         <div className="title">
-                            <Card.Link href={`/paper/${this.props.id}`} className="text">{this.props.title}</Card.Link>
+                            <Card.Link href={`/paper_id=${this.props.paperId}`} className="text">{this.props.title}</Card.Link>
                         </div>
                         <Card.Text>{this.props.date}</Card.Text>
                         <Card.Text>{this.props.author}</Card.Text>
                     </Card.Body>
                     <Card.Footer>
                         <Button className="like-button" onClick={this.state.isLiked ? this.clickReviewCardUnlikeHandler : this.clickReviewCardLikeHandler}>{this.props.likeCount}</Button>
-                        <Button href={`/papers/${this.props.paperId}/${this.props.id}`}>{this.props.replyCount}</Button>
+                        <Button href={`/review_id=${this.props.id}`}>{this.props.replyCount}</Button>
                     </Card.Footer>
                 </Card>
             </div>

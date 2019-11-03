@@ -5,7 +5,7 @@ import PaperCard from "./Paper/PaperCard/PaperCard";
 import ReviewCard from "./Review/ReviewCard/ReviewCard";
 import Header from "./Header/Header";
 import IntroModal from "./Modal/IntroModal/IntroModal";
-import ReviewReply from "./Reply/ReviewReply/ReviewReply";
+import Reply from "./Reply/Reply";
 
 export {
     SideBar,
@@ -15,5 +15,5 @@ export {
     ReviewCard,
     Header,
     IntroModal,
-    ReviewReply,
+    Reply,
 };

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Form, Button, Card } from "react-bootstrap";
 
 import {
-    SideBar, Header, ReviewReply,
+    Reply,
 } from "../../../components";
 import "./ReviewDetail.css";
 
@@ -67,11 +67,11 @@ class ReviewDetail extends Component {
     }
 
     clickEditButtonHandler() {
-        this.props.history.push(`papers/${this.state.paperId}/${this.state.id}/edit`);
+        this.props.history.push(`/review_id=${this.state.id}/edit`);
     }
 
     clickDeleteButtonHandler() {
-        this.props.history.push(`papers/${this.state.paperId}`);
+        this.props.history.push(`/paper_id=${this.state.paperId}`);
     }
 
     clickReplyAddButtonHandler() {
@@ -83,7 +83,7 @@ class ReviewDetail extends Component {
 
     render() {
         const replies = this.state.replies.map((reply) => (
-            <ReviewReply
+            <Reply
               key={reply.id}
               id={reply.id}
               author={reply.author}
@@ -94,8 +94,6 @@ class ReviewDetail extends Component {
 
         return (
             <div className="review-detail">
-                <Header />
-                <SideBar />
                 <div className="board">
                     <Card className="review-reply">
                         <Card.Body>

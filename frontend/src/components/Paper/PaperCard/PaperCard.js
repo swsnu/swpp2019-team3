@@ -40,7 +40,7 @@ class PaperCard extends Component {
                     <Card.Header>{`${this.props.user} ${this.props.source} this paper.`}</Card.Header>
                     <Card.Body className="body">
                         <div className="title">
-                            <Card.Link href={`/paper/${this.props.id}`} className="text">{this.props.title}</Card.Link>
+                            <Card.Link href={`/paper_id=${this.props.id}`} className="text">{this.props.title}</Card.Link>
                         </div>
                         <Card.Text>{this.props.date}</Card.Text>
                         <Card.Text>{this.props.authors}</Card.Text>
@@ -48,7 +48,7 @@ class PaperCard extends Component {
                     </Card.Body>
                     <Card.Footer className="footer">
                         <Button className="like-button" onClick={this.state.isLiked ? this.clickPaperCardUnlikeHandler : this.clickPaperCardLikeHandler}>{this.props.likeCount}</Button>
-                        <Button href={`/papers/${this.props.id}`}>{this.props.reviewCount}</Button>
+                        <Button href={`/paper_id=${this.props.id}`}>{this.props.reviewCount}</Button>
                         <Button className="add-button">Add</Button>
                     </Card.Footer>
                 </Card>
