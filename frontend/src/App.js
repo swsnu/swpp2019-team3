@@ -6,7 +6,7 @@ import { Route, /* Redirect , */ Switch } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
 
 import {
-    Intro, Main, ReviewDetail, PaperDetail, ReviewControl,
+    Intro, Main, ReviewDetail, PaperDetail, ReviewControl, ProfileDetail, ProfileEdit,
 } from "./containers";
 
 function App(props) {
@@ -36,6 +36,8 @@ function App(props) {
                       )}
                     />
                     <Route path="/papers/:id" exact component={PaperDetail} />
+                    <Route path="/profile/:id" exact component={ProfileDetail} />
+                    <Route path="/profile/:id/edit" exact component={ProfileEdit} />
                 </Switch>
             </div>
         </ConnectedRouter>
