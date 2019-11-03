@@ -81,7 +81,8 @@ def __get_args(request):
         # request.GET은 QueryDict을 리턴하므로 이를 Python dict으로 바꿔준다
         args = request.GET.dict()
         return args
-    elif request.method == 'DELETE':
+
+    if request.method == 'DELETE':
         # request.GET은 QueryDict을 리턴하므로 이를 Python dict으로 바꿔준다
         args = request.GET.dict()
 
@@ -90,15 +91,15 @@ def __get_args(request):
         if isinstance(body, dict):
             args = body
         return args
-    else:
-        args = request.POST
 
-        # POST의 경우 request.body 상의 json data를 arg로 넘겨주어야한다
-        body = json.loads(request.body.decode()) if request.body else None
-        if isinstance(body, dict):
-            args = body
+    args = request.POST
 
-        return args
+    # POST의 경우 request.body 상의 json data를 arg로 넘겨주어야한다
+    body = json.loads(request.body.decode()) if request.body else None
+    if isinstance(body, dict):
+        args = body
+
+    return args
 
 
 def __check_session(args, request):

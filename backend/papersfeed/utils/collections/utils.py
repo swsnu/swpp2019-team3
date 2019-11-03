@@ -198,7 +198,6 @@ def __get_collections_contains_paper(paper_id, request_user):
 
 def __remove_paper_from_collections(paper_id, collection_ids):
     """Remove Paper From Collections"""
-    
     if collection_ids:
         CollectionPaper.objects.filter(
             collection_id__in=collection_ids, paper_id=paper_id
