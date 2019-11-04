@@ -3,16 +3,17 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Modal, FormControl, Button } from "react-bootstrap";
 import authActions from "../../../store/actions/index";
+import { signupStatus } from "../../../store/reducers/auth";
 import "./IntroModal.css";
 
 class IntroModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            signupSubmitted: false,
+            signupStatus: signupStatus.NONE,
             isSignupOpen: false,
             isSigninOpen: false,
-            id: "",
+            username: "",
             password: "",
             email: "",
         };
@@ -33,12 +34,30 @@ class IntroModal extends Component {
 
     clickSignupButtonHandler() {
         const signingUpUser = {
-            username: this.state.id,
+            username: this.state.username,
             password: this.state.password,
             email: this.state.email,
         };
-        this.props.onSignup(signingUpUser);
-        this.setState({ signupSubmitted: true });
+        this.props.onSignup(signingUpUser)
+            .then(() => {
+                switch (this.props.signupStatus) {
+                case signupStatus.WAITING:
+                    // TODO: we should handle timeout
+                    break;
+                case signupStatus.SUCCESS:
+                    this.setState({ signupStatus: signupStatus.NONE });
+                    this.props.history.push("/main");
+                    break;
+                case signupStatus.DUPLICATE_USERNAME:
+                    this.setState({ signupStatus: signupStatus.DUPLICATE_USERNAME });
+                    break;
+                case signupStatus.DUPLICATE_EMAIL:
+                    this.setState({ signupStatus: signupStatus.DUPLICATE_EMAIL });
+                    break;
+                default:
+                    break;
+                }
+            });
     }
 
     clickSigninButtonHandler() {
@@ -54,6 +73,14 @@ class IntroModal extends Component {
         let modalHeader = null;
         let emailInput = null;
         let modalFooter = null;
+
+        let signupMessage = null;
+        if (this.state.signupStatus === signupStatus.DUPLICATE_USERNAME) {
+            signupMessage = "This username already exists";
+        } else if (this.state.signupStatus === signupStatus.DUPLICATE_EMAIL) {
+            signupMessage = "This email already exists";
+        }
+
         if (this.state.isSignupOpen) {
             modalHeader = (
                 <Modal.Header>
@@ -72,7 +99,13 @@ class IntroModal extends Component {
             );
             modalFooter = (
                 <Modal.Footer className="modal-footer">
-                    <Button className="signup-button" onClick={this.clickSignupButtonHandler}>Sign Up</Button>
+                    <h3 id="signup-message">{signupMessage}</h3>
+                    <Button
+                      className="signup-button"
+                      onClick={this.clickSignupButtonHandler}
+                      disabled={!(this.state.username && this.state.password && this.state.email)}
+                    >Sign Up
+                    </Button>
                 </Modal.Footer>
             );
         } else if (this.state.isSigninOpen) {
@@ -84,7 +117,12 @@ class IntroModal extends Component {
             );
             modalFooter = (
                 <Modal.Footer>
-                    <Button className="signin-button" onClick={this.clickSigninButtonHandler}>Sign In</Button>
+                    <Button
+                      className="signin-button"
+                      onClick={this.clickSigninButtonHandler}
+                      disabled={!(this.state.username && this.state.password)}
+                    >Sign In
+                    </Button>
                 </Modal.Footer>
             );
         }
@@ -102,11 +140,11 @@ class IntroModal extends Component {
                     {modalHeader}
                     <Modal.Body>
                         <FormControl
-                          className="id-input"
+                          className="username-input"
                           type="text"
-                          placeholder="ID"
-                          value={this.state.id}
-                          onChange={(e) => this.setState({ id: e.target.value })}
+                          placeholder="username"
+                          value={this.state.username}
+                          onChange={(e) => this.setState({ username: e.target.value })}
                         />
                         <FormControl
                           className="password-input"
@@ -125,7 +163,7 @@ class IntroModal extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    signedUp: state.auth.signedUp,
+    signupStatus: state.auth.status,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -137,9 +175,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(IntroModal);
 IntroModal.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
     onSignup: PropTypes.func,
+    signupStatus: PropTypes.string,
 };
 
 IntroModal.defaultProps = {
     history: null,
     onSignup: null,
+    signupStatus: signupStatus.NONE,
 };

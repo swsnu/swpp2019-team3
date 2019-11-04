@@ -6,10 +6,23 @@ const signupSuccess = (user) => ({
     target: user,
 });
 
-const signupFailure = (error) => ({
-    type: authConstants.SIGNUP_FAILURE,
-    target: error,
-});
+const signupFailure = (error) => {
+    let actionType = null;
+    switch (error.response.status) {
+    case 419:
+        actionType = authConstants.SIGNUP_FAILURE_DUPLICATE_USERNAME;
+        break;
+    case 420:
+        actionType = authConstants.SIGNUP_FAILURE_DUPLICATE_EMAIL;
+        break;
+    default:
+        break;
+    }
+    return {
+        type: actionType,
+        target: error,
+    };
+};
 
 const signup = (user) => (dispatch) => axios.post("/api/user", user)
     .then((res) => dispatch(signupSuccess(res.data)))
