@@ -1,5 +1,3 @@
-// This is for generating types of actions
-
 // Search
 export const SEARCH = "SEARCH";
 export const SEARCH_SUCCESS = "SEARCH_SUCCESS";

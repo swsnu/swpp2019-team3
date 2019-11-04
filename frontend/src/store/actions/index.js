@@ -14,7 +14,7 @@ export {
     // addUserFollower,
     // removeUserFollower,
     setUserProfile,
-} from './Profile/ProfileActions';
+} from "./Profile/ProfileActions";
 
 export {
     makeNewCollection,
@@ -26,12 +26,12 @@ export {
     setOwner,
     setNameAndDescription,
     addCollectionPaper,
-    removeCollectionPaper,    
+    removeCollectionPaper,
     addCollectionMember,
-    removeCollectionMember,    
+    removeCollectionMember,
     deleteCollection,
     // getCollectionLikesCount,
     // getCollectionIsLiked,
     // addCollectionLike,
     // removeCollectionLike,
-} from './Collection/CollectionActions';
+} from "./Collection/CollectionActions";

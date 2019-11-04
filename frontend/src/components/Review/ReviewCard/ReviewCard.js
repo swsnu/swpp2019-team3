@@ -9,7 +9,7 @@ class ReviewCard extends Component {
         super(props);
         this.state = {
             isLiked: false,
-            numLikes: 0,
+            likeCount: 0,
         };
         this.clickReviewCardUnlikeHandler = this.clickReviewCardUnlikeHandler.bind(this);
         this.clickReviewCardLikeHandler = this.clickReviewCardLikeHandler.bind(this);
@@ -19,7 +19,7 @@ class ReviewCard extends Component {
     clickReviewCardLikeHandler() {
         const nextState = {
             isLiked: true,
-            numLikes: this.state.numLikes + 1,
+            likeCount: this.state.likeCount + 1,
         };
         this.setState(nextState);
     }
@@ -28,16 +28,21 @@ class ReviewCard extends Component {
     clickReviewCardUnlikeHandler() {
         const nextState = {
             isLiked: false,
-            numLikes: this.state.numLikes - 1,
+            likeCount: this.state.likeCount - 1,
         };
         this.setState(nextState);
     }
 
     render() {
+        let header = null;
+        if (this.props.headerExists) {
+            header = <Card.Header className="header">{`${this.props.user} ${this.props.source} this review`}</Card.Header>;
+        }
+
         return (
             <div className="wrapper">
                 <Card className="review">
-                    <Card.Header>{`${this.props.user} ${this.props.source} this review`}</Card.Header>
+                    {header}
                     <Card.Body className="body">
                         <div className="title">
                             <Card.Link href={`/paper/${this.props.id}`} className="text">{this.props.title}</Card.Link>
@@ -46,8 +51,8 @@ class ReviewCard extends Component {
                         <Card.Text>{this.props.author}</Card.Text>
                     </Card.Body>
                     <Card.Footer>
-                        <Button className="like-button" onClick={this.state.isLiked ? this.clickReviewCardUnlikeHandler : this.clickReviewCardLikeHandler}>{this.state.numLikes}</Button>
-                        <Button href={`/papers/${this.props.paperId}/${this.props.id}`}>{this.props.numReplies}</Button>
+                        <Button className="like-button" onClick={this.state.isLiked ? this.clickReviewCardUnlikeHandler : this.clickReviewCardLikeHandler}>{this.props.likeCount}</Button>
+                        <Button href={`/papers/${this.props.paperId}/${this.props.id}`}>{this.props.replyCount}</Button>
                     </Card.Footer>
                 </Card>
             </div>
@@ -63,7 +68,9 @@ ReviewCard.propTypes = {
     user: PropTypes.string,
     title: PropTypes.string,
     date: PropTypes.string,
-    numReplies: PropTypes.number,
+    likeCount: PropTypes.number,
+    replyCount: PropTypes.number,
+    headerExists: PropTypes.bool,
 };
 
 ReviewCard.defaultProps = {
@@ -74,7 +81,9 @@ ReviewCard.defaultProps = {
     user: "",
     title: "",
     date: "",
-    numReplies: 0,
+    likeCount: 0,
+    replyCount: 0,
+    headerExists: true,
 };
 
 export default ReviewCard;
