@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Form, Button } from "react-bootstrap";
 import {
-    SideBar, Header, PaperSpec,
+    PaperSpec,
 } from "../../../components";
 import "./ReviewControl.css";
 
@@ -25,16 +25,11 @@ class ReviewControl extends Component {
             },
         };
         this.handleChange = this.handleChange.bind(this);
-        this.clickCreateHandler = this.clickCreateHandler.bind(this);
-        this.clickEditHandler = this.clickEditHandler.bind(this);
+        this.clickButtonHandler = this.clickButtonHandler.bind(this);
     }
 
-    clickEditHandler() {
-        this.props.history.push(`papers/${this.state.paper.id}/${this.state.id}`);
-    }
-
-    clickCreateHandler() {
-        this.props.history.push(`/papers/${this.state.paper.id}/${this.state.id}`);
+    clickButtonHandler() {
+        this.props.history.push(`/review_id=${this.state.id}`);
     }
 
     handleChange(e) {
@@ -46,8 +41,6 @@ class ReviewControl extends Component {
     render() {
         return (
             <div className="review-control">
-                <Header />
-                <SideBar />
                 <div className="review-control-page">
                     <div className="board">
                         <div className="paper-spec">
@@ -68,11 +61,11 @@ class ReviewControl extends Component {
                         </Form.Group>
                         <Form.Group className="form-content" controlId="formReviewContent">
                             <Form.Label>Content</Form.Label>
-                            <Form.Control name="content" className="content-input" as="textarea" value={this.state.content} rows="7" type="text" placeholder={this.props.mode === 0 ? "Enter content" : this.state.title} onChange={this.handleChange} />
+                            <Form.Control name="content" className="content-input" as="textarea" value={this.state.content} rows="7" type="text" placeholder={this.props.mode === 0 ? "Enter content" : this.state.content} onChange={this.handleChange} />
                         </Form.Group>
                         { this.props.mode === 0
-                            ? <Button className="create-button" onClick={this.clickCreateHandler}>Create</Button>
-                            : <Button className="edit-button" onClick={this.clickEditHandler}>Edit</Button> }
+                            ? <Button className="create-button" onClick={this.clickButtonHandler}>Create</Button>
+                            : <Button className="edit-button" onClick={this.clickButtonHandler}>Edit</Button> }
                     </div>
                 </div>
             </div>

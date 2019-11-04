@@ -8,8 +8,8 @@ class PaperCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLiked: false,
-            likeCount: 0,
+            isLiked: this.props.isLiked,
+            likeCount: this.props.likeCount,
         };
         this.clickPaperCardUnlikeHandler = this.clickPaperCardUnlikeHandler.bind(this);
         this.clickPaperCardLikeHandler = this.clickPaperCardLikeHandler.bind(this);
@@ -40,15 +40,15 @@ class PaperCard extends Component {
                     <Card.Header>{`${this.props.user} ${this.props.source} this paper.`}</Card.Header>
                     <Card.Body className="body">
                         <div className="title">
-                            <Card.Link href={`/paper/${this.props.id}`} className="text">{this.props.title}</Card.Link>
+                            <Card.Link href={`/paper_id=${this.props.id}`} className="text">{this.props.title}</Card.Link>
                         </div>
                         <Card.Text>{this.props.date}</Card.Text>
                         <Card.Text>{this.props.authors}</Card.Text>
                         <Card.Text>{this.props.keywords}</Card.Text>
                     </Card.Body>
                     <Card.Footer className="footer">
-                        <Button className="like-button" onClick={this.state.isLiked ? this.clickPaperCardUnlikeHandler : this.clickPaperCardLikeHandler}>{this.props.likeCount}</Button>
-                        <Button href={`/papers/${this.props.id}`}>{this.props.reviewCount}</Button>
+                        <Button className="like-button" onClick={this.state.isLiked ? this.clickPaperCardUnlikeHandler : this.clickPaperCardLikeHandler}>{this.state.likeCount}</Button>
+                        <Button href={`/paper_id=${this.props.id}`}>{this.props.reviewCount}</Button>
                         <Button className="add-button">Add</Button>
                     </Card.Footer>
                 </Card>
@@ -67,6 +67,7 @@ PaperCard.propTypes = {
     keywords: PropTypes.string,
     likeCount: PropTypes.number,
     reviewCount: PropTypes.number,
+    isLiked: PropTypes.bool,
 };
 
 PaperCard.defaultProps = {
@@ -79,6 +80,7 @@ PaperCard.defaultProps = {
     keywords: "",
     likeCount: 0,
     reviewCount: 0,
+    isLiked: false,
 };
 
 export default PaperCard;
