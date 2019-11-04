@@ -8,8 +8,8 @@ class CollectionCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLiked: false,
-            likeCount: 0,
+            isLiked: this.props.isLiked,
+            likeCount: this.props.likeCount,
         };
         this.clickCollectionCardUnlikeHandler = this.clickCollectionCardUnlikeHandler.bind(this);
         this.clickCollectionCardLikeHandler = this.clickCollectionCardLikeHandler.bind(this);
@@ -61,6 +61,8 @@ CollectionCard.propTypes = {
     title: PropTypes.string,
     paperCount: PropTypes.number,
     replyCount: PropTypes.number,
+    likeCount: PropTypes.number,
+    isLiked: PropTypes.bool,
 };
 
 CollectionCard.defaultProps = {
@@ -70,6 +72,8 @@ CollectionCard.defaultProps = {
     title: "",
     paperCount: 0,
     replyCount: 0,
+    likeCount: 0,
+    isLiked: false,
 };
 
 export default CollectionCard;

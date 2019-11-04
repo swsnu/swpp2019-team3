@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Button from "react-bootstrap/Button";
 
-import { SideBar, Header } from "../../../components";
 // import * as actionCreators from "../../../store/actions/index";
 
 import "./ProfileEdit.css";
@@ -25,8 +24,6 @@ class ProfileEdit extends Component {
     render() {
         return (
             <div className="ProfileEdit">
-                <Header id="Header" />
-                <SideBar id="SideBar" />
                 <div className="ProfileEditContent">
                     <div className="EditDescArea">
                         <h id="editDescTag">Your Description</h>

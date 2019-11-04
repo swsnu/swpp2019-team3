@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import {
-    SideBar, CollectionCard, ReviewCard, PaperCard, Header,
+    CollectionCard, ReviewCard, PaperCard,
 } from "../../components";
 import "./Main.css";
 
@@ -101,8 +101,6 @@ class Main extends Component {
 
         return (
             <div className="main">
-                <Header />
-                <SideBar />
                 <div className="feeds">
                     <div className="board">
                         <div className="left">{feedsLeft}</div>

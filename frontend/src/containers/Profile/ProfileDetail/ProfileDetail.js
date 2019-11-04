@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 // import { connect } from "react-redux";
 
 import {
-    SideBar, Header, CollectionCard, ReviewCard,
+    CollectionCard, ReviewCard,
 } from "../../../components";
 
 import "./ProfileDetail.css";
@@ -20,6 +20,39 @@ class ProfileDetail extends Component {
         this.state = {
             doIFollow: this.props.thisUser.doIFollow,
         };
+    }
+
+    cardMaker = (card) => {
+        if (card.type === "Collection") {
+            return (
+                <CollectionCard
+                  key={card.id}
+                  source={card.source}
+                  id={card.id}
+                  user={card.user}
+                  title={card.title}
+                  paperCount={card.paperCount}
+                  replyCount={card.replyCount}
+                />
+            );
+        } if (card.type === "Review") {
+            return (
+                <ReviewCard
+                  key={card.id}
+                  author={card.author}
+                  paperId={card.paperId}
+                  source={card.source}
+                  id={card.id}
+                  user={card.user}
+                  title={card.title}
+                  date={card.date}
+                  likeCount={card.likeCount}
+                  replyCount={card.replyCount}
+                  headerExists={card.headerExists}
+                />
+            );
+        }
+        return 0;
     }
 
     render() {
@@ -42,71 +75,22 @@ class ProfileDetail extends Component {
 
         const collectionCardsLeft = this.props.thisUserCollections
             .filter((x) => this.props.thisUserCollections.indexOf(x) % 2 === 0)
-            .map((collection) => (
-                <CollectionCard
-                  key={collection.id}
-                  source={collection.source}
-                  id={collection.id}
-                  user={collection.user}
-                  title={collection.title}
-                  paperCount={collection.paperCount}
-                  replyCount={collection.replyCount}
-                />
-            ));
+            .map((collection) => this.cardMaker(collection));
 
         const collectionCardsRight = this.props.thisUserCollections
             .filter((x) => this.props.thisUserCollections.indexOf(x) % 2 === 1)
-            .map((collection) => (
-                <CollectionCard
-                  key={collection.id}
-                  source={collection.source}
-                  id={collection.id}
-                  user={collection.user}
-                  title={collection.title}
-                  paperCount={collection.paperCount}
-                  replyCount={collection.replyCount}
-                />
-            ));
+            .map((collection) => this.cardMaker(collection));
+
         const reviewCardsLeft = this.props.thisUserReviews
             .filter((x) => this.props.thisUserReviews.indexOf(x) % 2 === 0)
-            .map((review) => (
-                <ReviewCard
-                  key={review.id}
-                  author={review.author}
-                  paperId={review.paperId}
-                  source={review.source}
-                  id={review.id}
-                  user={review.user}
-                  title={review.title}
-                  date={review.date}
-                  likeCount={review.likeCount}
-                  replyCount={review.replyCount}
-                  headerExists={review.headerExists}
-                />
-            ));
+            .map((review) => this.cardMaker(review));
 
         const reviewCardsRight = this.props.thisUserReviews
             .filter((x) => this.props.thisUserReviews.indexOf(x) % 2 === 1)
-            .map((review) => (
-                <ReviewCard
-                  key={review.id}
-                  author={review.author}
-                  paperId={review.paperId}
-                  source={review.source}
-                  id={review.id}
-                  user={review.user}
-                  title={review.title}
-                  date={review.date}
-                  likeCount={review.likeCount}
-                  replyCount={review.replyCount}
-                  headerExists={review.headerExists}
-                />
-            ));
+            .map((review) => this.cardMaker(review));
 
         return (
             <div className="ProfileDetail">
-                <Header id="Header" />
-                <SideBar id="SideBar" />
                 <div className="ProfileDetailContent">
                     <div className="userInfo">
                         <div className="userStatistic">
@@ -206,6 +190,7 @@ ProfileDetail.defaultProps = {
         {
             source: "tested",
             id: 1,
+            type: "Collection",
             user: "Girin",
             title: "Girin's Paper Collection",
             paperCount: 32,
@@ -214,6 +199,7 @@ ProfileDetail.defaultProps = {
         {
             source: "tasted",
             id: 2,
+            type: "Collection",
             user: "Girin",
             title: "Papers for tasty cat cans",
             paperCount: 4,
@@ -222,6 +208,7 @@ ProfileDetail.defaultProps = {
         {
             source: "hated",
             id: 3,
+            type: "Collection",
             user: "Girin",
             title: "Butler's Bad joke collection",
             paperCount: 62,
@@ -232,6 +219,7 @@ ProfileDetail.defaultProps = {
         {
             author: "Girin",
             paperId: 1,
+            type: "Review",
             source: "loved",
             id: 1,
             user: "Girin",
@@ -245,6 +233,7 @@ ProfileDetail.defaultProps = {
             author: "Girin",
             paperId: 12,
             source: "liked",
+            type: "Review",
             id: 2,
             user: "Kamui",
             title: "Kamui is my brother!",
@@ -256,6 +245,7 @@ ProfileDetail.defaultProps = {
         {
             author: "Girin",
             paperId: 100,
+            type: "Review",
             source: "reluctantly accepted",
             id: 3,
             user: "Butler",
