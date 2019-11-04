@@ -2,8 +2,10 @@ import React, {Component} from 'react';
 import Button from 'react-bootstrap/Button';
 import {Link} from 'react-router-dom';
 
-import {Header, SideBar} from "../../../components";
-import PaperCard from  "../../../components/Paper/PaperCard/PaperCard"
+import {Header, SideBar, PaperCard, ReviewReply } from "../../../components";
+
+// For now it would be no matter to use ReviewReply as reply component for collection,
+// since there is no functional difference between them.
 
 class CollectionDetail extends Component {
     constructor(props){
@@ -23,9 +25,12 @@ class CollectionDetail extends Component {
 // clickUnlikeButtonHandler(collection_id: number, user_id: number)
 // : Call onRemoveCollectionLike of CollectionDetail to change the like status between the user and the collection.
     
-    // addNewReplyHandler = () => {
-
-    // }
+    addNewReplyHandler = () => {
+        const newReply =
+            <ReviewReply
+              
+            />;
+    }
 
     render(){
         let likeButton = <Button id="likeButton">Like</Button>;
