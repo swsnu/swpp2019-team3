@@ -11,7 +11,7 @@ const signupFailure = (error) => ({
     target: error,
 });
 
-const signup = (user) => (dispatch) => axios.post("/api/users", user)
+const signup = (user) => (dispatch) => axios.post("/api/user", user)
     .then((res) => dispatch(signupSuccess(res.data)))
     .catch((err) => dispatch(signupFailure(err)));
 export default signup;
