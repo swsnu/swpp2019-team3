@@ -21,6 +21,8 @@ COUNT = 'count'
 SESSION = 'session'
 REQUEST = 'request'
 LIKED = 'liked'
+LIKES = 'likes'
+TYPE = 'type'
 
 # User
 USER = 'user'
@@ -34,9 +36,51 @@ FOLLOWER = 'follower'
 FOLLOWING = 'following'
 
 # Collection
+COLLECTION = 'collection'
+COLLECTION_IDS = 'collection_ids'
 TITLE = 'title'
 TEXT = 'text'
 
 # Paper
 PAPER = 'paper'
 PAPERS = 'papers'
+LANGUAGE = 'language'
+ABSTRACT = 'abstract'
+ISSN = 'ISSN'
+EISSN = 'eISSN'
+DOI = 'DOI'
+FILE_URL = 'file_url'
+DOWNLOAD_URL = 'download_url'
+
+# Author
+AUTHOR = 'author'
+AUTHORS = 'authors'
+FIRST_NAME = 'first_name'
+LAST_NAME = 'last_name'
+ADDRESS = 'address'
+RESEARCHER_ID = 'researcher_id'
+RANK = 'rank'
+
+# Review
+REVIEW = 'review'
+REVIEWS = 'reviews'
+
+# Keyword
+KEYWORD = 'keyword'
+KEYWORDS = 'keywords'
+NAME = 'name'
+
+# Paper Publication
+VOLUME = 'volume'
+ISSUE = 'issue'
+DATE = 'date'
+BEGINNING_PAGE = 'beginning_page'
+ENDING_PAGE = 'ending_page'
+ISBN = 'ISBN'
+
+# Publication
+PUBLICATION = 'publication'
+
+# Publisher
+PUBLISHER = 'publisher'
+CITY = 'city'

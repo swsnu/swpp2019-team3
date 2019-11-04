@@ -134,25 +134,25 @@ class CollectionTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    # def test_delete_collection(self):
-    #     """ DELETE Collection """
-    #     client = Client()
-    #
-    #     # Sign In
-    #     client.get('/api/session',
-    #                data={
-    #                    constants.EMAIL: 'swpp@snu.ac.kr',
-    #                    constants.PASSWORD: 'iluvswpp1234'
-    #                },
-    #                content_type='application/json')
-    #
-    #     collection_id = Collection.objects.filter(title='SWPP Papers').first().id
-    #
-    #     # Delete Collection
-    #     response = client.delete('/api/collection',
-    #                              data={
-    #                                  constants.ID: collection_id
-    #                              },
-    #                              content_type='application/json')
-    #
-    #     self.assertEqual(response.status_code, 200)
+    def test_delete_collection(self):
+        """ DELETE Collection """
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        collection_id = Collection.objects.filter(title='SWPP Papers').first().id
+
+        # Delete Collection
+        response = client.delete('/api/collection',
+                                 data=json.dumps({
+                                     constants.ID: collection_id
+                                 }),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
