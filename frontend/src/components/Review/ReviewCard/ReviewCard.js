@@ -8,8 +8,8 @@ class ReviewCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLiked: false,
-            likeCount: 0,
+            isLiked: this.props.isLiked,
+            likeCount: this.props.likeCount,
         };
         this.clickReviewCardUnlikeHandler = this.clickReviewCardUnlikeHandler.bind(this);
         this.clickReviewCardLikeHandler = this.clickReviewCardLikeHandler.bind(this);
@@ -51,7 +51,7 @@ class ReviewCard extends Component {
                         <Card.Text>{this.props.author}</Card.Text>
                     </Card.Body>
                     <Card.Footer>
-                        <Button className="like-button" onClick={this.state.isLiked ? this.clickReviewCardUnlikeHandler : this.clickReviewCardLikeHandler}>{this.props.likeCount}</Button>
+                        <Button className="like-button" onClick={this.state.isLiked ? this.clickReviewCardUnlikeHandler : this.clickReviewCardLikeHandler}>{this.state.likeCount}</Button>
                         <Button href={`/review_id=${this.props.id}`}>{this.props.replyCount}</Button>
                     </Card.Footer>
                 </Card>
@@ -70,6 +70,7 @@ ReviewCard.propTypes = {
     date: PropTypes.string,
     likeCount: PropTypes.number,
     replyCount: PropTypes.number,
+    isLiked: PropTypes.bool,
     headerExists: PropTypes.bool,
 };
 
@@ -82,6 +83,7 @@ ReviewCard.defaultProps = {
     title: "",
     date: "",
     likeCount: 0,
+    isLiked: false,
     replyCount: 0,
     headerExists: true,
 };

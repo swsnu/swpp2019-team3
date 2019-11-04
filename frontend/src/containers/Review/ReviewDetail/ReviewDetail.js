@@ -25,6 +25,8 @@ class ReviewDetail extends Component {
                 authorId: 0,
                 author: "dfdf",
                 review: 5,
+                likeCount: 7,
+                isLiked: false,
                 content: "dffffffffffffff",
             },
             {
@@ -32,6 +34,8 @@ class ReviewDetail extends Component {
                 authorId: 1,
                 author: "dfdffer",
                 review: 5,
+                likeCount: 7,
+                isLiked: true,
                 content: "dffffffffffffff",
             }],
             replyCount: 2,

@@ -17,6 +17,7 @@ class PaperDetail extends Component {
             keywords: "paper_keywords",
             likeCount: 101,
             reviewCount: 3,
+            isLiked: false,
             reviews: [
                 {
                     id: 5,
@@ -87,6 +88,7 @@ class PaperDetail extends Component {
                           keywords={this.state.keywords}
                           likeCount={this.state.likeCount}
                           reviewCount={this.state.reviewCount}
+                          isLiekd={this.state.isLiked}
                         />
                         <div className="reviewcards">
                             <div className="reviewcards-left">{reviewCardsLeft}</div>
