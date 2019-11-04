@@ -104,13 +104,13 @@ describe("<IntroModal />", () => {
 
         expect(introModalInstance.state.isSignupOpen).toBe(true);
 
-        let wrapper = component.find(".id-input").hostNodes();
-        wrapper.simulate("change", { target: { value: "my_id" } });
+        let wrapper = component.find(".username-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "my_username" } });
         wrapper = component.find(".password-input").hostNodes();
         wrapper.simulate("change", { target: { value: "my_password" } });
         wrapper = component.find(".email-input").hostNodes();
         wrapper.simulate("change", { target: { value: "my_email" } });
-        expect(introModalInstance.state.id).toBe("my_id");
+        expect(introModalInstance.state.username).toBe("my_username");
         expect(introModalInstance.state.password).toBe("my_password");
         expect(introModalInstance.state.email).toBe("my_email");
     });
@@ -124,11 +124,11 @@ describe("<IntroModal />", () => {
 
         expect(introModalInstance.state.isSigninOpen).toBe(true);
 
-        let wrapper = component.find(".id-input").hostNodes();
-        wrapper.simulate("change", { target: { value: "my_id" } });
+        let wrapper = component.find(".email-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "my_email" } });
         wrapper = component.find(".password-input").hostNodes();
         wrapper.simulate("change", { target: { value: "my_password" } });
-        expect(introModalInstance.state.id).toBe("my_id");
+        expect(introModalInstance.state.email).toBe("my_email");
         expect(introModalInstance.state.password).toBe("my_password");
     });
 });
