@@ -90,6 +90,8 @@ class IntroModal extends Component {
 
     clickCancelButtonHandler() {
         this.setState({
+            signupStatus: signupStatus.NONE,
+            signinStatus: signinStatus.NONE,
             isSignupOpen: false,
             isSigninOpen: false,
             email: "",
