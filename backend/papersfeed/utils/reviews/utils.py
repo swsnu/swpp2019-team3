@@ -153,6 +153,40 @@ def remove_review(args):
     review.delete()
 
 
+def select_review_paper(args):
+    """Get Reviews of Paper"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Paper Id
+    paper_id = args[constants.ID]
+
+    # Request Uer
+    request_user = args[constants.USER]
+
+    reviews, _, _ = __get_reviews(Q(paper_id=paper_id), request_user, None)
+
+    return reviews
+
+
+def select_review_user(args):
+    """Get User's Reviews"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # User Id
+    user_id = args[constants.ID]
+
+    # Request Uer
+    request_user = args[constants.USER]
+
+    reviews, _, _ = __get_reviews(Q(user_id=user_id), request_user, None)
+
+    return reviews
+
+
 def __get_reviews(filter_query, request_user, count):
     """Get Reviews By Query"""
     queryset = Review.objects.filter(

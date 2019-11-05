@@ -108,3 +108,13 @@ def put_review(args):
 def delete_review(args):
     """Delete Review"""
     return reviews_utils.remove_review(args)
+
+
+def get_review_paper(args):
+    """Get Review Paper"""
+    return {constants.REVIEWS: reviews_utils.select_review_paper(args)}
+
+
+def get_review_user(args):
+    """Get Review User"""
+    return {constants.REVIEWS: reviews_utils.select_review_user(args)}
