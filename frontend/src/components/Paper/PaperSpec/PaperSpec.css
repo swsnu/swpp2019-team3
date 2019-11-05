@@ -53,8 +53,9 @@
 }
 
 .paperspec .abstract #abstract-content {
-    text-align: left;
-    margin-left: 5%;
+    text-align: justify;
+    margin-left: 2%;
+    margin-right: 2%;
     text-indent: 1em;
 }
 
