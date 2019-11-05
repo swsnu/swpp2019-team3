@@ -1,33 +1,37 @@
 .paperspec #title {
     margin-top: 5%;
-    font-size: 300%;
+    margin-left: 2%;
+    margin-right: 2%;
+    font-size: 250%;
     font-weight:bold;
 }
 
 .paperspec #date {
     margin-top: 2%;
-    text-align: left;
-    margin-left: 5%;
+    text-align: right;
+    margin-right: 5%;
     font-size: 100%;
 }
 
 .paperspec #authors {
     text-align: left;
     margin-left: 5%;
-    font-size: 100%;
+    font-size: 110%;
+    font-weight: 700;
 }
 
 .paperspec #keywords {
     text-align: left;
     margin-left: 5%;
     font-size: 100%;
+    font-weight: 300;
+    font-style: italic;
 }
 
 .paperspec .buttons {
-    width: 100px;
+    width: 200px;
     margin-left: 5%;
     margin-top: 15px;
-    margin-bottom: 75px;
 }
 
 .paperspec .buttons .like-button {
@@ -35,21 +39,23 @@
     float: left;
 }
 
-.paperspec .buttons .reviewcount-button {
+.paperspec .buttons .add-button {
     margin-top: 5%;
+    margin-left: 5%;
     float: right;
 }
 
 .paperspec .abstract #abstract-title {
     text-align: left;
-    margin-top: 3%;
-    margin-left: 5%;
+    margin-top: 5%;
+    margin-left: 2%;
     font-size: 150%;
 }
 
 .paperspec .abstract #abstract-content {
-    text-align: left;
-    margin-left: 5%;
+    text-align: justify;
+    margin-left: 2%;
+    margin-right: 2%;
     text-indent: 1em;
 }
 

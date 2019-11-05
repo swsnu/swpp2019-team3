@@ -53,7 +53,9 @@ def get_papers(filename):
         "paper_author": 0,
         "publisher": 0,
         "publication": 0,
-        "paper_publication": 0
+        "paper_publication": 0,
+        "keyword": 0,
+        "paper_keyword": 0,
     }
     papers = []
     authors = []
@@ -61,6 +63,8 @@ def get_papers(filename):
     publishers = []
     publications = []
     paper_publications = []
+    keywords = []
+    paper_keywords = []
 
     address_pattern = re.compile(r'(\[.*?\].*?)\;')
     address_author_pattern = re.compile(r'\[.*?\]')
@@ -195,8 +199,40 @@ def get_papers(filename):
         }
         paper_publications.append(paper_publication)
 
+        # 7. create a Keyword record
+        keywords_name = list(map(str.strip, row['DE'].split(';')))
+        for keyword_name in keywords_name:
+            pk['keyword'] += 1
+            keyword_fields = {
+                "name": keyword_name.strip()
+            }
+            keyword_fields.update(creation_and_modification_date)
+            keyword = {
+                "model": "papersfeed.keyword",
+                "pk": pk['keyword'],
+                "fields": keyword_fields
+            }
+            keywords.append(keyword)
+
+            # 8. create a PaperKeyword record
+            pk['paper_keyword'] += 1
+            paper_keyword_fields = {
+                "paper": pk['paper'],
+                "keyword": pk['keyword'],
+                "type": "author",
+            }
+            paper_keyword_fields.update(creation_and_modification_date)
+            paper_keyword = {
+                "model": "papersfeed.paperkeyword",
+                "pk": pk['paper_keyword'],
+                "fields": paper_keyword_fields,
+            }
+            paper_keywords.append(paper_keyword)
+
     # create one json file with all record information
-    models = papers + authors + paper_authors + publishers + publications + paper_publications
+    # pylint: disable=line-too-long
+    models = papers + authors + paper_authors + publishers + publications + paper_publications + keywords + paper_keywords
+    # pylint: enable=line-too-long
     json_filename = filename.split('/')[-1].split('.')[0].strip() + '.json'
     json.dump(models, open(json_filename, 'w'), indent=4)
 # pylint: enable=too-many-locals, too-many-statements

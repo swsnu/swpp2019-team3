@@ -6,6 +6,7 @@ import { getMockStore } from "../../../test-utils/mocks";
 
 const stubInitialState = {
     auth: {},
+    paper: {},
     collection: {
         make: {
             status: "NONE",
@@ -72,9 +73,9 @@ describe("collectionActions", () => {
                 resolve(result);
             }));
 
-        mockStore.dispatch(collectionActions.makeNewCollection( "abc", "def"))
+        mockStore.dispatch(collectionActions.makeNewCollection("abc", "def"))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", { text: "def", title: "abc"});
+                expect(spy).toHaveBeenCalledWith("api/collection", { text: "def", title: "abc" });
                 done();
             });
     });
@@ -90,9 +91,9 @@ describe("collectionActions", () => {
                 reject(result);
             }));
 
-        mockStore.dispatch(collectionActions.makeNewCollection( "def"))
+        mockStore.dispatch(collectionActions.makeNewCollection("def"))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", { text: undefined, title: "def",});
+                expect(spy).toHaveBeenCalledWith("api/collection", { text: undefined, title: "def"  });
                 done();
             });
     });
@@ -253,7 +254,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.setTitleAndDescription(stubCollection.id, "dfd", "dfder"))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection",{ id: 1, text: "dfder", title: "dfd" } );
+                expect(spy).toHaveBeenCalledWith("api/collection", { id: 1, text: "dfder", title: "dfd" });
                 done();
             });
     });
@@ -272,7 +273,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.setTitleAndDescription(stubCollection.id, "dfd", "dfder"))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", { id: 1, text: "dfder", title: "dfd" } );
+                expect(spy).toHaveBeenCalledWith("api/collection", { id: 1, text: "dfder", title: "dfd" });
                 done();
             });
     });
@@ -291,7 +292,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.setTitleAndDescription(stubCollection.id, "dfd", "dfder"))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", { id: 1, text: "dfder", title: "dfd" } );
+                expect(spy).toHaveBeenCalledWith("api/collection", { id: 1, text: "dfder", title: "dfd" });
                 done();
             });
     });
@@ -327,7 +328,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.addCollectionPaper(stubCollection.id, 1))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/paper/collection", { collection_ids: 1, id: 1 } );
+                expect(spy).toHaveBeenCalledWith("api/paper/collection", { collection_ids: 1, id: 1 });
                 done();
             });
     });
@@ -344,7 +345,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.removeCollectionPaper(stubCollection.id, 1))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/paper/collection", { collection_ids: 1, id: 1 } );
+                expect(spy).toHaveBeenCalledWith("api/paper/collection", { collection_ids: 1, id: 1 });
                 done();
             });
     });
@@ -379,7 +380,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.deleteCollection(stubCollection.id))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", {"params": {"id": 1}});
+                expect(spy).toHaveBeenCalledWith("api/collection", { params: { id: 1 } });
                 done();
             });
     });
@@ -398,7 +399,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.deleteCollection(stubCollection.id))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", {"params": {"id": 1}});
+                expect(spy).toHaveBeenCalledWith("api/collection", { params: { id: 1 } });
                 done();
             });
     });
@@ -417,7 +418,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.deleteCollection(stubCollection.id))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", {"params": {"id": 1}});
+                expect(spy).toHaveBeenCalledWith("api/collection", { params: { id: 1 } });
                 done();
             });
     });

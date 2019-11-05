@@ -39,7 +39,8 @@ export const collectionConstants = {
 // Review
 // add more actionTypes at below
 export const GET_REVIEWS = "GET_REVIEWS";
-const authConstants = {
+
+export const authConstants = {
     // SignUp
     SIGNUP_REQUEST: "SIGNUP_REQUEST",
     SIGNUP_SUCCESS: "SIGNUP_SUCCESS",
@@ -50,11 +51,16 @@ const authConstants = {
     SIGNIN_REQUEST: "SIGNIN_REQUEST",
     SIGNIN_SUCCESS: "SIGNIN_SUCCESS",
     SIGNIN_FAILURE_USER_NOT_EXIST: "SIGNIN_FAILURE_USER_NOT_EXIST",
-    SGININ_FAILURE_WRONG_PW: "SIGNIN_FAILURE_WRONG_PW",
+    SIGNIN_FAILURE_WRONG_PW: "SIGNIN_FAILURE_WRONG_PW",
 
     // Signout
     SIGNOUT_REQUEST: "SIGNOUT_REQUEST",
     SIGNOUT_SUCCESS: "SIGNOUT_SUCCESS",
     SIGNOUT_FAILURE: "SIGNOUT_FAILURE",
 };
-export default authConstants;
+
+export const paperConstants = {
+    // GetPaper
+    GET_PAPER_SUCCESS: "GET_PAPER_SUCCESS",
+    GET_PAPER_FAILURE: "GET_PAPER_FAILURE",
+};

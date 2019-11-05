@@ -11,6 +11,7 @@ import {
     setUserProfile,
 } from "./Profile/ProfileActions";
 import { signup, signin } from "./auth";
+import getPaper from "./paper";
 
 import {
     makeNewCollection,
@@ -61,10 +62,10 @@ export {
     // removeCollectionLike,
 };
 
-
-
-const authActions = {
+export const authActions = {
     signup,
     signin,
 };
-export default authActions;
+export const paperActions = {
+    getPaper,
+};

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import authActions from ".";
+import { authActions } from ".";
 import { signupStatus, signinStatus } from "../reducers/auth";
 import { getMockStore } from "../../test-utils/mocks";
 
@@ -10,6 +10,7 @@ const stubInitialState = {
         signinStatus: signinStatus.NONE,
     },
     collection: {},
+    paper: {},
 };
 const mockStore = getMockStore(stubInitialState);
 

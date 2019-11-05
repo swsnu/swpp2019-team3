@@ -1,7 +1,8 @@
-import authConstants from "../actions/actionTypes";
+import { authConstants } from "../actions/actionTypes";
 
 export const signupStatus = {
     NONE: "NONE",
+    WRONG_EMAIL_FORMAT: "WRONG_EMAIL_FORMAT",
     WAITING: "WAITING",
     SUCCESS: "SUCCESS",
     DUPLICATE_USERNAME: "DUPLICATE_USERNAME",
@@ -33,7 +34,7 @@ const reducer = (state = initialState, action) => {
         return { ...state, signinStatus: signinStatus.SUCCESS };
     case authConstants.SIGNIN_FAILURE_USER_NOT_EXIST:
         return { ...state, signinStatus: signinStatus.USER_NOT_EXIST };
-    case authConstants.SGININ_FAILURE_WRONG_PW:
+    case authConstants.SIGNIN_FAILURE_WRONG_PW:
         return { ...state, signinStatus: signinStatus.WRONG_PW };
     default:
         return { ...state };

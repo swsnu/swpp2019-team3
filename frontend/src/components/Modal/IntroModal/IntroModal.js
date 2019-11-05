@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Modal, FormControl, Button } from "react-bootstrap";
-import authActions from "../../../store/actions";
+import { authActions } from "../../../store/actions";
 import { signupStatus, signinStatus } from "../../../store/reducers/auth";
 import "./IntroModal.css";
 
@@ -39,6 +39,10 @@ class IntroModal extends Component {
             username: this.state.username,
             password: this.state.password,
         };
+        if (!(/^[^@ ]+@[^@ .]+\.[a-zA-Z]{2,3}(\.[a-zA-Z]{2,3})?$/.test(signingUpUser.email))) {
+            this.setState({ signupStatus: signupStatus.WRONG_EMAIL_FORMAT });
+            return;
+        }
         this.props.onSignup(signingUpUser)
             .then(() => {
                 switch (this.props.signupStatus) {
@@ -47,6 +51,7 @@ class IntroModal extends Component {
                     break;
                 case signupStatus.SUCCESS:
                     this.setState({ signupStatus: signupStatus.NONE, isSignupOpen: false });
+                    this.props.onSignin(signingUpUser);
                     this.props.history.push("/main");
                     break;
                 case signupStatus.DUPLICATE_EMAIL:
@@ -110,6 +115,8 @@ class IntroModal extends Component {
             signupMessage = "This email already exists";
         } else if (this.state.signupStatus === signupStatus.DUPLICATE_USERNAME) {
             signupMessage = "This username already exists";
+        } else if (this.state.signupStatus === signupStatus.WRONG_EMAIL_FORMAT) {
+            signupMessage = "Wrong email format";
         }
         let signinMessage = null;
         if (this.state.signinStatus === signinStatus.USER_NOT_EXIST) {
@@ -187,7 +194,7 @@ class IntroModal extends Component {
                         {usernameInput}
                         <FormControl
                           className="password-input"
-                          type="text"
+                          type="password"
                           placeholder="password"
                           value={this.state.password}
                           onChange={(e) => this.setState({ password: e.target.value })}

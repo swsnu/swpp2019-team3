@@ -16,6 +16,7 @@ class PaperSpec extends Component {
 
     // handle click 'Like' button
     clickPaperSpecLikeHandler() {
+        this.setState({ likeCount: this.props.likeCount });
         const nextState = {
             isLiked: true,
             likeCount: this.state.likeCount + 1,
@@ -33,6 +34,10 @@ class PaperSpec extends Component {
     }
 
     render() {
+        let addButton = null;
+        if (this.props.addButtonExists) {
+            addButton = <Button className="add-button">Add</Button>;
+        }
         return (
             <div className="paperspec">
                 <h2 id="title">{this.props.title}</h2>
@@ -41,13 +46,12 @@ class PaperSpec extends Component {
                 <h3 id="keywords">{this.props.keywords}</h3>
                 <div className="buttons">
                     <Button className="like-button" onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
-                        {this.state.likeCount}
+                        {this.props.likeCount}
                     </Button>
-                    <Button className="reviewcount-button">{this.props.reviewCount}</Button>
-                    <Button className="add-button">Add</Button>
+                    {addButton}
                 </div>
                 <div className="abstract">
-                    <h3 id="abstract-title">abstract</h3>
+                    <h3 id="abstract-title">Abstract</h3>
                     <p id="abstract-content">{this.props.abstract}</p>
                 </div>
             </div>
@@ -62,8 +66,8 @@ PaperSpec.propTypes = {
     authors: PropTypes.string,
     keywords: PropTypes.string,
     likeCount: PropTypes.number,
-    reviewCount: PropTypes.number,
     isLiked: PropTypes.bool,
+    addButtonExists: PropTypes.bool,
 };
 
 PaperSpec.defaultProps = {
@@ -73,8 +77,8 @@ PaperSpec.defaultProps = {
     authors: "",
     keywords: "",
     likeCount: 0,
-    reviewCount: 0,
     isLiked: false,
+    addButtonExists: false,
 };
 
 export default PaperSpec;
