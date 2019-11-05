@@ -22,4 +22,3 @@ const authConstants = {
     SIGNOUT_FAILURE: "SIGNOUT_FAILURE",
 };
 export default authConstants;
-

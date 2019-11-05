@@ -8,6 +8,9 @@ import { ConnectedRouter } from "connected-react-router";
 import {
     Intro, Main, ReviewDetail, PaperDetail, ReviewControl, ProfileDetail, ProfileEdit,
 } from "./containers";
+import {
+    Header, SideBar,
+} from "./components";
 
 function App(props) {
     return (
@@ -15,29 +18,35 @@ function App(props) {
             <div className="App">
                 <Switch>
                     <Route path="/" exact component={Intro} />
-                    <Route path="/main" exact component={Main} />
-                    <Route
-                      path="/papers/:paper_id/create"
-                      exact
-                      render={() => (
-                          <div>
-                              <ReviewControl mode={0} />
-                          </div>
-                      )}
-                    />
-                    <Route path="/papers/:paper_id/:review_id" exact component={ReviewDetail} />
-                    <Route
-                      path="/papers/:paper_id/:review_id/edit"
-                      exact
-                      render={() => (
-                          <div>
-                              <ReviewControl mode={1} />
-                          </div>
-                      )}
-                    />
-                    <Route path="/papers/:id" exact component={PaperDetail} />
-                    <Route path="/profile/:id" exact component={ProfileDetail} />
-                    <Route path="/profile/:id/edit" exact component={ProfileEdit} />
+                    <div>
+                        <Header />
+                        <SideBar />
+                        <Switch>
+                            <Route path="/main" exact component={Main} />
+                            <Route
+                              path="/paper_id=:paper_id/create"
+                              exact
+                              render={() => (
+                                  <div>
+                                      <ReviewControl mode={0} history={props.history} />
+                                  </div>
+                              )}
+                            />
+                            <Route path="/review_id=:review_id" exact component={ReviewDetail} />
+                            <Route
+                              path="/review_id=:review_id/edit"
+                              exact
+                              render={() => (
+                                  <div>
+                                      <ReviewControl mode={1} history={props.history} />
+                                  </div>
+                              )}
+                            />
+                            <Route path="/paper_id=:paper_id" exact component={PaperDetail} />
+                            <Route path="/profile/:id" exact component={ProfileDetail} />
+                            <Route path="/profile/:id/edit" exact component={ProfileEdit} />
+                        </Switch>
+                    </div>
                 </Switch>
             </div>
         </ConnectedRouter>

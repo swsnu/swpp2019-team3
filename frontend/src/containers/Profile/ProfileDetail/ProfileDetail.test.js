@@ -9,10 +9,6 @@ describe("ProfileDetail Test", () => {
         const component = shallow(<ProfileDetail />);
         let wrapper = component.find(".ProfileDetail");
         expect(wrapper.length).toBe(1);
-        wrapper = component.find("#Header");
-        expect(wrapper.length).toBe(1);
-        wrapper = component.find("#SideBar");
-        expect(wrapper.length).toBe(1);
         wrapper = component.find(".itemTabSection");
         expect(wrapper.length).toBe(1);
     });
