@@ -149,7 +149,7 @@ def select_collection_user(args):
 
     # Collections
     collections, _, _ = __get_collections(filter_query, request_user, None)
-
+    print(collections)
     return collections
 
 
@@ -158,25 +158,25 @@ def update_paper_collection(args):
     is_parameter_exists([
         constants.ID, constants.COLLECTION_IDS
     ], args)
-
+    print(args)
     # Request User
     request_user = args[constants.USER]
-
+    print("success6")
     # Paper Id
     paper_id = args[constants.ID]
-
+    print("success5")
     # Collection IDs
     collection_ids = json.loads(args[constants.COLLECTION_IDS])
-
+    print("success4")
     # Containing Collections
     containing_collection_ids = __get_collections_contains_paper(paper_id, request_user)
-
+    print("success3")
     # Add To Collections
     __add_paper_to_collections(paper_id, list(set(collection_ids) - set(containing_collection_ids)))
-
+    print("success2")
     # Remove From Collections
     __remove_paper_from_collections(paper_id, list(set(containing_collection_ids) - set(collection_ids)))
-
+    print("success")
 
 def __get_collections_contains_paper(paper_id, request_user):
     """Get Collections Containing paper"""
