@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Form, Button, Card } from "react-bootstrap";
+import {
+    Form, Button, Card,
+} from "react-bootstrap";
 
 import {
     Reply,
@@ -108,7 +110,9 @@ class ReviewDetail extends Component {
                             </div>
                             <div className="reply">
                                 <div className="review-extra">
+                                    <div>Like</div>
                                     <Button className="like-button" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}>{this.state.likeCount}</Button>
+                                    <div>Reply</div>
                                     <Button className="replyCount-button" disabled>{this.state.replyCount}</Button>
                                     {this.state.authorId === 0
                                         ? <Button className="edit-button" onClick={this.clickEditButtonHandler}>Edit</Button>

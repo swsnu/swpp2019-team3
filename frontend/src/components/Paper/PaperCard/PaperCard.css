@@ -21,6 +21,10 @@
     font-size: 130%;
 }
 
+.paper .footer {
+    display: flex;
+    align-items: flex-start;
+}
 .paper .footer .add-button{
     margin-left: 50%;
 }

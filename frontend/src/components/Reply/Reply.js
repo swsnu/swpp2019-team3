@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Modal, FormControl, Button } from "react-bootstrap";
+import {
+    Modal, FormControl, Button,
+} from "react-bootstrap";
 
 import "./Reply.css";
 
@@ -95,6 +97,7 @@ class Reply extends Component {
                             <div className="author">{this.props.author}</div>
                             <div className="content">{this.props.content}</div>
                             <div className="buttons">
+                                <div>Like</div>
                                 <Button className="like-button" onClick={this.state.isLiked ? this.clickReplyUnlikeButtonHandler : this.clickReplyLikeButtonHandler}>{this.state.likeCount}</Button>
                                 {this.props.authorId === 0
                                     ? <Button className="edit-button" onClick={this.clickReplyEditButtonHandler}>Edit</Button> : null }

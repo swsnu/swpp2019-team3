@@ -47,7 +47,9 @@ class PaperCard extends Component {
                         <Card.Text>{this.props.keywords}</Card.Text>
                     </Card.Body>
                     <Card.Footer className="footer">
+                        <Card.Text>Like</Card.Text>
                         <Button className="like-button" onClick={this.state.isLiked ? this.clickPaperCardUnlikeHandler : this.clickPaperCardLikeHandler}>{this.state.likeCount}</Button>
+                        <Card.Text>Review</Card.Text>
                         <Button href={`/paper_id=${this.props.id}`}>{this.props.reviewCount}</Button>
                         <Button className="add-button">Add</Button>
                     </Card.Footer>

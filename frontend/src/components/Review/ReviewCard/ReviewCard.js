@@ -51,7 +51,9 @@ class ReviewCard extends Component {
                         <Card.Text>{this.props.author}</Card.Text>
                     </Card.Body>
                     <Card.Footer>
+                        <Card.Text>Like</Card.Text>
                         <Button className="like-button" onClick={this.state.isLiked ? this.clickReviewCardUnlikeHandler : this.clickReviewCardLikeHandler}>{this.state.likeCount}</Button>
+                        <Card.Text>Reply</Card.Text>
                         <Button href={`/review_id=${this.props.id}`}>{this.props.replyCount}</Button>
                     </Card.Footer>
                 </Card>

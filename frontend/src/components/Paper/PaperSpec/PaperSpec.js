@@ -40,10 +40,13 @@ class PaperSpec extends Component {
                 <h3 id="authors">{this.props.authors}</h3>
                 <h3 id="keywords">{this.props.keywords}</h3>
                 <div className="buttons">
+                    <div>Like</div>
                     <Button className="like-button" onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
                         {this.state.likeCount}
                     </Button>
+                    <div>Review</div>
                     <Button className="reviewcount-button">{this.props.reviewCount}</Button>
+                    <Button className="add-button">Add</Button>
                 </div>
                 <div className="abstract">
                     <h3 id="abstract-title">abstract</h3>
