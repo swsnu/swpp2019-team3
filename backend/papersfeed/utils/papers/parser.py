@@ -3,12 +3,11 @@ import argparse
 import csv
 import json
 import re
-import os
 import sys
+from datetime import datetime
 
 csv.field_size_limit(sys.maxsize)
 
-FIXTURE_DIR = '../fixtures'
 PUBLICATION_TYPE_DICT = {
     'J': 'journal',
     'B': 'book',
@@ -41,6 +40,12 @@ def get_papers(filename):
     Referencing cs_10.txt or cs_500.txt would be helpful for understanding this function
     Also, you can check all field tags in https://images.webofknowledge.com/images/help/WOS/hs_wos_fieldtags.html
     """
+    now = str(datetime.now())
+    creation_and_modification_date = {
+        "creation_date": now,
+        "modification_date": now,
+    }
+
     reader = csv.DictReader(open(filename, 'r', encoding='utf-16'), dialect='excel-tab')
     pk = {
         "paper": 0,
@@ -71,8 +76,9 @@ def get_papers(filename):
             "eISSN": row['EI'],
             "DOI": row['DI'],
         }
+        paper_fields.update(creation_and_modification_date)
         paper = {
-            "model": "papers.paper",
+            "model": "papersfeed.paper",
             "pk": pk['paper'],
             "fields": paper_fields
         }
@@ -109,10 +115,11 @@ def get_papers(filename):
                 "last_name": last_name,
                 "email": emails.pop(0).strip() if emails else '',
                 "address": address,
-                "researcher_id": researcher_id.strip()
+                "researcher_id": researcher_id.strip(),
             }
+            author_fields.update(creation_and_modification_date)
             author = {
-                "model": "papers.author",
+                "model": "papersfeed.author",
                 "pk": pk['author'],
                 "fields": author_fields
             }
@@ -120,15 +127,17 @@ def get_papers(filename):
 
             # 3. create PaperAuthor records
             pk['paper_author'] += 1
+            paper_author_fields = {
+                "paper": pk['paper'],
+                "author": pk['author'],
+                "type": 'general',
+                "rank": author_rank,
+            }
+            paper_author_fields.update(creation_and_modification_date)
             paper_author = {
-                "model": "papers.paperauthor",
+                "model": "papersfeed.paperauthor",
                 "pk": pk['paper_author'],
-                "fields": {
-                    "paper": pk['paper'],
-                    "author": pk['author'],
-                    "author_type": 'general',
-                    "rank": author_rank
-                }
+                "fields": paper_author_fields,
             }
             paper_authors.append(paper_author)
 
@@ -137,10 +146,11 @@ def get_papers(filename):
         publisher_fields = {
             "name": row['PU'],
             "city": row['PI'],
-            "address": row['PA']
+            "address": row['PA'],
         }
+        publisher_fields.update(creation_and_modification_date)
         publisher = {
-            "model": "papers.publisher",
+            "model": "papersfeed.publisher",
             "pk": pk['publisher'],
             "fields": publisher_fields
         }
@@ -150,11 +160,12 @@ def get_papers(filename):
         pk['publication'] += 1
         publication_fields = {
             "name": row['SO'],
-            "publication_type": PUBLICATION_TYPE_DICT[row['PT']],
-            "publisher": pk['publisher']
+            "type": PUBLICATION_TYPE_DICT[row['PT']],
+            "publisher": pk['publisher'],
         }
+        publication_fields.update(creation_and_modification_date)
         publication = {
-            "model": "papers.publication",
+            "model": "papersfeed.publication",
             "pk": pk['publication'],
             "fields": publication_fields
         }
@@ -166,26 +177,28 @@ def get_papers(filename):
         month = MONTH_DICT[month_day[0].split('-')[0].strip()] if month_day else '01'
         day = "{0:0>2}".format(month_day[1]) if len(month_day) > 1 else '01'
         date = row['PY'] + '-' + month + '-' + day if row['PY'] else None
+        paper_publication_fields = {
+            "paper": pk['paper'],
+            "publication": pk['publication'],
+            "volume": row['VL'] if row['VL'] else None,
+            "issue": row['IS'] if row['IS'] else None,
+            "date": date,
+            "beginning_page": row['BP'] if row['BP'].isdigit() else None,
+            "ending_page": row['EP'] if row['EP'].isdigit() else None,
+            "ISBN": row['BN'],
+        }
+        paper_publication_fields.update(creation_and_modification_date)
         paper_publication = {
-            "model": "papers.paperpublication",
+            "model": "papersfeed.paperpublication",
             "pk": pk['paper_publication'],
-            "fields": {
-                "paper": pk['paper'],
-                "publication": pk['publication'],
-                "volume": row['VL'] if row['VL'] else None,
-                "issue": row['IS'] if row['IS'] else None,
-                "date": date,
-                "beginning_page": row['BP'] if row['BP'].isdigit() else None,
-                "ending_page": row['EP'] if row['EP'].isdigit() else None,
-                "ISBN": row['BN']
-            }
+            "fields": paper_publication_fields,
         }
         paper_publications.append(paper_publication)
 
     # create one json file with all record information
     models = papers + authors + paper_authors + publishers + publications + paper_publications
-    json_filename = filename.split('.')[0].strip() + '.json'
-    json.dump(models, open(os.path.join(FIXTURE_DIR, json_filename), 'w'), indent=4)
+    json_filename = filename.split('/')[-1].split('.')[0].strip() + '.json'
+    json.dump(models, open(json_filename, 'w'), indent=4)
 # pylint: enable=too-many-locals, too-many-statements
 
 
