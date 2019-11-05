@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 
 import { CollectionCard } from "../../../components";
 
+import "./CollectionList.css";
+
 class CollectionList extends Component {
     constructor(props) {
         super(props);
@@ -46,7 +48,7 @@ class CollectionList extends Component {
         return (
             <div className="CollectionList">
                 <div className="CollectionListContent">
-                    <div className="CollectinonListText"><h>Your Colletion List</h></div>
+                    <div id="collectionListText"><h>Your Colletion List</h></div>
                     <div id="colletionCards">
                         <div id="collectionCardsLeft">{collectionCardsLeft}</div>
                         <div id="collectionCardsRight">{collectionCardsRight}</div>

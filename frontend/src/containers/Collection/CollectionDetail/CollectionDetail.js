@@ -100,11 +100,12 @@ class CollectionDetail extends Component {
         return (
             <div className="CollectionDetail">
                 <div className="CollectionDetailContent">
-                    <div className="collectionInfo">
-                        <div className="collectionName">
+                    <div className="CollectionInfo">
+                        <div id="collectionName">
                             <h2 id="collectionName">{this.props.thisCollection.name}</h2>
                         </div>
-                        <div className="collectionStat">
+                        <div id="collectionInfoMid">
+
                             <div id="likeStat">
                                 <h5 id="likeCount">{this.props.thisCollection.likesCount}</h5>
                                 <h5 id="likeText">Likes</h5>
@@ -113,16 +114,19 @@ class CollectionDetail extends Component {
                                 <h5 id="memberCount">{this.props.thisCollection.members.length}</h5>
                                 <h5 id="memberText">Members</h5>
                             </div>
+
+                            <div id="collectionButtons">
+                                {likeOrUnlike}
+                                {inviteButton}
+                                {this.props.thisCollection.amIMember ? editButton : <div />}
+                            </div>
                         </div>
-                        <div className="collectionButtons">
-                            {likeOrUnlike}
-                            {inviteButton}
-                            {this.props.thisCollection.amIMember ? editButton : <div />}
-                        </div>
-                        <div className="collectionDescription">
-                            <h5 id="creationDate">{this.props.thisCollection.creationDate}</h5>
-                            <h5 id="lastUpdateDate">{this.props.thisCollection.lastUpdateDate}</h5>
-                            <p id="collectionDescription">{this.props.thisCollection.description}</p>
+                        <div id="collectionDescription">
+                            <div id="date">
+                                <div id="creationDate"><h>Created: {this.props.thisCollection.creationDate}</h></div>
+                                <div id="lastUpdateDate"><h>Last Update: {this.props.thisCollection.lastUpdateDate}</h></div>
+                            </div>
+                            <p id="descriptionBox">{this.props.thisCollection.description}</p>
                         </div>
                     </div>
                     <div className="itemList">

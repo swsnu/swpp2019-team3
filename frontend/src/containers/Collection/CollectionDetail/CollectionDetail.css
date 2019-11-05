@@ -7,7 +7,33 @@
     flex-direction: column;
 }
 
+.CollectionInfo {
+    margin-top: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    display: flex;
+    flex-direction: column;
+}
 
+.CollectionInfo #collectionInfoMid {
+    display: inline-flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.CollectionInfo #collectionDescription #date {
+    margin-left: 10px;
+    margin-right: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-style: italic;
+}
+
+.CollectionInfo #collectionDescription #descriptionBox {
+    margin-left: 10px;
+    margin-right: 10px;
+    text-align: left;
+}
 
 .itemList {
     margin: 20px;
@@ -46,13 +72,3 @@
     height: 100%;
     margin: 15px;
 }
-
-/* .itemList #replyList {
-    width: 100%;
-    height: 100%;
-    margin: 15px;
-    
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-} */
