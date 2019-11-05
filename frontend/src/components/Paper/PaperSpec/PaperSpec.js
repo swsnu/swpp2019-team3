@@ -16,6 +16,7 @@ class PaperSpec extends Component {
 
     // handle click 'Like' button
     clickPaperSpecLikeHandler() {
+        this.setState({ likeCount: this.props.likeCount });
         const nextState = {
             isLiked: true,
             likeCount: this.state.likeCount + 1,
@@ -41,7 +42,7 @@ class PaperSpec extends Component {
                 <h3 id="keywords">{this.props.keywords}</h3>
                 <div className="buttons">
                     <Button className="like-button" onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
-                        {this.state.likeCount}
+                        {this.props.likeCount}
                     </Button>
                     <Button className="reviewcount-button">{this.props.reviewCount}</Button>
                 </div>

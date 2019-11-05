@@ -3,7 +3,7 @@ import { paperConstants } from "./actionTypes";
 
 const getPaperSuccess = (paper) => ({
     type: paperConstants.GET_PAPER_SUCCESS,
-    target: paper,
+    target: paper.paper,
 });
 
 const getPaperFailure = (error) => {
@@ -21,6 +21,6 @@ const getPaperFailure = (error) => {
     };
 };
 
-export const getPaper = (paperId) => (dispatch) => axios.post("/api/paper", paperId)
-    .then((res) => dispatch(getPaperSuccess(res.data)))
+export const getPaper = (paperId) => (dispatch) => axios.get("/api/paper", { params: paperId })
+    .then((res) => dispatch(getPaperSuccess(res.data.data)))
     .catch((err) => dispatch(getPaperFailure(err)));

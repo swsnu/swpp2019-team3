@@ -9,7 +9,7 @@ export const getPaperStatus = {
 
 const initialState = {
     getPaperStatus: getPaperStatus.NONE,
-    selectedPaper: null,
+    selectedPaper: {},
 };
 
 const reducer = (state = initialState, action) => {

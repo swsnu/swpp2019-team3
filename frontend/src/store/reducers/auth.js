@@ -2,6 +2,7 @@ import { authConstants } from "../actions/actionTypes";
 
 export const signupStatus = {
     NONE: "NONE",
+    WRONG_EMAIL_FORMAT: "WRONG_EMAIL_FORMAT",
     WAITING: "WAITING",
     SUCCESS: "SUCCESS",
     DUPLICATE_USERNAME: "DUPLICATE_USERNAME",

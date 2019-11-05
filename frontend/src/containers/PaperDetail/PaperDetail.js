@@ -1,26 +1,22 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import PropTypes, { any } from "prop-types";
 
-import {
-    PaperSpec, ReviewCard,
-} from "../../components";
+import { PaperSpec, ReviewCard } from "../../components";
 import { paperActions } from "../../store/actions";
-import { getPaperStatus } from "../../store/reducers/auth";
+import { getPaperStatus } from "../../store/reducers/paper";
 import "./PaperDetail.css";
 
 class PaperDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: 1,
-            title: "paper_title",
-            abstract: "abstract abstract abstract abstract abstract abstract abstract abstract ",
-            date: "2019.10.30.",
-            authors: "paper_authors",
-            keywords: "paper_keywords",
-            likeCount: 101,
-            reviewCount: 3,
-            isLiked: false,
+            getPaperStatus: getPaperStatus.NONE,
+            likeCount: 0,
+            reviewCount: 0,
+            authorNames: "",
+            keywords: "",
+            date: "",
             reviews: [
                 {
                     id: 5,
@@ -52,8 +48,28 @@ class PaperDetail extends Component {
     }
 
     componentDidMount() {
-        this.props.onGetPaper({ id: this.props.match.params.id });
-        console.log(this.props.match.params.id);
+        this.props.onGetPaper({ id: this.props.location.pathname.split("=")[1] })
+            .then(() => {
+                if (this.props.getPaperStatus === getPaperStatus.FAILURE) {
+                    this.props.history.push("/main");
+                    return;
+                }
+                if (this.props.selectedPaper.count) {
+                    this.setState({ likeCount: this.props.selectedPaper.count.likes });
+                    this.setState({ reviewCount: this.props.selectedPaper.count.reviews });
+                }
+                if (this.props.selectedPaper.authors) {
+                    const { authors } = this.props.selectedPaper;
+                    const authorNames = authors.map((author) => `${author.first_name} ${author.last_name}`);
+                    this.setState({ authorNames: authorNames.join(", ") });
+                }
+                if (this.props.selectedPaper.publication) {
+                    this.setState({ date: this.props.selectedPaper.publication.date });
+                }
+                if (this.props.selectedPaper.keywords) {
+                    this.setState({ keywords: this.props.selectedPaper.keywords.join(", ") });
+                }
+            });
     }
 
     reviewMaker = (review) => (
@@ -79,20 +95,21 @@ class PaperDetail extends Component {
             .filter((x) => this.state.reviews.indexOf(x) % 2 === 1)
             .map((review) => this.reviewMaker(review));
 
+        console.log(this.props.selectedPaper);
         return (
             <div className="paperdetail-page">
                 <div className="paperdetail">
                     <div className="paperdetail-content">
                         <PaperSpec
-                          id={this.state.id}
-                          title={this.state.title}
-                          abstract={this.state.abstract}
+                          id={this.props.selectedPaper.id}
+                          title={this.props.selectedPaper.title}
+                          abstract={this.props.selectedPaper.abstract}
                           date={this.state.date}
-                          authors={this.state.authors}
+                          authors={this.state.authorNames}
                           keywords={this.state.keywords}
                           likeCount={this.state.likeCount}
                           reviewCount={this.state.reviewCount}
-                          isLiekd={this.state.isLiked}
+                          isLiked={this.props.selectedPaper.liked}
                         />
                         <div className="reviewcards">
                             <div className="reviewcards-left">{reviewCardsLeft}</div>
@@ -114,3 +131,19 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PaperDetail);
+
+PaperDetail.propTypes = {
+    history: PropTypes.objectOf(PropTypes.any),
+    location: PropTypes.objectOf(any),
+    onGetPaper: PropTypes.func,
+    getPaperStatus: PropTypes.string,
+    selectedPaper: PropTypes.objectOf(any),
+};
+
+PaperDetail.defaultProps = {
+    history: null,
+    location: null,
+    onGetPaper: null,
+    getPaperStatus: getPaperStatus.NONE,
+    selectedPaper: {},
+};
