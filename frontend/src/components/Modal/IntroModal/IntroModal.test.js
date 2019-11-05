@@ -8,6 +8,7 @@ import { signupStatus, signinStatus } from "../../../store/reducers/auth";
 import { getMockStore } from "../../../test-utils/mocks";
 
 let stubInitialState = {
+    collection: {},
     auth: {
         signupStatus: signupStatus.NONE,
         signinStatus: signinStatus.NONE,
@@ -217,6 +218,7 @@ describe("<IntroModal />", () => {
                 signupStatus: signupStatus.WAITING,
                 signinStatus: signinStatus.NONE,
             },
+            collection: {},
         };
         let component = mount(makeIntroModal(stubInitialState));
         let openButton = component.find(".signup-open-button").hostNodes();
@@ -241,6 +243,7 @@ describe("<IntroModal />", () => {
                 signupStatus: signupStatus.SUCCESS,
                 signinStatus: signinStatus.NONE,
             },
+            collection: {},
         };
         component = mount(makeIntroModal(stubInitialState));
         openButton = component.find(".signup-open-button").hostNodes();
@@ -265,6 +268,7 @@ describe("<IntroModal />", () => {
                 signupStatus: signupStatus.DUPLICATE_EMAIL,
                 signinStatus: signinStatus.NONE,
             },
+            collection: {},
         };
         component = mount(makeIntroModal(stubInitialState));
         openButton = component.find(".signup-open-button").hostNodes();
@@ -290,6 +294,7 @@ describe("<IntroModal />", () => {
                 signupStatus: signupStatus.DUPLICATE_USERNAME,
                 signinStatus: signinStatus.NONE,
             },
+            collection: {},
         };
         component = mount(makeIntroModal(stubInitialState));
         openButton = component.find(".signup-open-button").hostNodes();
@@ -317,6 +322,7 @@ describe("<IntroModal />", () => {
                 signupStatus: signupStatus.NONE,
                 signinStatus: signinStatus.WAITING,
             },
+            collection: {},
         };
         let component = mount(makeIntroModal(stubInitialState));
         let openButton = component.find(".signin-open-button").hostNodes();
@@ -339,6 +345,7 @@ describe("<IntroModal />", () => {
                 signupStatus: signupStatus.NONE,
                 signinStatus: signinStatus.SUCCESS,
             },
+            collection: {},
         };
         component = mount(makeIntroModal(stubInitialState));
         openButton = component.find(".signin-open-button").hostNodes();
@@ -361,6 +368,7 @@ describe("<IntroModal />", () => {
                 signupStatus: signupStatus.NONE,
                 signinStatus: signinStatus.USER_NOT_EXIST,
             },
+            collection: {},
         };
         component = mount(makeIntroModal(stubInitialState));
 
@@ -385,6 +393,7 @@ describe("<IntroModal />", () => {
                 signupStatus: signupStatus.NONE,
                 signinStatus: signinStatus.WRONG_PW,
             },
+            collection: {},
         };
         component = mount(makeIntroModal(stubInitialState));
 

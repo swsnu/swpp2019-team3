@@ -9,6 +9,7 @@ const stubInitialState = {
         signupStatus: signupStatus.NONE,
         signinStatus: signinStatus.NONE,
     },
+    collection: {},
 };
 const mockStore = getMockStore(stubInitialState);
 

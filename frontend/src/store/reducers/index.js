@@ -7,11 +7,11 @@ import authReducer from "./auth";
 
 const rootReducer = (history) => combineReducers({
     // put reducers here
-    auth: AuthReducer,
     collection: CollectionReducer,
     user: UserReducer,
-    router: connectRouter(history),
     auth: authReducer,
+    router: connectRouter(history),
+
 });
 
 export default rootReducer;

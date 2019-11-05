@@ -109,8 +109,8 @@ const CollectionReducer = (state = initialState, action) => {
             ...state,
             edit: {
                 ...state.edit,
-                status: collectionConstants.COLLECTION_NOT_EXIST,
-                collection: action.target,
+                status: collectionStatus.COLLECTION_NOT_EXIST,
+                error: action.target,
             },
         };
     case collectionConstants.EDIT_COLLECTION_FAILURE_AUTH_ERROR:
@@ -119,7 +119,7 @@ const CollectionReducer = (state = initialState, action) => {
             edit: {
                 ...state.edit,
                 status: collectionStatus.AUTH_ERROR,
-                collection: action.target,
+                error: action.target,
             },
         };
     case collectionConstants.ADD_COLLECTION_PAPER:
