@@ -2,11 +2,6 @@ import CollectionReducer from "./CollectionReducer";
 import { collectionStatus } from "../../../constants/constants";
 import { collectionConstants } from "../../actions/actionTypes";
 
-const stubUser = {
-    id: 1,
-    username: "Girin",
-};
-
 const stubInitialState = {
     make: {
         status: collectionStatus.NONE,
@@ -127,7 +122,7 @@ describe("Colelction CollectionReducer", () => {
         expect(newState.edit.error).toBe(stubCollection);
     });
 
-    
+
     it("should return edit_collection_failure_collection_auth_error", () => {
         const newState = CollectionReducer(stubInitialState, {
             type: collectionConstants.EDIT_COLLECTION_FAILURE_AUTH_ERROR,
@@ -155,7 +150,7 @@ describe("Colelction CollectionReducer", () => {
         expect(newState.edit.collection).toBe(stubCollection);
     });
 
-    
+
     it("should return delete_collectionr", () => {
         const newState = CollectionReducer(stubInitialState, {
             type: collectionConstants.DEL_COLLECTION,
@@ -174,7 +169,7 @@ describe("Colelction CollectionReducer", () => {
         expect(newState.delete.error).toBe(stubCollection);
     });
 
-    
+
     it("should return delete_collection_failure_not_exist", () => {
         const newState = CollectionReducer(stubInitialState, {
             type: collectionConstants.DEL_COLLECTION_FAILURE_COLLECTION_NOT_EXIST,
@@ -183,6 +178,4 @@ describe("Colelction CollectionReducer", () => {
         expect(newState.delete.status).toBe(collectionStatus.COLLECTION_NOT_EXIST);
         expect(newState.delete.error).toBe(stubCollection);
     });
-
-
 });

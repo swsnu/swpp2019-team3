@@ -1,4 +1,5 @@
-// will implement actions for review here
+/* eslint-disable max-len */
+/* // will implement actions for review here
 
 import axios from "axios";
 import * as actionTypes from "../ActionTypes";
@@ -27,3 +28,4 @@ export const getUserByUserId = (userID) => (dispatch) => axios.get(`/user/${user
 // getReviewLikesCount(review_id) -> Promise<{status: number, data: number}>: Call backend api to get the number of users who like this review.
 // getReviewIsLiked(review_id:number, user_id:number) -> Promise<{status: number, data: boolean}>: Call backend api to check if the current user likes the review.
 // consumeReview(review_id: number, user_id: number) -> Promise<{status: number, data: Review}>: Call backend api to log the user viewed the review.
+*/

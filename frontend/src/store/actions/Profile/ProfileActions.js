@@ -1,4 +1,5 @@
-// will implement actions for profile here
+/* eslint-disable max-len */
+/* // will implement actions for profile here
 import axios from "axios";
 import * as actionTypes from "../actionTypes";
 
@@ -64,4 +65,4 @@ export const setUserProfile = (userID, description) => (dispatch) => axios.put(`
     }));
 // export const setUserProfile = (userID, description, photo) => {
 
-// }
+// } */
