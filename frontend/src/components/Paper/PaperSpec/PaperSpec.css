@@ -29,7 +29,7 @@
 }
 
 .paperspec .buttons {
-    width: 100px;
+    width: 200px;
     margin-left: 5%;
     margin-top: 15px;
 }
@@ -37,6 +37,12 @@
 .paperspec .buttons .like-button {
     margin-top: 5%;
     float: left;
+}
+
+.paperspec .buttons .add-button {
+    margin-top: 5%;
+    margin-left: 5%;
+    float: right;
 }
 
 .paperspec .abstract #abstract-title {

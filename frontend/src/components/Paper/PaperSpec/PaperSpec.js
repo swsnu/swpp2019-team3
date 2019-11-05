@@ -34,6 +34,10 @@ class PaperSpec extends Component {
     }
 
     render() {
+        let addButton = null;
+        if (this.props.addButtonExists) {
+            addButton = <Button className="add-button">Add</Button>;
+        }
         return (
             <div className="paperspec">
                 <h2 id="title">{this.props.title}</h2>
@@ -44,6 +48,7 @@ class PaperSpec extends Component {
                     <Button className="like-button" onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
                         {this.props.likeCount}
                     </Button>
+                    {addButton}
                 </div>
                 <div className="abstract">
                     <h3 id="abstract-title">Abstract</h3>
@@ -62,6 +67,7 @@ PaperSpec.propTypes = {
     keywords: PropTypes.string,
     likeCount: PropTypes.number,
     isLiked: PropTypes.bool,
+    addButtonExists: PropTypes.bool,
 };
 
 PaperSpec.defaultProps = {
@@ -72,6 +78,7 @@ PaperSpec.defaultProps = {
     keywords: "",
     likeCount: 0,
     isLiked: false,
+    addButtonExists: false,
 };
 
 export default PaperSpec;
