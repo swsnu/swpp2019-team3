@@ -9,5 +9,4 @@ const rootReducer = (history) => combineReducers({
     auth: authReducer,
     paper: paperReducer,
 });
-
 export default rootReducer;
