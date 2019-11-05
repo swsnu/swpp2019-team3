@@ -14,7 +14,7 @@ class Intro extends Component {
                     <h1 id="papersfeed">PAPERSFEED</h1>
                     <h1 id="exclamation-mark">!</h1>
                 </div>
-                <IntroModal className="signup" history={this.props.history} />
+                <IntroModal className="signup-and-signin" history={this.props.history} />
             </div>
         );
     }

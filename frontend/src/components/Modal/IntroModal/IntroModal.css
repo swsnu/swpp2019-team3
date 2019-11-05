@@ -12,6 +12,18 @@
     margin-right: 2%;
 }
 
+#signup-message {
+    font-size: 100%;
+    color: #DC143C;
+    margin-top: 2%;
+}
+
+#signin-message {
+    font-size: 100%;
+    color: #DC143C;
+    margin-top: 2%;
+}
+
 .signin-open-button {
     display: flex;
 }

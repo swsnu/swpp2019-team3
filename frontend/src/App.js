@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 import PropTypes from "prop-types";
 
-import { Route, /* Redirect , */ Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
 
 import {
@@ -19,7 +19,7 @@ function App(props) {
             <div className="App">
                 <Switch>
                     <Route path="/" exact component={Intro} />
-                    <div>
+                    <>
                         <Header />
                         <SideBar />
                         <Switch>
@@ -49,7 +49,7 @@ function App(props) {
                             <Route path="/collections" exact component={CollectionList} />
                             <Route path="/collections/:collection_id" exact component={CollectionDetail} />
                         </Switch>
-                    </div>
+                    </>
                 </Switch>
             </div>
         </ConnectedRouter>
