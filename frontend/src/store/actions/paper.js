@@ -21,6 +21,7 @@ const getPaperFailure = (error) => {
     };
 };
 
-export const getPaper = (paperId) => (dispatch) => axios.get("/api/paper", { params: paperId })
+const getPaper = (paperId) => (dispatch) => axios.get("/api/paper", { params: paperId })
     .then((res) => dispatch(getPaperSuccess(res.data.data)))
     .catch((err) => dispatch(getPaperFailure(err)));
+export default getPaper;

@@ -15,9 +15,9 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
     case paperConstants.GET_PAPER_SUCCESS:
-        return { ...state, signupStatus: getPaperStatus.SUCCESS, selectedPaper: action.target };
+        return { ...state, getPaperStatus: getPaperStatus.SUCCESS, selectedPaper: action.target };
     case paperConstants.GET_PAPER_FAILURE:
-        return { ...state, signupStatus: getPaperStatus.FAILURE };
+        return { ...state, getPaperStatus: getPaperStatus.FAILURE };
     default:
         return { ...state };
     }

@@ -1,5 +1,5 @@
 import { signup, signin } from "./auth";
-import { getPaper } from "./paper";
+import getPaper from "./paper";
 
 export const authActions = {
     signup,

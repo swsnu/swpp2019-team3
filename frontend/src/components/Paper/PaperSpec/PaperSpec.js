@@ -44,10 +44,9 @@ class PaperSpec extends Component {
                     <Button className="like-button" onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
                         {this.props.likeCount}
                     </Button>
-                    <Button className="reviewcount-button">{this.props.reviewCount}</Button>
                 </div>
                 <div className="abstract">
-                    <h3 id="abstract-title">abstract</h3>
+                    <h3 id="abstract-title">Abstract</h3>
                     <p id="abstract-content">{this.props.abstract}</p>
                 </div>
             </div>
@@ -62,7 +61,6 @@ PaperSpec.propTypes = {
     authors: PropTypes.string,
     keywords: PropTypes.string,
     likeCount: PropTypes.number,
-    reviewCount: PropTypes.number,
     isLiked: PropTypes.bool,
 };
 
@@ -73,7 +71,6 @@ PaperSpec.defaultProps = {
     authors: "",
     keywords: "",
     likeCount: 0,
-    reviewCount: 0,
     isLiked: false,
 };
 

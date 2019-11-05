@@ -1,5 +1,5 @@
 import reducer, { signupStatus, signinStatus } from "./auth";
-import authConstants from "../actions/actionTypes";
+import { authConstants } from "../actions/actionTypes";
 
 const stubSigningUpUser = {
     email: "my_email@papersfeed.com",
@@ -24,7 +24,7 @@ describe("Auth reducer", () => {
     it("should handle signup success", () => {
         const newState = reducer(undefined, {
             type: authConstants.SIGNUP_SUCCESS,
-            user: stubSigningUpUser,
+            target: stubSigningUpUser,
         });
         expect(newState).toEqual({
             signupStatus: signupStatus.SUCCESS,
@@ -35,7 +35,7 @@ describe("Auth reducer", () => {
     it("should handle signup duplicate email", () => {
         const newState = reducer(undefined, {
             type: authConstants.SIGNUP_FAILURE_DUPLICATE_EMAIL,
-            user: stubSigningUpUser,
+            target: stubSigningUpUser,
         });
         expect(newState).toEqual({
             signupStatus: signupStatus.DUPLICATE_EMAIL,
@@ -46,7 +46,7 @@ describe("Auth reducer", () => {
     it("should handle signup duplicate username", () => {
         const newState = reducer(undefined, {
             type: authConstants.SIGNUP_FAILURE_DUPLICATE_USERNAME,
-            user: stubSigningUpUser,
+            target: stubSigningUpUser,
         });
         expect(newState).toEqual({
             signupStatus: signupStatus.DUPLICATE_USERNAME,
@@ -58,7 +58,7 @@ describe("Auth reducer", () => {
     it("should handle signin success", () => {
         const newState = reducer(undefined, {
             type: authConstants.SIGNIN_SUCCESS,
-            user: stubSigningInUser,
+            target: stubSigningInUser,
         });
         expect(newState).toEqual({
             signupStatus: signupStatus.NONE,
@@ -69,7 +69,7 @@ describe("Auth reducer", () => {
     it("should handle signin user not exist", () => {
         const newState = reducer(undefined, {
             type: authConstants.SIGNIN_FAILURE_USER_NOT_EXIST,
-            user: stubSigningInUser,
+            target: stubSigningInUser,
         });
         expect(newState).toEqual({
             signupStatus: signupStatus.NONE,
@@ -79,8 +79,8 @@ describe("Auth reducer", () => {
 
     it("should handle signin wrong password", () => {
         const newState = reducer(undefined, {
-            type: authConstants.SGININ_FAILURE_WRONG_PW,
-            user: stubSigningInUser,
+            type: authConstants.SIGNIN_FAILURE_WRONG_PW,
+            target: stubSigningInUser,
         });
         expect(newState).toEqual({
             signupStatus: signupStatus.NONE,
