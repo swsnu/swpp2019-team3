@@ -1,6 +1,6 @@
 // will implement actions for profile here
 import axios from "axios";
-import * as actionTypes from "../ActionTypes";
+import * as actionTypes from "../actionTypes";
 
 // getUserByUserId(user_id: number) -> Promise<{status: number, data: User}>: Call backend api to get a user.
 export const getUserByUserId = (userID) => (dispatch) => axios.get(`/user/${userID}`)

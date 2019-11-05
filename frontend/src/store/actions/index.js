@@ -1,5 +1,5 @@
 
-export {
+import {
     getUserByUserId,
     // getUserByUserName,
     getFollowersByUserId,
@@ -10,6 +10,38 @@ export {
     // removeUserFollower,
     setUserProfile,
 } from "./Profile/ProfileActions";
+import { signup, signin } from "./auth";
+
+import {
+    makeNewCollection,
+    getCollectionsByUserId,
+    getCollection,
+    getCollectionPapers,
+    // getCollectionMembers,
+    // getCollectionReplies,
+    // setOwner,
+    setTitleAndDescription,
+    addCollectionPaper,
+    removeCollectionPaper,
+    // addCollectionMember,
+    // removeCollectionMember,
+    deleteCollection,
+    // addCollectionLike,
+    // removeCollectionLike,
+} from "./Collection/collection";
+
+export {
+    getUserByUserId,
+    // getUserByUserName,
+    getFollowersByUserId,
+    getFollowingsByUserId,
+    addUserFollowing,
+    removeUserFollowing,
+    // addUserFollower,
+    // removeUserFollower,
+    setUserProfile,
+};
+
 
 export {
     makeNewCollection,
@@ -27,4 +59,12 @@ export {
     deleteCollection,
     // addCollectionLike,
     // removeCollectionLike,
-} from "./Collection/collection";
+};
+
+
+
+const authActions = {
+    signup,
+    signin,
+};
+export default authActions;

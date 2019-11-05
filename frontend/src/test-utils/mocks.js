@@ -30,8 +30,8 @@ export const getMockStore = (initialState) => {
     return mockStore;
 };
 
-// eslint-disable-next-line react/display-name
 export const mockComponent = (componentName) => (props) => (
-    // eslint-disable-next-line react/jsx-props-no-spreading
+    /* eslint-disable react/jsx-props-no-spreading */
     <div className={componentName} {...props} />
+    /* eslint-enable react/jsx-props-no-spreading */
 );
