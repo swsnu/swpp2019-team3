@@ -1,8 +1,11 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
 import {
     PaperSpec, ReviewCard,
 } from "../../components";
+import { paperActions } from "../../store/actions";
+import { getPaperStatus } from "../../store/reducers/auth";
 import "./PaperDetail.css";
 
 class PaperDetail extends Component {
@@ -49,7 +52,8 @@ class PaperDetail extends Component {
     }
 
     componentDidMount() {
-
+        this.props.onGetPaper({ id: this.props.match.params.id });
+        console.log(this.props.match.params.id);
     }
 
     reviewMaker = (review) => (
@@ -100,4 +104,13 @@ class PaperDetail extends Component {
         );
     }
 }
-export default PaperDetail;
+const mapStateToProps = (state) => ({
+    getPaperStatus: state.paper.getPaperStatus,
+    selectedPaper: state.paper.selectedPaper,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onGetPaper: (paperId) => dispatch(paperActions.getPaper(paperId)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PaperDetail);
