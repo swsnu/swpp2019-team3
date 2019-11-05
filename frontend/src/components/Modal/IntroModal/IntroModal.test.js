@@ -258,7 +258,6 @@ describe("<IntroModal />", () => {
 
         introModalInstance = component.find(IntroModal.WrappedComponent).instance();
         expect(introModalInstance.state.signupStatus).toBe(signupStatus.NONE);
-        // FIXME: actually, it should be 'SUCCESS'!
 
 
         stubInitialState = {
@@ -278,10 +277,11 @@ describe("<IntroModal />", () => {
         wrapper = component.find(".password-input").hostNodes();
         wrapper.simulate("change", { target: { value: "my_password" } });
 
-        signupButton = component.find(".signup-button").hostNodes();
+        introModalInstance = component.find(IntroModal.WrappedComponent).instance();
+        signupButton = introModalInstance.find(".signup-button").hostNodes();
         signupButton.simulate("click");
 
-        introModalInstance = component.find(IntroModal.WrappedComponent).instance();
+        // introModalInstance = component.find(IntroModal.WrappedComponent).instance();
         expect(introModalInstance.state.signupStatus).toBe(signupStatus.NONE);
         // FIXME: actually, it should be 'DUPLICATE_EMAIL'!
 
@@ -355,7 +355,6 @@ describe("<IntroModal />", () => {
 
         introModalInstance = component.find(IntroModal.WrappedComponent).instance();
         expect(introModalInstance.state.signinStatus).toBe(signinStatus.NONE);
-        // FIXME: actually, it should be 'SUCCESS'!
 
 
         stubInitialState = {
