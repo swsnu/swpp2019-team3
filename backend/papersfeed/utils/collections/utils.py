@@ -11,6 +11,7 @@ from papersfeed.models.collections.collection import Collection
 from papersfeed.models.collections.collection_like import CollectionLike
 from papersfeed.models.collections.collection_user import CollectionUser, COLLECTION_USER_TYPE
 from papersfeed.models.collections.collection_paper import CollectionPaper
+from papersfeed.models.replies.reply_collection import ReplyCollection
 
 
 def insert_collection(args):
@@ -243,6 +244,12 @@ def __pack_collections(collections, request_user):  # pylint: disable=unused-arg
     # Paper Count
     paper_counts = __get_collection_paper_count(collection_ids, 'collection_id')
 
+    # Like count
+    like_counts = __get_collection_like_count(collection_ids, 'collection_id')
+
+    # Reply Count
+    reply_counts = __get_collection_reply_count(collection_ids, 'collection_id')
+
     for collection in collections:
         collection_id = collection.id
 
@@ -253,7 +260,9 @@ def __pack_collections(collections, request_user):  # pylint: disable=unused-arg
             constants.LIKED: collection.is_liked,
             constants.COUNT: {
                 constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0,
-                constants.PAPERS: paper_counts[collection_id] if collection_id in paper_counts else 0
+                constants.PAPERS: paper_counts[collection_id] if collection_id in paper_counts else 0,
+                constants.LIKES: like_counts[collection_id] if collection_id in like_counts else 0,
+                constants.REPLIES: reply_counts[collection_id] if collection_id in reply_counts else 0
             }
         }
 
@@ -268,6 +277,21 @@ def __is_collection_liked(outer_ref, request_user):
         CollectionLike.objects.filter(collection_id=OuterRef(outer_ref),
                                       user_id=request_user.id if request_user else None)
     )
+
+
+def __get_collection_like_count(collection_ids, group_by_field):
+    """Get Number of Likes of Collections"""
+    collection_likes = CollectionLike.objects.filter(
+        collection_id__in=collection_ids
+    ).values(
+        group_by_field
+    ).annotate(
+        count=Count(group_by_field)
+    ).order_by(
+        group_by_field
+    )
+
+    return {collection_like[group_by_field]: collection_like['count'] for collection_like in collection_likes}
 
 
 def __get_collection_user_count(collection_ids, group_by_field):
@@ -298,3 +322,18 @@ def __get_collection_paper_count(collection_ids, group_by_field):
     )
 
     return {collection_paper[group_by_field]: collection_paper['count'] for collection_paper in collection_papers}
+
+
+def __get_collection_reply_count(collection_ids, group_by_field):
+    """Get Number of Replies of Collections"""
+    collection_replies = ReplyCollection.objects.filter(
+        collection_id__in=collection_ids
+    ).values(
+        group_by_field
+    ).annotate(
+        count=Count(group_by_field)
+    ).order_by(
+        group_by_field
+    )
+
+    return {collection_reply[group_by_field]: collection_reply['count'] for collection_reply in collection_replies}

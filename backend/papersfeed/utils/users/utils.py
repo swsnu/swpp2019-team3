@@ -173,6 +173,11 @@ def select_user(args):
     return users[0]
 
 
+def get_users(filter_query, request_user, count):
+    """Public Get Users"""
+    return __get_users(filter_query, request_user, count)
+
+
 def __get_users(filter_query, request_user, count):
     """Get Users By Query"""
     queryset = User.objects.filter(

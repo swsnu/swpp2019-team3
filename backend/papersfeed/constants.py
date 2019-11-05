@@ -84,3 +84,7 @@ PUBLICATION = 'publication'
 # Publisher
 PUBLISHER = 'publisher'
 CITY = 'city'
+
+# Reply
+REPLY = 'reply'
+REPLIES = 'replies'
