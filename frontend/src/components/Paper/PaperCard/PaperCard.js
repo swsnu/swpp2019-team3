@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
+import { Card, Button, Image } from "react-bootstrap";
 import PropTypes from "prop-types";
 import "./PaperCard.css";
+import heart from "../../heart.png";
+import talk from "../../talk.png";
 
 class PaperCard extends Component {
     constructor(props) {
@@ -47,10 +48,12 @@ class PaperCard extends Component {
                         <Card.Text>{this.props.keywords}</Card.Text>
                     </Card.Body>
                     <Card.Footer className="footer">
-                        <Card.Text>Like</Card.Text>
-                        <Button className="like-button" onClick={this.state.isLiked ? this.clickPaperCardUnlikeHandler : this.clickPaperCardLikeHandler}>{this.state.likeCount}</Button>
-                        <Card.Text>Review</Card.Text>
-                        <Button href={`/paper_id=${this.props.id}`}>{this.props.reviewCount}</Button>
+
+                        <Button variant="light" className="like-button" onClick={this.state.isLiked ? this.clickPaperCardUnlikeHandler : this.clickPaperCardLikeHandler}><Image src={heart} width={20} height={20} className="heart-image" />{this.state.likeCount}</Button>
+
+                        <Button variant="light" className="review-button" href={`/paper_id=${this.props.id}`}>
+                            <Image src={talk} width={20} height={20} className="talk-image" />{this.props.reviewCount}
+                        </Button>
                         <Button className="add-button">Add</Button>
                     </Card.Footer>
                 </Card>

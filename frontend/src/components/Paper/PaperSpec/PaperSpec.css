@@ -36,7 +36,15 @@
 
 .paperspec .buttons .like-button {
     margin-top: 5%;
+    width: 35%;
     float: left;
+    display: flex;
+    justify-content: space-around;
+}
+
+.paperspec .buttons .like-button .heart-image{
+    margin-top: 9%;
+    margin-right: 10%;
 }
 
 .paperspec .buttons .add-button {

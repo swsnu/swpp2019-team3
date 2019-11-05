@@ -18,3 +18,26 @@
     font-weight: bold;
     font-size: 130%;
 }
+
+.collection .like-button{
+    width: 17%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.collection .footer {
+    display: flex;
+    justify-content: flex-start;
+}
+.collection .like-button .heart-image{
+    margin-top: 7%;
+}
+.collection .reply-button{
+    width: 17%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.collection .reply-button .talk-image{
+    margin-top: 9%;
+}   

@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import {
-    Modal, FormControl, Button,
+    Modal, FormControl, Button, Image,
 } from "react-bootstrap";
 
 import "./Reply.css";
+import heart from "../heart.png";
 
 class Reply extends Component {
     constructor(props) {
@@ -97,8 +98,9 @@ class Reply extends Component {
                             <div className="author">{this.props.author}</div>
                             <div className="content">{this.props.content}</div>
                             <div className="buttons">
-                                <div>Like</div>
-                                <Button className="like-button" onClick={this.state.isLiked ? this.clickReplyUnlikeButtonHandler : this.clickReplyLikeButtonHandler}>{this.state.likeCount}</Button>
+                                <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickReplyUnlikeButtonHandler : this.clickReplyLikeButtonHandler}>
+                                    <Image src={heart} width={20} height={20} className="heart-image" />{this.state.likeCount}
+                                </Button>
                                 {this.props.authorId === 0
                                     ? <Button className="edit-button" onClick={this.clickReplyEditButtonHandler}>Edit</Button> : null }
                                 {this.props.authorId === 0

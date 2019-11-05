@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
+import { Card, Button, Image } from "react-bootstrap";
 import PropTypes from "prop-types";
 import "./ReviewCard.css";
+import heart from "../../heart.png";
+import talk from "../../talk.png";
 
 class ReviewCard extends Component {
     constructor(props) {
@@ -45,16 +46,14 @@ class ReviewCard extends Component {
                     {header}
                     <Card.Body className="body">
                         <div className="title">
-                            <Card.Link href={`/paper_id=${this.props.paperId}`} className="text">{this.props.title}</Card.Link>
+                            <Card.Link href={`/review_id=${this.props.id}`} className="text">{this.props.title}</Card.Link>
                         </div>
                         <Card.Text>{this.props.date}</Card.Text>
                         <Card.Text>{this.props.author}</Card.Text>
                     </Card.Body>
-                    <Card.Footer>
-                        <Card.Text>Like</Card.Text>
-                        <Button className="like-button" onClick={this.state.isLiked ? this.clickReviewCardUnlikeHandler : this.clickReviewCardLikeHandler}>{this.state.likeCount}</Button>
-                        <Card.Text>Reply</Card.Text>
-                        <Button href={`/review_id=${this.props.id}`}>{this.props.replyCount}</Button>
+                    <Card.Footer className="footer">
+                        <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickReviewCardUnlikeHandler : this.clickReviewCardLikeHandler}> <Image src={heart} width={20} height={20} className="heart-image" />{this.state.likeCount}</Button>
+                        <Button className="reply-button" variant="light" href={`/review_id=${this.props.id}`}><Image src={talk} width={20} height={20} className="talk-image" />{this.props.replyCount}</Button>
                     </Card.Footer>
                 </Card>
             </div>
@@ -64,7 +63,6 @@ class ReviewCard extends Component {
 
 ReviewCard.propTypes = {
     author: PropTypes.string,
-    paperId: PropTypes.number,
     source: PropTypes.string,
     id: PropTypes.number,
     user: PropTypes.string,
@@ -78,7 +76,6 @@ ReviewCard.propTypes = {
 
 ReviewCard.defaultProps = {
     author: "",
-    paperId: 0,
     source: "",
     id: 0,
     user: "",

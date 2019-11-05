@@ -43,11 +43,31 @@
 
 .review-detail .board .review-reply .reply .review-extra {
     margin-top: 2%;
-    width: 10%;
+    width: 50%;
     display:flex;
     justify-content: flex-start;
 }
 
+.review-detail .board .review-reply .reply .review-extra .like-button{
+    width: 17%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.review-detail .board .review-reply .reply .review-extra .like-button .heart-image{
+    margin-top: 7%;
+}
+
+.review-detail .board .review-reply .reply .review-extra .replyCount-button{
+    width: 17%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.review-detail .board .review-reply .reply .review-extra .replyCount-button .talk-image{
+    margin-top: 8%;
+    margin-right: 5%;
+}
 
 .review-detail .board .review-reply .reply .new-reply {
     margin-top: 2%;

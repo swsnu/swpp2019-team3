@@ -1,44 +1,46 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import {
-    Form, Button, Card,
+    Form, Button, Card, Image,
 } from "react-bootstrap";
 
 import {
     Reply,
 } from "../../../components";
 import "./ReviewDetail.css";
+import heart from "../../../components/heart.png";
+import talk from "../../../components/talk.png";
 
 class ReviewDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            authorId: 0,
-            paperId: 1,
-            id: 5,
-            title: "review_title1",
-            content: "review content",
-            author: "review_author1",
-            likeCount: 5,
+            authorId: 1,
+            paperId: 4,
+            id: 2,
+            title: "What computer-lovers should read",
+            content: "I think everyone should read this paper. I could learn so many things from this.",
+            author: "Alpha",
+            likeCount: 14,
             newReply: "",
             isLiked: false,
             replies: [{
                 id: 1,
                 authorId: 0,
-                author: "dfdf",
-                review: 5,
+                author: "Girin",
+                review: 2,
                 likeCount: 7,
                 isLiked: false,
-                content: "dffffffffffffff",
+                content: "You are right!",
             },
             {
                 id: 2,
-                authorId: 1,
-                author: "dfdffer",
-                review: 5,
-                likeCount: 7,
+                authorId: 4,
+                author: "Goyangineun Yaong",
+                review: 2,
+                likeCount: 4,
                 isLiked: true,
-                content: "dffffffffffffff",
+                content: "Interesting! I want to follow you",
             }],
             replyCount: 2,
         };
@@ -110,10 +112,8 @@ class ReviewDetail extends Component {
                             </div>
                             <div className="reply">
                                 <div className="review-extra">
-                                    <div>Like</div>
-                                    <Button className="like-button" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}>{this.state.likeCount}</Button>
-                                    <div>Reply</div>
-                                    <Button className="replyCount-button" disabled>{this.state.replyCount}</Button>
+                                    <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><Image src={heart} width={20} height={20} className="heart-image" />{this.state.likeCount}</Button>
+                                    <Button className="replyCount-button" variant="light"><Image src={talk} width={20} height={20} className="talk-image" />{this.state.replyCount}</Button>
                                     {this.state.authorId === 0
                                         ? <Button className="edit-button" onClick={this.clickEditButtonHandler}>Edit</Button>
 
@@ -123,7 +123,7 @@ class ReviewDetail extends Component {
                                     ) : null}
                                 </div>
                                 <Form className="new-reply">
-                                    <Form.Label className="username">Username </Form.Label>
+                                    <Form.Label className="username">Girin </Form.Label>
                                     <Form.Control className="reply-input" type="text" bsPrefix="reply-input" value={this.state.newReply} onChange={this.handleChange} />
                                     <Button className="new-reply-button" onClick={this.clickReplyAddButtonHandler}>Add</Button>
                                 </Form>

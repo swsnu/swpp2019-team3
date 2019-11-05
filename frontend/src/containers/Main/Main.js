@@ -11,33 +11,48 @@ class Main extends Component {
         this.state = {
             feeds: [{
                 type: "Collection",
-                source: "liked",
+                source: "made",
                 id: 1,
-                title: "dfad",
-                user: "Dfafdaf",
+                title: "Literature",
+                user: "JYFaust",
                 paperCount: 14,
                 replyCount: 15,
+                owner: "Prof.Seong",
                 likeCount: 30,
             }, {
                 type: "Review",
                 source: "liked",
-                key: 1,
-                id: 3,
-                title: "dfad",
-                user: "Dfafdaf",
+                id: 2,
+                title: "What computer-lovers should read",
+                user: "Goyangineun Yaong",
+                author: "Alpha",
+                date: "2019-11-05",
                 likeCount: 14,
-                replyCount: 15,
+                replyCount: 2,
             },
             {
                 type: "Paper",
                 source: "liked",
-                key: 1,
+                authors: "Espitau Thomas, Joux Antonie",
                 id: 3,
-                paperId: 1,
-                title: "dfad",
-                user: "Dfafdaf",
-                likeCount: 14,
-                reviewCount: 15,
+                paperId: 3,
+                date: "2019-11-06",
+                title: "CERTIFIED LATTICE REDUCTION",
+                user: "Ha",
+                likeCount: 0,
+                reviewCount: 1,
+                keywords: "Combinational optimization Problems, Facility Layout Problem, Quadratic Assignment Problem",
+            },
+            {
+                type: "Review",
+                source: "wrote",
+                id: 4,
+                title: "Best way to go to sleep",
+                user: "Uluk",
+                author: "Girin",
+                date: "2019-10-31",
+                likeCount: 75,
+                replyCount: 12,
             }],
         };
 
@@ -79,6 +94,7 @@ class Main extends Component {
             return (
                 <PaperCard
                   key={feed.id}
+                  source={feed.source}
                   id={feed.id}
                   user={feed.user}
                   title={feed.title}
