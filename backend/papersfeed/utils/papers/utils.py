@@ -160,6 +160,11 @@ def get_paper_migration():
         PaperPublication.objects.bulk_create(paper_publications)
 
 
+def get_papers(filter_query, request_user, count):
+    """Public Get Papers"""
+    return __get_papers(filter_query, request_user, count)
+
+
 def __get_papers(filter_query, request_user, count):
     """Get Papers By Query"""
     queryset = Paper.objects.filter(

@@ -8,6 +8,7 @@ from django.db.models import Q, Exists, OuterRef, Count
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
 from papersfeed.utils.users import utils as users_utils
+from papersfeed.utils.papers import utils as papers_utils
 from papersfeed.models.reviews.review import Review
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.reviews.review_like import ReviewLike
@@ -216,10 +217,17 @@ def __pack_reviews(reviews, request_user):
 
     # Users
     user_ids = [review.user_id for review in reviews]
-    users = users_utils.get_users(Q(id__in=user_ids), request_user, None)
+    users, _, _ = users_utils.get_users(Q(id__in=user_ids), request_user, None)
 
     # {user_id: user}
     users = {user[constants.ID]: user for user in users}
+
+    # Papers
+    paper_ids = [review.paper_id for review in reviews]
+    papers, _, _ = papers_utils.get_papers(Q(id__in=paper_ids), request_user, None)
+
+    # {paper_id: paper}
+    papers = {paper[constants.ID]: paper for paper in papers}
 
     # Review Like
     like_counts = __get_review_like_count(review_ids, 'review_id')
@@ -234,11 +242,15 @@ def __pack_reviews(reviews, request_user):
         # User Id
         user_id = review.user_id
 
+        # Paper Id
+        paper_id = review.paper_id
+
         packed_review = {
             constants.ID: review_id,
             constants.TITLE: review.title,
             constants.TEXT: review.text,
             constants.LIKED: review.is_liked,
+            constants.PAPER: papers[paper_id] if paper_id in papers else {},
             constants.USER: users[user_id] if user_id in users else {},
             constants.COUNT: {
                 constants.LIKES: like_counts[review_id] if review_id in like_counts else 0,
