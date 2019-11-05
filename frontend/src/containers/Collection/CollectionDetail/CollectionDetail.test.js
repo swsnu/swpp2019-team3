@@ -6,7 +6,7 @@ import CollectionDetail from "./CollectionDetail";
 describe("CollectionDetail Test", () => {
     it("should render without errors", () => {
         const component = shallow(<CollectionDetail />);
-        let wrapper = component.find(".collectionInfo");
+        let wrapper = component.find(".CollectionInfo");
         expect(wrapper.length).toBe(1);
         wrapper = component.find(".itemList");
         expect(wrapper.length).toBe(1);

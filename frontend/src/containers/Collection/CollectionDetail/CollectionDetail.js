@@ -105,7 +105,6 @@ class CollectionDetail extends Component {
                             <h2 id="collectionName">{this.props.thisCollection.name}</h2>
                         </div>
                         <div id="collectionInfoMid">
-
                             <div id="likeStat">
                                 <h5 id="likeCount">{this.props.thisCollection.likesCount}</h5>
                                 <h5 id="likeText">Likes</h5>
@@ -114,7 +113,6 @@ class CollectionDetail extends Component {
                                 <h5 id="memberCount">{this.props.thisCollection.members.length}</h5>
                                 <h5 id="memberText">Members</h5>
                             </div>
-
                             <div id="collectionButtons">
                                 {likeOrUnlike}
                                 {inviteButton}
