@@ -5,6 +5,7 @@
 from papersfeed.utils.papers import utils as papers_utils
 from papersfeed.utils.users import utils as users_utils
 from papersfeed.utils.collections import utils as collections_utils
+from papersfeed.utils.reviews import utils as reviews_utils
 
 from . import constants
 
@@ -31,7 +32,7 @@ def delete_session(args):
 
 def post_user(args):
     """Post User"""
-    return users_utils.insert_user(args)
+    return {constants.USER: users_utils.insert_user(args)}
 
 
 def get_user(args):
@@ -41,7 +42,7 @@ def get_user(args):
 
 def put_user(args):
     """Put User"""
-    return users_utils.update_user(args)
+    return {constants.USER: users_utils.update_user(args)}
 
 
 def delete_user(args):
@@ -56,12 +57,12 @@ def get_collection(args):
 
 def post_collection(args):
     """Post Collection"""
-    return collections_utils.insert_collection(args)
+    return {constants.COLLECTION: collections_utils.insert_collection(args)}
 
 
 def put_collection(args):
     """Put Collection"""
-    return collections_utils.update_collection(args)
+    return {constants.COLLECTION: collections_utils.update_collection(args)}
 
 
 def delete_collection(args):
@@ -87,3 +88,23 @@ def get_paper_collection(args):
 def put_paper_collection(args):
     """Put Paper Collection"""
     return collections_utils.update_paper_collection(args)
+
+
+def get_review(args):
+    """Get Review"""
+    return {constants.REVIEW: reviews_utils.select_review(args)}
+
+
+def post_review(args):
+    """Post Review"""
+    return {constants.REVIEW: reviews_utils.insert_review(args)}
+
+
+def put_review(args):
+    """Put Review"""
+    return {constants.REVIEW: reviews_utils.update_review(args)}
+
+
+def delete_review(args):
+    """Delete Review"""
+    return reviews_utils.remove_review(args)

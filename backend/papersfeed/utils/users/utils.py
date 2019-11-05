@@ -59,6 +59,9 @@ def insert_user(args):
         constants.EMAIL, constants.USERNAME, constants.PASSWORD
     ], args)
 
+    # Request User
+    request_user = args[constants.USER]
+
     # Email
     email = args[constants.EMAIL]
 
@@ -83,11 +86,18 @@ def insert_user(args):
     hashed, salt = __hash_password(password)
 
     try:
-        User.objects.create(
+        user = User.objects.create(
             description=None, email=email, username=username, password=hashed, salt=salt
         )
     except IntegrityError:
         raise ApiError(constants.USERNAME_ALREADY_EXISTS)
+
+    users, _, _ = __get_users(Q(id=user.id), request_user, None)
+
+    if not users:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    return users[0]
 
 
 def update_user(args):
@@ -132,6 +142,13 @@ def update_user(args):
         user.salt = salt
 
     user.save()
+
+    users, _, _ = __get_users(Q(id=user.id), user, None)
+
+    if not users:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    return users[0]
 
 
 def remove_user(args):

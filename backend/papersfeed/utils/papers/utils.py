@@ -17,7 +17,7 @@ from papersfeed.models.papers.paper_like import PaperLike
 from papersfeed.models.papers.paper_publication import PaperPublication
 from papersfeed.models.papers.publication import Publication
 from papersfeed.models.papers.publisher import Publisher
-from papersfeed.models.reviews.review_paper import ReviewPaper
+from papersfeed.models.reviews.review import Review
 from papersfeed.models.collections.collection_paper import CollectionPaper
 
 
@@ -532,7 +532,7 @@ def __get_paper_like_count(paper_ids, group_by_field):
 
 def __get_paper_review_count(paper_ids, group_by_field):
     """Get Number of Reviews of Papers"""
-    review_papers = ReviewPaper.objects.filter(
+    review_papers = Review.objects.filter(
         paper_id__in=paper_ids
     ).values(
         group_by_field

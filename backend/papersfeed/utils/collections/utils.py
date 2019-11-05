@@ -20,8 +20,11 @@ def insert_collection(args):
         constants.TITLE, constants.TEXT
     ], args)
 
+    # Request User
+    request_user = args[constants.USER]
+
     # User Id
-    user_id = args[constants.USER].id
+    user_id = request_user.id
 
     # Title
     title = args[constants.TITLE]
@@ -38,6 +41,13 @@ def insert_collection(args):
 
     # Add User To Collection
     CollectionUser.objects.create(collection_id=collection.id, user_id=user_id, type=COLLECTION_USER_TYPE[0])
+
+    collections, _, _ = __get_collections(Q(id=collection.id), request_user, None)
+
+    if not collections:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    return collections[0]
 
 
 def update_collection(args):
@@ -78,6 +88,13 @@ def update_collection(args):
         collection.text = text
 
     collection.save()
+
+    collections, _, _ = __get_collections(Q(id=collection.id), request_user, None)
+
+    if not collections:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    return collections[0]
 
 
 def remove_collection(args):

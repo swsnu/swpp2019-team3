@@ -9,7 +9,7 @@ from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
 from papersfeed.utils.users import utils as users_utils
 from papersfeed.models.reviews.review import Review
-from papersfeed.models.reviews.review_paper import ReviewPaper
+from papersfeed.models.papers.paper import Paper
 from papersfeed.models.reviews.review_like import ReviewLike
 from papersfeed.models.replies.reply_review import ReplyReview
 
@@ -56,7 +56,101 @@ def insert_review(args):
     # Text
     text = args[constants.TEXT]
 
+    # Check Valid
+    if not title or not text:
+        raise ApiError(constants.PARAMETER_ERROR)
+
+    # Check Paper Id
+    if not Paper.objects.filter(id=paper_id).exists():
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
     # Create
+    review = Review.objects.create(
+        paper_id=paper_id,
+        user_id=request_user.id,
+        title=title,
+        text=text
+    )
+
+    reviews, _, _ = __get_reviews(Q(id=review.id), request_user, None)
+
+    if not reviews:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    review = reviews[0]
+
+    return review
+
+
+def update_review(args):
+    """Update Review"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Review ID
+    review_id = args[constants.ID]
+
+    # Request User
+    request_user = args[constants.USER]
+
+    try:
+        review = Review.objects.get(id=review_id)
+    except ObjectDoesNotExist:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    # Auth
+    if review.user_id != request_user.id:
+        raise ApiError(constants.AUTH_ERROR)
+
+    # Title
+    title = args[constants.TITLE] if constants.TITLE in args else None
+
+    # Text
+    text = args[constants.TEXT] if constants.TEXT in args else None
+
+    # Update Title
+    if title:
+        review.title = title
+
+    # Update Text
+    if text:
+        review.text = text
+
+    review.save()
+
+    reviews, _, _ = __get_reviews(Q(id=review.id), request_user, None)
+
+    if not reviews:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    review = reviews[0]
+
+    return review
+
+
+def remove_review(args):
+    """Remove Review"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Review ID
+    review_id = args[constants.ID]
+
+    # Request User
+    request_user = args[constants.USER]
+
+    try:
+        review = Review.objects.get(id=review_id)
+    except ObjectDoesNotExist:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    # Auth
+    if review.user_id != request_user.id:
+        raise ApiError(constants.AUTH_ERROR)
+
+    review.delete()
 
 
 def __get_reviews(filter_query, request_user, count):
