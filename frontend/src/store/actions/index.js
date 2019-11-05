@@ -1,8 +1,3 @@
-// import actions here
-
-export {
-    // put actions here
-};
 
 export {
     getUserByUserId,
@@ -21,17 +16,15 @@ export {
     getCollectionsByUserId,
     getCollection,
     getCollectionPapers,
-    getCollectionMembers,
-    getCollectionReplies,
-    setOwner,
-    setNameAndDescription,
+    // getCollectionMembers,
+    // getCollectionReplies,
+    // setOwner,
+    setTitleAndDescription,
     addCollectionPaper,
     removeCollectionPaper,
-    addCollectionMember,
-    removeCollectionMember,
+    // addCollectionMember,
+    // removeCollectionMember,
     deleteCollection,
-    // getCollectionLikesCount,
-    // getCollectionIsLiked,
     // addCollectionLike,
     // removeCollectionLike,
-} from "./Collection/CollectionActions";
+} from "./Collection/collection";

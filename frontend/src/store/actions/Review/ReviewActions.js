@@ -1,26 +1,20 @@
-//will implement actions for review here
+// will implement actions for review here
 
-import * as actionTypes from '../ActionTypes';
-import axios from 'axios';
+import axios from "axios";
+import * as actionTypes from "../ActionTypes";
 
 // getReviewsByUserId(user_id: number) -> Promise<{status: number, data: Review[]}>: Call backend api to get reviews written by the selected user.
-export const getReviewsByUserId = (userID) => {
-    return dispatch => {
-        
-    }
+export const getReviewsByUserId = (userID) => (dispatch) => {
+
 };
 
-export const getUserByUserId = (userID) => {
-    return dispatch => {
-        return axios.get('/user/'+userID)
-            .then(res => dispatch({
-                type: actionTypes.GET_USER, selectedUser: res.data
-            }));
-    };
-};
+export const getUserByUserId = (userID) => (dispatch) => axios.get(`/user/${userID}`)
+    .then((res) => dispatch({
+        type: actionTypes.GET_USER, selectedUser: res.data,
+    }));
 
 
-//implement another functions at below
+// implement another functions at below
 
 // makeNewReview(paper_id: number, user_id: number, content: string) -> Promise<{status: number, data: Review}>: Call backend api to make a new review.
 // getReviewsByPaperId(paper_id: number) -> Promise<{status: number, data: Review[]}>: Call backend api to get reviews on the selected paper.

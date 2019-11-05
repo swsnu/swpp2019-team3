@@ -44,6 +44,7 @@ class PaperSpec extends Component {
                         {this.state.likeCount}
                     </Button>
                     <Button className="reviewcount-button">{this.props.reviewCount}</Button>
+                    <Button className="add-button">Add</Button>
                 </div>
                 <div className="abstract">
                     <h3 id="abstract-title">abstract</h3>
