@@ -1,0 +1,24 @@
+.ProfileEditContent {
+    min-height: 1000px;
+    background: rgb(242,243,247);
+    margin-left: 250px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.EditDescArea {
+    display:flex;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+    flex-direction: column;
+}
+
+.EditDescArea #editDescTag {
+    align-self: flex-start;
+}
+
+.ButtonArea {
+    margin: 20px;
+}

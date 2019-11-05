@@ -105,35 +105,34 @@ class UserTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    # def test_unfollow(self):
-    #     """ UNFOLLOW """
-    #     client = Client()
-    #
-    #     # Sign In
-    #     client.get('/api/session',
-    #                data={
-    #                    constants.EMAIL: 'swpp@snu.ac.kr',
-    #                    constants.PASSWORD: 'iluvswpp1234'
-    #                },
-    #                content_type='application/json')
-    #
-    #     # Follow
-    #     client.post('/api/follow',
-    #                 json.dumps({
-    #                     constants.ID: 2
-    #                 }),
-    #                 content_type='application/json')
-    #
-    #     unfollow_id = User.objects.filter(email='swpp2@snu.ac.kr').first().id
-    #
-    #     # Unfollow Success
-    #     response = client.delete('/api/follow',
-    #                              json.dumps({
-    #                                constants.ID: unfollow_id
-    #                              }),
-    #                              content_type='application/json')
-    #
-    #     self.assertEqual(response.status_code, 200)
+    def test_unfollow(self):
+        """ UNFOLLOW """
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        follow_id = User.objects.filter(email='swpp2@snu.ac.kr').first().id
+
+        # Follow
+        client.post('/api/follow',
+                    json.dumps({
+                        constants.ID: follow_id
+                    }),
+                    content_type='application/json')
+
+        # Unfollow Success
+        response = client.delete('/api/follow',
+                                 json.dumps({
+                                     constants.ID: follow_id
+                                 }), content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
 
     def test_get_user(self):
         """" GET SINGLE USER """

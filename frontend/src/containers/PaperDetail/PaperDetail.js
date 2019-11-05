@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import {
-    Header, SideBar, PaperSpec, ReviewCard,
+    PaperSpec, ReviewCard,
 } from "../../components";
 import "./PaperDetail.css";
 
@@ -17,6 +17,7 @@ class PaperDetail extends Component {
             keywords: "paper_keywords",
             likeCount: 101,
             reviewCount: 3,
+            isLiked: false,
             reviews: [
                 {
                     id: 5,
@@ -44,49 +45,38 @@ class PaperDetail extends Component {
                 },
             ],
         };
+        this.reviewMaker = this.reviewMaker.bind(this);
     }
 
     componentDidMount() {
 
     }
 
+    reviewMaker = (review) => (
+        <ReviewCard
+          key={review.id}
+          id={review.id}
+          paperId={review.paperId}
+          author={review.author}
+          title={review.title}
+          date={review.date}
+          likeCount={review.likeCount}
+          replyCount={review.replyCount}
+          headerExists={false}
+        />
+    )
+
     render() {
         const reviewCardsLeft = this.state.reviews
             .filter((x) => this.state.reviews.indexOf(x) % 2 === 0)
-            .map((review) => (
-                <ReviewCard
-                  key={review.id}
-                  id={review.id}
-                  paperId={review.paperId}
-                  author={review.author}
-                  title={review.title}
-                  date={review.date}
-                  likeCount={review.likeCount}
-                  replyCount={review.replyCount}
-                  headerExists={false}
-                />
-            ));
+            .map((review) => this.reviewMaker(review));
 
         const reviewCardsRight = this.state.reviews
             .filter((x) => this.state.reviews.indexOf(x) % 2 === 1)
-            .map((review) => (
-                <ReviewCard
-                  key={review.id}
-                  id={review.id}
-                  paperId={review.paperId}
-                  author={review.author}
-                  title={review.title}
-                  date={review.date}
-                  likeCount={review.likeCount}
-                  replyCount={review.replyCount}
-                  headerExists={false}
-                />
-            ));
+            .map((review) => this.reviewMaker(review));
 
         return (
             <div className="paperdetail-page">
-                <Header />
-                <SideBar />
                 <div className="paperdetail">
                     <div className="paperdetail-content">
                         <PaperSpec
@@ -98,6 +88,7 @@ class PaperDetail extends Component {
                           keywords={this.state.keywords}
                           likeCount={this.state.likeCount}
                           reviewCount={this.state.reviewCount}
+                          isLiekd={this.state.isLiked}
                         />
                         <div className="reviewcards">
                             <div className="reviewcards-left">{reviewCardsLeft}</div>

@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Modal, FormControl, Button } from "react-bootstrap";
 
-import "./ReviewReply.css";
+import "./Reply.css";
 
-class ReviewReply extends Component {
+class Reply extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -88,7 +88,7 @@ class ReviewReply extends Component {
 
     render() {
         return (
-            <div className="review-reply-component">
+            <div className="reply-component">
                 { this.state.isExisting
                     ? (
                         <div className="reply">
@@ -133,7 +133,7 @@ class ReviewReply extends Component {
     }
 }
 
-ReviewReply.propTypes = {
+Reply.propTypes = {
     content: PropTypes.string,
     author: PropTypes.string,
     authorId: PropTypes.number,
@@ -141,7 +141,7 @@ ReviewReply.propTypes = {
     likeCount: PropTypes.number,
 };
 
-ReviewReply.defaultProps = {
+Reply.defaultProps = {
     content: "",
     author: "",
     authorId: 0,
@@ -149,4 +149,4 @@ ReviewReply.defaultProps = {
     likeCount: 0,
 };
 
-export default ReviewReply;
+export default Reply;
