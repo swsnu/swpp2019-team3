@@ -18,7 +18,7 @@ describe("paperActions", () => {
         jest.clearAllMocks();
     });
 
-    /* FIXME: This test has some problems
+    /* FIXME: This test has some problems!
     it("'getPaper' should call axios.get", (done) => {
         const spy = jest.spyOn(axios, "get")
             .mockImplementation(() => new Promise((resolve) => {
