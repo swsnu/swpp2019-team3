@@ -16,6 +16,8 @@
 }
 
 .CollectionInfo #collectionInfoMid {
+    margin-top: 15px;
+    margin-bottom: 15px;
     display: inline-flex;
     justify-content: space-around;
     align-items: center;
@@ -68,7 +70,23 @@
 }
 
 .itemList #replies {
-    width: 100%;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
     margin: 15px;
+}
+
+.itemList #replies #createNewReply {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.itemList #replies #createNewReply #newReplyContentInput {
+    width: 1000px;
+}
+
+.itemList #replies #replyList {
+
+    background: rgb(242,243,247);
+    margin: 10px;
 }
