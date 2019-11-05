@@ -1,0 +1,58 @@
+.CollectionDetailContent {
+    min-height: 1000px;
+    background: rgb(242,243,247);
+    margin-left: 250px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.itemList {
+    margin: 20px;
+    background: rgb(255,255,255);
+}
+
+.itemList #paperCards {
+    width: 100%;
+    height: 100%;
+    margin: 15px;
+    
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: row wrap;
+    align-items: flex-start;
+}
+
+.itemList #paperCardsLeft {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.itemList #paperCardsRight {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.itemList #replies {
+    width: 100%;
+    height: 100%;
+    margin: 15px;
+}
+
+/* .itemList #replyList {
+    width: 100%;
+    height: 100%;
+    margin: 15px;
+    
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+} */

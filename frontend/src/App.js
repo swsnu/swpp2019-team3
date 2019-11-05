@@ -6,7 +6,7 @@ import { Route, /* Redirect , */ Switch } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
 
 import {
-    Intro, Main, ReviewDetail, PaperDetail, ReviewControl, ProfileDetail, ProfileEdit,
+    Intro, Main, ReviewDetail, PaperDetail, ReviewControl, ProfileDetail, ProfileEdit, CollectionDetail, CollectionList
 } from "./containers";
 import {
     Header, SideBar,
@@ -45,6 +45,8 @@ function App(props) {
                             <Route path="/paper_id=:paper_id" exact component={PaperDetail} />
                             <Route path="/profile/:id" exact component={ProfileDetail} />
                             <Route path="/profile/:id/edit" exact component={ProfileEdit} />
+                            <Route path="/collections" exact component={CollectionList} />
+                            <Route path="/collections/:collection_id" exact component={CollectionDetail} />
                         </Switch>
                     </div>
                 </Switch>
