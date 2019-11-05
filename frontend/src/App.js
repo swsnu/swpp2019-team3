@@ -6,7 +6,7 @@ import { Route, Switch } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
 
 import {
-    Test, Intro, Main, ReviewDetail, PaperDetail, ReviewControl, ProfileDetail, ProfileEdit,
+    Intro, Main, ReviewDetail, PaperDetail, ReviewControl, ProfileDetail, ProfileEdit,
 } from "./containers";
 import {
     Header, SideBar,
@@ -43,7 +43,6 @@ function App(props) {
                               )}
                             />
                             <Route path="/paper_id=:paper_id" exact component={PaperDetail} />
-                            <Route path="/test" exact component={Test} />
                             <Route path="/profile/:id" exact component={ProfileDetail} />
                             <Route path="/profile/:id/edit" exact component={ProfileEdit} />
                         </Switch>

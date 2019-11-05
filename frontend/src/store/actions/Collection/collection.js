@@ -19,11 +19,9 @@ const makeNewCollectionFailure = (error) => {
     };
 };
 
-export const makeNewCollection = (title, description) => (dispatch) => {
-    return axios.post("api/collection", {title, text: description })
-        .then((res) => {  dispatch(makeNewCollectionSuccess(res.data));})
-        .catch((err) => {  (dispatch(makeNewCollectionFailure(err)))});
-};
+export const makeNewCollection = (title, description) => (dispatch) => axios.post("api/collection", { title, text: description })
+    .then((res) => { dispatch(makeNewCollectionSuccess(res.data)); })
+    .catch((err) => { (dispatch(makeNewCollectionFailure(err))); });
 
 // getCollectionsByUserId
 
@@ -38,8 +36,8 @@ const getCollectionsByUserIdFailure = (error) => ({
 });
 
 export const getCollectionsByUserId = (userId) => (dispatch) => axios.get("api/collection/user", { params: { id: userId } })
-.then((res) => {  dispatch(getCollectionsByUserIdSuccess(res.data));})
-.catch((err) => {  (dispatch(getCollectionsByUserIdFailure(err)))});
+    .then((res) => { dispatch(getCollectionsByUserIdSuccess(res.data)); })
+    .catch((err) => { (dispatch(getCollectionsByUserIdFailure(err))); });
 
 // getCollection
 
@@ -62,8 +60,8 @@ const getCollectionFailure = (error) => {
 };
 
 export const getCollection = (collectionId) => (dispatch) => axios.get("api/collection", { params: { id: collectionId } })
-.then((res) => {  dispatch(getCollectionSuccess(res.data));})
-.catch((err) => {  (dispatch(getCollectionFailure(err)))});
+    .then((res) => { dispatch(getCollectionSuccess(res.data)); })
+    .catch((err) => { (dispatch(getCollectionFailure(err))); });
 
 // get papers of a collection
 const getCollectionPapersSuccess = (papers) => ({
@@ -77,8 +75,8 @@ const getCollectionPapersFailure = (error) => ({
 });
 
 export const getCollectionPapers = (collectionId) => (dispatch) => axios.get("api/paper/collection", { params: { id: collectionId } })
-.then((res) => {  dispatch(getCollectionPapersSuccess(res.data));})
-.catch((err) => {  (dispatch(getCollectionPapersFailure(err)))});
+    .then((res) => { dispatch(getCollectionPapersSuccess(res.data)); })
+    .catch((err) => { (dispatch(getCollectionPapersFailure(err))); });
 
 // getCollectionMembers - no matching api
 
@@ -123,9 +121,9 @@ const setTitleAndDescriptionFailure = (error) => {
     };
 };
 
-export const setTitleAndDescription = (collectionId, title, description) => (dispatch) => axios.put("api/collection",  { id: collectionId, title, text: description } )
-.then((res) => {  dispatch(setTitleAndDescriptionSuccess(res.data));})
-.catch((err) => {  (dispatch(setTitleAndDescriptionFailure(err)))});
+export const setTitleAndDescription = (collectionId, title, description) => (dispatch) => axios.put("api/collection", { id: collectionId, title, text: description })
+    .then((res) => { dispatch(setTitleAndDescriptionSuccess(res.data)); })
+    .catch((err) => { (dispatch(setTitleAndDescriptionFailure(err))); });
 
 // add paper to CollectionPaper
 const addCollectionPaperSuccess = (collection) => ({
@@ -139,8 +137,8 @@ const addCollectionPaperFailure = (error) => ({
 });
 
 export const addCollectionPaper = (collectionIds, paperId) => (dispatch) => axios.put("api/paper/collection", { id: paperId, collection_ids: collectionIds })
-.then((res) => {  dispatch(addCollectionPaperSuccess(res.data));})
-.catch((err) => {  (dispatch(addCollectionPaperFailure(err)))});
+    .then((res) => { dispatch(addCollectionPaperSuccess(res.data)); })
+    .catch((err) => { (dispatch(addCollectionPaperFailure(err))); });
 
 // remove paper from collection
 const removeCollectionPaperSuccess = (collection) => ({
@@ -154,8 +152,8 @@ const removeCollectionPaperFailure = (error) => ({
 });
 
 export const removeCollectionPaper = (collectionIds, paperId) => (dispatch) => axios.put("api/paper/collection", { id: paperId, collection_ids: collectionIds })
-.then((res) => {  dispatch(removeCollectionPaperSuccess(res.data));})
-.catch((err) => {  (dispatch(removeCollectionPaperFailure(err)))});
+    .then((res) => { dispatch(removeCollectionPaperSuccess(res.data)); })
+    .catch((err) => { (dispatch(removeCollectionPaperFailure(err))); });
 
 // add member to collection - no matching api
 /* export const addCollectionMember = (collectionID, userID) => (dispatch)
@@ -192,9 +190,9 @@ const deleteCollectionFailure = (error) => {
     };
 };
 
-export const deleteCollection = (collectionId) => (dispatch) => axios.delete("api/collection", {params:{id:collectionId}})
-.then((res) => {  dispatch(deleteCollectionSuccess(res.data));})
-.catch((err) => {  (dispatch(deleteCollectionFailure(err)))});
+export const deleteCollection = (collectionId) => (dispatch) => axios.delete("api/collection", { params: { id: collectionId } })
+    .then((res) => { dispatch(deleteCollectionSuccess(res.data)); })
+    .catch((err) => { (dispatch(deleteCollectionFailure(err))); });
 
 // add collection like - no matching api
 // export const addCollectionLike = (collectionID) => {

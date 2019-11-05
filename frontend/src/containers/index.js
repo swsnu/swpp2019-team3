@@ -6,7 +6,6 @@ import PaperDetail from "./PaperDetail/PaperDetail";
 import ReviewControl from "./Review/ReviewControl/ReviewControl";
 import ProfileDetail from "./Profile/ProfileDetail/ProfileDetail";
 import ProfileEdit from "./Profile/ProfileEdit/ProfileEdit";
-import Test from "./CollectionTest";
 
 export {
     Intro,
@@ -16,5 +15,4 @@ export {
     ReviewControl,
     ProfileDetail,
     ProfileEdit,
-    Test,
 };
