@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Modal, FormControl, Button } from "react-bootstrap";
-import authActions from "../../../store/actions/index";
+import authActions from "../../../store/actions";
 import { signupStatus, signinStatus } from "../../../store/reducers/auth";
 import "./IntroModal.css";
+import { doesNotReject } from "assert";
 
 class IntroModal extends Component {
     constructor(props) {
