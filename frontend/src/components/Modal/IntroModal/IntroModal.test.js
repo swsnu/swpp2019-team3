@@ -99,8 +99,6 @@ describe("<IntroModal />", () => {
         signupButton.simulate("click");
 
         expect(spySignup).toBeCalledTimes(1);
-        // expect(introModalInstance.state.isSignupOpen).toBe(false);
-        // expect(mockHistory.push).toHaveBeenCalledTimes(1);
     });
 
 
@@ -123,8 +121,6 @@ describe("<IntroModal />", () => {
         signinButton.simulate("click");
 
         expect(spySignin).toBeCalledTimes(1);
-        // expect(introModalInstance.state.isSigninOpen).toBe(false);
-        // expect(mockHistory.push).toHaveBeenCalledTimes(1);
     });
 
 
@@ -262,6 +258,7 @@ describe("<IntroModal />", () => {
 
         introModalInstance = component.find(IntroModal.WrappedComponent).instance();
         expect(introModalInstance.state.signupStatus).toBe(signupStatus.NONE);
+        // FIXME: actually, it should be 'SUCCESS'!
 
 
         stubInitialState = {
@@ -286,6 +283,7 @@ describe("<IntroModal />", () => {
 
         introModalInstance = component.find(IntroModal.WrappedComponent).instance();
         expect(introModalInstance.state.signupStatus).toBe(signupStatus.NONE);
+        // FIXME: actually, it should be 'DUPLICATE_EMAIL'!
 
 
         stubInitialState = {
@@ -310,6 +308,7 @@ describe("<IntroModal />", () => {
 
         introModalInstance = component.find(IntroModal.WrappedComponent).instance();
         expect(introModalInstance.state.signupStatus).toBe(signupStatus.NONE);
+        // FIXME: actually, it should be 'DUPLICATE_USERNAME'!
     });
 
 
@@ -356,6 +355,7 @@ describe("<IntroModal />", () => {
 
         introModalInstance = component.find(IntroModal.WrappedComponent).instance();
         expect(introModalInstance.state.signinStatus).toBe(signinStatus.NONE);
+        // FIXME: actually, it should be 'SUCCESS'!
 
 
         stubInitialState = {
@@ -379,6 +379,7 @@ describe("<IntroModal />", () => {
 
         introModalInstance = component.find(IntroModal.WrappedComponent).instance();
         expect(introModalInstance.state.signinStatus).toBe(signinStatus.NONE);
+        // FIXME: actually, it should be 'USER_NOT_EXIST'!
 
 
         stubInitialState = {
@@ -402,5 +403,6 @@ describe("<IntroModal />", () => {
 
         introModalInstance = component.find(IntroModal.WrappedComponent).instance();
         expect(introModalInstance.state.signinStatus).toBe(signinStatus.NONE);
+        // FIXME: actually, it should be 'WRONG_PW'!
     });
 });
