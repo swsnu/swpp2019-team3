@@ -1,5 +1,6 @@
 import axios from "axios";
-import authConstants from "./actionTypes";
+
+import { authConstants } from "./actionTypes";
 
 const signupSuccess = (user) => ({
     type: authConstants.SIGNUP_SUCCESS,
@@ -41,7 +42,7 @@ const signinFailure = (error) => {
         actionType = authConstants.SIGNIN_FAILURE_USER_NOT_EXIST;
         break;
     case 403:
-        actionType = authConstants.SGININ_FAILURE_WRONG_PW;
+        actionType = authConstants.SIGNIN_FAILURE_WRONG_PW;
         break;
     default:
         break;

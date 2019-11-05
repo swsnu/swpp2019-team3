@@ -18,7 +18,7 @@ function App(props) {
             <div className="App">
                 <Switch>
                     <Route path="/" exact component={Intro} />
-                    <div>
+                    <>
                         <Header />
                         <SideBar />
                         <Switch>
@@ -46,7 +46,7 @@ function App(props) {
                             <Route path="/profile/:id" exact component={ProfileDetail} />
                             <Route path="/profile/:id/edit" exact component={ProfileEdit} />
                         </Switch>
-                    </div>
+                    </>
                 </Switch>
             </div>
         </ConnectedRouter>

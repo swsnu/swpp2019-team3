@@ -1,7 +1,10 @@
 import { signup, signin } from "./auth";
+import getPaper from "./paper";
 
-const authActions = {
+export const authActions = {
     signup,
     signin,
 };
-export default authActions;
+export const paperActions = {
+    getPaper,
+};
