@@ -30,7 +30,7 @@ describe("authActions", () => {
 
     it("'signup' should call axios.post", (done) => {
         const spy = jest.spyOn(axios, "post")
-            .mockImplementation((url) => new Promise((resolve, reject) => {
+            .mockImplementation(() => new Promise((resolve) => {
                 const result = {
                     status: 200, // TODO: actually, it should be 201(POST)
                     data: {},
@@ -40,7 +40,6 @@ describe("authActions", () => {
 
         mockStore.dispatch(authActions.signup(stubSigningUpUser))
             .then(() => {
-                const newState = mockStore.getState();
                 expect(spy).toHaveBeenCalledWith("/api/user", stubSigningUpUser);
                 done();
             });
@@ -48,7 +47,7 @@ describe("authActions", () => {
 
     it("'signup' should handle duplicate username", (done) => {
         const spy = jest.spyOn(axios, "post")
-            .mockImplementation((url) => new Promise((resolve, reject) => {
+            .mockImplementation(() => new Promise((_, reject) => {
                 const error = {
                     response: {
                         status: 419,
@@ -60,7 +59,6 @@ describe("authActions", () => {
 
         mockStore.dispatch(authActions.signup(stubSigningUpUser))
             .then(() => {
-                const newState = mockStore.getState();
                 expect(spy).toHaveBeenCalledWith("/api/user", stubSigningUpUser);
                 done();
             });
@@ -68,7 +66,7 @@ describe("authActions", () => {
 
     it("'signup' should handle duplicate email", (done) => {
         const spy = jest.spyOn(axios, "post")
-            .mockImplementation((url) => new Promise((resolve, reject) => {
+            .mockImplementation(() => new Promise((_, reject) => {
                 const error = {
                     response: {
                         status: 420,
@@ -80,7 +78,6 @@ describe("authActions", () => {
 
         mockStore.dispatch(authActions.signup(stubSigningUpUser))
             .then(() => {
-                const newState = mockStore.getState();
                 expect(spy).toHaveBeenCalledWith("/api/user", stubSigningUpUser);
                 done();
             });
@@ -88,7 +85,7 @@ describe("authActions", () => {
 
     it("'signup' should handle session expired", (done) => {
         const spy = jest.spyOn(axios, "post")
-            .mockImplementation((url) => new Promise((resolve, reject) => {
+            .mockImplementation(() => new Promise((_, reject) => {
                 const error = {
                     response: {
                         status: 440,
@@ -100,7 +97,6 @@ describe("authActions", () => {
 
         mockStore.dispatch(authActions.signup(stubSigningUpUser))
             .then(() => {
-                const newState = mockStore.getState();
                 expect(spy).toHaveBeenCalledWith("/api/user", stubSigningUpUser);
                 done();
             });
@@ -109,7 +105,7 @@ describe("authActions", () => {
 
     it("'signin' should call axios.get", (done) => {
         const spy = jest.spyOn(axios, "get")
-            .mockImplementation((url) => new Promise((resolve, reject) => {
+            .mockImplementation(() => new Promise((resolve) => {
                 const result = {
                     status: 200,
                     data: {},
@@ -119,7 +115,6 @@ describe("authActions", () => {
 
         mockStore.dispatch(authActions.signin(stubSigningInUser))
             .then(() => {
-                const newState = mockStore.getState();
                 expect(spy).toHaveBeenCalledWith("/api/session", { params: stubSigningInUser });
                 done();
             });
@@ -127,7 +122,7 @@ describe("authActions", () => {
 
     it("'signin' should handle user not exist", (done) => {
         const spy = jest.spyOn(axios, "get")
-            .mockImplementation((url) => new Promise((resolve, reject) => {
+            .mockImplementation(() => new Promise((_, reject) => {
                 const error = {
                     response: {
                         status: 404,
@@ -139,7 +134,6 @@ describe("authActions", () => {
 
         mockStore.dispatch(authActions.signin(stubSigningInUser))
             .then(() => {
-                const newState = mockStore.getState();
                 expect(spy).toHaveBeenCalledWith("/api/session", { params: stubSigningInUser });
                 done();
             });
@@ -147,7 +141,7 @@ describe("authActions", () => {
 
     it("'signin' should handle wrong password", (done) => {
         const spy = jest.spyOn(axios, "get")
-            .mockImplementation((url) => new Promise((resolve, reject) => {
+            .mockImplementation(() => new Promise((_, reject) => {
                 const error = {
                     response: {
                         status: 403,
@@ -159,7 +153,6 @@ describe("authActions", () => {
 
         mockStore.dispatch(authActions.signin(stubSigningInUser))
             .then(() => {
-                const newState = mockStore.getState();
                 expect(spy).toHaveBeenCalledWith("/api/session", { params: stubSigningInUser });
                 done();
             });
@@ -167,7 +160,7 @@ describe("authActions", () => {
 
     it("'signin' should handle session expired", (done) => {
         const spy = jest.spyOn(axios, "get")
-            .mockImplementation((url) => new Promise((resolve, reject) => {
+            .mockImplementation(() => new Promise((_, reject) => {
                 const error = {
                     response: {
                         status: 440,
@@ -179,7 +172,6 @@ describe("authActions", () => {
 
         mockStore.dispatch(authActions.signin(stubSigningInUser))
             .then(() => {
-                const newState = mockStore.getState();
                 expect(spy).toHaveBeenCalledWith("/api/session", { params: stubSigningInUser });
                 done();
             });

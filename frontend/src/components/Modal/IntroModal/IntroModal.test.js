@@ -19,7 +19,9 @@ const makeIntroModal = (initialState) => (
         <IntroModal history={mockHistory} />
     </Provider>
 );
+/* eslint-disable no-unused-vars */
 const mockPromise = new Promise((resolve, reject) => { resolve(); });
+/* eslint-enable no-unused-vars */
 
 describe("<IntroModal />", () => {
     let introModal;
