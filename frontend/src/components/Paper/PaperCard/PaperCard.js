@@ -35,10 +35,14 @@ class PaperCard extends Component {
     }
 
     render() {
+        let header = null;
+        if (this.props.headerExists) {
+            header = <Card.Header>{`${this.props.user} ${this.props.source} this paper.`}</Card.Header>;
+        }
         return (
             <div className="wrapper">
                 <Card className="paper">
-                    <Card.Header>{`${this.props.user} ${this.props.source} this paper.`}</Card.Header>
+                    {header}
                     <Card.Body className="body">
                         <div className="title">
                             <Card.Link href={`/paper_id=${this.props.id}`} className="text">{this.props.title}</Card.Link>
@@ -73,6 +77,7 @@ PaperCard.propTypes = {
     likeCount: PropTypes.number,
     reviewCount: PropTypes.number,
     isLiked: PropTypes.bool,
+    headerExists: PropTypes.bool,
 };
 
 PaperCard.defaultProps = {
@@ -86,6 +91,7 @@ PaperCard.defaultProps = {
     likeCount: 0,
     reviewCount: 0,
     isLiked: false,
+    headerExists: true,
 };
 
 export default PaperCard;

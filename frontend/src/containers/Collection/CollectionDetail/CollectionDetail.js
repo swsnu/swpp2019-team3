@@ -64,6 +64,7 @@ class CollectionDetail extends Component {
           likeCount={paper.likeCount}
           reviewCount={paper.reviewCount}
           isLiked={paper.isLiked}
+          headerExists={false}
         />
     )
 
