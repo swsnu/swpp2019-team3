@@ -51,7 +51,7 @@ class PaperSpec extends Component {
                 <div className="buttons">
                     <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
                         <Image src={heart} width={20} height={20} className="heart-image" />
-                        {this.props.likeCount}
+                        {this.state.likeCount}
                     </Button>
                     {addButton}
                 </div>
