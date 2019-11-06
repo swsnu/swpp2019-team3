@@ -44,8 +44,8 @@ class Header extends Component {
                         <Dropdown>
                             <Dropdown.Toggle title="myaccount" className="myaccount-button">My Account</Dropdown.Toggle>
                             <Dropdown.Menu className="myaccount-menu">
-                                <Dropdown.Header>User Name</Dropdown.Header>
-                                <Dropdown.Item className="my-profile-button" href="/profile/user_id">My Profile</Dropdown.Item>
+                                <Dropdown.Header>Girin</Dropdown.Header>
+                                <Dropdown.Item className="my-profile-button" href="/profile/1">My Profile</Dropdown.Item>
                                 <Dropdown.Item className="logout-button" href="/">Logout</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>

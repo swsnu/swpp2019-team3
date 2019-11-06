@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
+import { Button, Image, Card } from "react-bootstrap";
 import PropTypes from "prop-types";
 import "./CollectionCard.css";
+import heart from "../../heart.png";
+import talk from "../../talk.png";
 
 class CollectionCard extends Component {
     constructor(props) {
@@ -44,9 +45,14 @@ class CollectionCard extends Component {
                         </div>
                         <Card.Text>Number of papers: {this.props.paperCount}</Card.Text>
                     </Card.Body>
-                    <Card.Footer>
-                        <Button id="like-button" className="like-button" onClick={this.state.isLiked ? this.clickCollectionCardUnlikeHandler : this.clickCollectionCardLikeHandler}>{this.state.likeCount}</Button>
-                        <Button href={`/collections/${this.props.id}`}>{this.props.replyCount}</Button>
+                    <Card.Footer className="footer">
+
+                        <Button variant="light" id="like-button" className="like-button" onClick={this.state.isLiked ? this.clickCollectionCardUnlikeHandler : this.clickCollectionCardLikeHandler}>
+                            <Image src={heart} width={20} height={20} className="heart-image" />
+                            {this.state.likeCount}
+                        </Button>
+
+                        <Button variant="light" className="reply-button" href={`/collections/${this.props.id}`}><Image src={talk} width={20} height={20} className="talk-image" />{this.props.replyCount}</Button>
                     </Card.Footer>
                 </Card>
             </div>

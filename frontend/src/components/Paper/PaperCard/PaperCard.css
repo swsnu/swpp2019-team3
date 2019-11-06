@@ -21,6 +21,30 @@
     font-size: 130%;
 }
 
+.paper .footer {
+    display: flex;
+    align-items: flex-start;
+}
 .paper .footer .add-button{
     margin-left: 50%;
+}
+
+.paper .like-button .heart-image{
+    margin-top: 6%;
+}
+.paper .review-button{
+    width: 17%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.paper .review-button .talk-image{
+    margin-top: 8%;
+    margin-right: 5%;
+}
+
+.paper .like-button{
+    width: 17%;
+    display: flex;
+    justify-content: space-around;
 }
