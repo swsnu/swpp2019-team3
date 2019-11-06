@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import "./PaperCard.css";
 import heart from "../../heart.png";
 import talk from "../../talk.png";
+import { AddPaperModal } from "../..";
 
 class PaperCard extends Component {
     constructor(props) {
@@ -39,6 +40,11 @@ class PaperCard extends Component {
         if (this.props.headerExists) {
             header = <Card.Header>{`${this.props.user} ${this.props.source} this paper.`}</Card.Header>;
         }
+        let addButton = null;
+        if (this.props.addButtonExists) {
+            addButton = <AddPaperModal className="add-button" id={this.props.id} />;
+        }
+
         return (
             <div className="wrapper">
                 <Card className="paper">
@@ -58,7 +64,7 @@ class PaperCard extends Component {
                         <Button variant="light" className="review-button" href={`/paper_id=${this.props.id}`}>
                             <Image src={talk} width={20} height={20} className="talk-image" />{this.props.reviewCount}
                         </Button>
-                        <Button className="add-button">Add</Button>
+                        {addButton}
                     </Card.Footer>
                 </Card>
             </div>
@@ -78,6 +84,7 @@ PaperCard.propTypes = {
     reviewCount: PropTypes.number,
     isLiked: PropTypes.bool,
     headerExists: PropTypes.bool,
+    addButtonExists: PropTypes.bool,
 };
 
 PaperCard.defaultProps = {
@@ -92,6 +99,7 @@ PaperCard.defaultProps = {
     reviewCount: 0,
     isLiked: false,
     headerExists: true,
+    addButtonExists: false,
 };
 
 export default PaperCard;

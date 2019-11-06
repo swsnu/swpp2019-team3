@@ -103,6 +103,7 @@ class Main extends Component {
                   keywords={feed.keywords}
                   likeCount={feed.likeCount}
                   reviewCount={feed.reviewCount}
+                  addButtonExists
                 />
             );
         }

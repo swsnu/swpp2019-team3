@@ -54,6 +54,7 @@ class CollectionDetail extends Component {
 
     paperCardMaker = (paper) => (
         <PaperCard
+          key={paper.id}
           source={paper.source}
           id={paper.id}
           user={paper.user}
@@ -122,8 +123,8 @@ class CollectionDetail extends Component {
                         </div>
                         <div id="collectionDescription">
                             <div id="date">
-                                <div id="creationDate"><h>Created: {this.props.thisCollection.creationDate}</h></div>
-                                <div id="lastUpdateDate"><h>Last Update: {this.props.thisCollection.lastUpdateDate}</h></div>
+                                <div id="creationDate">Created: {this.props.thisCollection.creationDate}</div>
+                                <div id="lastUpdateDate">Last Update: {this.props.thisCollection.lastUpdateDate}</div>
                             </div>
                             <p id="descriptionBox">{this.props.thisCollection.description}</p>
                         </div>
