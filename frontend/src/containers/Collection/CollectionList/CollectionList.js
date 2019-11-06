@@ -38,6 +38,7 @@ class CollectionList extends Component {
                   replyCount={collection.replyCount}
                   likeCount={collection.likeCount}
                   isLiked={collection.isLiked}
+                  headerExists={false}
                 />
             ));
 
@@ -54,6 +55,7 @@ class CollectionList extends Component {
                   replyCount={collection.replyCount}
                   likeCount={collection.likeCount}
                   isLiked={collection.isLiked}
+                  headerExists={false}
                 />
             ));
 

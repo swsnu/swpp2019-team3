@@ -35,10 +35,14 @@ class CollectionCard extends Component {
     }
 
     render() {
+        let header = null;
+        if (this.props.headerExists) {
+            header = <Card.Header>{`${this.props.user} ${this.props.source} this collection.`}</Card.Header>;
+        }
         return (
             <div className="wrapper">
                 <Card className="collection">
-                    <Card.Header>{`${this.props.user} ${this.props.source} this collection.`}</Card.Header>
+                    {header}
                     <Card.Body className="body">
                         <div className="title">
                             <Card.Link className="text" href={`/collections/${this.props.id}`}>{this.props.title}</Card.Link>
@@ -69,6 +73,7 @@ CollectionCard.propTypes = {
     replyCount: PropTypes.number,
     likeCount: PropTypes.number,
     isLiked: PropTypes.bool,
+    headerExists: PropTypes.bool,
 };
 
 CollectionCard.defaultProps = {
@@ -80,6 +85,7 @@ CollectionCard.defaultProps = {
     replyCount: 0,
     likeCount: 0,
     isLiked: false,
+    headerExists: true,
 };
 
 export default CollectionCard;
