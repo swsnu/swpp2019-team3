@@ -15,12 +15,7 @@ class AddPaperModal extends Component {
             makeNewCollectionStatus: collectionStatus.NONE,
             isAddPaperOpen: false,
             checkedCollections: [1, 3, 4],
-            collections: [
-                { id: 1, title: "collection_1" },
-                { id: 2, title: "collection_2" },
-                { id: 3, title: "collection_3" },
-                { id: 4, title: "collection_4" },
-            ],
+            collections: [],
             collectionName: "",
         };
         this.openAddPaperHandler = this.openAddPaperHandler.bind(this);
@@ -29,17 +24,25 @@ class AddPaperModal extends Component {
         this.clickCancelButtonHandler = this.clickCancelButtonHandler.bind(this);
     }
 
+    componentDidMount() {
+        this.props.onGetCollections()
+            .then(() => {
+                this.setState({ collections: this.props.storedCollections });
+            });
+    }
+
     openAddPaperHandler() {
+        this.props.onGetCollections();
         this.setState({ isAddPaperOpen: true });
     }
 
     checkHandler(collection) {
         const beforeCheckedCollections = this.state.checkedCollections;
         if (collection.id in beforeCheckedCollections) {
-            console.log(`uncheck${collection.id}`);
+            // console.log(`uncheck${collection.id}`);
             this.setState({ checkedCollections: beforeCheckedCollections.filter((id) => id !== collection) });
         } else {
-            console.log(`check${collection.id}`);
+            // console.log(`check${collection.id}`);
             this.setState({ checkedCollections: beforeCheckedCollections.concat(collection) });
         }
     }
@@ -49,7 +52,7 @@ class AddPaperModal extends Component {
             const collectionIds = this.state.checkedCollections;
             const paperId = this.props.id;
             const collectionsAndPaper = { id: paperId, collection_ids: collectionIds };
-            console.log(collectionsAndPaper);
+            // console.log(collectionsAndPaper);
             this.props.onAddPaper(collectionsAndPaper)
                 .then(() => {
                     switch (this.props.addPaperCollectionStatus) {
@@ -65,7 +68,7 @@ class AddPaperModal extends Component {
 
         if (this.state.collectionName.length > 0) {
             const newCollection = { title: this.state.collectionName, text: "empty description" };
-            console.log(newCollection);
+            // console.log(newCollection);
             this.props.onMakeNewCollection(newCollection)
                 .then(() => {
                     switch (this.props.makeNewCollectionStatus) {
@@ -118,6 +121,9 @@ class AddPaperModal extends Component {
                     <Modal.Header>
                         <h2 id="add-paper-to-my-collections">Add Paper to My Collections</h2>
                         <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
+
+                    </Modal.Header>
+                    <Modal.Body>
                         <FormControl
                           className="collection-name-input"
                           type="text"
@@ -125,8 +131,6 @@ class AddPaperModal extends Component {
                           value={this.state.collectionName}
                           onChange={(e) => this.setState({ collectionName: e.target.value })}
                         />
-                    </Modal.Header>
-                    <Modal.Body>
                         {collectionEntries}
                     </Modal.Body>
                     <Modal.Footer>
@@ -144,8 +148,11 @@ class AddPaperModal extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    me: state.auth.me,
     addPaperCollectionStatus: state.collection.edit.status,
     makeNewCollectionStatus: state.collection.make.status,
+    getCollectionsStatus: state.collection.list.status,
+    storedCollections: state.collection.list.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -153,22 +160,27 @@ const mapDispatchToProps = (dispatch) => ({
     onAddPaper: (collectionsAndPaper) => dispatch(
         collectionActions.addCollectionPaper(collectionsAndPaper),
     ),
+    onGetCollections: () => dispatch(collectionActions.getCollectionsByUserId()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddPaperModal);
 
 AddPaperModal.propTypes = {
+    me: PropTypes.objectOf(PropTypes.any),
     id: PropTypes.number,
     onMakeNewCollection: PropTypes.func,
     onAddPaper: PropTypes.func,
+    onGetCollections: PropTypes.func,
     addPaperCollectionStatus: PropTypes.string,
     makeNewCollectionStatus: PropTypes.string,
 };
 
 AddPaperModal.defaultProps = {
+    me: null,
     id: -1,
     onMakeNewCollection: null,
     onAddPaper: null,
+    onGetCollections: null,
     addPaperCollectionStatus: collectionStatus.NONE,
     makeNewCollectionStatus: collectionStatus.NONE,
 };

@@ -27,7 +27,7 @@ export const makeNewCollection = (collection) => (dispatch) => axios.post("api/c
 
 const getCollectionsByUserIdSuccess = (collections) => ({
     type: collectionConstants.GET_COLLECTIONS,
-    target: collections,
+    target: collections.users,
 });
 
 const getCollectionsByUserIdFailure = (error) => ({
@@ -35,8 +35,8 @@ const getCollectionsByUserIdFailure = (error) => ({
     target: error,
 });
 
-export const getCollectionsByUserId = (userId) => (dispatch) => axios.get("api/collection/user", { params: { id: userId } })
-    .then((res) => { dispatch(getCollectionsByUserIdSuccess(res.data)); })
+export const getCollectionsByUserId = () => (dispatch) => axios.get("api/collection/user", { params: { id: 0 } })
+    .then((res) => { dispatch(getCollectionsByUserIdSuccess(res.data.data)); })
     .catch((err) => { (dispatch(getCollectionsByUserIdFailure(err))); });
 
 // getCollection

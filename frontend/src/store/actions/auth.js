@@ -32,7 +32,7 @@ export const signup = (user) => (dispatch) => axios.post("/api/user", user)
 
 const signinSuccess = (user) => ({
     type: authConstants.SIGNIN_SUCCESS,
-    target: user,
+    target: user.data,
 });
 
 const signinFailure = (error) => {

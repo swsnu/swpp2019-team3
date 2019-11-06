@@ -131,15 +131,15 @@ def select_collection(args):
 
 def select_collection_user(args):
     """Select User's Collections"""
-    is_parameter_exists([
-        constants.ID
-    ], args)
+    #is_parameter_exists([
+    #    constants.ID
+    #], args)
 
     # Request User
     request_user = args[constants.USER]
 
     # User Id
-    user_id = args[constants.ID]
+    user_id = request_user.id
 
     # User's Collections
     collection_ids = CollectionUser.objects.filter(user_id=user_id).values_list('collection_id', flat=True)
