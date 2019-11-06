@@ -93,7 +93,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.makeNewCollection("def"))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", { text: undefined, title: "def"  });
+                expect(spy).toHaveBeenCalledWith("api/collection", { text: undefined, title: "def" });
                 done();
             });
     });

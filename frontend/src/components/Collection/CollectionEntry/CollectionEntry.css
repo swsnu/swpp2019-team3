@@ -1,0 +1,16 @@
+.collection-entry {
+    width: 200px;
+    margin-left: 5%;
+    margin-top: 15px;
+}
+
+#collection-title {
+    margin-top: 5%;
+    float: left;
+}
+
+.checkButton {
+    margin-top: 5%;
+    margin-left: 5%;
+    float: right;
+}

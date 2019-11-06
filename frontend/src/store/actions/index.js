@@ -1,4 +1,3 @@
-
 import {
     getUserByUserId,
     // getUserByUserName,
@@ -31,6 +30,7 @@ import {
     // removeCollectionLike,
 } from "./Collection/collection";
 
+
 export {
     getUserByUserId,
     // getUserByUserName,
@@ -43,8 +43,7 @@ export {
     setUserProfile,
 };
 
-
-export {
+export const collectionActions = {
     makeNewCollection,
     getCollectionsByUserId,
     getCollection,

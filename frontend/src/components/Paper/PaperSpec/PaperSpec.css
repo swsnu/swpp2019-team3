@@ -39,10 +39,9 @@
     float: left;
 }
 
-.paperspec .buttons .add-button {
+.add-button {
     margin-top: 5%;
-    margin-left: 5%;
-    float: right;
+    margin-left: 20%;
 }
 
 .paperspec .abstract #abstract-title {

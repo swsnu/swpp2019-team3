@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import Button from "react-bootstrap/Button";
 import PropTypes from "prop-types";
+
 import "./PaperSpec.css";
+import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
 
 class PaperSpec extends Component {
     constructor(props) {
@@ -36,7 +38,7 @@ class PaperSpec extends Component {
     render() {
         let addButton = null;
         if (this.props.addButtonExists) {
-            addButton = <Button className="add-button">Add</Button>;
+            addButton = <AddPaperModal className="add-button" />;
         }
         return (
             <div className="paperspec">

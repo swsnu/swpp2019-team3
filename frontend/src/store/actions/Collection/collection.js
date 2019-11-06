@@ -19,7 +19,7 @@ const makeNewCollectionFailure = (error) => {
     };
 };
 
-export const makeNewCollection = (title, description) => (dispatch) => axios.post("api/collection", { title, text: description })
+export const makeNewCollection = (collection) => (dispatch) => axios.post("api/collection", collection)
     .then((res) => { dispatch(makeNewCollectionSuccess(res.data)); })
     .catch((err) => { (dispatch(makeNewCollectionFailure(err))); });
 
