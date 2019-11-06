@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Modal, FormControl, Button, Form } from "react-bootstrap";
+import {
+    Modal, FormControl, Button, Form,
+} from "react-bootstrap";
 import { collectionActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
 import CollectionEntry from "../../Collection/CollectionEntry/CollectionEntry";
@@ -61,7 +63,7 @@ class AddPaperModal extends Component {
                     case collectionStatus.SUCCESS:
                         this.setState({
                             addPaperCollectionStatus: collectionStatus.SUCCESS,
-                            makeNewCollectionStatus: collectionStatus.NONE,
+                            makeNewCollectionStatus: collectionActions.NONE,
                             isAddPaperOpen: false,
                             checkedCollections: [],
                             collectionName: "",
@@ -151,7 +153,7 @@ class AddPaperModal extends Component {
                           value={this.state.collectionName}
                           onChange={(e) => this.setState({ collectionName: e.target.value })}
                         />
-                        <Form><Form.Group controlId="A" className="entry-board">{collectionEntries}</Form.Group></Form>                   
+                        <Form><Form.Group controlId="A" className="entry-board">{collectionEntries}</Form.Group></Form>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button
@@ -174,7 +176,6 @@ const mapStateToProps = (state) => ({
     makeNewCollectionStatus: state.collection.make.status,
     getCollectionsStatus: state.collection.list.status,
     storedCollections: state.collection.list.list,
-    createdCollectionId: state.collection.make.collection.id,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -196,7 +197,6 @@ AddPaperModal.propTypes = {
     onGetCollections: PropTypes.func,
     addPaperCollectionStatus: PropTypes.string,
     makeNewCollectionStatus: PropTypes.string,
-    createdCollectionId: PropTypes.number,
 };
 
 AddPaperModal.defaultProps = {
@@ -208,5 +208,4 @@ AddPaperModal.defaultProps = {
     onGetCollections: null,
     addPaperCollectionStatus: collectionStatus.NONE,
     makeNewCollectionStatus: collectionStatus.NONE,
-    createdCollectionId: -1,
 };
