@@ -45,7 +45,7 @@ class GoMyCollectionsModal extends Component {
                             <Button
                               className="go-button"
                               onClick={this.clickGotoButtonHandler}
-                            >Go
+                            >My Collection
                             </Button>
                             <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
                         </div>
