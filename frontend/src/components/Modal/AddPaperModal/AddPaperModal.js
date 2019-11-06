@@ -63,6 +63,7 @@ class AddPaperModal extends Component {
                     case collectionStatus.SUCCESS:
                         this.setState({
                             addPaperCollectionStatus: collectionStatus.SUCCESS,
+                            makeNewCollectionStatus: collectionActions.NONE,
                             isAddPaperOpen: false,
                             checkedCollections: [],
                             collectionName: "",
@@ -83,6 +84,7 @@ class AddPaperModal extends Component {
                     switch (this.props.makeNewCollectionStatus) {
                     case collectionStatus.SUCCESS:
                         this.setState({
+                            addPaperCollectionStatus: collectionStatus.NONE,
                             makeNewCollectionStatus: collectionStatus.SUCCESS,
                             isAddPaperOpen: false,
                             checkedCollections: [],
