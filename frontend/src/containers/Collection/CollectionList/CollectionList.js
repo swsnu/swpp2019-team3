@@ -1,7 +1,10 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { CollectionCard } from "../../../components";
+import { collectionActions } from "../../../store/actions";
+import { collectionStatus } from "../../../constants/constants";
 
 import "./CollectionList.css";
 
@@ -9,12 +12,21 @@ class CollectionList extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            makeNewCollectionStatus: collectionStatus.NONE,
+            collections: [],
         };
     }
 
+    componentDidMount() {
+        this.props.onGetCollections()
+            .then(() => {
+                this.setState({ collections: this.props.storedCollections });
+            });
+    }
+
     render() {
-        const collectionCardsLeft = this.props.collections
-            .filter((x) => this.props.collections.indexOf(x) % 2 === 0)
+        const collectionCardsLeft = this.state.collections
+            .filter((x) => this.state.collections.indexOf(x) % 2 === 0)
             .map((collection) => (
                 <CollectionCard
                   key={collection.id}
@@ -29,8 +41,8 @@ class CollectionList extends Component {
                 />
             ));
 
-        const collectionCardsRight = this.props.collections
-            .filter((x) => this.props.collections.indexOf(x) % 2 === 1)
+        const collectionCardsRight = this.state.collections
+            .filter((x) => this.state.collections.indexOf(x) % 2 === 1)
             .map((collection) => (
                 <CollectionCard
                   key={collection.id}
@@ -117,4 +129,30 @@ CollectionList.defaultProps = {
     ],
 };
 
-export default CollectionList;
+const mapStateToProps = (state) => ({
+    me: state.auth.me,
+    makeNewCollectionStatus: state.collection.make.status,
+    getCollectionsStatus: state.collection.list.status,
+    storedCollections: state.collection.list.list,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onMakeNewCollection: (newCollection) => dispatch(collectionActions.makeNewCollection(newCollection)),
+    onGetCollections: () => dispatch(collectionActions.getCollectionsByUserId()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CollectionList);
+
+CollectionList.propTypes = {
+    me: PropTypes.objectOf(PropTypes.any),
+    onMakeNewCollection: PropTypes.func,
+    onGetCollections: PropTypes.func,
+    makeNewCollectionStatus: PropTypes.string,
+};
+
+CollectionList.defaultProps = {
+    me: null,
+    onMakeNewCollection: null,
+    onGetCollections: null,
+    makeNewCollectionStatus: collectionStatus.NONE,
+};
