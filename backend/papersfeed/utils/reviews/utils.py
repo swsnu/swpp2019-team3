@@ -266,7 +266,7 @@ def __pack_reviews(reviews, request_user):
 def __is_review_liked(outer_ref, request_user):
     """Check If Review is Liked by User"""
     return Exists(
-        ReviewLike.objects.filter(reivew_id=OuterRef(outer_ref), user_id=request_user.id if request_user else None)
+        ReviewLike.objects.filter(review_id=OuterRef(outer_ref), user_id=request_user.id if request_user else None)
     )
 
 

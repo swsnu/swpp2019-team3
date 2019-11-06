@@ -72,7 +72,7 @@ def delete_collection(args):
 
 def get_collection_user(args):
     """Get Collection User"""
-    return {constants.USERS: collections_utils.select_collection_user(args)}
+    return {constants.COLLECTIONS: collections_utils.select_collection_user(args)}
 
 
 def get_paper(args):

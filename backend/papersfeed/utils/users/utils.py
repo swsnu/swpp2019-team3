@@ -59,8 +59,8 @@ def insert_user(args):
         constants.EMAIL, constants.USERNAME, constants.PASSWORD
     ], args)
 
-    # Request User
-    request_user = args[constants.USER]
+    # # Request User
+    # request_user = args[constants.USER]
 
     # Email
     email = args[constants.EMAIL]
@@ -92,7 +92,7 @@ def insert_user(args):
     except IntegrityError:
         raise ApiError(constants.USERNAME_ALREADY_EXISTS)
 
-    users, _, _ = __get_users(Q(id=user.id), request_user, None)
+    users, _, _ = __get_users(Q(id=user.id), user, None)
 
     if not users:
         raise ApiError(constants.NOT_EXIST_OBJECT)
