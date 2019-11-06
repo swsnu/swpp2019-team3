@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import {
     CollectionCard, ReviewCard, PaperCard,
@@ -104,6 +105,7 @@ class Main extends Component {
                   likeCount={feed.likeCount}
                   reviewCount={feed.reviewCount}
                   addButtonExists
+                  history={this.props.history}
                 />
             );
         }
@@ -129,3 +131,11 @@ class Main extends Component {
     }
 }
 export default Main;
+
+Main.propTypes = {
+    history: PropTypes.objectOf(PropTypes.any),
+};
+
+Main.defaultProps = {
+    history: null,
+};
