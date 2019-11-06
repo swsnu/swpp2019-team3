@@ -9,6 +9,7 @@
     font-weight: bold;
     text-decoration-color: #2f87ef;
     font-size: 130%;
+    font-style: oblique;
     padding: 1%;
     margin-right: auto;
 }
@@ -20,6 +21,7 @@
 
 .header .search .search-input {
     width: 500px;
+
     background:rgb(242,243,247);
 }
 

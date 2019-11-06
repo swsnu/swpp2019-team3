@@ -33,6 +33,7 @@ class ProfileDetail extends Component {
                   title={card.title}
                   paperCount={card.paperCount}
                   replyCount={card.replyCount}
+                  headerExists={false}
                 />
             );
         } if (card.type === "Review") {
