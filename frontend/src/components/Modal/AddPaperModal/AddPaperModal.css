@@ -3,3 +3,11 @@
     margin-right: 80%;
     float: right;
 }
+
+.addpaper-open-button .entry-board {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}

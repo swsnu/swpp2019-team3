@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Modal, FormControl, Button } from "react-bootstrap";
+import { Modal, FormControl, Button, Form } from "react-bootstrap";
 import { collectionActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
 import CollectionEntry from "../../Collection/CollectionEntry/CollectionEntry";
@@ -131,7 +131,7 @@ class AddPaperModal extends Component {
                           value={this.state.collectionName}
                           onChange={(e) => this.setState({ collectionName: e.target.value })}
                         />
-                        {collectionEntries}
+                        <Form><Form.Group controlId="A" className="entry-board">{collectionEntries}</Form.Group></Form>                   
                     </Modal.Body>
                     <Modal.Footer>
                         <Button

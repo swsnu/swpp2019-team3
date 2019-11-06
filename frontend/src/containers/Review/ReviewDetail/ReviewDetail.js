@@ -104,6 +104,7 @@ class ReviewDetail extends Component {
             <div className="review-detail">
                 <div className="board">
                     <Card className="review-reply">
+                        <div className="head">REVIEW</div>
                         <Card.Body>
                             <div className="review">
                                 <Card.Text className="author">{this.state.author}</Card.Text>

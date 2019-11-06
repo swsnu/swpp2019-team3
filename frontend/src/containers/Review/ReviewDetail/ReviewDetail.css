@@ -14,6 +14,11 @@
     justify-content: flex-start;
 }
 
+.review-detail .board .review-reply .head {
+    margin-top: 3%;
+    font-size: 200%;
+    font-weight: bold;
+}
 .review-detail .board .review-reply .review {
     width: 100%;
     padding-bottom: 5%;

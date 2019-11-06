@@ -102,6 +102,7 @@ class CollectionDetail extends Component {
         return (
             <div className="CollectionDetail">
                 <div className="CollectionDetailContent">
+                    <div className="head">COLLECTION</div>
                     <div className="CollectionInfo">
                         <div id="collectionName">
                             <h2 id="collectionName">{this.props.thisCollection.name}</h2>
@@ -137,7 +138,7 @@ class CollectionDetail extends Component {
                                     <div id="paperCardsRight">{paperCardsRight}</div>
                                 </div>
                             </Tab>
-                            <Tab eventKey="replyTab" title="Replies">
+                            <Tab className="reply-tab" eventKey="replyTab" title="Replies">
                                 <div id="replies">
                                     <div id="createNewReply">
                                         <textarea

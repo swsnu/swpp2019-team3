@@ -1,11 +1,12 @@
 .collection-entry {
-    width: 200px;
+    width: 50%;
     margin-left: 5%;
     margin-top: 15px;
 }
 
-#collection-title {
-    margin-top: 5%;
+.collection-entry #collection-title {
+    margin-top: 2%;
+    margin-left: 5%;
     float: left;
 }
 
