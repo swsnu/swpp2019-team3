@@ -1,0 +1,92 @@
+.CollectionDetailContent {
+    min-height: 1000px;
+    background: rgb(242,243,247);
+    margin-left: 250px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.CollectionInfo {
+    margin-top: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.CollectionInfo #collectionInfoMid {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    display: inline-flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.CollectionInfo #collectionDescription #date {
+    margin-left: 10px;
+    margin-right: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-style: italic;
+}
+
+.CollectionInfo #collectionDescription #descriptionBox {
+    margin-left: 10px;
+    margin-right: 10px;
+    text-align: left;
+}
+
+.itemList {
+    margin: 20px;
+    background: rgb(255,255,255);
+}
+
+.itemList #paperCards {
+    width: 100%;
+    height: 100%;
+    margin: 15px;
+    
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: row wrap;
+    align-items: flex-start;
+}
+
+.itemList #paperCardsLeft {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.itemList #paperCardsRight {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.itemList #replies {
+    display: flex;
+    flex-direction: column;
+    margin: 15px;
+}
+
+.itemList #replies #createNewReply {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.itemList #replies #createNewReply #newReplyContentInput {
+    width: 1000px;
+}
+
+.itemList #replies #replyList {
+
+    background: rgb(242,243,247);
+    margin: 10px;
+}
