@@ -6,6 +6,7 @@ import { collectionActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
 import CollectionEntry from "../../Collection/CollectionEntry/CollectionEntry";
 import "./AddPaperModal.css";
+import GoMyCollectionsModal from "../GoMyCollectionsModal/GoMyCollectionsModal";
 
 class AddPaperModal extends Component {
     constructor(props) {
@@ -17,6 +18,7 @@ class AddPaperModal extends Component {
             checkedCollections: [1, 3, 4],
             collections: [],
             collectionName: "",
+            openGotoModal: false,
         };
         this.openAddPaperHandler = this.openAddPaperHandler.bind(this);
         this.checkHandler = this.checkHandler.bind(this);
@@ -40,10 +42,10 @@ class AddPaperModal extends Component {
         const beforeCheckedCollections = this.state.checkedCollections;
         if (collection.id in beforeCheckedCollections) {
             // console.log(`uncheck${collection.id}`);
-            this.setState({ checkedCollections: beforeCheckedCollections.filter((id) => id !== collection) });
+            this.setState({ checkedCollections: beforeCheckedCollections.filter((id) => id !== collection.id) });
         } else {
             // console.log(`check${collection.id}`);
-            this.setState({ checkedCollections: beforeCheckedCollections.concat(collection) });
+            this.setState({ checkedCollections: beforeCheckedCollections.concat(collection.id) });
         }
     }
 
@@ -57,7 +59,13 @@ class AddPaperModal extends Component {
                 .then(() => {
                     switch (this.props.addPaperCollectionStatus) {
                     case collectionStatus.SUCCESS:
-                        this.setState({ addPaperCollectionStatus: collectionStatus.SUCCESS });
+                        this.setState({
+                            addPaperCollectionStatus: collectionStatus.SUCCESS,
+                            makeNewCollectionStatus: collectionStatus.NONE,
+                            isAddPaperOpen: false,
+                            checkedCollections: [],
+                            collectionName: "",
+                        });
                         break;
                     default:
                         this.setState({ addPaperCollectionStatus: collectionStatus.FAILURE });
@@ -73,7 +81,14 @@ class AddPaperModal extends Component {
                 .then(() => {
                     switch (this.props.makeNewCollectionStatus) {
                     case collectionStatus.SUCCESS:
-                        this.clickCancelButtonHandler();
+                        this.setState({
+                            addPaperCollectionStatus: collectionStatus.NONE,
+                            makeNewCollectionStatus: collectionStatus.SUCCESS,
+                            isAddPaperOpen: false,
+                            checkedCollections: [],
+                            collectionName: "",
+                        });
+                        // this.props.onAddPaper(collectionsAndPaper);
                         break;
                     default:
                         this.setState({ makeNewCollectionStatus: collectionStatus.FAILURE });
@@ -81,7 +96,6 @@ class AddPaperModal extends Component {
                     }
                 });
         }
-        this.clickCancelButtonHandler();
     }
 
     clickCancelButtonHandler() {
@@ -95,6 +109,12 @@ class AddPaperModal extends Component {
     }
 
     render() {
+        let gotoModal = null;
+        if (this.state.addPaperCollectionStatus === collectionStatus.SUCCESS
+            || this.state.makeNewCollectionStatus === collectionStatus.SUCCESS) {
+            gotoModal = <GoMyCollectionsModal openTrigger history={this.props.history} />;
+        }
+
         let collectionEntries = null;
         if (this.state.collections) {
             collectionEntries = this.state.collections.map((collection) => (
@@ -142,6 +162,7 @@ class AddPaperModal extends Component {
                         </Button>
                     </Modal.Footer>
                 </Modal>
+                {gotoModal}
             </div>
         );
     }
@@ -153,6 +174,7 @@ const mapStateToProps = (state) => ({
     makeNewCollectionStatus: state.collection.make.status,
     getCollectionsStatus: state.collection.list.status,
     storedCollections: state.collection.list.list,
+    createdCollectionId: state.collection.make.collection.id,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -166,6 +188,7 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(AddPaperModal);
 
 AddPaperModal.propTypes = {
+    history: PropTypes.objectOf(PropTypes.any),
     me: PropTypes.objectOf(PropTypes.any),
     id: PropTypes.number,
     onMakeNewCollection: PropTypes.func,
@@ -173,9 +196,11 @@ AddPaperModal.propTypes = {
     onGetCollections: PropTypes.func,
     addPaperCollectionStatus: PropTypes.string,
     makeNewCollectionStatus: PropTypes.string,
+    createdCollectionId: PropTypes.number,
 };
 
 AddPaperModal.defaultProps = {
+    history: null,
     me: null,
     id: -1,
     onMakeNewCollection: null,
@@ -183,4 +208,5 @@ AddPaperModal.defaultProps = {
     onGetCollections: null,
     addPaperCollectionStatus: collectionStatus.NONE,
     makeNewCollectionStatus: collectionStatus.NONE,
+    createdCollectionId: -1,
 };

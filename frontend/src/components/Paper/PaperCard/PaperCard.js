@@ -42,7 +42,7 @@ class PaperCard extends Component {
         }
         let addButton = null;
         if (this.props.addButtonExists) {
-            addButton = <AddPaperModal className="add-button" id={this.props.id} />;
+            addButton = <AddPaperModal className="add-button" id={this.props.id} history={this.props.history} />;
         }
 
         return (
@@ -73,6 +73,7 @@ class PaperCard extends Component {
 }
 
 PaperCard.propTypes = {
+    history: PropTypes.objectOf(PropTypes.any),
     source: PropTypes.string,
     id: PropTypes.number,
     user: PropTypes.string,
@@ -88,6 +89,7 @@ PaperCard.propTypes = {
 };
 
 PaperCard.defaultProps = {
+    history: null,
     source: "",
     id: 0,
     user: "",

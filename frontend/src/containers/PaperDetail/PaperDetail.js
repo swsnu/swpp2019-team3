@@ -114,6 +114,7 @@ class PaperDetail extends Component {
                           likeCount={this.state.likeCount}
                           isLiked={this.props.selectedPaper.liked}
                           addButtonExists
+                          history={this.props.history}
                         />
                         {/* FIXME: review-count should reflect this.state.reviewCount */}
                         <h3 id="review-count">{this.state.reviews.length} reviews</h3>
