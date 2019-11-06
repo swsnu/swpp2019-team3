@@ -136,7 +136,7 @@ const addCollectionPaperFailure = (error) => ({
     target: error,
 });
 
-export const addCollectionPaper = (collectionIds, paperId) => (dispatch) => axios.put("api/paper/collection", { id: paperId, collection_ids: collectionIds })
+export const addCollectionPaper = (collectionsAndPaper) => (dispatch) => axios.put("api/paper/collection", collectionsAndPaper)
     .then((res) => { dispatch(addCollectionPaperSuccess(res.data)); })
     .catch((err) => { (dispatch(addCollectionPaperFailure(err))); });
 

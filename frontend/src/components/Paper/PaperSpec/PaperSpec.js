@@ -38,7 +38,7 @@ class PaperSpec extends Component {
     render() {
         let addButton = null;
         if (this.props.addButtonExists) {
-            addButton = <AddPaperModal className="add-button" />;
+            addButton = <AddPaperModal className="add-button" id={this.props.id} />;
         }
         return (
             <div className="paperspec">
@@ -62,6 +62,7 @@ class PaperSpec extends Component {
 }
 
 PaperSpec.propTypes = {
+    id: PropTypes.number,
     title: PropTypes.string,
     abstract: PropTypes.string,
     date: PropTypes.string,
@@ -73,6 +74,7 @@ PaperSpec.propTypes = {
 };
 
 PaperSpec.defaultProps = {
+    id: -1,
     title: "",
     abstract: "",
     date: "",
