@@ -1,7 +1,6 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
 
-from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Exists, OuterRef, Count
 
@@ -207,6 +206,7 @@ def __get_reviews(filter_query, request_user, count):
     return reviews, pagination_value, is_finished
 
 
+# pylint: disable-msg=too-many-locals
 def __pack_reviews(reviews, request_user):
     """Pack Reviews"""
     # Packed
@@ -261,6 +261,7 @@ def __pack_reviews(reviews, request_user):
         packed.append(packed_review)
 
     return packed
+# pylint: enable-msg=too-many-locals
 
 
 def __is_review_liked(outer_ref, request_user):
