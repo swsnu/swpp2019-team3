@@ -1,6 +1,6 @@
 .header {
     justify-content: space-between;
-    /* justify-content: flex-start; */
+    justify-content: flex-start;
     display: flexbox;
     position: sticky;
     border-bottom: 2px solid rgb(220,224,227);
@@ -12,7 +12,7 @@
     font-size: 150%;
     font-style: oblique;
     padding: 1%;
-    /* margin-right: 18%; */
+    margin-right: 10%;
 }
 
 .header .search {
@@ -21,6 +21,7 @@
 }
 
 .header .search .search-input {
+    /* margin-left:18%; */
     width: 500px;
     background:rgb(242,243,247);
 }
@@ -29,7 +30,6 @@
     margin-left: auto;
     display: flex;
     flex-direction: row;
-
 }
 
 .header .buttons .myaccount-button {

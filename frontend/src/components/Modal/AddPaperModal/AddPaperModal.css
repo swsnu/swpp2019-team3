@@ -10,6 +10,28 @@
     white-space: nowrap;
 }
 
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header #header-buttons {
+    /* display: flex;
+    justify-content: space-around; */
+    /* padding-left: 5px; */
+    background: red;
+}
+
+.cancel-button {
+    padding-left: 10px;
+}
+
+#add-paper-to-my-collections {
+    font-size: 21px;
+    font-weight: bold;
+}
+
 .addpaper-open-button .entry-board {
     width: 90%;
     display: flex;
