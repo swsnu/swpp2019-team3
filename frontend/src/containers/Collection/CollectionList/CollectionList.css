@@ -1,26 +1,26 @@
 .CollectionListContent {
     min-height: 1000px;
     background: rgb(242,243,247);
-    margin-left: 250px;
+    margin-left: 18%;
     position: relative;
     display: flex;
     flex-direction: column;
 }
 
 .CollectionListContent #collectionListText {
-    width: 100%;
+    width: 96%;
     height: 100%;
-    margin-top: 15px;
-    margin-bottom: 5px;
+    margin-top: 5%;
+    margin-bottom: 5%;
     font-size: 200%;
     font-weight: 700;
 }
 
 .CollectionListContent #colletionCards {
-    width: 100%;
+    width: 90%;
     height: 100%;
-    margin: 15px;
-    
+    margin-left: 5%;
+    margin-right: 10%;
     display: flex;
     justify-content: flex-start;
     flex-flow: row wrap;

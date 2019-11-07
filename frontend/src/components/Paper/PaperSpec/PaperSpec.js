@@ -3,7 +3,7 @@ import { Button, Image } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 import "./PaperSpec.css";
-
+import SVG from "../../svg";
 import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
 import heart from "../../heart.png";
 
@@ -60,7 +60,7 @@ class PaperSpec extends Component {
                 <h3 id="keywords">{this.props.keywords}</h3>
                 <div className="buttons">
                     <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
-                        <Image src={heart} width={20} height={20} className="heart-image" />
+                    <div className="heart-image"><SVG  name="heart" height="70%" width="70%"/></div>
                         {this.state.likeCount}
                     </Button>
                     {addButton}

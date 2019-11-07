@@ -5,6 +5,7 @@ import "./PaperCard.css";
 import heart from "../../heart.png";
 import talk from "../../talk.png";
 import { AddPaperModal } from "../..";
+import SVG from "../../svg";
 
 class PaperCard extends Component {
     constructor(props) {
@@ -71,10 +72,10 @@ class PaperCard extends Component {
                     </Card.Body>
                     <Card.Footer className="footer">
 
-                        <Button variant="light" className="like-button" onClick={this.state.isLiked ? this.clickPaperCardUnlikeHandler : this.clickPaperCardLikeHandler}><Image src={heart} width={20} height={20} className="heart-image" />{this.state.likeCount}</Button>
+                        <Button variant="light" className="like-button" onClick={this.state.isLiked ? this.clickPaperCardUnlikeHandler : this.clickPaperCardLikeHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%"/></div>{this.state.likeCount}</Button>
 
                         <Button variant="light" className="review-button" href={`/paper_id=${this.props.id}`}>
-                            <Image src={talk} width={20} height={20} className="talk-image" />{this.props.reviewCount}
+                        <div className="review-image"><SVG name="zoom" height="70%" width="70%"/></div>{this.props.reviewCount}
                         </Button>
                         {addButton}
                     </Card.Footer>

@@ -5,7 +5,7 @@ import {
 } from "react-bootstrap";
 
 import "./Reply.css";
-import heart from "../heart.png";
+import SVG from "../svg";
 
 class Reply extends Component {
     constructor(props) {
@@ -99,7 +99,7 @@ class Reply extends Component {
                             <div className="content">{this.props.content}</div>
                             <div className="buttons">
                                 <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickReplyUnlikeButtonHandler : this.clickReplyLikeButtonHandler}>
-                                    <Image src={heart} width={20} height={20} className="heart-image" />{this.state.likeCount}
+                                <div className="heart-image"><SVG  name="heart" height="70%" width="70%"/></div>{this.state.likeCount}
                                 </Button>
                                 {this.props.authorId === 0
                                     ? <Button className="edit-button" onClick={this.clickReplyEditButtonHandler}>Edit</Button> : null }
