@@ -53,11 +53,13 @@ class PaperSpec extends Component {
 
         return (
             <div className="paperspec">
-                <h2 id="title">{this.props.title}</h2>
-                <h3 id="date">{this.props.date}</h3>
-                <Button className="url-button" onClick={() => window.open(link)}>URL</Button>
-                <h3 id="authors">{this.props.authors}</h3>
-                <h3 id="keywords">{this.props.keywords}</h3>
+                <div className="paperInfo">
+                    <h2 id="title">{this.props.title}</h2>
+                    <h3 id="date">{this.props.date}</h3>
+                    <Button className="url-button" onClick={() => window.open(link)}>URL</Button>
+                    <h3 id="authors">{this.props.authors}</h3>
+                    <h3 id="keywords">{this.props.keywords}</h3>
+                </div>
                 <div className="buttons">
                     <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
                         <Image src={heart} width={20} height={20} className="heart-image" />
