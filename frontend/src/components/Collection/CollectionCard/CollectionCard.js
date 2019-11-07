@@ -83,7 +83,7 @@ CollectionCard.defaultProps = {
     id: 0,
     user: "",
     title: "",
-    memberCount: 0,
+    memberCount: 1,
     paperCount: 0,
     replyCount: 0,
     likeCount: 0,
