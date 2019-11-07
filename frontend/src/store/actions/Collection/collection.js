@@ -20,7 +20,7 @@ const makeNewCollectionFailure = (error) => {
 };
 
 export const makeNewCollection = (collection) => (dispatch) => axios.post("api/collection", collection)
-    .then((res) => { dispatch(makeNewCollectionSuccess(res.data.data)); })
+    .then((res) => { dispatch(makeNewCollectionSuccess(res.data)); })
     .catch((err) => { (dispatch(makeNewCollectionFailure(err))); });
 
 // getCollectionsByUserId
@@ -43,7 +43,7 @@ export const getCollectionsByUserId = () => (dispatch) => axios.get("api/collect
 
 const getCollectionSuccess = (collection) => ({
     type: collectionConstants.GET_COLLECTION,
-    target: collection,
+    target: collection.collection,
 });
 
 const getCollectionFailure = (error) => {
@@ -59,8 +59,8 @@ const getCollectionFailure = (error) => {
     };
 };
 
-export const getCollection = (collectionId) => (dispatch) => axios.get("api/collection", { params: { id: collectionId } })
-    .then((res) => { dispatch(getCollectionSuccess(res.data)); })
+export const getCollection = (collectionId) => (dispatch) => axios.get("api/collection", { params: collectionId })
+    .then((res) => { dispatch(getCollectionSuccess(res.data.data)); })
     .catch((err) => { (dispatch(getCollectionFailure(err))); });
 
 // get papers of a collection
@@ -75,7 +75,7 @@ const getCollectionPapersFailure = (error) => ({
 });
 
 export const getCollectionPapers = (collectionId) => (dispatch) => axios.get("api/paper/collection", { params: { id: collectionId } })
-    .then((res) => { dispatch(getCollectionPapersSuccess(res.data)); })
+    .then((res) => { dispatch(getCollectionPapersSuccess(res.data.data)); })
     .catch((err) => { (dispatch(getCollectionPapersFailure(err))); });
 
 // getCollectionMembers - no matching api

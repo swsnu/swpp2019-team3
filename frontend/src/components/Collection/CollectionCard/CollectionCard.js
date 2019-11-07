@@ -45,7 +45,7 @@ class CollectionCard extends Component {
                     {header}
                     <Card.Body className="body">
                         <div className="title">
-                            <Card.Link className="text" href={`/collections/${this.props.id}`}>{this.props.title}</Card.Link>
+                            <Card.Link className="text" href={`/collection_id=${this.props.id}`}>{this.props.title}</Card.Link>
                         </div>
                         <Card.Text>Number of papers: {this.props.paperCount}</Card.Text>
                     </Card.Body>
@@ -56,7 +56,7 @@ class CollectionCard extends Component {
                             {this.state.likeCount}
                         </Button>
 
-                        <Button variant="light" className="reply-button" href={`/collections/${this.props.id}`}><Image src={talk} width={20} height={20} className="talk-image" />{this.props.replyCount}</Button>
+                        <Button variant="light" className="reply-button" href={`/collection_id=${this.props.id}`}><Image src={talk} width={20} height={20} className="talk-image" />{this.props.replyCount}</Button>
                     </Card.Footer>
                 </Card>
             </div>

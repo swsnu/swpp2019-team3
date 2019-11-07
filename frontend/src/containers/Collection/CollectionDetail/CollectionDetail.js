@@ -3,11 +3,14 @@ import {
     Button, Tabs, Tab,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import {
     PaperCard, Reply,
 } from "../../../components";
+import { collectionActions } from "../../../store/actions";
+import { collectionStatus } from "../../../constants/constants";
 
 import "./CollectionDetail.css";
 
@@ -15,10 +18,138 @@ class CollectionDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            getCollectionStatus: collectionStatus.NONE,
+            papers: [],
+            replies: [],
+            isLiked: false,
+            members: [],
+            likeCount: 0,
+            paperCount: 0,
+            userCount: 0,
+            replyCount: 0,
+            description: "",
             newReplyContent: "",
-            replies: this.props.thisCollection.replies,
-            isLiked: this.props.thisCollection.isLiked,
+            thisCollection: {
+                id: 2,
+                name: "Papers for tasty cat cans",
+                description: "Girin the Intelligent Cat's Paper Collection!",
+                creationDate: "2019-11-03",
+                lastUpdateDate: "2019-11-06",
+                papers: [
+                    {
+                        source: "recently added",
+                        id: 1,
+                        user: "Girin",
+                        title: "CERTIFIED LATTICE REDUCTION",
+                        date: "2020-02-01",
+                        authors: "Espitau Thomas, Joux Antoine",
+                        keywords: "Combinational optimization Problems, Facility Layout Problem, Quadratic Assignment Problem",
+                        likeCount: 3,
+                        reviewCount: 6,
+                        isLiked: false,
+                    },
+                    // {
+                    //     source: "added",
+                    //     id: 1,
+                    //     user: "Testing Module",
+                    //     title: "title:test",
+                    //     date: "2020",
+                    //     authors: "author:test",
+                    //     keywords: "keywords:test",
+                    //     likeCount: 3,
+                    //     reviewCount: 6,
+                    //     isLiked: false,
+                    // },
+                    // {
+                    //     source: "added",
+                    //     id: 2,
+                    //     user: "Testing Module",
+                    //     title: "title:test2",
+                    //     date: "date:111111",
+                    //     authors: "author:test",
+                    //     keywords: "keywords:test",
+                    //     likeCount: 3,
+                    //     reviewCount: 6,
+                    //     isLiked: false,
+                    // },
+                    // {
+                    //     source: "added",
+                    //     id: 3,
+                    //     user: "Testing Module",
+                    //     title: "title:test3",
+                    //     date: "date:111111",
+                    //     authors: "author:test",
+                    //     keywords: "keywords:test",
+                    //     likeCount: 3,
+                    //     reviewCount: 6,
+                    //     isLiked: false,
+                    // },
+                    // {
+                    //     source: "added",
+                    //     id: 4,
+                    //     user: "Testing Module",
+                    //     title: "title:test4",
+                    //     date: "date:111111",
+                    //     authors: "author:test",
+                    //     keywords: "keywords:test",
+                    //     likeCount: 3,
+                    //     reviewCount: 6,
+                    //     isLiked: false,
+                    // },
+                ],
+                members: [
+                    // "Anna",
+                    // "Betty",
+                    // "Charlie",
+                    // "Dophio",
+                    // "Emily",
+                ],
+                replies: [
+                    // {
+                    //     content: "asdf",
+                    //     author: "qwer",
+                    //     authorId: 1,
+                    //     isLiked: false,
+                    //     likeCount: 3,
+                    // },
+                    // {
+                    //     content: "dsaf",
+                    //     author: "zvcx",
+                    //     authorId: 2,
+                    //     isLiked: false,
+                    //     likeCount: 7,
+                    // },
+                    // {
+                    //     content: "rtyui",
+                    //     author: "asfd",
+                    //     authorId: 3,
+                    //     isLiked: false,
+                    //     likeCount: 9,
+                    // },
+                ],
+                likesCount: 15,
+                isLiked: false,
+                amIMember: true,
+            },
         };
+    }
+
+    componentDidMount() {
+        this.props.onGetCollection({ id: this.props.location.pathname.split("=")[1] })
+            .then(() => {
+                if (this.props.selectedCollection.count) {
+                    console.log(this.props.selectedCollection.count);
+                    this.setState({ userCount: this.props.selectedCollection.count.users });
+                    /* eslint-disable react/no-unused-state */
+                    this.setState({ paperCount: this.props.selectedCollection.count.papers });
+                    /* eslint-enable react/no-unused-state */
+                }
+
+                // FIXME: Please uncomment this block if onGetPaper can get keywords
+                /* if (this.props.selectedPaper.keywords) {
+                    this.setState({ keywords: this.props.selectedPaper.keywords.join(", ") });
+                } */
+            });
     }
 
     // clickInviteButtonHandler(): Open ‘Invite to the collection’ popup.
@@ -75,20 +206,20 @@ class CollectionDetail extends Component {
         const likeOrUnlike = this.state.isLiked ? unlikeButton : likeButton;
         const inviteButton = <Button id="inviteButton">Invite</Button>;
         const editButton = (
-            <Link id="editButtonLink" to={`/collections/${this.props.thisCollection.id}/edit/`}>
+            <Link id="editButtonLink" to={`/collection_id=${this.state.id}/edit/`}>
                 <Button id="editButton">Edit</Button>
             </Link>
         );
 
-        const paperCardsLeft = this.props.thisCollection.papers
-            .filter((x) => this.props.thisCollection.papers.indexOf(x) % 2 === 0)
+        const paperCardsLeft = this.state.papers
+            .filter((x) => this.state.papers.indexOf(x) % 2 === 0)
             .map((paper) => this.paperCardMaker(paper));
 
-        const paperCardsRight = this.props.thisCollection.papers
-            .filter((x) => this.props.thisCollection.papers.indexOf(x) % 2 === 1)
+        const paperCardsRight = this.state.papers
+            .filter((x) => this.state.papers.indexOf(x) % 2 === 1)
             .map((paper) => this.paperCardMaker(paper));
 
-        const replies = this.props.thisCollection.replies.map((reply) => (
+        const replies = this.state.replies.map((reply) => (
             <Reply
               key={reply.content} // shoud be fixed
               content={reply.content}
@@ -105,29 +236,29 @@ class CollectionDetail extends Component {
                     <div className="head">COLLECTION</div>
                     <div className="CollectionInfo">
                         <div id="collectionName">
-                            <h2 id="collectionName">{this.props.thisCollection.name}</h2>
+                            <h2 id="collectionName">{this.props.selectedCollection.title}</h2>
                         </div>
                         <div id="collectionInfoMid">
                             <div id="likeStat">
-                                <h5 id="likeCount">{this.props.thisCollection.likesCount}</h5>
+                                <h5 id="likeCount">{this.state.likeCount}</h5>
                                 <h5 id="likeText">Likes</h5>
                             </div>
                             <div id="memberStat">
-                                <h5 id="memberCount">{this.props.thisCollection.members.length}</h5>
+                                <h5 id="memberCount">{this.state.userCount}</h5>
                                 <h5 id="memberText">Members</h5>
                             </div>
                             <div id="collectionButtons">
                                 {likeOrUnlike}
                                 {inviteButton}
-                                {this.props.thisCollection.amIMember ? editButton : <div />}
+                                {editButton}
                             </div>
                         </div>
                         <div id="collectionDescription">
                             <div id="date">
-                                <div id="creationDate">Created: {this.props.thisCollection.creationDate}</div>
-                                <div id="lastUpdateDate">Last Update: {this.props.thisCollection.lastUpdateDate}</div>
+                                <div id="creationDate">Created: {this.state.thisCollection.creationDate}</div>
+                                <div id="lastUpdateDate">Last Update: {this.state.thisCollection.lastUpdateDate}</div>
                             </div>
-                            <p id="descriptionBox">{this.props.thisCollection.description}</p>
+                            <p id="descriptionBox">{this.props.selectedCollection.text}</p>
                         </div>
                     </div>
                     <div className="itemList">
@@ -164,134 +295,33 @@ class CollectionDetail extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+    getCollectionStatus: state.paper.getPaperStatus,
+    selectedCollection: state.collection.selected.collection,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onGetCollection: (collectionId) => dispatch(collectionActions.getCollection(collectionId)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CollectionDetail);
+
 CollectionDetail.propTypes = {
     currentUserID: PropTypes.number,
     currentUserName: PropTypes.string,
-    thisCollection: PropTypes.shape({
-        id: PropTypes.number,
-        name: PropTypes.string,
-        description: PropTypes.string,
-        creationDate: PropTypes.string,
-        lastUpdateDate: PropTypes.string,
-        papers: PropTypes.arrayOf(PropTypes.shape({
-            source: PropTypes.string,
-            id: PropTypes.number,
-            user: PropTypes.string,
-            title: PropTypes.string,
-            date: PropTypes.string,
-            authors: PropTypes.string,
-            keywords: PropTypes.string,
-            likeCount: PropTypes.number,
-            reviewCount: PropTypes.number,
-            isLiked: PropTypes.bool,
-        })),
-        members: PropTypes.arrayOf(PropTypes.string),
-        replies: PropTypes.arrayOf(PropTypes.shape({
-            content: PropTypes.string,
-            author: PropTypes.string,
-            authorId: PropTypes.number,
-            isLiked: PropTypes.bool,
-            likeCount: PropTypes.number,
-        })),
-        likesCount: PropTypes.number,
-        isLiked: PropTypes.bool,
-        amIMember: PropTypes.bool,
-    }),
+    history: PropTypes.objectOf(PropTypes.any),
+    location: PropTypes.objectOf(PropTypes.any),
+    onGetCollection: PropTypes.func,
+    getCollectionStatus: PropTypes.string,
+    selectedCollection: PropTypes.objectOf(PropTypes.any),
 };
 
 CollectionDetail.defaultProps = {
     currentUserID: 1,
     currentUserName: "Girin",
-    thisCollection: {
-        id: 1,
-        name: "Papers for tasty cat cans",
-        description: "asdf",
-        creationDate: "180102",
-        lastUpdateDate: "191031",
-        papers: [
-            {
-                source: "added",
-                id: 1,
-                user: "Testing Module",
-                title: "title:test",
-                date: "date:111111",
-                authors: "author:test",
-                keywords: "keywords:test",
-                likeCount: 3,
-                reviewCount: 6,
-                isLiked: false,
-            },
-            {
-                source: "added",
-                id: 2,
-                user: "Testing Module",
-                title: "title:test2",
-                date: "date:111111",
-                authors: "author:test",
-                keywords: "keywords:test",
-                likeCount: 3,
-                reviewCount: 6,
-                isLiked: false,
-            },
-            {
-                source: "added",
-                id: 3,
-                user: "Testing Module",
-                title: "title:test3",
-                date: "date:111111",
-                authors: "author:test",
-                keywords: "keywords:test",
-                likeCount: 3,
-                reviewCount: 6,
-                isLiked: false,
-            },
-            {
-                source: "added",
-                id: 4,
-                user: "Testing Module",
-                title: "title:test4",
-                date: "date:111111",
-                authors: "author:test",
-                keywords: "keywords:test",
-                likeCount: 3,
-                reviewCount: 6,
-                isLiked: false,
-            },
-        ],
-        members: [
-            "Anna",
-            "Betty",
-            "Charlie",
-            "Dophio",
-            "Emily",
-        ],
-        replies: [
-            {
-                content: "asdf",
-                author: "qwer",
-                authorId: 1,
-                isLiked: false,
-                likeCount: 3,
-            },
-            {
-                content: "dsaf",
-                author: "zvcx",
-                authorId: 2,
-                isLiked: false,
-                likeCount: 7,
-            },
-            {
-                content: "rtyui",
-                author: "asfd",
-                authorId: 3,
-                isLiked: false,
-                likeCount: 9,
-            },
-        ],
-        likesCount: 15,
-        isLiked: false,
-        amIMember: true,
-    },
+    history: null,
+    location: null,
+    onGetCollection: null,
+    getCollectionStatus: collectionStatus.NONE,
+    selectedCollection: {},
 };
-
-export default CollectionDetail;

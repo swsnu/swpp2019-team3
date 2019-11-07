@@ -1,19 +1,23 @@
 .welcome-sentence {
     margin-top: 25%;
+    margin-bottom: 3%;
     text-align: center;
 }
 
 .welcome-sentence #welcome-to {
     display: inline-block;
+    font-size: 400%;
 }
 
 .welcome-sentence #papersfeed {
     display: inline-block;
     font-style: oblique;
     font-weight: bold;
+    font-size: 400%;
     color: #2f87ef;
 }
 
 .welcome-sentence #exclamation-mark {
     display: inline-block;
+    font-size: 400%;
 }

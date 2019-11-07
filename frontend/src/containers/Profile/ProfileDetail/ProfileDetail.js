@@ -189,8 +189,17 @@ ProfileDetail.defaultProps = {
     },
     thisUserCollections: [
         {
-            source: "tested",
+            source: "is recently added",
             id: 1,
+            type: "Collection",
+            user: "Girin",
+            title: "SWPP",
+            paperCount: 1,
+            replyCount: 0,
+        },
+        {
+            source: "tested",
+            id: 2,
             type: "Collection",
             user: "Girin",
             title: "Girin's Paper Collection",
@@ -199,7 +208,7 @@ ProfileDetail.defaultProps = {
         },
         {
             source: "tasted",
-            id: 2,
+            id: 3,
             type: "Collection",
             user: "Girin",
             title: "Papers for tasty cat cans",
@@ -208,7 +217,7 @@ ProfileDetail.defaultProps = {
         },
         {
             source: "hated",
-            id: 3,
+            id: 4,
             type: "Collection",
             user: "Girin",
             title: "Butler's Bad joke collection",
