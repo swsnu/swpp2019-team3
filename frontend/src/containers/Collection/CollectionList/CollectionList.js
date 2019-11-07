@@ -18,7 +18,7 @@ class CollectionList extends Component {
     }
 
     componentDidMount() {
-        this.props.onGetCollections()
+        this.props.onGetCollections({ id: 1 })
             .then(() => {
                 this.setState({ collections: this.props.storedCollections });
             });
@@ -142,7 +142,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     onMakeNewCollection: (newCollection) => dispatch(collectionActions.makeNewCollection(newCollection)),
-    onGetCollections: () => dispatch(collectionActions.getCollectionsByUserId()),
+    onGetCollections: (userId) => dispatch(collectionActions.getCollectionsByUserId(userId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionList);

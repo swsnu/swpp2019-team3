@@ -13,6 +13,8 @@ class PaperSpec extends Component {
         this.state = {
             isLiked: this.props.isLiked,
             likeCount: this.props.likeCount,
+            link3: "https://arxiv.org/pdf/1905.11743.pdf",
+            link500: "https://arxiv.org/pdf/1806.10993.pdf",
         };
         this.clickPaperSpecUnlikeHandler = this.clickPaperSpecUnlikeHandler.bind(this);
         this.clickPaperSpecLikeHandler = this.clickPaperSpecLikeHandler.bind(this);
@@ -42,11 +44,18 @@ class PaperSpec extends Component {
         if (this.props.addButtonExists) {
             addButton = <AddPaperModal className="add-button" id={this.props.id} history={this.props.history} />;
         }
+        let link = "";
+        if (this.props.id === 3) {
+            link = this.state.link3;
+        } else if (this.props.id === 500) {
+            link = this.state.link500;
+        }
+
         return (
             <div className="paperspec">
                 <h2 id="title">{this.props.title}</h2>
                 <h3 id="date">{this.props.date}</h3>
-                <Button className="url-button" onClick={() => window.open("https://arxiv.org/pdf/1905.11743.pdf")}>URL</Button>
+                <Button className="url-button" onClick={() => window.open(link)}>URL</Button>
                 <h3 id="authors">{this.props.authors}</h3>
                 <h3 id="keywords">{this.props.keywords}</h3>
                 <div className="buttons">
