@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import "./CollectionCard.css";
 import heart from "../../heart.png";
 import talk from "../../talk.png";
+import SVG from "../../svg";
 
 class CollectionCard extends Component {
     constructor(props) {
@@ -53,11 +54,12 @@ class CollectionCard extends Component {
                     <Card.Footer className="footer">
 
                         <Button variant="light" id="like-button" className="like-button" onClick={this.state.isLiked ? this.clickCollectionCardUnlikeHandler : this.clickCollectionCardLikeHandler}>
-                            <Image src={heart} width={20} height={20} className="heart-image" />
+                        <div className="heart-image"><SVG name="heart" height="70%" width="70%"/></div>
+                        
                             {this.state.likeCount}
                         </Button>
 
-                        <Button variant="light" className="reply-button" href={`/collection_id=${this.props.id}`}><Image src={talk} width={20} height={20} className="talk-image" />{this.props.replyCount}</Button>
+                        <Button variant="light" className="reply-button" href={`/collection_id=${this.props.id}`}><div className="reply-image"><SVG name="zoom" height="70%" width="70%"/></div>{this.props.replyCount}</Button>
                     </Card.Footer>
                 </Card>
             </div>

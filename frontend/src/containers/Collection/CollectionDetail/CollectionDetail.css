@@ -1,25 +1,26 @@
 .CollectionDetailContent {
     min-height: 1000px;
     background: rgb(242,243,247);
-    margin-left: 250px;
+    margin-left: 18%;
     position: relative;
     display: flex;
     flex-direction: column;
 }
 
 .CollectionDetailContent .head {
-    margin-top: 3%;
+    width:92%;
+    margin-top: 5%;
     font-weight: bold;
     font-size: 200%;
     margin-bottom: 2%;
-    margin-right: 8%;
 
 }
 
 .CollectionInfo {
-    margin-top: 15px;
-    margin-left: 15px;
-    margin-right: 20px;
+    width: 92%;
+    margin-top: 1%;
+    margin-left: 1%;
+    margin-right: 3%;
     display: flex;
     flex-direction: column;
 }
@@ -29,8 +30,10 @@
 }
 
 .CollectionInfo #collectionInfoMid {
-    margin-top: 15px;
-    margin-bottom: 15px;
+    width: 92%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    margin-left: 6%;
     display: inline-flex;
     justify-content: space-around;
     align-items: center;

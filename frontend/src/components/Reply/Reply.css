@@ -25,12 +25,9 @@
 }
 
 .reply-component .reply .buttons .like-button{
-    width: 14%;
+    width: 10%;
     display: flex;
     justify-content: space-around;
 }
 
 
-.reply-component .reply .buttons .like-button .heart-image {
-    margin-top: 6%;
-}  
