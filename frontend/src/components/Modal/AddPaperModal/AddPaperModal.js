@@ -17,7 +17,7 @@ class AddPaperModal extends Component {
             addPaperCollectionStatus: collectionStatus.NONE,
             makeNewCollectionStatus: collectionStatus.NONE,
             isAddPaperOpen: false,
-            checkedCollections: [4, 5],
+            checkedCollections: [],
             collections: [],
             collectionName: "",
         };
@@ -48,6 +48,7 @@ class AddPaperModal extends Component {
             // console.log(`check${collection.id}`);
             this.setState({ checkedCollections: beforeCheckedCollections.concat(collection.id) });
         }
+        console.log(this.state.checkedCollections);
     }
 
     clickAddButtonHandler() {
@@ -123,7 +124,7 @@ class AddPaperModal extends Component {
                   key={collection.id}
                   id={collection.id}
                   title={collection.title}
-                  isChecked={this.state.checkedCollections.includes(collection)}
+                  isChecked={this.state.checkedCollections.includes(collection.id)}
                   checkHandler={() => this.checkHandler(collection)}
                 />
             ));
