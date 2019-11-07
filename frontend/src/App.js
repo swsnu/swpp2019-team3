@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 import PropTypes from "prop-types";
 
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
 
 import {

@@ -35,7 +35,7 @@ const getCollectionsByUserIdFailure = (error) => ({
     target: error,
 });
 
-export const getCollectionsByUserId = () => (dispatch) => axios.get("api/collection/user", { params: { id: 0 } })
+export const getCollectionsByUserId = (userId) => (dispatch) => axios.get("api/collection/user", { params: userId })
     .then((res) => { dispatch(getCollectionsByUserIdSuccess(res.data.data)); })
     .catch((err) => { (dispatch(getCollectionsByUserIdFailure(err))); });
 

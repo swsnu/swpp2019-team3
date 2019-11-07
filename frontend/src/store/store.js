@@ -16,12 +16,9 @@ const logger = (store) => (next) => (action) => {
 export const history = createBrowserHistory();
 export const middlewares = [logger, thunk, routerMiddleware(history)];
 
-const persistedState = localStorage.getItem("reduxState") ? JSON.parse(localStorage.getItem("reduxState")) : {};
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(rootReducer(history), persistedState, composeEnhancers(applyMiddleware(...middlewares)));
-store.subscribe(() => {
-    localStorage.setItem("reduxState", JSON.stringify(store.getState()));
-});
-
+const store = createStore(rootReducer(history), composeEnhancers(
+    applyMiddleware(...middlewares),
+));
 
 export default store;
