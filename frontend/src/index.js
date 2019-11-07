@@ -12,7 +12,7 @@ import store, { history } from "./store/store";
 
 ReactDOM.render(
     <Provider store={store}>
-        <App history={history} />
+        <App history={history} me={store.getState().auth.me} />
     </Provider>,
     document.getElementById("root"),
 );
