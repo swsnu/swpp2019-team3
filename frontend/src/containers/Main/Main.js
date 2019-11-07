@@ -34,7 +34,8 @@ class Main extends Component {
             {
                 type: "Paper",
                 source: "liked",
-                authors: "Espitau Thomas, Joux Antonie",
+                authors: [{ first_name: "Espitau", last_name: "Thomas" },
+                    { first_name: "Joux", last_name: "Antonie" }],
                 id: 3,
                 paperId: 3,
                 date: "2019-11-06",
@@ -42,7 +43,7 @@ class Main extends Component {
                 user: "Ha",
                 likeCount: 0,
                 reviewCount: 1,
-                keywords: "Combinational optimization Problems, Facility Layout Problem, Quadratic Assignment Problem",
+                keywords: ["Combinational optimization Problems", "Facility Layout Problem", "Quadratic Assignment Problem"],
             },
             {
                 type: "Review",

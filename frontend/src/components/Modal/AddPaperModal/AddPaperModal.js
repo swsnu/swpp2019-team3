@@ -17,7 +17,7 @@ class AddPaperModal extends Component {
             addPaperCollectionStatus: collectionStatus.NONE,
             makeNewCollectionStatus: collectionStatus.NONE,
             isAddPaperOpen: false,
-            checkedCollections: [3],
+            checkedCollections: [4, 5],
             collections: [],
             collectionName: "",
         };
