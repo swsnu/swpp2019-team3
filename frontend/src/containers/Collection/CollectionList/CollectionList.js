@@ -34,7 +34,8 @@ class CollectionList extends Component {
                   id={collection.id}
                   user={collection.user}
                   title={collection.title}
-                  paperCount={collection.paperCount}
+                  memberCount={collection.count.users}
+                  paperCount={collection.count.papers}
                   replyCount={collection.replyCount}
                   likeCount={collection.likeCount}
                   isLiked={collection.isLiked}
@@ -51,7 +52,8 @@ class CollectionList extends Component {
                   id={collection.id}
                   user={collection.user}
                   title={collection.title}
-                  paperCount={collection.paperCount}
+                  memberCount={collection.count.users}
+                  paperCount={collection.count.papers}
                   replyCount={collection.replyCount}
                   likeCount={collection.likeCount}
                   isLiked={collection.isLiked}

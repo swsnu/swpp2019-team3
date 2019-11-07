@@ -47,7 +47,8 @@ class CollectionCard extends Component {
                         <div className="title">
                             <Card.Link className="text" href={`/collection_id=${this.props.id}`}>{this.props.title}</Card.Link>
                         </div>
-                        <Card.Text>Number of papers: {this.props.paperCount}</Card.Text>
+                        <Card.Text>papers: {this.props.paperCount}</Card.Text>
+                        <Card.Text>members: {this.props.memberCount}</Card.Text>
                     </Card.Body>
                     <Card.Footer className="footer">
 
@@ -69,6 +70,7 @@ CollectionCard.propTypes = {
     id: PropTypes.number,
     user: PropTypes.string,
     title: PropTypes.string,
+    memberCount: PropTypes.number,
     paperCount: PropTypes.number,
     replyCount: PropTypes.number,
     likeCount: PropTypes.number,
@@ -81,6 +83,7 @@ CollectionCard.defaultProps = {
     id: 0,
     user: "",
     title: "",
+    memberCount: 0,
     paperCount: 0,
     replyCount: 0,
     likeCount: 0,
