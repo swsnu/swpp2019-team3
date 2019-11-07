@@ -5,14 +5,14 @@ import "./CollectionEntry.css";
 
 const CollectionEntry = (props) => (
     <Form.Row className="collection-entry">
-        <Form.Check
+        <Form.Check className = "check"
           id="check"
           type="checkbox"
           className="checkButton"
           checked={props.isChecked}
           onChange={props.checkHandler}
+          label = {props.title}
         />
-        <h3 id="collection-title">{props.title}</h3>
     </Form.Row>
 );
 
