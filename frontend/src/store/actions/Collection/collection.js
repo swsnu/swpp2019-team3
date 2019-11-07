@@ -20,7 +20,7 @@ const makeNewCollectionFailure = (error) => {
 };
 
 export const makeNewCollection = (collection) => (dispatch) => axios.post("api/collection", collection)
-    .then((res) => { dispatch(makeNewCollectionSuccess(res.data.data)); })
+    .then((res) => { dispatch(makeNewCollectionSuccess(res.data)); })
     .catch((err) => { (dispatch(makeNewCollectionFailure(err))); });
 
 // getCollectionsByUserId
