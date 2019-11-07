@@ -33,8 +33,8 @@ class CollectionDetail extends Component {
                 id: 2,
                 name: "Papers for tasty cat cans",
                 description: "Girin the Intelligent Cat's Paper Collection!",
-                creationDate: "2019-11-03",
-                lastUpdateDate: "2019-11-06",
+                creationDate: "2019-11-07",
+                lastUpdateDate: "2019-11-07",
                 papers: [
                     {
                         source: "recently added",
@@ -137,6 +137,10 @@ class CollectionDetail extends Component {
     componentDidMount() {
         this.props.onGetCollection({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
+                if (this.props.getCollectionStatus === collectionStatus.COLLECTION_NOT_EXIST) {
+                    this.props.history.push("/main");
+                    return;
+                }
                 if (this.props.selectedCollection.count) {
                     this.setState({ userCount: this.props.selectedCollection.count.users });
                     /* eslint-disable react/no-unused-state */
@@ -299,7 +303,7 @@ class CollectionDetail extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    getCollectionStatus: state.paper.getPaperStatus,
+    getCollectionStatus: state.collection.selected.status,
     selectedCollection: state.collection.selected.collection,
     storedPapers: state.collection.selected.papers,
 });

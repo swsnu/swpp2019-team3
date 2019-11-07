@@ -16,7 +16,7 @@ class Main extends Component {
                 id: 2,
                 title: "Papers for tasty cat cans",
                 user: "Canpicker",
-                paperCount: 4,
+                paperCount: 3,
                 replyCount: 3,
                 owner: "Ddaeggeol",
                 likeCount: 15,

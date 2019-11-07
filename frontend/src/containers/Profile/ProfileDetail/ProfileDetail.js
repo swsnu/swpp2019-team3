@@ -20,16 +20,14 @@ class ProfileDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            getCollectionsStatus: collectionStatus.NONE,
             doIFollow: this.props.thisUser.doIFollow,
             collections: [],
         };
     }
 
     componentDidMount() {
-        this.props.onGetCollections({ id: 1 })
-            .then(() => {
-                this.setState({ collections: this.props.storedCollections });
-            });
+
     }
 
     cardMaker = (card) => {
@@ -228,19 +226,8 @@ ProfileDetail.defaultProps = {
             replyCount: 0,
         },
         {
-            source: "tested",
-            id: 2,
-            type: "Collection",
-            user: "Girin",
-            title: "Girin's Paper Collection",
-            memberCount: 1,
-            likeCount: 0,
-            paperCount: 32,
-            replyCount: 13,
-        },
-        {
             source: "tasted",
-            id: 3,
+            id: 2,
             type: "Collection",
             user: "Girin",
             title: "Papers for tasty cat cans",
@@ -250,8 +237,19 @@ ProfileDetail.defaultProps = {
             replyCount: 1,
         },
         {
+            source: "tested",
+            id: 3,
+            type: "Collection",
+            user: "Girin",
+            title: "Girin's Paper Collection",
+            memberCount: 1,
+            likeCount: 0,
+            paperCount: 32,
+            replyCount: 13,
+        },
+        {
             source: "hated",
-            id: 4,
+            id: 1,
             type: "Collection",
             user: "Girin",
             title: "Butler's Bad joke collection",
