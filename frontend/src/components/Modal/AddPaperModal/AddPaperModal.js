@@ -28,7 +28,7 @@ class AddPaperModal extends Component {
     }
 
     componentDidMount() {
-        this.props.onGetCollections()
+        this.props.onGetCollections({ id: 1 })
             .then(() => {
                 this.setState({ collections: this.props.storedCollections });
             });
@@ -48,7 +48,6 @@ class AddPaperModal extends Component {
             // console.log(`check${collection.id}`);
             this.setState({ checkedCollections: beforeCheckedCollections.concat(collection.id) });
         }
-        console.log(this.state.checkedCollections);
     }
 
     clickAddButtonHandler() {
@@ -184,7 +183,7 @@ const mapDispatchToProps = (dispatch) => ({
     onAddPaper: (collectionsAndPaper) => dispatch(
         collectionActions.addCollectionPaper(collectionsAndPaper),
     ),
-    onGetCollections: () => dispatch(collectionActions.getCollectionsByUserId()),
+    onGetCollections: (userId) => dispatch(collectionActions.getCollectionsByUserId(userId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddPaperModal);
@@ -204,7 +203,7 @@ AddPaperModal.propTypes = {
 
 AddPaperModal.defaultProps = {
     history: null,
-    me: null,
+    me: { id: 1 },
     id: -1,
     onMakeNewCollection: null,
     onAddPaper: null,

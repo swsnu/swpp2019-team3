@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import {
     Button, Image, Tabs, Tab,
 } from "react-bootstrap";
@@ -9,7 +10,8 @@ import PropTypes from "prop-types";
 import {
     CollectionCard, ReviewCard,
 } from "../../../components";
-
+import { collectionActions } from "../../../store/actions";
+import { collectionStatus } from "../../../constants/constants";
 import "./ProfileDetail.css";
 import SamplePhoto from "./sample.jpg";
 // import * as actionCreators from "../../../store/actions/index";
@@ -19,7 +21,15 @@ class ProfileDetail extends Component {
         super(props);
         this.state = {
             doIFollow: this.props.thisUser.doIFollow,
+            collections: [],
         };
+    }
+
+    componentDidMount() {
+        this.props.onGetCollections({ id: 1 })
+            .then(() => {
+                this.setState({ collections: this.props.storedCollections });
+            });
     }
 
     cardMaker = (card) => {
@@ -145,7 +155,20 @@ class ProfileDetail extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+    me: state.auth.me,
+    getCollectionsStatus: state.collection.list.status,
+    storedCollections: state.collection.list.list,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onGetCollections: (userId) => dispatch(collectionActions.getCollectionsByUserId(userId)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileDetail);
+
 ProfileDetail.propTypes = {
+    me: PropTypes.objectOf(PropTypes.any),
     currentUserID: PropTypes.number,
     thisUser: PropTypes.shape({
         id: PropTypes.number,
@@ -182,6 +205,7 @@ ProfileDetail.propTypes = {
 };
 
 ProfileDetail.defaultProps = {
+    me: { id: 1 },
     currentUserID: 1,
     thisUser: {
         id: 1,
@@ -279,5 +303,3 @@ ProfileDetail.defaultProps = {
         },
     ],
 };
-
-export default ProfileDetail;
