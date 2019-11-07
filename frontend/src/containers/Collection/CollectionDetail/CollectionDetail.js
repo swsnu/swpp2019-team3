@@ -33,8 +33,8 @@ class CollectionDetail extends Component {
                 id: 2,
                 name: "Papers for tasty cat cans",
                 description: "Girin the Intelligent Cat's Paper Collection!",
-                creationDate: "2019-11-03",
-                lastUpdateDate: "2019-11-06",
+                creationDate: "2019-11-07",
+                lastUpdateDate: "2019-11-07",
                 papers: [
                     {
                         source: "recently added",
