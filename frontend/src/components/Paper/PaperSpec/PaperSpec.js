@@ -46,7 +46,7 @@ class PaperSpec extends Component {
             <div className="paperspec">
                 <h2 id="title">{this.props.title}</h2>
                 <h3 id="date">{this.props.date}</h3>
-                <Button className="url-button">URL</Button>
+                <Button className="url-button" onClick={() => window.open("https://arxiv.org/pdf/1905.11743.pdf")}>URL</Button>
                 <h3 id="authors">{this.props.authors}</h3>
                 <h3 id="keywords">{this.props.keywords}</h3>
                 <div className="buttons">
