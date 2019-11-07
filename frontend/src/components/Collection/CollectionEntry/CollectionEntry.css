@@ -1,12 +1,14 @@
 .collection-entry {
-    margin-left: 5%;
-    margin-top: 15px;
+
 }
 
+.collection-entry .check {
+font-size: 100%;
+}
 .collection-entry #collection-title {
-    margin-top: 2%;
     margin-left: 5%;
     float: left;
+    font-size: 100%;
 }
 
 .checkButton {
