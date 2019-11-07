@@ -132,17 +132,24 @@ class AddPaperModal extends Component {
         return (
             <div className="addpapermodal">
                 <div className="buttons">
-                    <Button className="addpaper-open-button" onClick={this.openAddPaperHandler}>Add</Button>
+                    <Button className="addpaper-open-button" onClick={this.openAddPaperHandler}>Add to..</Button>
                 </div>
                 <Modal
                   show={this.state.isAddPaperOpen}
                   className="addpaper-modal"
                   centered
                 >
-                    <Modal.Header>
-                        <h2 id="add-paper-to-my-collections">Add Paper to My Collections</h2>
-                        <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
-
+                    <Modal.Header className="modal-header">
+                        <div id="add-paper-to-my-collections">Add Paper to My Collections</div>
+                        <div id="header-buttons">
+                            <Button
+                            className="add-button"
+                            onClick={this.clickAddButtonHandler}
+                            disabled={false}
+                            >Add
+                            </Button>
+                            <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
+                        </div>
                     </Modal.Header>
                     <Modal.Body>
                         <FormControl
@@ -154,14 +161,8 @@ class AddPaperModal extends Component {
                         />
                         <Form><Form.Group controlId="A" className="entry-board">{collectionEntries}</Form.Group></Form>
                     </Modal.Body>
-                    <Modal.Footer>
-                        <Button
-                          className="add-button"
-                          onClick={this.clickAddButtonHandler}
-                          disabled={false}
-                        >Add
-                        </Button>
-                    </Modal.Footer>
+                    {/* <Modal.Footer>
+                    </Modal.Footer> */}
                 </Modal>
                 {gotoModal}
             </div>
