@@ -137,6 +137,10 @@ class CollectionDetail extends Component {
     componentDidMount() {
         this.props.onGetCollection({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
+                if (this.props.getCollectionStatus === collectionStatus.COLLECTION_NOT_EXIST) {
+                    this.props.history.push("/main");
+                    return;
+                }
                 if (this.props.selectedCollection.count) {
                     this.setState({ userCount: this.props.selectedCollection.count.users });
                     /* eslint-disable react/no-unused-state */
@@ -299,7 +303,7 @@ class CollectionDetail extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    getCollectionStatus: state.paper.getPaperStatus,
+    getCollectionStatus: state.collection.selected.status,
     selectedCollection: state.collection.selected.collection,
     storedPapers: state.collection.selected.papers,
 });
