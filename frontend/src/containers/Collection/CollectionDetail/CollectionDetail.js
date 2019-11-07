@@ -138,7 +138,6 @@ class CollectionDetail extends Component {
         this.props.onGetCollection({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
                 if (this.props.selectedCollection.count) {
-                    console.log(this.props.selectedCollection.count);
                     this.setState({ userCount: this.props.selectedCollection.count.users });
                     /* eslint-disable react/no-unused-state */
                     this.setState({ paperCount: this.props.selectedCollection.count.papers });
@@ -149,6 +148,10 @@ class CollectionDetail extends Component {
                 /* if (this.props.selectedPaper.keywords) {
                     this.setState({ keywords: this.props.selectedPaper.keywords.join(", ") });
                 } */
+            });
+        this.props.onGetCollectionPapers({ id: this.props.location.pathname.split("=")[1] })
+            .then(() => {
+                this.setState({ papers: this.props.storedPapers });
             });
     }
 
@@ -298,10 +301,12 @@ class CollectionDetail extends Component {
 const mapStateToProps = (state) => ({
     getCollectionStatus: state.paper.getPaperStatus,
     selectedCollection: state.collection.selected.collection,
+    storedPapers: state.collection.selected.papers,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onGetCollection: (collectionId) => dispatch(collectionActions.getCollection(collectionId)),
+    onGetCollectionPapers: (collectionId) => dispatch(collectionActions.getCollectionPapers(collectionId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionDetail);
@@ -312,8 +317,10 @@ CollectionDetail.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
     location: PropTypes.objectOf(PropTypes.any),
     onGetCollection: PropTypes.func,
+    onGetCollectionPapers: PropTypes.func,
     getCollectionStatus: PropTypes.string,
     selectedCollection: PropTypes.objectOf(PropTypes.any),
+    storedPapers: PropTypes.array,
 };
 
 CollectionDetail.defaultProps = {
@@ -322,6 +329,8 @@ CollectionDetail.defaultProps = {
     history: null,
     location: null,
     onGetCollection: null,
+    onGetCollectionPapers: null,
     getCollectionStatus: collectionStatus.NONE,
     selectedCollection: {},
+    storedPapers: [],
 };

@@ -12,9 +12,21 @@ class PaperCard extends Component {
         this.state = {
             isLiked: this.props.isLiked,
             likeCount: this.props.likeCount,
+            authorNames: "",
+            keywords: "",
         };
         this.clickPaperCardUnlikeHandler = this.clickPaperCardUnlikeHandler.bind(this);
         this.clickPaperCardLikeHandler = this.clickPaperCardLikeHandler.bind(this);
+    }
+
+    componentDidMount() {
+        if (this.props.authors) {
+            const authorNames = this.props.authors.map((author) => `${author.first_name} ${author.last_name}`);
+            this.setState({ authorNames: authorNames.join(", ") });
+        }
+        if (this.props.keywords) {
+            this.setState({ keywords: this.props.keywords.join(", ") });
+        }
     }
 
     // handle click 'Like' button
@@ -54,8 +66,8 @@ class PaperCard extends Component {
                             <Card.Link href={`/paper_id=${this.props.id}`} className="text">{this.props.title}</Card.Link>
                         </div>
                         <Card.Text>{this.props.date}</Card.Text>
-                        <Card.Text>{this.props.authors}</Card.Text>
-                        <Card.Text>{this.props.keywords}</Card.Text>
+                        <Card.Text>{this.state.authorNames}</Card.Text>
+                        <Card.Text>{this.state.keywords}</Card.Text>
                     </Card.Body>
                     <Card.Footer className="footer">
 
@@ -79,8 +91,8 @@ PaperCard.propTypes = {
     user: PropTypes.string,
     title: PropTypes.string,
     date: PropTypes.string,
-    authors: PropTypes.string,
-    keywords: PropTypes.string,
+    authors: PropTypes.array,
+    keywords: PropTypes.array,
     likeCount: PropTypes.number,
     reviewCount: PropTypes.number,
     isLiked: PropTypes.bool,
@@ -95,8 +107,8 @@ PaperCard.defaultProps = {
     user: "",
     title: "",
     date: "",
-    authors: "",
-    keywords: "",
+    authors: [],
+    keywords: [],
     likeCount: 0,
     reviewCount: 0,
     isLiked: false,

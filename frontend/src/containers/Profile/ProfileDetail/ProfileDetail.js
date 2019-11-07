@@ -31,7 +31,9 @@ class ProfileDetail extends Component {
                   id={card.id}
                   user={card.user}
                   title={card.title}
+                  memberCount={card.memberCount}
                   paperCount={card.paperCount}
+                  likeCount={card.likeCount}
                   replyCount={card.replyCount}
                   headerExists={false}
                 />
@@ -159,8 +161,10 @@ ProfileDetail.propTypes = {
         id: PropTypes.number,
         user: PropTypes.string,
         title: PropTypes.string,
+        memberCount: PropTypes.number,
         paperCount: PropTypes.number,
         replyCount: PropTypes.number,
+        likeCount: PropTypes.number,
     })),
     // thisUserCollections: PropTypes.arrayOf(PropTypes.instanceOf(Review))
     thisUserReviews: PropTypes.arrayOf(PropTypes.shape({
@@ -194,6 +198,8 @@ ProfileDetail.defaultProps = {
             type: "Collection",
             user: "Girin",
             title: "SWPP",
+            memberCount: 1,
+            likeCount: 0,
             paperCount: 1,
             replyCount: 0,
         },
@@ -203,6 +209,8 @@ ProfileDetail.defaultProps = {
             type: "Collection",
             user: "Girin",
             title: "Girin's Paper Collection",
+            memberCount: 1,
+            likeCount: 0,
             paperCount: 32,
             replyCount: 13,
         },
@@ -212,6 +220,8 @@ ProfileDetail.defaultProps = {
             type: "Collection",
             user: "Girin",
             title: "Papers for tasty cat cans",
+            memberCount: 1,
+            likeCount: 0,
             paperCount: 4,
             replyCount: 1,
         },
@@ -221,6 +231,8 @@ ProfileDetail.defaultProps = {
             type: "Collection",
             user: "Girin",
             title: "Butler's Bad joke collection",
+            memberCount: 1,
+            likeCount: 0,
             paperCount: 62,
             replyCount: 23,
         },

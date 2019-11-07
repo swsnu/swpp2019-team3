@@ -66,7 +66,7 @@ export const getCollection = (collectionId) => (dispatch) => axios.get("api/coll
 // get papers of a collection
 const getCollectionPapersSuccess = (papers) => ({
     type: collectionConstants.GET_COLLECTION_PAPERS,
-    target: papers,
+    target: papers.papers,
 });
 
 const getCollectionPapersFailure = (error) => ({
@@ -74,7 +74,7 @@ const getCollectionPapersFailure = (error) => ({
     target: error,
 });
 
-export const getCollectionPapers = (collectionId) => (dispatch) => axios.get("api/paper/collection", { params: { id: collectionId } })
+export const getCollectionPapers = (collectionId) => (dispatch) => axios.get("api/paper/collection", { params: collectionId })
     .then((res) => { dispatch(getCollectionPapersSuccess(res.data.data)); })
     .catch((err) => { (dispatch(getCollectionPapersFailure(err))); });
 
