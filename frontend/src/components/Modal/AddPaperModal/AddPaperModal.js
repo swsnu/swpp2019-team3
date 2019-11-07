@@ -42,7 +42,7 @@ class AddPaperModal extends Component {
 
     checkHandler(collection) {
         const beforeCheckedCollections = this.state.checkedCollections;
-        if (collection.id in beforeCheckedCollections) {
+        if (beforeCheckedCollections.includes(collection.id)) {
             // console.log(`uncheck${collection.id}`);
             this.setState({ checkedCollections: beforeCheckedCollections.filter((id) => id !== collection.id) });
         } else {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import PropTypes, { any } from "prop-types";
+import PropTypes from "prop-types";
 
 import { PaperSpec, ReviewCard } from "../../components";
 import { paperActions } from "../../store/actions";
@@ -141,10 +141,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(PaperDetail);
 
 PaperDetail.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
-    location: PropTypes.objectOf(any),
+    location: PropTypes.objectOf(PropTypes.any),
     onGetPaper: PropTypes.func,
     getPaperStatus: PropTypes.string,
-    selectedPaper: PropTypes.objectOf(any),
+    selectedPaper: PropTypes.objectOf(PropTypes.any),
 };
 
 PaperDetail.defaultProps = {

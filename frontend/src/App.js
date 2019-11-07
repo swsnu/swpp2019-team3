@@ -47,7 +47,7 @@ function App(props) {
                             <Route path="/profile/:id" exact component={ProfileDetail} />
                             <Route path="/profile/:id/edit" exact component={ProfileEdit} />
                             <Route path="/collections" exact component={CollectionList} />
-                            <Route path="/collections/:collection_id" exact component={CollectionDetail} />
+                            <Route path="/collection_id=:collection_id" exact component={CollectionDetail} />
                         </Switch>
                     </>
                 </Switch>

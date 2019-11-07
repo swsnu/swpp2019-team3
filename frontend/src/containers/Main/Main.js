@@ -13,7 +13,7 @@ class Main extends Component {
             feeds: [{
                 type: "Collection",
                 source: "made",
-                id: 1,
+                id: 2,
                 title: "Papers for tasty cat cans",
                 user: "Canpicker",
                 paperCount: 4,
