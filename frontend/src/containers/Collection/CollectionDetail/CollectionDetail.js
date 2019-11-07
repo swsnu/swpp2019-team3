@@ -23,8 +23,10 @@ class CollectionDetail extends Component {
             replies: [],
             isLiked: false,
             members: [],
-            lickCount: 0,
+            likeCount: 0,
             paperCount: 0,
+            userCount: 0,
+            replyCount: 0,
             description: "",
             newReplyContent: "",
             thisCollection: {
@@ -136,7 +138,8 @@ class CollectionDetail extends Component {
         this.props.onGetCollection({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
                 if (this.props.selectedCollection.count) {
-                    this.setState({ likeCount: this.props.selectedCollection.count.likes });
+                    console.log(this.props.selectedCollection.count);
+                    this.setState({ userCount: this.props.selectedCollection.count.users });
                     /* eslint-disable react/no-unused-state */
                     this.setState({ paperCount: this.props.selectedCollection.count.papers });
                     /* eslint-enable react/no-unused-state */
@@ -241,7 +244,7 @@ class CollectionDetail extends Component {
                                 <h5 id="likeText">Likes</h5>
                             </div>
                             <div id="memberStat">
-                                <h5 id="memberCount">{this.state.thisCollection.members.length}</h5>
+                                <h5 id="memberCount">{this.state.userCount}</h5>
                                 <h5 id="memberText">Members</h5>
                             </div>
                             <div id="collectionButtons">
@@ -255,7 +258,7 @@ class CollectionDetail extends Component {
                                 <div id="creationDate">Created: {this.state.thisCollection.creationDate}</div>
                                 <div id="lastUpdateDate">Last Update: {this.state.thisCollection.lastUpdateDate}</div>
                             </div>
-                            <p id="descriptionBox">{this.state.description}</p>
+                            <p id="descriptionBox">{this.props.selectedCollection.text}</p>
                         </div>
                     </div>
                     <div className="itemList">
