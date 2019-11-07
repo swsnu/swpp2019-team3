@@ -30,11 +30,11 @@ class CollectionDetail extends Component {
             description: "",
             newReplyContent: "",
             thisCollection: {
-                id: 1,
+                id: 2,
                 name: "Papers for tasty cat cans",
                 description: "Girin the Intelligent Cat's Paper Collection!",
-                creationDate: "2019-11-07",
-                lastUpdateDate: "2019-11-07",
+                creationDate: "2019-11-03",
+                lastUpdateDate: "2019-11-06",
                 papers: [
                     {
                         source: "recently added",
@@ -307,6 +307,8 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionDetail);
 
 CollectionDetail.propTypes = {
+    currentUserID: PropTypes.number,
+    currentUserName: PropTypes.string,
     history: PropTypes.objectOf(PropTypes.any),
     location: PropTypes.objectOf(PropTypes.any),
     onGetCollection: PropTypes.func,
@@ -315,6 +317,8 @@ CollectionDetail.propTypes = {
 };
 
 CollectionDetail.defaultProps = {
+    currentUserID: 1,
+    currentUserName: "Girin",
     history: null,
     location: null,
     onGetCollection: null,
