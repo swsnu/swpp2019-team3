@@ -52,7 +52,8 @@ class CollectionCard extends Component {
                     <Card.Footer className="footer">
 
                         <Button variant="light" id="like-button" className="like-button" onClick={this.state.isLiked ? this.clickCollectionCardUnlikeHandler : this.clickCollectionCardLikeHandler}>
-                            <Image src={heart} width={20} height={20} className="heart-image" />
+                            <div dangerouslySetInnerHTML={ {__html: '<head><link href="/open-iconic/font/css/open-iconic-bootstrp.css" rel="stylesheet"></head><body><span class="oi oi-icon-name" title="heart" aria-hidden="true"></span></body>'}}>
+                            </div>
                             {this.state.likeCount}
                         </Button>
 
