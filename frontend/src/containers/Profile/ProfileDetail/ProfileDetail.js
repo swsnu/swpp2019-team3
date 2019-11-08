@@ -216,7 +216,7 @@ ProfileDetail.defaultProps = {
     thisUserCollections: [
         {
             source: "is recently added",
-            id: 1,
+            id: 4,
             type: "Collection",
             user: "Girin",
             title: "SWPP",
@@ -234,7 +234,7 @@ ProfileDetail.defaultProps = {
             memberCount: 1,
             likeCount: 0,
             paperCount: 4,
-            replyCount: 1,
+            replyCount: 0,
         },
         {
             source: "tested",
@@ -244,8 +244,8 @@ ProfileDetail.defaultProps = {
             title: "Girin's Paper Collection",
             memberCount: 1,
             likeCount: 0,
-            paperCount: 32,
-            replyCount: 13,
+            paperCount: 6,
+            replyCount: 0,
         },
         {
             source: "hated",
@@ -255,8 +255,8 @@ ProfileDetail.defaultProps = {
             title: "Butler's Bad joke collection",
             memberCount: 1,
             likeCount: 0,
-            paperCount: 62,
-            replyCount: 23,
+            paperCount: 5,
+            replyCount: 0,
         },
     ],
     thisUserReviews: [

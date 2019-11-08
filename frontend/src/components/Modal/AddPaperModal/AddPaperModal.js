@@ -132,7 +132,7 @@ class AddPaperModal extends Component {
         return (
             <div className="addpapermodal">
                 <div className="buttons">
-                    <Button className="addpaper-open-button" onClick={this.openAddPaperHandler}>Add to..</Button>
+                    <Button className="addpaper-open-button" onClick={this.openAddPaperHandler}>Add to...</Button>
                 </div>
                 <Modal
                   show={this.state.isAddPaperOpen}
@@ -143,9 +143,9 @@ class AddPaperModal extends Component {
                         <div id="add-paper-to-my-collections">Add Paper to My Collections</div>
                         <div id="header-buttons">
                             <Button
-                            className="add-button"
-                            onClick={this.clickAddButtonHandler}
-                            disabled={false}
+                              className="add-button"
+                              onClick={this.clickAddButtonHandler}
+                              disabled={false}
                             >Add
                             </Button>
                             <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>

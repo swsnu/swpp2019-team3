@@ -22,26 +22,26 @@ class PaperDetail extends Component {
                 {
                     id: 5,
                     paperId: 1,
-                    title: "review_title1",
-                    author: "review_author1",
-                    likeCount: 5,
-                    replyCount: 15,
+                    title: "Ciao Churu is my favorite snack!",
+                    author: "Girin",
+                    likeCount: 56,
+                    replyCount: 6,
                 },
                 {
                     id: 6,
                     paperId: 1,
-                    title: "review_title2",
-                    author: "review_author2",
-                    likeCount: 3,
-                    replyCount: 10,
+                    title: "What computer-lovers should read",
+                    author: "Alpha",
+                    likeCount: 14,
+                    replyCount: 2,
                 },
                 {
                     id: 7,
                     paperId: 1,
-                    title: "review_title3",
-                    author: "review_author3",
-                    likeCount: 4,
-                    replyCount: 100,
+                    title: "Bring me tasty food Ningen!",
+                    author: "Girin",
+                    likeCount: 35,
+                    replyCount: 8,
                 },
             ],
         };
@@ -92,14 +92,19 @@ class PaperDetail extends Component {
     )
 
     render() {
-        const reviewCardsLeft = this.state.reviews
-            .filter((x) => this.state.reviews.indexOf(x) % 2 === 0)
-            .map((review) => this.reviewMaker(review));
+        let reviewCardsLeft = null;
+        let reviewCardsRight = null;
+        let reviewLength = 0;
+        if (this.props.selectedPaper.id === 3) {
+            reviewCardsLeft = this.state.reviews
+                .filter((x) => this.state.reviews.indexOf(x) % 2 === 0)
+                .map((review) => this.reviewMaker(review));
 
-        const reviewCardsRight = this.state.reviews
-            .filter((x) => this.state.reviews.indexOf(x) % 2 === 1)
-            .map((review) => this.reviewMaker(review));
-
+            reviewCardsRight = this.state.reviews
+                .filter((x) => this.state.reviews.indexOf(x) % 2 === 1)
+                .map((review) => this.reviewMaker(review));
+            reviewLength = 3;
+        }
         return (
             <div className="paperdetail-page">
                 <div className="paperdetail">
@@ -117,7 +122,7 @@ class PaperDetail extends Component {
                           history={this.props.history}
                         />
                         {/* FIXME: review-count should reflect this.state.reviewCount */}
-                        <h3 id="review-count">{this.state.reviews.length} reviews</h3>
+                        <h3 id="review-count">{reviewLength} reviews</h3>
                         <div className="reviewcards">
                             <div className="reviewcards-left">{reviewCardsLeft}</div>
                             <div className="reviewcards-right">{reviewCardsRight}</div>

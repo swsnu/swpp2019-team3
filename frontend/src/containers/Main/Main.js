@@ -17,9 +17,9 @@ class Main extends Component {
                 title: "Papers for tasty cat cans",
                 user: "Canpicker",
                 paperCount: 3,
-                replyCount: 3,
+                replyCount: 0,
                 owner: "Ddaeggeol",
-                likeCount: 15,
+                likeCount: 0,
             }, {
                 type: "Review",
                 source: "liked",
