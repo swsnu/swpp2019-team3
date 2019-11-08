@@ -1,6 +1,6 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
-import json
+import json #pylint disable=unused import
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Exists, OuterRef, Count
