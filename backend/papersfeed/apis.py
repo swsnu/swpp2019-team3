@@ -24,7 +24,7 @@ def get_session(args):
     return users_utils.select_session(args)
 
 def get_user_me(args):
-    """Get Currentt User"""
+    """Get Current User"""
     return users_utils.select_me(args)
 
 def delete_session(args):
