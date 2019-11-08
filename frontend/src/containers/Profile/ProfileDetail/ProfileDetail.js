@@ -11,7 +11,7 @@ import {
     CollectionCard, ReviewCard,
 } from "../../../components";
 import { collectionActions } from "../../../store/actions";
-import { collectionStatus } from "../../../constants/constants";
+// import { collectionStatus } from "../../../constants/constants";
 import "./ProfileDetail.css";
 import SamplePhoto from "./sample.jpg";
 // import * as actionCreators from "../../../store/actions/index";
@@ -20,9 +20,9 @@ class ProfileDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            getCollectionsStatus: collectionStatus.NONE,
+            // getCollectionsStatus: collectionStatus.NONE,
             doIFollow: this.props.thisUser.doIFollow,
-            collections: [],
+            // collections: [],
         };
     }
 
@@ -166,7 +166,7 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileDetail);
 
 ProfileDetail.propTypes = {
-    me: PropTypes.objectOf(PropTypes.any),
+    // me: PropTypes.objectOf(PropTypes.any),
     currentUserID: PropTypes.number,
     thisUser: PropTypes.shape({
         id: PropTypes.number,
@@ -203,7 +203,7 @@ ProfileDetail.propTypes = {
 };
 
 ProfileDetail.defaultProps = {
-    me: { id: 1 },
+    // me: { id: 1 },
     currentUserID: 1,
     thisUser: {
         id: 1,

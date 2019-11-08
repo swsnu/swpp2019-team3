@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import { CollectionCard } from "../../../components";
 import { collectionActions } from "../../../store/actions";
-import { collectionStatus } from "../../../constants/constants";
+// import { collectionStatus } from "../../../constants/constants";
 
 import "./CollectionList.css";
 
@@ -12,7 +12,7 @@ class CollectionList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            makeNewCollectionStatus: collectionStatus.NONE,
+            // makeNewCollectionStatus: collectionStatus.NONE,
             collections: [],
         };
     }
@@ -76,7 +76,7 @@ class CollectionList extends Component {
 }
 
 CollectionList.propTypes = {
-    collections: PropTypes.arrayOf(PropTypes.shape({
+    /* collections: PropTypes.arrayOf(PropTypes.shape({
         source: PropTypes.string,
         id: PropTypes.number,
         user: PropTypes.string,
@@ -85,11 +85,11 @@ CollectionList.propTypes = {
         replyCount: PropTypes.number,
         likeCount: PropTypes.number,
         isLiked: PropTypes.bool,
-    })),
+    })), */
 };
 
 CollectionList.defaultProps = {
-    collections: [
+    /* collections: [
         {
             source: "testing",
             id: 1,
@@ -130,7 +130,7 @@ CollectionList.defaultProps = {
             likeCount: 5,
             isLiked: false,
         },
-    ],
+    ], */
 };
 
 const mapStateToProps = (state) => ({
@@ -141,22 +141,26 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onMakeNewCollection: (newCollection) => dispatch(collectionActions.makeNewCollection(newCollection)),
+    onMakeNewCollection: (newCollection) => dispatch(
+        collectionActions.makeNewCollection(newCollection),
+    ),
     onGetCollections: (userId) => dispatch(collectionActions.getCollectionsByUserId(userId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionList);
 
 CollectionList.propTypes = {
-    me: PropTypes.objectOf(PropTypes.any),
-    onMakeNewCollection: PropTypes.func,
+    // me: PropTypes.objectOf(PropTypes.any),
+    // onMakeNewCollection: PropTypes.func,
     onGetCollections: PropTypes.func,
-    makeNewCollectionStatus: PropTypes.string,
+    // makeNewCollectionStatus: PropTypes.string,
+    storedCollections: PropTypes.objectOf(PropTypes.any),
 };
 
 CollectionList.defaultProps = {
-    me: null,
-    onMakeNewCollection: null,
+    // me: null,
+    // onMakeNewCollection: null,
     onGetCollections: null,
-    makeNewCollectionStatus: collectionStatus.NONE,
+    // makeNewCollectionStatus: collectionStatus.NONE,
+    storedCollections: [],
 };

@@ -61,7 +61,7 @@ const getCollectionFailure = (error) => {
 
 export const getCollection = (collectionId) => (dispatch) => axios.get("api/collection", { params: collectionId })
     .then((res) => { dispatch(getCollectionSuccess(res.data.data)); })
-    .catch((err) => { (dispatch(getCollectionFailure(err))); });
+    .catch((err) => { dispatch(getCollectionFailure(err)); });
 
 // get papers of a collection
 const getCollectionPapersSuccess = (papers) => ({
@@ -121,7 +121,7 @@ const setTitleAndDescriptionFailure = (error) => {
     };
 };
 
-export const setTitleAndDescription = (collectionId, title, description) => (dispatch) => axios.put("api/collection", { id: collectionId, title, text: description })
+export const setTitleAndDescription = (collectionInfo) => (dispatch) => axios.put("api/collection", collectionInfo)
     .then((res) => { dispatch(setTitleAndDescriptionSuccess(res.data)); })
     .catch((err) => { (dispatch(setTitleAndDescriptionFailure(err))); });
 
@@ -151,7 +151,7 @@ const removeCollectionPaperFailure = (error) => ({
     target: error,
 });
 
-export const removeCollectionPaper = (collectionIds, paperId) => (dispatch) => axios.put("api/paper/collection", { id: paperId, collection_ids: collectionIds })
+export const removeCollectionPaper = (collectionsAndPaper) => (dispatch) => axios.put("api/paper/collection", collectionsAndPaper)
     .then((res) => { dispatch(removeCollectionPaperSuccess(res.data)); })
     .catch((err) => { (dispatch(removeCollectionPaperFailure(err))); });
 
@@ -190,7 +190,7 @@ const deleteCollectionFailure = (error) => {
     };
 };
 
-export const deleteCollection = (collectionId) => (dispatch) => axios.delete("api/collection", { params: { id: collectionId } })
+export const deleteCollection = (collectionId) => (dispatch) => axios.delete("api/collection", { params: collectionId })
     .then((res) => { dispatch(deleteCollectionSuccess(res.data)); })
     .catch((err) => { (dispatch(deleteCollectionFailure(err))); });
 

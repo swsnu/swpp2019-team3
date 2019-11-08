@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-import { Card, Button, Image } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 import "./PaperCard.css";
-import heart from "../../heart.png";
-import talk from "../../talk.png";
-import { AddPaperModal } from "../..";
+// import { AddPaperModal } from "../..";
 import SVG from "../../svg";
 
 class PaperCard extends Component {
@@ -55,7 +53,9 @@ class PaperCard extends Component {
         }
         let addButton = null;
         if (this.props.addButtonExists) {
-            addButton = <AddPaperModal className="add-button" id={this.props.id} history={this.props.history} />;
+            addButton = null;
+            // <AddPaperModal className="add-button"
+            // id={this.props.id} history={this.props.history} />;
         }
 
         return (
@@ -72,10 +72,10 @@ class PaperCard extends Component {
                     </Card.Body>
                     <Card.Footer className="footer">
 
-                        <Button variant="light" className="like-button" onClick={this.state.isLiked ? this.clickPaperCardUnlikeHandler : this.clickPaperCardLikeHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%"/></div>{this.state.likeCount}</Button>
+                        <Button variant="light" className="like-button" onClick={this.state.isLiked ? this.clickPaperCardUnlikeHandler : this.clickPaperCardLikeHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
 
                         <Button variant="light" className="review-button" href={`/paper_id=${this.props.id}`}>
-                        <div className="review-image"><SVG name="zoom" height="70%" width="70%"/></div>{this.props.reviewCount}
+                            <div className="review-image"><SVG name="zoom" height="70%" width="70%" /></div>{this.props.reviewCount}
                         </Button>
                         {addButton}
                     </Card.Footer>
@@ -86,13 +86,15 @@ class PaperCard extends Component {
 }
 
 PaperCard.propTypes = {
-    history: PropTypes.objectOf(PropTypes.any),
+    // history: PropTypes.objectOf(PropTypes.any),
     source: PropTypes.string,
     id: PropTypes.number,
     user: PropTypes.string,
     title: PropTypes.string,
     date: PropTypes.string,
+    // eslint-disable-next-line react/forbid-prop-types
     authors: PropTypes.array,
+    // eslint-disable-next-line react/forbid-prop-types
     keywords: PropTypes.array,
     likeCount: PropTypes.number,
     reviewCount: PropTypes.number,
@@ -102,7 +104,7 @@ PaperCard.propTypes = {
 };
 
 PaperCard.defaultProps = {
-    history: null,
+    // history: null,
     source: "",
     id: 0,
     user: "",

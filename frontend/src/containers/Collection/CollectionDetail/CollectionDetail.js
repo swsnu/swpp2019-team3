@@ -18,16 +18,16 @@ class CollectionDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            getCollectionStatus: collectionStatus.NONE,
+            // getCollectionStatus: collectionStatus.NONE,
             papers: [],
             replies: [],
             isLiked: false,
-            members: [],
+            // members: [],
             likeCount: 0,
-            paperCount: 0,
+            // paperCount: 0,
             userCount: 0,
-            replyCount: 0,
-            description: "",
+            // replyCount: 0,
+            // description: "",
             newReplyContent: "",
             thisCollection: {
                 id: 2,
@@ -310,7 +310,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     onGetCollection: (collectionId) => dispatch(collectionActions.getCollection(collectionId)),
-    onGetCollectionPapers: (collectionId) => dispatch(collectionActions.getCollectionPapers(collectionId)),
+    onGetCollectionPapers: (collectionId) => dispatch(
+        collectionActions.getCollectionPapers(collectionId),
+    ),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionDetail);
@@ -324,6 +326,7 @@ CollectionDetail.propTypes = {
     onGetCollectionPapers: PropTypes.func,
     getCollectionStatus: PropTypes.string,
     selectedCollection: PropTypes.objectOf(PropTypes.any),
+    // eslint-disable-next-line react/forbid-prop-types
     storedPapers: PropTypes.array,
 };
 

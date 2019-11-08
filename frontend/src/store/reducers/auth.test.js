@@ -16,6 +16,7 @@ describe("Auth reducer", () => {
     it("should return default state", () => {
         const newState = reducer(undefined, {});
         expect(newState).toEqual({
+            me: null,
             signupStatus: signupStatus.NONE,
             signinStatus: signinStatus.NONE,
         });
@@ -27,6 +28,7 @@ describe("Auth reducer", () => {
             target: stubSigningUpUser,
         });
         expect(newState).toEqual({
+            me: null,
             signupStatus: signupStatus.SUCCESS,
             signinStatus: signinStatus.NONE,
         });
@@ -38,6 +40,7 @@ describe("Auth reducer", () => {
             target: stubSigningUpUser,
         });
         expect(newState).toEqual({
+            me: null,
             signupStatus: signupStatus.DUPLICATE_EMAIL,
             signinStatus: signinStatus.NONE,
         });
@@ -49,6 +52,7 @@ describe("Auth reducer", () => {
             target: stubSigningUpUser,
         });
         expect(newState).toEqual({
+            me: null,
             signupStatus: signupStatus.DUPLICATE_USERNAME,
             signinStatus: signinStatus.NONE,
         });
@@ -61,6 +65,10 @@ describe("Auth reducer", () => {
             target: stubSigningInUser,
         });
         expect(newState).toEqual({
+            me: {
+                "email": "my_email@papersfeed.com",
+                "password": "swpp",
+            },
             signupStatus: signupStatus.NONE,
             signinStatus: signinStatus.SUCCESS,
         });
@@ -72,6 +80,7 @@ describe("Auth reducer", () => {
             target: stubSigningInUser,
         });
         expect(newState).toEqual({
+            me: null,
             signupStatus: signupStatus.NONE,
             signinStatus: signinStatus.USER_NOT_EXIST,
         });
@@ -83,6 +92,7 @@ describe("Auth reducer", () => {
             target: stubSigningInUser,
         });
         expect(newState).toEqual({
+            me: null,
             signupStatus: signupStatus.NONE,
             signinStatus: signinStatus.WRONG_PW,
         });

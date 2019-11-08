@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import { Button, Image } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 import "./PaperSpec.css";
 import SVG from "../../svg";
-import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
-import heart from "../../heart.png";
+// import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
 
 class PaperSpec extends Component {
     constructor(props) {
@@ -42,7 +41,9 @@ class PaperSpec extends Component {
     render() {
         let addButton = null;
         if (this.props.addButtonExists) {
-            addButton = <AddPaperModal className="add-button" id={this.props.id} history={this.props.history} />;
+            addButton = null;
+            // <AddPaperModal className="add-button"
+            // id={this.props.id} history={this.props.history} />;
         }
         let link = "";
         if (this.props.id === 3) {
@@ -62,7 +63,7 @@ class PaperSpec extends Component {
                 </div>
                 <div className="buttons">
                     <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
-                    <div className="heart-image"><SVG  name="heart" height="70%" width="70%"/></div>
+                        <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>
                         {this.state.likeCount}
                     </Button>
                     {addButton}

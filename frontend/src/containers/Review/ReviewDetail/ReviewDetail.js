@@ -1,15 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import {
-    Form, Button, Card, Image,
+    Form, Button, Card,
 } from "react-bootstrap";
 
 import {
     Reply,
 } from "../../../components";
 import "./ReviewDetail.css";
-import heart from "../../../components/heart.png";
-import talk from "../../../components/talk.png";
 import SVG from "../../../components/svg";
 
 class ReviewDetail extends Component {
@@ -114,8 +112,8 @@ class ReviewDetail extends Component {
                             </div>
                             <div className="reply">
                                 <div className="review-extra">
-                                    <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%"/></div>{this.state.likeCount}</Button>
-                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" hegiht="60%" width="60%"/></div>{this.state.replyCount}</Button>
+                                    <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
+                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" hegiht="60%" width="60%" /></div>{this.state.replyCount}</Button>
                                     {this.state.authorId === 0
                                         ? <Button className="edit-button" onClick={this.clickEditButtonHandler}>Edit</Button>
 
