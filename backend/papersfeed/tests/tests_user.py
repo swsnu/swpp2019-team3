@@ -80,10 +80,13 @@ class UserTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         response = client.get('/api/user/me', content_type='application/json')
-        
+
         self.assertEqual(response.status_code, 200)
 
-        self.assertIn('{"data": {"id": 21, "username": "swpp", "email": "swpp@snu.ac.kr", "description": "", "count": {"follower": 0, "following": 0}}}', response.content.decode())
+        self.assertIn(
+            '{"data": {"id": 21, "username": "swpp", "email": "swpp@snu.ac.kr", "description": "",'
+            +'"count": {"follower": 0, "following": 0}}}',
+            response.content.decode())
 
     def test_sign_out(self):
         """ SIGN OUT """
