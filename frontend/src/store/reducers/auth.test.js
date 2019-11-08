@@ -66,8 +66,8 @@ describe("Auth reducer", () => {
         });
         expect(newState).toEqual({
             me: {
-                "email": "my_email@papersfeed.com",
-                "password": "swpp",
+                email: "my_email@papersfeed.com",
+                password: "swpp",
             },
             signupStatus: signupStatus.NONE,
             signinStatus: signinStatus.SUCCESS,

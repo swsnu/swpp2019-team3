@@ -6,7 +6,7 @@ import { Route, Switch } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
 
 import {
-    Intro, Main, ReviewDetail, PaperDetail, ReviewControl, ProfileDetail, ProfileEdit,
+    Intro, Main, ReviewDetail, /* PaperDetail , */ ReviewControl, ProfileDetail, ProfileEdit,
     CollectionDetail, CollectionList,
 } from "./containers";
 import {

@@ -81,6 +81,8 @@ describe("CollectionDetail Test", () => {
     });
 
     it("should render without errors", () => {
+        // eslint-disable-next-line no-unused-vars
+        const component = mount(collectionDetail);
         expect(spyGetCollection).toHaveBeenCalledTimes(1);
         expect(spyGetCollectionPapers).toHaveBeenCalledTimes(1);
     });

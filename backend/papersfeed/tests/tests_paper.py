@@ -126,7 +126,7 @@ class PaperTestCase(TestCase):
         response = client.put('/api/paper/collection',
                               data=json.dumps({
                                   constants.ID: paper_id,
-                                  constants.COLLECTION_IDS: json.dumps([test_collection_2_id])
+                                  constants.COLLECTION_IDS: [test_collection_2_id]
                               }),
                               content_type='application/json')
 
