@@ -85,7 +85,7 @@ class UserTestCase(TestCase):
 
         self.assertIn(
             '{"data": {"id": 21, "username": "swpp", "email": "swpp@snu.ac.kr", "description": "",'
-            +'"count": {"follower": 0, "following": 0}}}',
+            +' "count": {"follower": 0, "following": 0}}}',
             response.content.decode())
 
     def test_sign_out(self):
