@@ -56,12 +56,12 @@ def delete_session(args):
 def select_me(args):
     """Get Current User"""
 
-    # Request User
+    # Request User-
     request_user = args[constants.USER] if constants.USER in args else None
 
     # User ID
     user_id = request_user.id
-    
+
     users, _, _ = __get_users(Q(id=user_id), request_user, None)
 
     if not users:
