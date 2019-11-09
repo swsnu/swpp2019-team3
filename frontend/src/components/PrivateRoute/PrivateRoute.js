@@ -10,9 +10,6 @@ class PrivateRoute extends Component {
         this.props.onGetMe()
             .then(() => {
                 switch (this.props.getMeStatus) {
-                case getMeStatus.WAITING:
-                    // TODO: we should handle timeout
-                    break;
                 case getMeStatus.SUCCESS:
                     if (this.props.history.location.pathname === "/") {
                         this.props.history.goBack();
@@ -23,7 +20,7 @@ class PrivateRoute extends Component {
                         this.props.history.push("/");
                     }
                     break;
-                default:
+                default: // TODO: we should handle timeout
                     break;
                 }
             });

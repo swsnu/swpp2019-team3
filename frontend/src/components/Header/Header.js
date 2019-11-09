@@ -34,16 +34,10 @@ class Header extends Component {
     clickSignoutButtonHandler() {
         this.props.onSignout()
             .then(() => {
-                switch (this.props.signoutStatus) {
-                case signoutStatus.WAITING:
-                    // TODO: we should handle timeout
-                    break;
-                case signoutStatus.SUCCESS:
+                if (this.props.signoutStatus === signoutStatus.SUCCESS) {
                     this.props.history.push("/");
-                    break;
-                default:
-                    break;
                 }
+                // TODO: we should handle timeout
             });
     }
 
@@ -71,7 +65,7 @@ class Header extends Component {
                         <Dropdown>
                             <Dropdown.Toggle title="myaccount" className="myaccount-button">My Account</Dropdown.Toggle>
                             <Dropdown.Menu className="myaccount-menu">
-                                <Dropdown.Header>{username}</Dropdown.Header>
+                                <Dropdown.Header className="username-header">{username}</Dropdown.Header>
                                 <Dropdown.Item className="my-profile-button" href="/profile/user_id">My Profile</Dropdown.Item>
                                 <Dropdown.Item className="signout-button" onClick={this.clickSignoutButtonHandler}>Logout</Dropdown.Item>
                             </Dropdown.Menu>

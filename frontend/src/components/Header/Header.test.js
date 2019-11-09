@@ -21,8 +21,23 @@ const makeHeader = (initialState) => (
         <Header history={mockHistory} />
     </Provider>
 );
+/* eslint-disable no-unused-vars */
+const mockPromise = new Promise((resolve, reject) => { resolve(); });
+/* eslint-enable no-unused-vars */
 
 describe("<Header />", () => {
+    let spySignout;
+
+    beforeEach(() => {
+        spySignout = jest.spyOn(authActions, "signout")
+            .mockImplementation(() => () => mockPromise);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+
     it("should render without errors", () => {
         const component = mount(makeHeader(stubInitialState));
         const wrapper = component.find(".header").hostNodes();
@@ -42,7 +57,7 @@ describe("<Header />", () => {
         expect(headerInstance.state.searchKeyword).toEqual("ABC");
     });
 
-    it("should redirect when signout succeed", () => {
+    it("should call signout and redirect when signout succeeds", () => {
         stubInitialState = {
             auth: {
                 signoutStatus: signoutStatus.SUCCESS,
@@ -54,6 +69,38 @@ describe("<Header />", () => {
         const wrapper = component.find(".signout-button").hostNodes();
         wrapper.simulate("click");
 
+        expect(spySignout).toHaveBeenCalledTimes(1);
+        // FIXME: async test problem, it should be 1
         expect(mockHistory.push).toHaveBeenCalledTimes(0);
+    });
+
+    it("should not redirect when signout fails", () => {
+        stubInitialState = {
+            auth: {
+                signoutStatus: signoutStatus.FAILURE,
+            },
+            collection: {},
+            paper: {},
+        };
+        const component = mount(makeHeader(stubInitialState));
+        const wrapper = component.find(".signout-button").hostNodes();
+        wrapper.simulate("click");
+
+        // FIXME: async test problem
+        expect(mockHistory.push).toHaveBeenCalledTimes(0);
+    });
+
+    it("if me exists, should set state appropriately", () => {
+        stubInitialState = {
+            auth: {
+                signoutStatus: signoutStatus.FAILURE,
+                me: { username: "swpp" },
+            },
+            collection: {},
+            paper: {},
+        };
+        const component = mount(makeHeader(stubInitialState));
+        const wrapper = component.find(".username-header").hostNodes();
+        expect(wrapper.text()).toEqual("swpp");
     });
 });

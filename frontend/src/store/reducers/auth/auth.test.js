@@ -129,4 +129,47 @@ describe("Auth reducer", () => {
             me: null,
         });
     });
+
+    it("should handle signout failure", () => {
+        const newState = reducer(undefined, {
+            type: authConstants.SIGNOUT_FAILURE,
+            target: null,
+        });
+        expect(newState).toEqual({
+            signupStatus: signupStatus.NONE,
+            signinStatus: signinStatus.NONE,
+            signoutStatus: signoutStatus.FAILURE,
+            getMeStatus: getMeStatus.NONE,
+            me: null,
+        });
+    });
+
+
+    it("should process getMe", () => {
+        const newState = reducer(undefined, {
+            type: authConstants.GETME_SUCCESS,
+            target: stubSigningInUser,
+        });
+        expect(newState).toEqual({
+            signupStatus: signupStatus.NONE,
+            signinStatus: signinStatus.NONE,
+            signoutStatus: signoutStatus.NONE,
+            getMeStatus: getMeStatus.SUCCESS,
+            me: stubSigningInUser,
+        });
+    });
+
+    it("should handle getMe failure", () => {
+        const newState = reducer(undefined, {
+            type: authConstants.GETME_FAILURE,
+            target: stubSigningInUser,
+        });
+        expect(newState).toEqual({
+            signupStatus: signupStatus.NONE,
+            signinStatus: signinStatus.NONE,
+            signoutStatus: signoutStatus.NONE,
+            getMeStatus: getMeStatus.FAILURE,
+            me: null,
+        });
+    });
 });

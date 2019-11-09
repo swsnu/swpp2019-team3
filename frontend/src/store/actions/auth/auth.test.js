@@ -114,7 +114,7 @@ describe("authActions", () => {
             .mockImplementation(() => new Promise((resolve) => {
                 const result = {
                     status: 200,
-                    data: {},
+                    data: { id: 1, username: "swpp" },
                 };
                 resolve(result);
             }));
@@ -179,6 +179,80 @@ describe("authActions", () => {
         mockStore.dispatch(authActions.signin(stubSigningInUser))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/session", { params: stubSigningInUser });
+                done();
+            });
+    });
+
+
+    it("'signout' should call axios.delete", (done) => {
+        const spy = jest.spyOn(axios, "delete")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(authActions.signout())
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/session");
+                done();
+            });
+    });
+
+    it("'signout' should handle failure", (done) => {
+        const spy = jest.spyOn(axios, "delete")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 403,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(authActions.signout())
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/session");
+                done();
+            });
+    });
+
+
+    it("'getMe' should call axios.get", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: { id: 1, username: "swpp" },
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(authActions.getMe())
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/me");
+                done();
+            });
+    });
+
+    it("'getMe' should handle unauthorized person", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 403,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(authActions.getMe())
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/me");
                 done();
             });
     });
