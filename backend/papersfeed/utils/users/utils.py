@@ -117,6 +117,9 @@ def update_user(args):
     # User
     user = args[constants.USER]
 
+    # Descrpition
+    description = args[constants.DESCRIPTION] if constants.DESCRIPTION in args else None
+
     # Email
     email = args[constants.EMAIL] if constants.EMAIL in args else None
 
@@ -125,6 +128,11 @@ def update_user(args):
 
     # Password
     password = args[constants.PASSWORD] if constants.PASSWORD in args else None
+
+    # Update Descrpition
+    if description:
+        # Change Description
+        user.description = description
 
     # Update Email
     if email:
