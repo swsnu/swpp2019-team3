@@ -15,7 +15,7 @@ class AddPaperModal extends Component {
         super(props);
         this.state = {
             addPaperCollectionStatus: collectionStatus.NONE,
-            // makeNewCollectionStatus: collectionStatus.NONE,
+            makeNewCollectionStatus: collectionStatus.NONE,
             isAddPaperOpen: false,
             checkedCollections: [],
             collections: [],
@@ -54,7 +54,7 @@ class AddPaperModal extends Component {
     clickCancelButtonHandler() {
         this.setState({
             addPaperCollectionStatus: collectionStatus.NONE,
-            // makeNewCollectionStatus: collectionStatus.NONE,
+            makeNewCollectionStatus: collectionStatus.NONE,
             isAddPaperOpen: false,
             checkedCollections: [],
             collectionName: "",
@@ -65,14 +65,17 @@ class AddPaperModal extends Component {
         if (this.state.collectionName !== "") {
             this.props.onMakeNewCollection({ title: this.state.collectionName, text: " " })
                 .then(() => {
-                    this.state.checkedCollections.push(this.props.selectedCollection);
+                    this.setState({                    
+                        makeNewCollectionStatus: collectionStatus.SUCCESS,
+                    })
+                    this.props.onAddPaper({id: this.props.id, collection_ids: [this.props.selectedCollection.id]})
                 });
         }
 
         if (this.state.checkedCollections.length >= 1) {
             this.props.onAddPaper({
                 id: this.props.id,
-                collection_ids: JSON.stringify(this.state.checkedCollections),
+                collection_ids: this.state.checkedCollections,
             })
                 .then(() => {
                     this.setState({
@@ -84,7 +87,8 @@ class AddPaperModal extends Component {
 
     render() {
         let gotoModal = null;
-        if (this.state.addPaperCollectionStatus === collectionStatus.SUCCESS) {
+        if (this.state.addPaperCollectionStatus === collectionStatus.SUCCESS ||
+            this.state.makeNewCollectionStatus === collectionStatus.SUCCESS ) {
             gotoModal = <GoMyCollectionsModal openTrigger history={this.props.history} />;
         }
 
