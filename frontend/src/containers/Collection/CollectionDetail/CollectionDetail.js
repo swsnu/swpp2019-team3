@@ -1,14 +1,15 @@
 import React, { Component } from "react";
-import {
-    Button, Tabs, Tab,
-} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import {
+    Button, Tabs, Tab,
+} from "react-bootstrap";
+import {
     PaperCard, Reply,
 } from "../../../components";
+
 import { collectionActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
 
@@ -19,115 +20,33 @@ class CollectionDetail extends Component {
         super(props);
         this.state = {
             // getCollectionStatus: collectionStatus.NONE,
-            papers: [],
-            replies: [],
+            userCount: 0,
+            likeCount: 0,
+            // eslint-disable-next-line react/no-unused-state
+            paperCount: 0,
+            newReplyContent: "",
             isLiked: false,
             // members: [],
-            likeCount: 0,
-            // paperCount: 0,
-            userCount: 0,
-            // replyCount: 0,
-            // description: "",
-            newReplyContent: "",
+            replies: [],
+            papers: [{
+                source: "recently added",
+                id: 1,
+                user: "Girin",
+                title: "CERTIFIED LATTICE REDUCTION",
+                date: "2020-02-01",
+                authors: ["Espitau Thomas", "Joux Antoine"],
+                keywords: ["Combinational optimization Problems", "Facility Layout Problem", "Quadratic Assignment Problem"],
+                likeCount: 3,
+                reviewCount: 6,
+                isLiked: false,
+            }],
             thisCollection: {
                 id: 2,
-                name: "Papers for tasty cat cans",
-                description: "Girin the Intelligent Cat's Paper Collection!",
+                title: "Papers for tasty cat cans",
+                text: "Girin the Intelligent Cat's Paper Collection!",
                 creationDate: "2019-11-07",
                 lastUpdateDate: "2019-11-07",
-                papers: [
-                    {
-                        source: "recently added",
-                        id: 1,
-                        user: "Girin",
-                        title: "CERTIFIED LATTICE REDUCTION",
-                        date: "2020-02-01",
-                        authors: "Espitau Thomas, Joux Antoine",
-                        keywords: "Combinational optimization Problems, Facility Layout Problem, Quadratic Assignment Problem",
-                        likeCount: 3,
-                        reviewCount: 6,
-                        isLiked: false,
-                    },
-                    // {
-                    //     source: "added",
-                    //     id: 1,
-                    //     user: "Testing Module",
-                    //     title: "title:test",
-                    //     date: "2020",
-                    //     authors: "author:test",
-                    //     keywords: "keywords:test",
-                    //     likeCount: 3,
-                    //     reviewCount: 6,
-                    //     isLiked: false,
-                    // },
-                    // {
-                    //     source: "added",
-                    //     id: 2,
-                    //     user: "Testing Module",
-                    //     title: "title:test2",
-                    //     date: "date:111111",
-                    //     authors: "author:test",
-                    //     keywords: "keywords:test",
-                    //     likeCount: 3,
-                    //     reviewCount: 6,
-                    //     isLiked: false,
-                    // },
-                    // {
-                    //     source: "added",
-                    //     id: 3,
-                    //     user: "Testing Module",
-                    //     title: "title:test3",
-                    //     date: "date:111111",
-                    //     authors: "author:test",
-                    //     keywords: "keywords:test",
-                    //     likeCount: 3,
-                    //     reviewCount: 6,
-                    //     isLiked: false,
-                    // },
-                    // {
-                    //     source: "added",
-                    //     id: 4,
-                    //     user: "Testing Module",
-                    //     title: "title:test4",
-                    //     date: "date:111111",
-                    //     authors: "author:test",
-                    //     keywords: "keywords:test",
-                    //     likeCount: 3,
-                    //     reviewCount: 6,
-                    //     isLiked: false,
-                    // },
-                ],
-                members: [
-                    // "Anna",
-                    // "Betty",
-                    // "Charlie",
-                    // "Dophio",
-                    // "Emily",
-                ],
-                replies: [
-                    // {
-                    //     content: "asdf",
-                    //     author: "qwer",
-                    //     authorId: 1,
-                    //     isLiked: false,
-                    //     likeCount: 3,
-                    // },
-                    // {
-                    //     content: "dsaf",
-                    //     author: "zvcx",
-                    //     authorId: 2,
-                    //     isLiked: false,
-                    //     likeCount: 7,
-                    // },
-                    // {
-                    //     content: "rtyui",
-                    //     author: "asfd",
-                    //     authorId: 3,
-                    //     isLiked: false,
-                    //     likeCount: 9,
-                    // },
-                ],
-                likesCount: 15,
+                count: { users: 0, papers: 0 },
                 isLiked: false,
                 amIMember: true,
             },
@@ -141,12 +60,10 @@ class CollectionDetail extends Component {
                     this.props.history.push("/main");
                     return;
                 }
-                if (this.props.selectedCollection.count) {
-                    this.setState({ userCount: this.props.selectedCollection.count.users });
-                    /* eslint-disable react/no-unused-state */
-                    this.setState({ paperCount: this.props.selectedCollection.count.papers });
-                    /* eslint-enable react/no-unused-state */
+                if (this.props.getCollectionStatus === collectionStatus.SUCCESS) {
+                    this.setState({ thisCollection: this.props.selectedCollection });
                 }
+
 
                 // FIXME: Please uncomment this block if onGetPaper can get keywords
                 /* if (this.props.selectedPaper.keywords) {
@@ -243,7 +160,7 @@ class CollectionDetail extends Component {
                     <div className="head">COLLECTION</div>
                     <div className="CollectionInfo">
                         <div id="collectionName">
-                            <h2 id="collectionName">{this.props.selectedCollection.title}</h2>
+                            <h2 id="collectionName">{this.state.thisCollection.title}</h2>
                         </div>
                         <div id="collectionInfoMid">
                             <div id="likeStat">
@@ -265,7 +182,7 @@ class CollectionDetail extends Component {
                                 <div id="creationDate">Created: {this.state.thisCollection.creationDate}</div>
                                 <div id="lastUpdateDate">Last Update: {this.state.thisCollection.lastUpdateDate}</div>
                             </div>
-                            <p id="descriptionBox">{this.props.selectedCollection.text}</p>
+                            <p id="descriptionBox">{this.state.thisCollection.text}</p>
                         </div>
                     </div>
                     <div className="itemList">
@@ -326,8 +243,7 @@ CollectionDetail.propTypes = {
     onGetCollectionPapers: PropTypes.func,
     getCollectionStatus: PropTypes.string,
     selectedCollection: PropTypes.objectOf(PropTypes.any),
-    // eslint-disable-next-line react/forbid-prop-types
-    storedPapers: PropTypes.array,
+    storedPapers: PropTypes.objectOf(PropTypes.any),
 };
 
 CollectionDetail.defaultProps = {

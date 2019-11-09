@@ -92,10 +92,8 @@ PaperCard.propTypes = {
     user: PropTypes.string,
     title: PropTypes.string,
     date: PropTypes.string,
-    // eslint-disable-next-line react/forbid-prop-types
-    authors: PropTypes.array,
-    // eslint-disable-next-line react/forbid-prop-types
-    keywords: PropTypes.array,
+    authors: PropTypes.objectOf(PropTypes.any),
+    keywords: PropTypes.objectOf(PropTypes.any),
     likeCount: PropTypes.number,
     reviewCount: PropTypes.number,
     isLiked: PropTypes.bool,
