@@ -14,6 +14,11 @@
     justify-content: flex-start;
 }
 
+.review-detail .board .review-reply .head {
+    margin-top: 3%;
+    font-size: 200%;
+    font-weight: bold;
+}
 .review-detail .board .review-reply .review {
     width: 100%;
     padding-bottom: 5%;
@@ -39,15 +44,31 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+
 }
 
 .review-detail .board .review-reply .reply .review-extra {
     margin-top: 2%;
-    width: 10%;
+    width: 50%;
     display:flex;
     justify-content: flex-start;
 }
 
+.review-detail .board .review-reply .reply .review-extra .like-button{
+    width: 15%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.review-detail .board .review-reply .reply .review-extra .replyCount-button{
+    width: 15%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.review-detail .board .review-reply .reply .review-extra .replyCount-button .reply-image{
+    margin-right: 5%;
+}
 
 .review-detail .board .review-reply .reply .new-reply {
     margin-top: 2%;
@@ -55,8 +76,9 @@
     justify-content: flex-start;
     flex-direction: column;
     text-align: left;
-    margin-bottom: 5%;
+    margin-bottom: 10%;
     margin-left: 3%;
+    height: 100%;
     width: 90%;
 }
 

@@ -28,6 +28,8 @@ def insert_collection(args):
     # Text
     text = args[constants.TEXT]
 
+    request_user = args[constants.USER]
+
     # Check Valid
     if not title or not text:
         raise ApiError(constants.PARAMETER_ERROR)
@@ -37,6 +39,18 @@ def insert_collection(args):
 
     # Add User To Collection
     CollectionUser.objects.create(collection_id=collection.id, user_id=user_id, type=COLLECTION_USER_TYPE[0])
+
+    collection_id = collection.id
+
+    collections, _, _ = __get_collections(Q(id=collection_id), request_user, None)
+
+    # Does Not Exist
+    if not collections:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    collection = collections[0]
+
+    return collection
 
 
 def update_collection(args):

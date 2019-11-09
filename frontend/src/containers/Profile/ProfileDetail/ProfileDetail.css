@@ -1,16 +1,19 @@
 .ProfileDetailContent {
     min-height: 1000px;
     background: rgb(242,243,247);
-    margin-left: 250px;
+    margin-left: 18%;
     position: relative;
     display: flex;
     flex-direction: column;
 }
 
 .userInfo {
+    margin-top: 5%;
+    margin-left: 5%;
+    margin-bottom: 5%;
+    margin-right: 10%;
     display: flex;
     flex-direction: column;
-    margin: 20px;
 }
 
 .userInfo .userStatistic {
@@ -34,11 +37,13 @@
 }
 
 .itemTabSection {
-    margin: 20px;
+    margin-left: 5%;
+    margin-right: 10%;
     background: rgb(255,255,255);
 }
 
 .itemTabSection #collectionCards {
+
     width: 100%;
     height: 100%;
     margin: 15px;

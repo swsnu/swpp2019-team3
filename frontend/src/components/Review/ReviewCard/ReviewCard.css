@@ -20,3 +20,26 @@
     font-weight: bold;
     font-size: 130%;
 }
+
+.review .like-button{
+    width: 17%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.review .footer {
+    display: flex;
+    justify-content: flex-start;
+}
+
+
+.review .reply-button{
+    width: 17%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.review .reply-button .talk-image{
+    margin-top: 8%;
+    margin-right: 5%;
+}

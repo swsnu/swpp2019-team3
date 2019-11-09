@@ -1,6 +1,6 @@
 .sidebar {
     display: flex;
-    margin-left: 1%;
+    /* margin-left: 1%; */
     flex-direction: column;
     align-items: flex-start;   
     height: 100%;
@@ -10,11 +10,17 @@
 
 .sidebar .main-link {
     margin-top: 10%;
+    /* flex-basis: 50%; */
+    /* width: 100%; */
     color: black;
     font-weight: bold;
     font-size: 110%;
     padding: 12%;
 }
+
+/* .sidebar .main-link:hover{
+    background:rgb(163, 163, 163);
+} */
 
 .sidebar .collection-link {
     color: black;

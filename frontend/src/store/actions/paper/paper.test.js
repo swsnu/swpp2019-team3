@@ -1,8 +1,8 @@
 import axios from "axios";
 
-import { paperActions } from ".";
-import { getPaperStatus } from "../reducers/paper";
-import { getMockStore } from "../../test-utils/mocks";
+import { paperActions } from "..";
+import { getPaperStatus } from "../../../constants/constants";
+import { getMockStore } from "../../../test-utils/mocks";
 
 const stubInitialState = {
     paper: {
@@ -10,6 +10,7 @@ const stubInitialState = {
         selectedPaper: {},
     },
     auth: {},
+    collection: {},
 };
 const mockStore = getMockStore(stubInitialState);
 

@@ -23,4 +23,15 @@ describe("<PaperSpec />", () => {
         expect(component.state().likeCount).toBe(0);
         expect(component.state().isLiked).toBe(false);
     });
+
+    it("should window open is called when url button is clicked", () => {
+        const spyOpen = jest.spyOn(window, "open")
+            .mockImplementation(jest.fn());
+
+        const component = mount(<PaperSpec />);
+        const wrapper = component.find(".url-button").hostNodes();
+        wrapper.simulate("click");
+
+        expect(spyOpen).toHaveBeenCalledTimes(1);
+    });
 });

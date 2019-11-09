@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { authConstants } from "./actionTypes";
+import { authConstants } from "../actionTypes";
 
 const signupSuccess = (user) => ({
     type: authConstants.SIGNUP_SUCCESS,
@@ -32,7 +32,7 @@ export const signup = (user) => (dispatch) => axios.post("/api/user", user)
 
 const signinSuccess = (user) => ({
     type: authConstants.SIGNIN_SUCCESS,
-    target: user,
+    target: user.data,
 });
 
 const signinFailure = (error) => {

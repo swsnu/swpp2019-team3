@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 
 import PaperDetail from "./PaperDetail";
 import { paperActions } from "../../store/actions";
-import { getPaperStatus } from "../../store/reducers/paper";
+import { getPaperStatus } from "../../constants/constants";
 import { getMockStore } from "../../test-utils/mocks";
 
 let stubInitialState = {
@@ -13,6 +13,7 @@ let stubInitialState = {
         selectedPaper: {},
     },
     auth: {},
+    collection: {},
 };
 const mockHistory = { push: jest.fn() };
 const makeIntroModal = (initialState) => (
@@ -52,6 +53,7 @@ describe("<PaperDetail />", () => {
                 selectedPaper: { count: { likes: 3, reviews: 5 } },
             },
             auth: {},
+            collection: {},
         };
         const component = mount(makeIntroModal(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
@@ -73,6 +75,7 @@ describe("<PaperDetail />", () => {
                 },
             },
             auth: {},
+            collection: {},
         };
         const component = mount(makeIntroModal(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
@@ -89,6 +92,7 @@ describe("<PaperDetail />", () => {
                 },
             },
             auth: {},
+            collection: {},
         };
         const component = mount(makeIntroModal(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
@@ -103,8 +107,41 @@ describe("<PaperDetail />", () => {
                 selectedPaper: {},
             },
             auth: {},
+            collection: {},
         };
         expect(mockHistory.push).toHaveBeenCalledTimes(0);
         // FIXME: actually, it should be '1'!
+    });
+
+    it("should make reviewCardsLeft and reviewCardsRight well", () => {
+        const component = mount(makeIntroModal(stubInitialState));
+        const paperDetailInstance = component.find(PaperDetail.WrappedComponent).instance();
+        paperDetailInstance.setState(
+            {
+                reviews: [{
+                    id: 1,
+                    paperId: 1,
+                    author: "review_author_1",
+                    title: "review_title_1",
+                    date: "2019-11-09",
+                    likeCount: 0,
+                    replyCount: 0,
+                }, {
+                    id: 2,
+                    paperId: 1,
+                    author: "review_author_2",
+                    title: "review_title_2",
+                    date: "2019-11-08",
+                    likeCount: 0,
+                    replyCount: 0,
+                }],
+            },
+        );
+        component.update();
+        const wrapperLeft = component.find(".reviewcards-left");
+        const wrapperRight = component.find(".reviewcards-right");
+        expect(component.find("ReviewCard").length).toBe(2);
+        expect(wrapperLeft.children().length).toBe(1);
+        expect(wrapperRight.children().length).toBe(1);
     });
 });

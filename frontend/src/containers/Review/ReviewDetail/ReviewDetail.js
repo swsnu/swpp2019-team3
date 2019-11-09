@@ -6,6 +6,7 @@ import {
     Reply,
 } from "../../../components";
 import "./ReviewDetail.css";
+import SVG from "../../../components/svg";
 
 class ReviewDetail extends Component {
     constructor(props) {
@@ -25,8 +26,6 @@ class ReviewDetail extends Component {
                 authorId: 0,
                 author: "dfdf",
                 review: 5,
-                likeCount: 7,
-                isLiked: false,
                 content: "dffffffffffffff",
             },
             {
@@ -34,8 +33,6 @@ class ReviewDetail extends Component {
                 authorId: 1,
                 author: "dfdffer",
                 review: 5,
-                likeCount: 7,
-                isLiked: true,
                 content: "dffffffffffffff",
             }],
             replyCount: 2,
@@ -100,6 +97,7 @@ class ReviewDetail extends Component {
             <div className="review-detail">
                 <div className="board">
                     <Card className="review-reply">
+                        <div className="head">REVIEW</div>
                         <Card.Body>
                             <div className="review">
                                 <Card.Text className="author">{this.state.author}</Card.Text>
@@ -108,8 +106,8 @@ class ReviewDetail extends Component {
                             </div>
                             <div className="reply">
                                 <div className="review-extra">
-                                    <Button className="like-button" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}>{this.state.likeCount}</Button>
-                                    <Button className="replyCount-button" disabled>{this.state.replyCount}</Button>
+                                    <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
+                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="60%" width="60%" /></div>{this.state.replyCount}</Button>
                                     {this.state.authorId === 0
                                         ? <Button className="edit-button" onClick={this.clickEditButtonHandler}>Edit</Button>
 

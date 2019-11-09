@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import PropTypes, { any } from "prop-types";
+import PropTypes from "prop-types";
 
 import { PaperSpec, ReviewCard } from "../../components";
 import { paperActions } from "../../store/actions";
-import { getPaperStatus } from "../../store/reducers/paper";
+import { getPaperStatus } from "../../constants/constants";
 import "./PaperDetail.css";
 
 class PaperDetail extends Component {
@@ -18,32 +18,7 @@ class PaperDetail extends Component {
             authorNames: "",
             keywords: "",
             date: "",
-            reviews: [
-                {
-                    id: 5,
-                    paperId: 1,
-                    title: "review_title1",
-                    author: "review_author1",
-                    likeCount: 5,
-                    replyCount: 15,
-                },
-                {
-                    id: 6,
-                    paperId: 1,
-                    title: "review_title2",
-                    author: "review_author2",
-                    likeCount: 3,
-                    replyCount: 10,
-                },
-                {
-                    id: 7,
-                    paperId: 1,
-                    title: "review_title3",
-                    author: "review_author3",
-                    likeCount: 4,
-                    replyCount: 100,
-                },
-            ],
+            reviews: [],
         };
         this.reviewMaker = this.reviewMaker.bind(this);
     }
@@ -68,7 +43,6 @@ class PaperDetail extends Component {
                 }
                 if (this.props.selectedPaper.publication) {
                     this.setState({ date: this.props.selectedPaper.publication.date });
-                    this.setState({ keywords: "Combinational optimization Problems, Facility Layout Problem, Quadratic Assignment Problem" });
                 }
                 // FIXME: Please uncomment this block if onGetPaper can get keywords
                 /* if (this.props.selectedPaper.keywords) {
@@ -112,8 +86,10 @@ class PaperDetail extends Component {
                           authors={this.state.authorNames}
                           keywords={this.state.keywords}
                           likeCount={this.state.likeCount}
+                          reviewCount={this.state.reviews.length}
                           isLiked={this.props.selectedPaper.liked}
                           addButtonExists
+                          history={this.props.history}
                         />
                         {/* FIXME: review-count should reflect this.state.reviewCount */}
                         <h3 id="review-count">{this.state.reviews.length} reviews</h3>
@@ -140,10 +116,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(PaperDetail);
 
 PaperDetail.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
-    location: PropTypes.objectOf(any),
+    location: PropTypes.objectOf(PropTypes.any),
     onGetPaper: PropTypes.func,
     getPaperStatus: PropTypes.string,
-    selectedPaper: PropTypes.objectOf(any),
+    selectedPaper: PropTypes.objectOf(PropTypes.any),
 };
 
 PaperDetail.defaultProps = {

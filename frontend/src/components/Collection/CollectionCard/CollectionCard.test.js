@@ -24,4 +24,10 @@ describe("<CollectionCard />", () => {
         expect(component.state().likeCount).toBe(0);
         expect(component.state().isLiked).toBe(false);
     });
+
+    it("if headerExists is false, then header should not exist", () => {
+        const component = mount(<CollectionCard headerExists={false} />);
+        const wrapper = component.find(".header");
+        expect(wrapper.length).toBe(0);
+    });
 });

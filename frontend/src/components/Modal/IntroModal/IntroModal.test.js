@@ -4,10 +4,11 @@ import { Provider } from "react-redux";
 
 import IntroModal from "./IntroModal";
 import { authActions } from "../../../store/actions";
-import { signupStatus, signinStatus } from "../../../store/reducers/auth";
+import { signupStatus, signinStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 
 let stubInitialState = {
+    collection: {},
     auth: {
         signupStatus: signupStatus.NONE,
         signinStatus: signinStatus.NONE,
@@ -163,6 +164,29 @@ describe("<IntroModal />", () => {
     });
 
 
+    it("should set state properly when wrong email format", () => {
+        const component = mount(introModal);
+        const introModalInstance = component.find(IntroModal.WrappedComponent).instance();
+
+        const openButton = component.find(".signup-open-button").hostNodes();
+        openButton.simulate("click");
+
+        expect(introModalInstance.state.isSignupOpen).toBe(true);
+
+        let wrapper = component.find(".username-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "my_username" } });
+        wrapper = component.find(".password-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "my_password" } });
+        wrapper = component.find(".email-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "my_email@wrongformat" } });
+
+        const signupButton = component.find(".signup-button").hostNodes();
+        signupButton.simulate("click");
+
+        expect(introModalInstance.state.signupStatus).toBe(signupStatus.WRONG_EMAIL_FORMAT);
+    });
+
+
     it("should set state properly on signin inputs", () => {
         const component = mount(introModal);
         const introModalInstance = component.find(IntroModal.WrappedComponent).instance();
@@ -218,6 +242,7 @@ describe("<IntroModal />", () => {
                 signupStatus: signupStatus.WAITING,
                 signinStatus: signinStatus.NONE,
             },
+            collection: {},
             paper: {},
         };
         let component = mount(makeIntroModal(stubInitialState));
@@ -243,6 +268,7 @@ describe("<IntroModal />", () => {
                 signupStatus: signupStatus.SUCCESS,
                 signinStatus: signinStatus.NONE,
             },
+            collection: {},
             paper: {},
         };
         component = mount(makeIntroModal(stubInitialState));
@@ -268,6 +294,7 @@ describe("<IntroModal />", () => {
                 signupStatus: signupStatus.DUPLICATE_EMAIL,
                 signinStatus: signinStatus.NONE,
             },
+            collection: {},
             paper: {},
         };
         component = mount(makeIntroModal(stubInitialState));
@@ -294,6 +321,7 @@ describe("<IntroModal />", () => {
                 signupStatus: signupStatus.DUPLICATE_USERNAME,
                 signinStatus: signinStatus.NONE,
             },
+            collection: {},
             paper: {},
         };
         component = mount(makeIntroModal(stubInitialState));
@@ -322,6 +350,7 @@ describe("<IntroModal />", () => {
                 signupStatus: signupStatus.NONE,
                 signinStatus: signinStatus.WAITING,
             },
+            collection: {},
             paper: {},
         };
         let component = mount(makeIntroModal(stubInitialState));
@@ -345,6 +374,7 @@ describe("<IntroModal />", () => {
                 signupStatus: signupStatus.NONE,
                 signinStatus: signinStatus.SUCCESS,
             },
+            collection: {},
             paper: {},
         };
         component = mount(makeIntroModal(stubInitialState));
@@ -368,6 +398,7 @@ describe("<IntroModal />", () => {
                 signupStatus: signupStatus.NONE,
                 signinStatus: signinStatus.USER_NOT_EXIST,
             },
+            collection: {},
             paper: {},
         };
         component = mount(makeIntroModal(stubInitialState));
@@ -393,6 +424,7 @@ describe("<IntroModal />", () => {
                 signupStatus: signupStatus.NONE,
                 signinStatus: signinStatus.WRONG_PW,
             },
+            collection: {},
             paper: {},
         };
         component = mount(makeIntroModal(stubInitialState));

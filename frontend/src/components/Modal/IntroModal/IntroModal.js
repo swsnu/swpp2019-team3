@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Modal, FormControl, Button } from "react-bootstrap";
 import { authActions } from "../../../store/actions";
-import { signupStatus, signinStatus } from "../../../store/reducers/auth";
+import { signupStatus, signinStatus } from "../../../constants/constants";
 import "./IntroModal.css";
 
 class IntroModal extends Component {

@@ -1,7 +1,10 @@
 import React, { Component } from "react";
-import Button from "react-bootstrap/Button";
+import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
+
 import "./PaperSpec.css";
+import SVG from "../../svg";
+import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
 
 class PaperSpec extends Component {
     constructor(props) {
@@ -36,17 +39,22 @@ class PaperSpec extends Component {
     render() {
         let addButton = null;
         if (this.props.addButtonExists) {
-            addButton = <Button className="add-button">Add</Button>;
+            addButton = <AddPaperModal className="add-button" id={this.props.id} history={this.props.history} />;
         }
+
         return (
             <div className="paperspec">
-                <h2 id="title">{this.props.title}</h2>
-                <h3 id="date">{this.props.date}</h3>
-                <h3 id="authors">{this.props.authors}</h3>
-                <h3 id="keywords">{this.props.keywords}</h3>
+                <div className="paperInfo">
+                    <h2 id="title">{this.props.title}</h2>
+                    <h3 id="date">{this.props.date}</h3>
+                    <Button className="url-button" onClick={() => window.open(this.props.link)}>URL</Button>
+                    <h3 id="authors">{this.props.authors}</h3>
+                    <h3 id="keywords">{this.props.keywords}</h3>
+                </div>
                 <div className="buttons">
-                    <Button className="like-button" onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
-                        {this.props.likeCount}
+                    <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
+                        <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>
+                        {this.state.likeCount}
                     </Button>
                     {addButton}
                 </div>
@@ -60,6 +68,8 @@ class PaperSpec extends Component {
 }
 
 PaperSpec.propTypes = {
+    history: PropTypes.objectOf(PropTypes.any),
+    id: PropTypes.number,
     title: PropTypes.string,
     abstract: PropTypes.string,
     date: PropTypes.string,
@@ -68,9 +78,12 @@ PaperSpec.propTypes = {
     likeCount: PropTypes.number,
     isLiked: PropTypes.bool,
     addButtonExists: PropTypes.bool,
+    link: PropTypes.string,
 };
 
 PaperSpec.defaultProps = {
+    history: null,
+    id: -1,
     title: "",
     abstract: "",
     date: "",
@@ -79,6 +92,7 @@ PaperSpec.defaultProps = {
     likeCount: 0,
     isLiked: false,
     addButtonExists: false,
+    link: "",
 };
 
 export default PaperSpec;

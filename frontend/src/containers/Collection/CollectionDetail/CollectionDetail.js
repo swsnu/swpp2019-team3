@@ -54,6 +54,7 @@ class CollectionDetail extends Component {
 
     paperCardMaker = (paper) => (
         <PaperCard
+          key={paper.id}
           source={paper.source}
           id={paper.id}
           user={paper.user}
@@ -176,8 +177,8 @@ CollectionDetail.propTypes = {
             user: PropTypes.string,
             title: PropTypes.string,
             date: PropTypes.string,
-            authors: PropTypes.string,
-            keywords: PropTypes.string,
+            authors: PropTypes.array,
+            keywords: PropTypes.array,
             likeCount: PropTypes.number,
             reviewCount: PropTypes.number,
             isLiked: PropTypes.bool,
@@ -212,8 +213,8 @@ CollectionDetail.defaultProps = {
                 user: "Testing Module",
                 title: "title:test",
                 date: "date:111111",
-                authors: "author:test",
-                keywords: "keywords:test",
+                authors: [{ first_name: "first", last_name: "last" }],
+                keywords: ["keywords:test"],
                 likeCount: 3,
                 reviewCount: 6,
                 isLiked: false,
@@ -224,8 +225,8 @@ CollectionDetail.defaultProps = {
                 user: "Testing Module",
                 title: "title:test2",
                 date: "date:111111",
-                authors: "author:test",
-                keywords: "keywords:test",
+                authors: [{ first_name: "first", last_name: "last" }],
+                keywords: ["keywords:test"],
                 likeCount: 3,
                 reviewCount: 6,
                 isLiked: false,
@@ -236,8 +237,8 @@ CollectionDetail.defaultProps = {
                 user: "Testing Module",
                 title: "title:test3",
                 date: "date:111111",
-                authors: "author:test",
-                keywords: "keywords:test",
+                authors: [{ first_name: "first", last_name: "last" }],
+                keywords: ["keywords:test"],
                 likeCount: 3,
                 reviewCount: 6,
                 isLiked: false,
@@ -248,8 +249,8 @@ CollectionDetail.defaultProps = {
                 user: "Testing Module",
                 title: "title:test4",
                 date: "date:111111",
-                authors: "author:test",
-                keywords: "keywords:test",
+                authors: [{ first_name: "first", last_name: "last" }],
+                keywords: ["keywords:test"],
                 likeCount: 3,
                 reviewCount: 6,
                 isLiked: false,
