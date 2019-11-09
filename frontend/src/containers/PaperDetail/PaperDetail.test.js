@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import PaperDetail from "./PaperDetail";
 import { paperActions } from "../../store/actions";
 import { getPaperStatus, collectionStatus } from "../../constants/constants";
-import { getMockStore, getMockComponent, mockComponent } from "../../test-utils/mocks";
+import { getMockStore } from "../../test-utils/mocks";
 
 
 let stubInitialState = {

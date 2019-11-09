@@ -111,8 +111,8 @@ describe("<CollectionList />", () => {
                         numPapers: 14,
                         numReplies: 15,
                         count: {
-                            users:0,
-                            papers:0,
+                            users: 0,
+                            papers: 0,
                         },
                     },
                     {
@@ -124,8 +124,8 @@ describe("<CollectionList />", () => {
                         numPapers: 14,
                         numReplies: 15,
                         count: {
-                            users:0,
-                            papers:0,
+                            users: 0,
+                            papers: 0,
                         },
                     },
                 ],
@@ -135,7 +135,7 @@ describe("<CollectionList />", () => {
         wrapper.update();
         const wrapperLeft = wrapper.find("#collectionCardsLeft");
         const wrapperRight = wrapper.find("#collectionCardsRight");
-        expect(wrapperLeft.children().length).toBe(1); 
-        expect(wrapperRight.children().length).toBe(1); 
-    })
+        expect(wrapperLeft.children().length).toBe(1);
+        expect(wrapperRight.children().length).toBe(1);
+    });
 });

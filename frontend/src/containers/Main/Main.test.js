@@ -1,10 +1,10 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
-import Main from "./Main";
-import { getMockStore } from "../../test-utils/mocks";
 import { Provider } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
 import { Route, Switch } from "react-router-dom";
+import { getMockStore } from "../../test-utils/mocks";
+import Main from "./Main";
 import { collectionStatus } from "../../constants/constants";
 import { history } from "../../store/store";
 
@@ -46,7 +46,6 @@ const stubInitialState = {
 };
 
 const mockStore = getMockStore(stubInitialState);
-const mockPromise = new Promise((resolve) => { resolve(); });
 
 describe("<Main />", () => {
     let main;
@@ -57,13 +56,13 @@ describe("<Main />", () => {
                 <ConnectedRouter history={history}>
                     <Switch>
                         <Route
-                        path="/"
-                        exact
-                        render={() => (
-                            <div>
-                                <Main location={{ pathname: "/paper_id=1" }} />
-                            </div>
-                        )}
+                          path="/"
+                          exact
+                          render={() => (
+                              <div>
+                                  <Main location={{ pathname: "/paper_id=1" }} />
+                              </div>
+                          )}
                         />
                     </Switch>
                 </ConnectedRouter>
@@ -74,7 +73,7 @@ describe("<Main />", () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
-        
+
     it("should render without errors", () => {
         const component = shallow(<Main />);
         const wrapper = component.find(".main");
@@ -142,8 +141,8 @@ describe("<Main />", () => {
         wrapper.update();
         const wrapperLeft = wrapper.find(".left");
         const wrapperRight = wrapper.find(".right");
-        expect(wrapperLeft.children().length).toBe(3); 
-        expect(wrapperRight.children().length).toBe(3); 
+        expect(wrapperLeft.children().length).toBe(3);
+        expect(wrapperRight.children().length).toBe(3);
     });
 
     it("should not make feedsLeft and feedsRight if wrong type", () => {
@@ -178,7 +177,7 @@ describe("<Main />", () => {
         wrapper.update();
         const wrapperLeft = wrapper.find(".left");
         const wrapperRight = wrapper.find(".right");
-        expect(wrapperLeft.children().length).toBe(0);  
-        expect(wrapperRight.children().length).toBe(0); 
+        expect(wrapperLeft.children().length).toBe(0);
+        expect(wrapperRight.children().length).toBe(0);
     });
 });

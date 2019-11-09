@@ -15,7 +15,7 @@ class AddPaperModal extends Component {
         super(props);
         this.state = {
             addPaperCollectionStatus: collectionStatus.NONE,
-            makeNewCollectionStatus: collectionStatus.NONE,
+            // makeNewCollectionStatus: collectionStatus.NONE,
             isAddPaperOpen: false,
             checkedCollections: [],
             collections: [],
@@ -28,10 +28,10 @@ class AddPaperModal extends Component {
     }
 
     componentDidMount() {
-        this.props.onGetCollections({id: 1})
-        .then(() => {
-            this.setState({collections: this.props.collectionList});
-        });
+        this.props.onGetCollections({ id: 1 })
+            .then(() => {
+                this.setState({ collections: this.props.collectionList });
+            });
     }
 
     openAddPaperHandler() {
@@ -54,7 +54,7 @@ class AddPaperModal extends Component {
     clickCancelButtonHandler() {
         this.setState({
             addPaperCollectionStatus: collectionStatus.NONE,
-            makeNewCollectionStatus: collectionStatus.NONE,
+            // makeNewCollectionStatus: collectionStatus.NONE,
             isAddPaperOpen: false,
             checkedCollections: [],
             collectionName: "",
@@ -63,22 +63,23 @@ class AddPaperModal extends Component {
 
     clickAddButtonHandler() {
         if (this.state.collectionName !== "") {
-            this.props.onMakeNewCollection({title: this.state.collectionName, text: " "})
-            .then(() => {
-                this.state.checkedCollections.push(this.props.selectedCollection);
-            }
-            )
+            this.props.onMakeNewCollection({ title: this.state.collectionName, text: " " })
+                .then(() => {
+                    this.state.checkedCollections.push(this.props.selectedCollection);
+                });
         }
 
         if (this.state.checkedCollections.length >= 1) {
-            this.props.onAddPaper({id: this.props.id, collection_ids: JSON.stringify(this.state.checkedCollections) })
-            .then(()=>{
-                this.setState({
-                    addPaperCollectionStatus: collectionStatus.SUCCESS,
-                })
+            this.props.onAddPaper({
+                id: this.props.id,
+                collection_ids: JSON.stringify(this.state.checkedCollections),
             })
+                .then(() => {
+                    this.setState({
+                        addPaperCollectionStatus: collectionStatus.SUCCESS,
+                    });
+                });
         }
-
     }
 
     render() {
@@ -88,7 +89,7 @@ class AddPaperModal extends Component {
         }
 
         let collectionEntries = null;
-        if ( this.state.collections.length >= 1) {
+        if (this.state.collections.length >= 1) {
             collectionEntries = this.state.collections.map((collection) => (
                 <CollectionEntry
                   key={collection.id}
@@ -149,15 +150,15 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     onGetCollections: (userId) => dispatch(
-        collectionActions.getCollectionsByUserId(userId)
+        collectionActions.getCollectionsByUserId(userId),
     ),
     onMakeNewCollection: (collection) => dispatch(
-        collectionActions.makeNewCollection(collection)
+        collectionActions.makeNewCollection(collection),
     ),
     onAddPaper: (collectionsAndPaper) => dispatch(
-        collectionActions.addCollectionPaper(collectionsAndPaper)
+        collectionActions.addCollectionPaper(collectionsAndPaper),
     ),
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddPaperModal);
 
@@ -168,6 +169,7 @@ AddPaperModal.propTypes = {
     selectedCollection: PropTypes.objectOf(PropTypes.any),
     onGetCollections: PropTypes.func,
     onMakeNewCollection: PropTypes.func,
+    onAddPaper: PropTypes.func,
     id: PropTypes.number,
 };
 
@@ -177,7 +179,6 @@ AddPaperModal.defaultProps = {
     selectedCollection: {},
     onGetCollections: () => {},
     onMakeNewCollection: () => {},
+    onAddPaper: () => {},
     id: 0,
 };
-
-
