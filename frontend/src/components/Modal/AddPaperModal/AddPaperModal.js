@@ -65,10 +65,13 @@ class AddPaperModal extends Component {
         if (this.state.collectionName !== "") {
             this.props.onMakeNewCollection({ title: this.state.collectionName, text: " " })
                 .then(() => {
-                    this.setState({                    
+                    this.setState({
                         makeNewCollectionStatus: collectionStatus.SUCCESS,
-                    })
-                    this.props.onAddPaper({id: this.props.id, collection_ids: [this.props.selectedCollection.id]})
+                    });
+                    this.props.onAddPaper({
+                        id: this.props.id,
+                        collection_ids: [this.props.selectedCollection.id],
+                    });
                 });
         }
 
@@ -87,8 +90,8 @@ class AddPaperModal extends Component {
 
     render() {
         let gotoModal = null;
-        if (this.state.addPaperCollectionStatus === collectionStatus.SUCCESS ||
-            this.state.makeNewCollectionStatus === collectionStatus.SUCCESS ) {
+        if (this.state.addPaperCollectionStatus === collectionStatus.SUCCESS
+            || this.state.makeNewCollectionStatus === collectionStatus.SUCCESS) {
             gotoModal = <GoMyCollectionsModal openTrigger history={this.props.history} />;
         }
 
