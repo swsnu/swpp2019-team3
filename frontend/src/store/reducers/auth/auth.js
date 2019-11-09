@@ -1,21 +1,5 @@
 import { authConstants } from "../../actions/actionTypes";
-
-export const signupStatus = {
-    NONE: "NONE",
-    WRONG_EMAIL_FORMAT: "WRONG_EMAIL_FORMAT",
-    WAITING: "WAITING",
-    SUCCESS: "SUCCESS",
-    DUPLICATE_USERNAME: "DUPLICATE_USERNAME",
-    DUPLICATE_EMAIL: "DUPLICATE_EMAIL",
-};
-
-export const signinStatus = {
-    NONE: "NONE",
-    WAITING: "WAITING",
-    SUCCESS: "SUCCESS",
-    USER_NOT_EXIST: "USER_NOT_EXIST",
-    WRONG_PW: "WRONG_PW",
-};
+import { signupStatus, signinStatus } from "../../../constants/constants";
 
 const initialState = {
     signupStatus: signupStatus.NONE,

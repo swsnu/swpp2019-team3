@@ -1,5 +1,6 @@
-import reducer, { signupStatus, signinStatus } from "./auth";
+import reducer from "./auth";
 import { authConstants } from "../../actions/actionTypes";
+import { signupStatus, signinStatus } from "../../../constants/constants";
 
 const stubSigningUpUser = {
     email: "my_email@papersfeed.com",

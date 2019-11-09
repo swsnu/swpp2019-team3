@@ -1,11 +1,5 @@
 import { paperConstants } from "../../actions/actionTypes";
-
-export const getPaperStatus = {
-    NONE: "NONE",
-    WAITING: "WAITING",
-    SUCCESS: "SUCCESS",
-    FAILURE: "FAILURE",
-};
+import { getPaperStatus } from "../../../constants/constants";
 
 const initialState = {
     getPaperStatus: getPaperStatus.NONE,

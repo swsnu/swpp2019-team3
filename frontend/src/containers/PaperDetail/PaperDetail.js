@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import { PaperSpec, ReviewCard } from "../../components";
 import { paperActions } from "../../store/actions";
-import { getPaperStatus } from "../../store/reducers/paper/paper";
+import { getPaperStatus } from "../../constants/constants";
 import "./PaperDetail.css";
 
 class PaperDetail extends Component {
