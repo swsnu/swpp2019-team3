@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, Image } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 import "./ReviewCard.css";
 
@@ -52,8 +52,8 @@ class ReviewCard extends Component {
                         <Card.Text>{this.props.author}</Card.Text>
                     </Card.Body>
                     <Card.Footer className="footer">
-                        <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickReviewCardUnlikeHandler : this.clickReviewCardLikeHandler}> <div className="heart-image"><SVG  name="heart" height="70%" width="70%"/></div>{this.state.likeCount}</Button>
-                        <Button className="reply-button" variant="light" href={`/review_id=${this.props.id}`}><div className="reply-image"><SVG  name="zoom" height="70%" width="70%"/></div>{this.props.replyCount}</Button>
+                        <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickReviewCardUnlikeHandler : this.clickReviewCardLikeHandler}> <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
+                        <Button className="reply-button" variant="light" href={`/review_id=${this.props.id}`}><div className="reply-image"><SVG name="zoom" height="70%" width="70%" /></div>{this.props.replyCount}</Button>
                     </Card.Footer>
                 </Card>
             </div>

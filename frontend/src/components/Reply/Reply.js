@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import {
-    Modal, FormControl, Button, Image,
+    Modal, FormControl, Button,
 } from "react-bootstrap";
 
 import "./Reply.css";
@@ -99,7 +99,7 @@ class Reply extends Component {
                             <div className="content">{this.props.content}</div>
                             <div className="buttons">
                                 <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickReplyUnlikeButtonHandler : this.clickReplyLikeButtonHandler}>
-                                <div className="heart-image"><SVG  name="heart" height="70%" width="70%"/></div>{this.state.likeCount}
+                                    <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}
                                 </Button>
                                 {this.props.authorId === 0
                                     ? <Button className="edit-button" onClick={this.clickReplyEditButtonHandler}>Edit</Button> : null }

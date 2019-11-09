@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import { Button, Image } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 import "./PaperSpec.css";
 import SVG from "../../svg";
 import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
-import heart from "../../heart.png";
 
 class PaperSpec extends Component {
     constructor(props) {
@@ -69,6 +68,7 @@ class PaperSpec extends Component {
 }
 
 PaperSpec.propTypes = {
+    history: PropTypes.objectOf(PropTypes.any),
     id: PropTypes.number,
     title: PropTypes.string,
     abstract: PropTypes.string,
@@ -82,6 +82,7 @@ PaperSpec.propTypes = {
 };
 
 PaperSpec.defaultProps = {
+    history: null,
     id: -1,
     title: "",
     abstract: "",

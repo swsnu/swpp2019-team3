@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-import { Card, Button, Image } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 import "./PaperCard.css";
-import heart from "../../heart.png";
-import talk from "../../talk.png";
-import { AddPaperModal } from "../..";
+import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
 import SVG from "../../svg";
 
 class PaperCard extends Component {
@@ -92,8 +90,8 @@ PaperCard.propTypes = {
     user: PropTypes.string,
     title: PropTypes.string,
     date: PropTypes.string,
-    authors: PropTypes.array,
-    keywords: PropTypes.array,
+    authors: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
+    keywords: PropTypes.arrayOf(PropTypes.string),
     likeCount: PropTypes.number,
     reviewCount: PropTypes.number,
     isLiked: PropTypes.bool,
