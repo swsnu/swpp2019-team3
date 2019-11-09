@@ -1,13 +1,9 @@
 import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
-import { ConnectedRouter } from "connected-react-router";
-import { Route, Switch } from "react-router-dom";
 import { collectionStatus } from "../../../constants/constants";
 import AddPaperModal from "./AddPaperModal";
-import { getMockStore } from "../../../test-utils/mocks";
-import { history } from "../../../store/store";
-import { mockComponent } from "../../../test-utils/mocks";
+import { getMockStore, mockComponent } from "../../../test-utils/mocks";
 
 
 const stubInitialState = {
@@ -46,7 +42,6 @@ const stubInitialState = {
     },
 };
 
-const mockStore = getMockStore(stubInitialState);
 const mockHistory = { push: jest.fn() };
 const makeAddPaperModal = (initialState) => (
     <Provider store={getMockStore(initialState)}>
