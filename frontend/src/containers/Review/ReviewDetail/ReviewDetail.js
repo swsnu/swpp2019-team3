@@ -16,32 +16,28 @@ class ReviewDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            authorId: 1,
-            paperId: 4,
-            id: 2,
-            title: "What computer-lovers should read",
-            content: "I think everyone should read this paper. I could learn so many things from this.",
-            author: "Alpha",
-            likeCount: 14,
+            authorId: 0,
+            paperId: 1,
+            id: 5,
+            title: "review_title1",
+            content: "review content",
+            author: "review_author1",
+            likeCount: 5,
             newReply: "",
             isLiked: false,
             replies: [{
                 id: 1,
                 authorId: 0,
-                author: "Girin",
-                review: 2,
-                likeCount: 7,
-                isLiked: false,
-                content: "You are right!",
+                author: "dfdf",
+                review: 5,
+                content: "dffffffffffffff",
             },
             {
                 id: 2,
-                authorId: 4,
-                author: "Goyangineun Yaong",
-                review: 2,
-                likeCount: 4,
-                isLiked: true,
-                content: "Interesting! I want to follow you",
+                authorId: 1,
+                author: "dfdffer",
+                review: 5,
+                content: "dffffffffffffff",
             }],
             replyCount: 2,
         };
@@ -114,8 +110,8 @@ class ReviewDetail extends Component {
                             </div>
                             <div className="reply">
                                 <div className="review-extra">
-                                    <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%"/></div>{this.state.likeCount}</Button>
-                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" hegiht="60%" width="60%"/></div>{this.state.replyCount}</Button>
+                                    <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
+                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" hegiht="60%" width="60%" /></div>{this.state.replyCount}</Button>
                                     {this.state.authorId === 0
                                         ? <Button className="edit-button" onClick={this.clickEditButtonHandler}>Edit</Button>
 
