@@ -20,7 +20,6 @@ export const signinStatus = {
 const initialState = {
     signupStatus: signupStatus.NONE,
     signinStatus: signinStatus.NONE,
-    me: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -32,7 +31,7 @@ const reducer = (state = initialState, action) => {
     case authConstants.SIGNUP_FAILURE_DUPLICATE_EMAIL:
         return { ...state, signupStatus: signupStatus.DUPLICATE_EMAIL };
     case authConstants.SIGNIN_SUCCESS:
-        return { ...state, signinStatus: signinStatus.SUCCESS, me: action.target };
+        return { ...state, signinStatus: signinStatus.SUCCESS };
     case authConstants.SIGNIN_FAILURE_USER_NOT_EXIST:
         return { ...state, signinStatus: signinStatus.USER_NOT_EXIST };
     case authConstants.SIGNIN_FAILURE_WRONG_PW:
