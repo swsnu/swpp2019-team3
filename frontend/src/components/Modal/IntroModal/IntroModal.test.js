@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 
 import IntroModal from "./IntroModal";
 import { authActions } from "../../../store/actions";
-import { signupStatus, signinStatus } from "../../../store/reducers/auth";
+import { signupStatus, signinStatus } from "../../../store/reducers/auth/auth";
 import { getMockStore } from "../../../test-utils/mocks";
 
 let stubInitialState = {

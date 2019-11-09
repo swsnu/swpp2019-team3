@@ -40,8 +40,8 @@ SVG.propTypes = {
 };
 
 SVG.defaultProps = {
-    width: 0,
-    height: 0,
+    width: "",
+    height: "",
     color: "",
     name: "",
 };
