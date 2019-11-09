@@ -1,0 +1,114 @@
+.CollectionDetailContent {
+    min-height: 1000px;
+    background: rgb(242,243,247);
+    margin-left: 18%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.CollectionDetailContent .head {
+    width:92%;
+    margin-top: 5%;
+    font-weight: bold;
+    font-size: 200%;
+    margin-bottom: 2%;
+
+}
+
+.CollectionInfo {
+    width: 92%;
+    margin-top: 1%;
+    margin-left: 1%;
+    margin-right: 3%;
+    display: flex;
+    flex-direction: column;
+}
+
+.CollectionInfo #collectionName {
+    margin-right: 4%;
+}
+
+.CollectionInfo #collectionInfoMid {
+    width: 92%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    margin-left: 6%;
+    display: inline-flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.CollectionInfo #collectionDescription #date {
+    margin-left: 1%;
+    margin-right: 5%;
+    display: flex;
+    justify-content: space-between;
+    font-style: italic;
+}
+
+.CollectionInfo #collectionDescription #descriptionBox {
+    margin-left: 1%;
+    margin-right: 5%;
+    text-align: left;
+}
+
+.itemList {
+    margin-left: 1%;
+    margin-right: 5%;
+    background: rgb(255,255,255);
+}
+
+.itemList .reply-tab {
+    background: white;
+}
+
+.itemList #paperCards {
+    width: 100%;
+    height: 100%;
+    margin: 15px;
+    
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: row wrap;
+    align-items: flex-start;
+}
+
+.itemList #paperCardsLeft {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.itemList #paperCardsRight {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.itemList #replies {
+    display: flex;
+    background: white;
+    flex-direction: column;
+    margin: 15px;
+}
+
+.itemList #replies #createNewReply {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.itemList #replies #createNewReply #newReplyContentInput {
+    width: 1000px;
+}
+
+.itemList #replies #replyList {
+
+    background: rgb(242,243,247);
+    margin: 10px;
+}

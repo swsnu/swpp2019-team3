@@ -1,15 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import {
-    Form, Button, Card, Image,
-} from "react-bootstrap";
+import { Form, Button, Card } from "react-bootstrap";
 
 import {
     Reply,
 } from "../../../components";
 import "./ReviewDetail.css";
-import heart from "../../../components/heart.png";
-import talk from "../../../components/talk.png";
 import SVG from "../../../components/svg";
 
 class ReviewDetail extends Component {
@@ -121,7 +117,7 @@ class ReviewDetail extends Component {
                                     ) : null}
                                 </div>
                                 <Form className="new-reply">
-                                    <Form.Label className="username">Girin </Form.Label>
+                                    <Form.Label className="username">Username </Form.Label>
                                     <Form.Control className="reply-input" type="text" bsPrefix="reply-input" value={this.state.newReply} onChange={this.handleChange} />
                                     <Button className="new-reply-button" onClick={this.clickReplyAddButtonHandler}>Add</Button>
                                 </Form>

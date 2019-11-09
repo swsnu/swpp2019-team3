@@ -311,7 +311,6 @@ describe("<IntroModal />", () => {
         signupButton = component.find(".signup-button").hostNodes();
         signupButton.simulate("click");
 
-        component.update();
         introModalInstance = component.find(IntroModal.WrappedComponent).instance();
         expect(introModalInstance.state.signupStatus).toBe(signupStatus.NONE);
         // FIXME: actually, it should be 'DUPLICATE_EMAIL'!

@@ -6,6 +6,8 @@ import PaperDetail from "./PaperDetail/PaperDetail";
 import ReviewControl from "./Review/ReviewControl/ReviewControl";
 import ProfileDetail from "./Profile/ProfileDetail/ProfileDetail";
 import ProfileEdit from "./Profile/ProfileEdit/ProfileEdit";
+import CollectionDetail from "./Collection/CollectionDetail/CollectionDetail";
+import CollectionList from "./Collection/CollectionList/CollectionList";
 
 export {
     Intro,
@@ -15,4 +17,6 @@ export {
     ReviewControl,
     ProfileDetail,
     ProfileEdit,
+    CollectionDetail,
+    CollectionList,
 };
