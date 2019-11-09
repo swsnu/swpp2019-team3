@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { PaperSpec, ReviewCard } from "../../components";
 import { paperActions } from "../../store/actions";
 import { getPaperStatus } from "../../constants/constants";
-import "./PaperDetail.css";
+// import "./PaperDetail.css";
 
 class PaperDetail extends Component {
     constructor(props) {

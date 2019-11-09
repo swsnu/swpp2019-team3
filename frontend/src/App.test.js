@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import App from "./App";
 import { getMockStore, history } from "./test-utils/mocks";
 
-const mockStore = getMockStore({ auth: {}, paper: {} });
+const mockStore = getMockStore({ auth: {}, paper: {}, collection: {} });
 
 describe("App", () => {
     let app;
