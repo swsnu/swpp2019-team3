@@ -7,7 +7,7 @@ import { signoutStatus } from "../../constants/constants";
 import { getMockStore } from "../../test-utils/mocks";
 import Header from "./Header";
 
-const stubInitialState = {
+let stubInitialState = {
     collection: {},
     auth: {
         singoutStatus: signoutStatus.NONE,
@@ -40,5 +40,20 @@ describe("<Header />", () => {
         wrapper.simulate("change", event);
         const headerInstance = component.find(Header.WrappedComponent).instance();
         expect(headerInstance.state.searchKeyword).toEqual("ABC");
+    });
+
+    it("should redirect when signout succeed", () => {
+        stubInitialState = {
+            auth: {
+                signoutStatus: signoutStatus.SUCCESS,
+            },
+            collection: {},
+            paper: {},
+        };
+        const component = mount(makeHeader(stubInitialState));
+        const wrapper = component.find(".signout-button").hostNodes();
+        wrapper.simulate("click");
+
+        expect(mockHistory.push).toHaveBeenCalledTimes(0);
     });
 });
