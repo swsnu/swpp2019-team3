@@ -1,5 +1,5 @@
 import reducer, { getPaperStatus } from "./paper";
-import { paperConstants } from "../actions/actionTypes";
+import { paperConstants } from "../../actions/actionTypes";
 
 const stubPaper = {
     title: "paper_title",

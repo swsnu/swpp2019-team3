@@ -1,4 +1,4 @@
-import { authConstants } from "../actions/actionTypes";
+import { authConstants } from "../../actions/actionTypes";
 
 export const signupStatus = {
     NONE: "NONE",

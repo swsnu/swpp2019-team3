@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { authConstants } from "./actionTypes";
+import { authConstants } from "../actionTypes";
 
 const signupSuccess = (user) => ({
     type: authConstants.SIGNUP_SUCCESS,

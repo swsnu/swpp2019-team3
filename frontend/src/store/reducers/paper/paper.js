@@ -1,4 +1,4 @@
-import { paperConstants } from "../actions/actionTypes";
+import { paperConstants } from "../../actions/actionTypes";
 
 export const getPaperStatus = {
     NONE: "NONE",
