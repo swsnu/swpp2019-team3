@@ -1,13 +1,17 @@
 import axios from "axios";
 
 import { authActions } from "..";
-import { signupStatus, signinStatus } from "../../../constants/constants";
+import {
+    signupStatus, signinStatus, signoutStatus, getMeStatus,
+} from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 
 const stubInitialState = {
     auth: {
         signupStatus: signupStatus.NONE,
         signinStatus: signinStatus.NONE,
+        signoutStatus: signoutStatus.NONE,
+        getMeStatus: getMeStatus.NONE,
     },
     collection: {},
     paper: {},
