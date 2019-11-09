@@ -1,6 +1,6 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
-import json #pylint: disable=unused-import
+import json
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Exists, OuterRef, Count
@@ -145,15 +145,15 @@ def select_collection(args):
 
 def select_collection_user(args):
     """Select User's Collections"""
-    #is_parameter_exists([
-    #    constants.ID
-    #], args)
+    is_parameter_exists([
+        constants.ID
+    ], args)
 
     # Request User
     request_user = args[constants.USER]
 
     # User Id
-    user_id = request_user.id
+    user_id = args[constants.ID]
 
     # User's Collections
     collection_ids = CollectionUser.objects.filter(user_id=user_id).values_list('collection_id', flat=True)
@@ -181,7 +181,7 @@ def update_paper_collection(args):
     paper_id = args[constants.ID]
 
     # Collection IDs
-    collection_ids = args[constants.COLLECTION_IDS]
+    collection_ids = json.loads(args[constants.COLLECTION_IDS])
 
     # Containing Collections
     containing_collection_ids = __get_collections_contains_paper(paper_id, request_user)

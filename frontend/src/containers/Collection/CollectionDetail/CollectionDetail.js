@@ -243,7 +243,7 @@ CollectionDetail.propTypes = {
     onGetCollectionPapers: PropTypes.func,
     getCollectionStatus: PropTypes.string,
     selectedCollection: PropTypes.objectOf(PropTypes.any),
-    storedPapers: PropTypes.objectOf(PropTypes.any),
+    storedPapers: PropTypes.arrayOf(PropTypes.any),
 };
 
 CollectionDetail.defaultProps = {

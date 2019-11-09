@@ -1,13 +1,57 @@
 import React from "react";
 import { mount } from "enzyme";
-
-import AddPaperModal from "./AddPaperModal";
+import { Provider } from "react-redux";
+import { ConnectedRouter } from "connected-react-router";
+import { Route, Switch } from "react-router-dom";
 import { collectionStatus } from "../../../constants/constants";
+import AddPaperModal from "./AddPaperModal";
+import { getMockStore } from "../../../test-utils/mocks";
+import { history } from "../../../store/store";
 import { mockComponent } from "../../../test-utils/mocks";
 
+
+const stubInitialState = {
+    paper: {
+    },
+    auth: {},
+    collection: {
+        make: {
+            status: collectionStatus.NONE,
+            collection: {},
+            error: null,
+        },
+        list: {
+            status: collectionStatus.NONE,
+            list: [],
+            error: null,
+        },
+        edit: {
+            status: collectionStatus.NONE,
+            collection: {},
+            error: null,
+        },
+        delete: {
+            status: collectionStatus.NONE,
+            collection: {},
+            error: null,
+        },
+        selected: {
+            status: collectionStatus.NONE,
+            error: null,
+            collection: {},
+            papers: [],
+            members: [],
+            replies: [],
+        },
+    },
+};
+
+const mockStore = getMockStore(stubInitialState);
 const mockHistory = { push: jest.fn() };
-const makeAddPaperModal = () => (
-    <AddPaperModal history={mockHistory} />
+const makeAddPaperModal = (initialState) => (
+    <Provider store={getMockStore(initialState)}>
+        <AddPaperModal id={1} history={mockHistory} location={{ pathname: "/paper_id=1" }} />
+    </Provider>
 );
 
 jest.mock("../GoMyCollectionsModal/GoMyCollectionsModal", () => jest.fn(() => (mockComponent("GoMyCollectionsModal")())));
@@ -26,7 +70,7 @@ describe("<AddPaperModal />", () => {
     let addPaperModal;
 
     beforeEach(() => {
-        addPaperModal = makeAddPaperModal();
+        addPaperModal = makeAddPaperModal(stubInitialState);
     });
 
     afterEach(() => {
@@ -57,7 +101,7 @@ describe("<AddPaperModal />", () => {
 
     it("should open if adding paper or creating collection succeeds", () => {
         const component = mount(addPaperModal);
-        const addPaperModalInstance = component.find(AddPaperModal).instance();
+        const addPaperModalInstance = component.find("AddPaperModal").instance();
 
         const openButton = component.find(".addpaper-open-button").hostNodes();
         openButton.simulate("click");
@@ -73,7 +117,7 @@ describe("<AddPaperModal />", () => {
 
     it("should be closed if cancelButton is clicked", () => {
         const component = mount(addPaperModal);
-        const addPaperModalInstance = component.find(AddPaperModal).instance();
+        const addPaperModalInstance = component.find("AddPaperModal").instance();
 
         const openButton = component.find(".addpaper-open-button").hostNodes();
         openButton.simulate("click");
@@ -89,7 +133,7 @@ describe("<AddPaperModal />", () => {
 
     it("should set state properly on collectionName inputs", () => {
         const component = mount(addPaperModal);
-        const addPaperModalInstance = component.find(AddPaperModal).instance();
+        const addPaperModalInstance = component.find("AddPaperModal").instance();
 
         const openButton = component.find(".addpaper-open-button").hostNodes();
         openButton.simulate("click");
@@ -103,7 +147,7 @@ describe("<AddPaperModal />", () => {
 
     it("should render collection entries if it has collections", () => {
         const component = mount(addPaperModal);
-        const addPaperModalInstance = component.find(AddPaperModal).instance();
+        const addPaperModalInstance = component.find("AddPaperModal").instance();
 
         addPaperModalInstance.setState({
             collections: [{ id: 1, title: "collection_1" },
@@ -121,7 +165,7 @@ describe("<AddPaperModal />", () => {
 
     it("checkedCollections should reflect checking on collection entries", () => {
         const component = mount(addPaperModal);
-        const addPaperModalInstance = component.find(AddPaperModal).instance();
+        const addPaperModalInstance = component.find("AddPaperModal").instance();
 
         addPaperModalInstance.setState({
             collections: [{ id: 1, title: "collection_1" },

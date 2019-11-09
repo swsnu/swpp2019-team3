@@ -53,7 +53,6 @@ class CollectionCard extends Component {
 
                         <Button variant="light" id="like-button" className="like-button" onClick={this.state.isLiked ? this.clickCollectionCardUnlikeHandler : this.clickCollectionCardLikeHandler}>
                             <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>
-
                             {this.state.likeCount}
                         </Button>
 

@@ -84,7 +84,7 @@ CollectionList.propTypes = {
     // onMakeNewCollection: PropTypes.func,
     onGetCollections: PropTypes.func,
     // makeNewCollectionStatus: PropTypes.string,
-    storedCollections: PropTypes.objectOf(PropTypes.any),
+    storedCollections: PropTypes.arrayOf(PropTypes.any),
 };
 
 CollectionList.defaultProps = {
