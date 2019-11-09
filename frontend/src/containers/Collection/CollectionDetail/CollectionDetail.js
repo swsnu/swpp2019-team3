@@ -28,28 +28,8 @@ class CollectionDetail extends Component {
             isLiked: false,
             // members: [],
             replies: [],
-            papers: [{
-                source: "recently added",
-                id: 1,
-                user: "Girin",
-                title: "CERTIFIED LATTICE REDUCTION",
-                date: "2020-02-01",
-                authors: ["Espitau Thomas", "Joux Antoine"],
-                keywords: ["Combinational optimization Problems", "Facility Layout Problem", "Quadratic Assignment Problem"],
-                likeCount: 3,
-                reviewCount: 6,
-                isLiked: false,
-            }],
-            thisCollection: {
-                id: 2,
-                title: "Papers for tasty cat cans",
-                text: "Girin the Intelligent Cat's Paper Collection!",
-                creationDate: "2019-11-07",
-                lastUpdateDate: "2019-11-07",
-                count: { users: 0, papers: 0 },
-                isLiked: false,
-                amIMember: true,
-            },
+            papers: [],
+            thisCollection: {},
         };
     }
 
