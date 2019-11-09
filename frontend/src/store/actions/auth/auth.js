@@ -83,5 +83,5 @@ const getMeFailure = (error) => ({
 });
 
 export const getMe = () => (dispatch) => axios.get("/api/user/me")
-    .then((res) => dispatch(getMeSuccess(res.data)))
+    .then((res) => dispatch(getMeSuccess(res.data.data)))
     .catch((err) => dispatch(getMeFailure(err)));

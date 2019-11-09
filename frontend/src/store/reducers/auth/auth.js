@@ -21,7 +21,7 @@ const reducer = (state = initialState, action) => {
         return { ...state, signupStatus: signupStatus.DUPLICATE_EMAIL };
 
     case authConstants.SIGNIN_SUCCESS:
-        return { ...state, signinStatus: signinStatus.SUCCESS };
+        return { ...state, signinStatus: signinStatus.SUCCESS, me: action.target };
     case authConstants.SIGNIN_FAILURE_USER_NOT_EXIST:
         return { ...state, signinStatus: signinStatus.USER_NOT_EXIST };
     case authConstants.SIGNIN_FAILURE_WRONG_PW:
@@ -33,7 +33,6 @@ const reducer = (state = initialState, action) => {
         return { ...state, signoutStatus: signoutStatus.FAILURE };
 
     case authConstants.GETME_SUCCESS:
-        console.log(action.target);
         return { ...state, getMeStatus: getMeStatus.SUCCESS, me: action.target };
     case authConstants.GETME_FAILURE:
         return { ...state, getMeStatus: getMeStatus.FAILURE };

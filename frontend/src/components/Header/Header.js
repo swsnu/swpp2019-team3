@@ -48,6 +48,11 @@ class Header extends Component {
     }
 
     render() {
+        let username = null;
+        if (this.props.me) {
+            username = this.props.me.username;
+        }
+
         return (
             <div>
                 <Navbar className="header">
@@ -66,7 +71,7 @@ class Header extends Component {
                         <Dropdown>
                             <Dropdown.Toggle title="myaccount" className="myaccount-button">My Account</Dropdown.Toggle>
                             <Dropdown.Menu className="myaccount-menu">
-                                <Dropdown.Header>Username</Dropdown.Header>
+                                <Dropdown.Header>{username}</Dropdown.Header>
                                 <Dropdown.Item className="my-profile-button" href="/profile/user_id">My Profile</Dropdown.Item>
                                 <Dropdown.Item className="logout-button" onClick={this.clickSignoutButtonHandler}>Logout</Dropdown.Item>
                             </Dropdown.Menu>
@@ -79,6 +84,7 @@ class Header extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    me: state.auth.me,
     signoutStatus: state.auth.signoutStatus,
 });
 
@@ -89,12 +95,14 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
 
 Header.propTypes = {
+    me: PropTypes.objectOf(PropTypes.any),
     history: PropTypes.objectOf(PropTypes.any),
     onSignout: PropTypes.func,
     signoutStatus: PropTypes.string,
 };
 
 Header.defaultProps = {
+    me: null,
     history: null,
     onSignout: null,
     signoutStatus: signoutStatus.NONE,
