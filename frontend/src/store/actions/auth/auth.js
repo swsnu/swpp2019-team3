@@ -67,6 +67,21 @@ const signoutFailure = (error) => ({
     target: error,
 });
 
-export const signout = () => (dispatch) => axios.delete("api/session")
+export const signout = () => (dispatch) => axios.delete("/api/session")
     .then(() => dispatch(signoutSuccess()))
     .catch((err) => dispatch(signoutFailure(err)));
+
+
+const getMeSuccess = (user) => ({
+    type: authConstants.GETME_SUCCESS,
+    target: user,
+});
+
+const getMeFailure = (error) => ({
+    type: authConstants.GETME_FAILURE,
+    target: error,
+});
+
+export const getMe = () => (dispatch) => axios.get("/api/user/me")
+    .then((res) => dispatch(getMeSuccess(res.data)))
+    .catch((err) => dispatch(getMeFailure(err)));

@@ -32,6 +32,13 @@ export const signoutStatus = {
     FAILURE: "FAILURE",
 };
 
+export const getMeStatus = {
+    NONE: "NONE",
+    WAITING: "WAITING",
+    SUCCESS: "SUCCESS",
+    FAILURE: "FAILURE",
+};
+
 export const getPaperStatus = {
     NONE: "NONE",
     WAITING: "WAITING",

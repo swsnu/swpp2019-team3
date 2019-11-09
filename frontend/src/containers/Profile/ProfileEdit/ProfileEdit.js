@@ -26,7 +26,7 @@ class ProfileEdit extends Component {
             <div className="ProfileEdit">
                 <div className="ProfileEditContent">
                     <div className="EditDescArea">
-                        <h id="editDescTag">Your Description</h>
+                        <h3 id="editDescTag">Your Description</h3>
                         <textarea
                           id="editDescription"
                           rows="4"
