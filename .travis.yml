@@ -56,4 +56,5 @@ matrix:
     - coverage report --fail-under=90
     - coverage xml
     after_success:
+    - sonar-scanner
     - coveralls
