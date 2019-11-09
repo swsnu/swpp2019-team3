@@ -13,8 +13,6 @@ class PaperSpec extends Component {
         this.state = {
             isLiked: this.props.isLiked,
             likeCount: this.props.likeCount,
-            link3: "https://arxiv.org/pdf/1905.11743.pdf",
-            link500: "https://arxiv.org/pdf/1806.10993.pdf",
         };
         this.clickPaperSpecUnlikeHandler = this.clickPaperSpecUnlikeHandler.bind(this);
         this.clickPaperSpecLikeHandler = this.clickPaperSpecLikeHandler.bind(this);
@@ -44,25 +42,19 @@ class PaperSpec extends Component {
         if (this.props.addButtonExists) {
             addButton = <AddPaperModal className="add-button" id={this.props.id} history={this.props.history} />;
         }
-        let link = "";
-        if (this.props.id === 3) {
-            link = this.state.link3;
-        } else if (this.props.id === 500) {
-            link = this.state.link500;
-        }
 
         return (
             <div className="paperspec">
                 <div className="paperInfo">
                     <h2 id="title">{this.props.title}</h2>
                     <h3 id="date">{this.props.date}</h3>
-                    <Button className="url-button" onClick={() => window.open(link)}>URL</Button>
+                    <Button className="url-button" onClick={() => window.open(this.props.link)}>URL</Button>
                     <h3 id="authors">{this.props.authors}</h3>
                     <h3 id="keywords">{this.props.keywords}</h3>
                 </div>
                 <div className="buttons">
                     <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
-                    <div className="heart-image"><SVG  name="heart" height="70%" width="70%"/></div>
+                        <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>
                         {this.state.likeCount}
                     </Button>
                     {addButton}
@@ -86,6 +78,7 @@ PaperSpec.propTypes = {
     likeCount: PropTypes.number,
     isLiked: PropTypes.bool,
     addButtonExists: PropTypes.bool,
+    link: PropTypes.string,
 };
 
 PaperSpec.defaultProps = {
@@ -98,6 +91,7 @@ PaperSpec.defaultProps = {
     likeCount: 0,
     isLiked: false,
     addButtonExists: false,
+    link: "",
 };
 
 export default PaperSpec;

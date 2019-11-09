@@ -18,32 +18,7 @@ class PaperDetail extends Component {
             authorNames: "",
             keywords: "",
             date: "",
-            reviews: [
-                {
-                    id: 5,
-                    paperId: 1,
-                    title: "Ciao Churu is my favorite snack!",
-                    author: "Girin",
-                    likeCount: 56,
-                    replyCount: 6,
-                },
-                {
-                    id: 6,
-                    paperId: 1,
-                    title: "What computer-lovers should read",
-                    author: "Alpha",
-                    likeCount: 14,
-                    replyCount: 2,
-                },
-                {
-                    id: 7,
-                    paperId: 1,
-                    title: "Bring me tasty food Ningen!",
-                    author: "Girin",
-                    likeCount: 35,
-                    replyCount: 8,
-                },
-            ],
+            reviews: [],
         };
         this.reviewMaker = this.reviewMaker.bind(this);
     }
@@ -68,7 +43,6 @@ class PaperDetail extends Component {
                 }
                 if (this.props.selectedPaper.publication) {
                     this.setState({ date: this.props.selectedPaper.publication.date });
-                    this.setState({ keywords: "Combinational optimization Problems, Facility Layout Problem, Quadratic Assignment Problem" });
                 }
                 // FIXME: Please uncomment this block if onGetPaper can get keywords
                 /* if (this.props.selectedPaper.keywords) {
@@ -92,19 +66,14 @@ class PaperDetail extends Component {
     )
 
     render() {
-        let reviewCardsLeft = null;
-        let reviewCardsRight = null;
-        let reviewLength = 0;
-        if (this.props.selectedPaper.id === 3) {
-            reviewCardsLeft = this.state.reviews
-                .filter((x) => this.state.reviews.indexOf(x) % 2 === 0)
-                .map((review) => this.reviewMaker(review));
+        const reviewCardsLeft = this.state.reviews
+            .filter((x) => this.state.reviews.indexOf(x) % 2 === 0)
+            .map((review) => this.reviewMaker(review));
 
-            reviewCardsRight = this.state.reviews
-                .filter((x) => this.state.reviews.indexOf(x) % 2 === 1)
-                .map((review) => this.reviewMaker(review));
-            reviewLength = 3;
-        }
+        const reviewCardsRight = this.state.reviews
+            .filter((x) => this.state.reviews.indexOf(x) % 2 === 1)
+            .map((review) => this.reviewMaker(review));
+
         return (
             <div className="paperdetail-page">
                 <div className="paperdetail">
@@ -117,12 +86,13 @@ class PaperDetail extends Component {
                           authors={this.state.authorNames}
                           keywords={this.state.keywords}
                           likeCount={this.state.likeCount}
+                          reviewCount={this.state.reviews.length}
                           isLiked={this.props.selectedPaper.liked}
                           addButtonExists
                           history={this.props.history}
                         />
                         {/* FIXME: review-count should reflect this.state.reviewCount */}
-                        <h3 id="review-count">{reviewLength} reviews</h3>
+                        <h3 id="review-count">{this.state.reviews.length} reviews</h3>
                         <div className="reviewcards">
                             <div className="reviewcards-left">{reviewCardsLeft}</div>
                             <div className="reviewcards-right">{reviewCardsRight}</div>

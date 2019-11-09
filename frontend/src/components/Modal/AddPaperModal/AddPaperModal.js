@@ -64,14 +64,14 @@ class AddPaperModal extends Component {
         }
 
         let collectionEntries = null;
-        if (this.state.collections) {
+        if (this.state.collections.length > 1) {
             collectionEntries = this.state.collections.map((collection) => (
                 <CollectionEntry
                   key={collection.id}
                   id={collection.id}
                   title={collection.title}
-                  isChecked={this.state.checkedCollections.includes(collection.id)}
-                  checkHandler={() => this.checkHandler(collection)}
+                  ischecked={this.state.checkedCollections.includes(collection.id)}
+                  checkhandler={() => this.checkHandler(collection)}
                 />
             ));
         }

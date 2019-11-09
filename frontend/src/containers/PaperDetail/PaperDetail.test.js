@@ -112,4 +112,36 @@ describe("<PaperDetail />", () => {
         expect(mockHistory.push).toHaveBeenCalledTimes(0);
         // FIXME: actually, it should be '1'!
     });
+
+    it("should make reviewCardsLeft and reviewCardsRight well", () => {
+        const component = mount(makeIntroModal(stubInitialState));
+        const paperDetailInstance = component.find(PaperDetail.WrappedComponent).instance();
+        paperDetailInstance.setState(
+            {
+                reviews: [{
+                    id: 1,
+                    paperId: 1,
+                    author: "review_author_1",
+                    title: "review_title_1",
+                    date: "2019-11-09",
+                    likeCount: 0,
+                    replyCount: 0,
+                }, {
+                    id: 2,
+                    paperId: 1,
+                    author: "review_author_2",
+                    title: "review_title_2",
+                    date: "2019-11-08",
+                    likeCount: 0,
+                    replyCount: 0,
+                }],
+            },
+        );
+        component.update();
+        const wrapperLeft = component.find(".reviewcards-left");
+        const wrapperRight = component.find(".reviewcards-right");
+        expect(component.find("ReviewCard").length).toBe(2);
+        expect(wrapperLeft.children().length).toBe(1);
+        expect(wrapperRight.children().length).toBe(1);
+    });
 });

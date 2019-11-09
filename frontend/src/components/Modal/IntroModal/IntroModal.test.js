@@ -164,6 +164,29 @@ describe("<IntroModal />", () => {
     });
 
 
+    it("should set state properly when wrong email format", () => {
+        const component = mount(introModal);
+        const introModalInstance = component.find(IntroModal.WrappedComponent).instance();
+
+        const openButton = component.find(".signup-open-button").hostNodes();
+        openButton.simulate("click");
+
+        expect(introModalInstance.state.isSignupOpen).toBe(true);
+
+        let wrapper = component.find(".username-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "my_username" } });
+        wrapper = component.find(".password-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "my_password" } });
+        wrapper = component.find(".email-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "my_email@wrongformat" } });
+
+        const signupButton = component.find(".signup-button").hostNodes();
+        signupButton.simulate("click");
+
+        expect(introModalInstance.state.signupStatus).toBe(signupStatus.WRONG_EMAIL_FORMAT);
+    });
+
+
     it("should set state properly on signin inputs", () => {
         const component = mount(introModal);
         const introModalInstance = component.find(IntroModal.WrappedComponent).instance();
@@ -288,7 +311,7 @@ describe("<IntroModal />", () => {
         signupButton = component.find(".signup-button").hostNodes();
         signupButton.simulate("click");
 
-
+        component.update();
         introModalInstance = component.find(IntroModal.WrappedComponent).instance();
         expect(introModalInstance.state.signupStatus).toBe(signupStatus.NONE);
         // FIXME: actually, it should be 'DUPLICATE_EMAIL'!

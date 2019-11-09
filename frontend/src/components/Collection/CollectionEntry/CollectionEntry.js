@@ -6,12 +6,11 @@ import "./CollectionEntry.css";
 const CollectionEntry = (props) => (
     <Form.Row className="collection-entry">
         <Form.Check
-          className="check"
+          className="check-entry"
           id="check"
           type="checkbox"
-          className="checkButton"
-          checked={props.isChecked}
-          onChange={props.checkHandler}
+          checked={props.ischecked}
+          onChange={props.checkhandler}
           label={props.title}
         />
     </Form.Row>
@@ -19,14 +18,14 @@ const CollectionEntry = (props) => (
 
 CollectionEntry.propTypes = {
     title: PropTypes.string,
-    isChecked: PropTypes.bool,
-    checkHandler: PropTypes.func,
+    ischecked: PropTypes.bool,
+    checkhandler: PropTypes.func,
 };
 
 CollectionEntry.defaultProps = {
     title: "",
-    isChecked: false,
-    checkHandler: null,
+    ischecked: false,
+    checkhandler: null,
 };
 
 export default CollectionEntry;

@@ -21,11 +21,11 @@ class PaperCard extends Component {
     }
 
     componentDidMount() {
-        if (this.props.authors) {
+        if (this.props.authors.length > 0) {
             const authorNames = this.props.authors.map((author) => `${author.first_name} ${author.last_name}`);
             this.setState({ authorNames: authorNames.join(", ") });
         }
-        if (this.props.keywords) {
+        if (this.props.keywords.length > 0) {
             this.setState({ keywords: this.props.keywords.join(", ") });
         }
     }
@@ -72,10 +72,10 @@ class PaperCard extends Component {
                     </Card.Body>
                     <Card.Footer className="footer">
 
-                        <Button variant="light" className="like-button" onClick={this.state.isLiked ? this.clickPaperCardUnlikeHandler : this.clickPaperCardLikeHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%"/></div>{this.state.likeCount}</Button>
+                        <Button variant="light" className="like-button" onClick={this.state.isLiked ? this.clickPaperCardUnlikeHandler : this.clickPaperCardLikeHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
 
                         <Button variant="light" className="review-button" href={`/paper_id=${this.props.id}`}>
-                        <div className="review-image"><SVG name="zoom" height="70%" width="70%"/></div>{this.props.reviewCount}
+                            <div className="review-image"><SVG name="zoom" height="70%" width="70%" /></div>{this.props.reviewCount}
                         </Button>
                         {addButton}
                     </Card.Footer>

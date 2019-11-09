@@ -9,13 +9,8 @@ class GoMyCollectionsModal extends Component {
         this.state = {
             isModalOpen: this.props.openTrigger,
         };
-        this.openModalHandler = this.openModalHandler.bind(this);
         this.clickCancelButtonHandler = this.clickCancelButtonHandler.bind(this);
         this.clickGotoButtonHandler = this.clickGotoButtonHandler.bind(this);
-    }
-
-    openModalHandler() {
-        this.setState({ isModalOpen: true });
     }
 
     clickGotoButtonHandler() {
@@ -29,11 +24,10 @@ class GoMyCollectionsModal extends Component {
 
     render() {
         return (
-            <div className="gotomodal">
-                <div className="trigger" />
+            <div className="gotomycollectionsmodal">
                 <Modal
                   show={this.state.isModalOpen}
-                  className="addpaper-modal"
+                  className="modal"
                   centered
                 >
                     <Modal.Header>
