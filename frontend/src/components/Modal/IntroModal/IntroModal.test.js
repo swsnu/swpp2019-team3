@@ -103,6 +103,30 @@ describe("<IntroModal />", () => {
         expect(spySignup).toBeCalledTimes(1);
     });
 
+    it("should be closed and redirect if enter is pressed on signup-modal", () => {
+        const component = mount(introModal);
+        const introModalInstance = component.find(IntroModal.WrappedComponent).instance();
+
+        const openButton = component.find(".signup-open-button").hostNodes();
+        openButton.simulate("click");
+
+        expect(introModalInstance.state.isSignupOpen).toBe(true);
+
+        let wrapper = component.find(".email-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "my_email@papersfeed.com" } });
+        wrapper = component.find(".username-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "my_username" } });
+        wrapper = component.find(".password-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "my_password" } });
+
+        // if press other key, nothing should happen
+        wrapper.simulate("keypress", { charCode: 17 });
+        expect(spySignup).toBeCalledTimes(0);
+
+        wrapper.simulate("keypress", { charCode: 13 });
+        expect(spySignup).toBeCalledTimes(1);
+    });
+
 
     it("should be closed and redirect if signinButton is clicked", () => {
         const component = mount(introModal);
@@ -122,6 +146,28 @@ describe("<IntroModal />", () => {
         expect(signinButton.length).toBe(1);
         signinButton.simulate("click");
 
+        expect(spySignin).toBeCalledTimes(1);
+    });
+
+    it("should be closed and redirect if enter is pressed on signin-modal", () => {
+        const component = mount(introModal);
+        const introModalInstance = component.find(IntroModal.WrappedComponent).instance();
+
+        const openButton = component.find(".signin-open-button").hostNodes();
+        openButton.simulate("click");
+
+        expect(introModalInstance.state.isSigninOpen).toBe(true);
+
+        let wrapper = component.find(".email-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "my_email@papersfeed.com" } });
+        wrapper = component.find(".password-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "my_password" } });
+
+        // if press other key, nothing should happen
+        wrapper.simulate("keypress", { charCode: 17 });
+        expect(spySignup).toBeCalledTimes(0);
+
+        wrapper.simulate("keypress", { charCode: 13 });
         expect(spySignin).toBeCalledTimes(1);
     });
 
