@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Card, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 import "./PaperCard.css";
-// import { AddPaperModal } from "../..";
+import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
 import SVG from "../../svg";
 
 class PaperCard extends Component {
@@ -19,11 +19,11 @@ class PaperCard extends Component {
     }
 
     componentDidMount() {
-        if (this.props.authors) {
+        if (this.props.authors.length > 0) {
             const authorNames = this.props.authors.map((author) => `${author.first_name} ${author.last_name}`);
             this.setState({ authorNames: authorNames.join(", ") });
         }
-        if (this.props.keywords) {
+        if (this.props.keywords.length > 0) {
             this.setState({ keywords: this.props.keywords.join(", ") });
         }
     }
@@ -53,9 +53,7 @@ class PaperCard extends Component {
         }
         let addButton = null;
         if (this.props.addButtonExists) {
-            addButton = null;
-            // <AddPaperModal className="add-button"
-            // id={this.props.id} history={this.props.history} />;
+            addButton = <AddPaperModal className="add-button" id={this.props.id} history={this.props.history} />;
         }
 
         return (
@@ -86,14 +84,14 @@ class PaperCard extends Component {
 }
 
 PaperCard.propTypes = {
-    // history: PropTypes.objectOf(PropTypes.any),
+    history: PropTypes.objectOf(PropTypes.any),
     source: PropTypes.string,
     id: PropTypes.number,
     user: PropTypes.string,
     title: PropTypes.string,
     date: PropTypes.string,
-    authors: PropTypes.objectOf(PropTypes.any),
-    keywords: PropTypes.objectOf(PropTypes.any),
+    authors: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
+    keywords: PropTypes.arrayOf(PropTypes.string),
     likeCount: PropTypes.number,
     reviewCount: PropTypes.number,
     isLiked: PropTypes.bool,
@@ -102,7 +100,7 @@ PaperCard.propTypes = {
 };
 
 PaperCard.defaultProps = {
-    // history: null,
+    history: null,
     source: "",
     id: 0,
     user: "",

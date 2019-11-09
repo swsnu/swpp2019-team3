@@ -1,4 +1,3 @@
-/* eslint-disable */
 import Intro from "./Intro/Intro";
 import Main from "./Main/Main";
 import ReviewDetail from "./Review/ReviewDetail/ReviewDetail";

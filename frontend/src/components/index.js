@@ -5,7 +5,7 @@ import PaperCard from "./Paper/PaperCard/PaperCard";
 import ReviewCard from "./Review/ReviewCard/ReviewCard";
 import Header from "./Header/Header";
 import IntroModal from "./Modal/IntroModal/IntroModal";
-// import AddPaperModal from "./Modal/AddPaperModal/AddPaperModal";
+import AddPaperModal from "./Modal/AddPaperModal/AddPaperModal";
 import Reply from "./Reply/Reply";
 
 export {
@@ -16,6 +16,6 @@ export {
     ReviewCard,
     Header,
     IntroModal,
-    // AddPaperModal,
+    AddPaperModal,
     Reply,
 };

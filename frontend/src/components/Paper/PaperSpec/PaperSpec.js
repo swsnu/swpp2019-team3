@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import "./PaperSpec.css";
 import SVG from "../../svg";
-// import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
+import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
 
 class PaperSpec extends Component {
     constructor(props) {
@@ -12,8 +12,6 @@ class PaperSpec extends Component {
         this.state = {
             isLiked: this.props.isLiked,
             likeCount: this.props.likeCount,
-            link3: "https://arxiv.org/pdf/1905.11743.pdf",
-            link500: "https://arxiv.org/pdf/1806.10993.pdf",
         };
         this.clickPaperSpecUnlikeHandler = this.clickPaperSpecUnlikeHandler.bind(this);
         this.clickPaperSpecLikeHandler = this.clickPaperSpecLikeHandler.bind(this);
@@ -41,15 +39,7 @@ class PaperSpec extends Component {
     render() {
         let addButton = null;
         if (this.props.addButtonExists) {
-            addButton = null;
-            // <AddPaperModal className="add-button"
-            // id={this.props.id} history={this.props.history} />;
-        }
-        let link = "";
-        if (this.props.id === 3) {
-            link = this.state.link3;
-        } else if (this.props.id === 500) {
-            link = this.state.link500;
+            addButton = <AddPaperModal className="add-button" id={this.props.id} history={this.props.history} />;
         }
 
         return (
@@ -57,7 +47,7 @@ class PaperSpec extends Component {
                 <div className="paperInfo">
                     <h2 id="title">{this.props.title}</h2>
                     <h3 id="date">{this.props.date}</h3>
-                    <Button className="url-button" onClick={() => window.open(link)}>URL</Button>
+                    <Button className="url-button" onClick={() => window.open(this.props.link)}>URL</Button>
                     <h3 id="authors">{this.props.authors}</h3>
                     <h3 id="keywords">{this.props.keywords}</h3>
                 </div>
@@ -78,6 +68,7 @@ class PaperSpec extends Component {
 }
 
 PaperSpec.propTypes = {
+    history: PropTypes.objectOf(PropTypes.any),
     id: PropTypes.number,
     title: PropTypes.string,
     abstract: PropTypes.string,
@@ -87,9 +78,11 @@ PaperSpec.propTypes = {
     likeCount: PropTypes.number,
     isLiked: PropTypes.bool,
     addButtonExists: PropTypes.bool,
+    link: PropTypes.string,
 };
 
 PaperSpec.defaultProps = {
+    history: null,
     id: -1,
     title: "",
     abstract: "",
@@ -99,6 +92,7 @@ PaperSpec.defaultProps = {
     likeCount: 0,
     isLiked: false,
     addButtonExists: false,
+    link: "",
 };
 
 export default PaperSpec;

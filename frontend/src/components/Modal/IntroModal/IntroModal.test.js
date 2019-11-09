@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 
 import IntroModal from "./IntroModal";
 import { authActions } from "../../../store/actions";
-import { signupStatus, signinStatus } from "../../../store/reducers/auth";
+import { signupStatus, signinStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 
 let stubInitialState = {
@@ -161,6 +161,29 @@ describe("<IntroModal />", () => {
         expect(introModalInstance.state.username).toBe("my_username");
         expect(introModalInstance.state.password).toBe("my_password");
         expect(introModalInstance.state.email).toBe("my_email@papersfeed.com");
+    });
+
+
+    it("should set state properly when wrong email format", () => {
+        const component = mount(introModal);
+        const introModalInstance = component.find(IntroModal.WrappedComponent).instance();
+
+        const openButton = component.find(".signup-open-button").hostNodes();
+        openButton.simulate("click");
+
+        expect(introModalInstance.state.isSignupOpen).toBe(true);
+
+        let wrapper = component.find(".username-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "my_username" } });
+        wrapper = component.find(".password-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "my_password" } });
+        wrapper = component.find(".email-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "my_email@wrongformat" } });
+
+        const signupButton = component.find(".signup-button").hostNodes();
+        signupButton.simulate("click");
+
+        expect(introModalInstance.state.signupStatus).toBe(signupStatus.WRONG_EMAIL_FORMAT);
     });
 
 

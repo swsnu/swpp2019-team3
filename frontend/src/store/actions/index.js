@@ -9,8 +9,8 @@ import {
     // removeUserFollower,
     setUserProfile,
 } from "./Profile/ProfileActions";
-import { signup, signin } from "./auth";
-import getPaper from "./paper";
+import { signup, signin } from "./auth/auth";
+import getPaper from "./paper/paper";
 
 import {
     makeNewCollection,
