@@ -65,6 +65,32 @@ class UserTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            '{"data": {"id": 24, "username": "swpp", "email": "swpp@snu.ac.kr", "description": "",'
+            +' "count": {"follower": 0, "following": 0}}}',
+            response.content.decode())
+
+    def test_get_user_me(self):
+        """GET CURRENT USER"""
+        client = Client()
+
+        response = client.get('/api/session',
+                              data={
+                                  constants.EMAIL: 'swpp@snu.ac.kr',
+                                  constants.PASSWORD: 'iluvswpp1234'
+                              },
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+        response = client.get('/api/user/me', content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertIn(
+            '{"data": {"id": 21, "username": "swpp", "email": "swpp@snu.ac.kr", "description": "",'
+            +' "count": {"follower": 0, "following": 0}}}',
+            response.content.decode())
 
     def test_sign_out(self):
         """ SIGN OUT """

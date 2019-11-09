@@ -70,6 +70,7 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
             status_code = 200
     else:
         status_code = 404
+
     response = JsonResponse(response_data, safe=False)
     response.status_code = status_code
 
