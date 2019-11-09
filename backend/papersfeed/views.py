@@ -57,7 +57,6 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
 
             # Functions 실행
             data = handler(args)
-
             response_data[constants.DATA] = {} if data is None else data
 
         except ApiError as error:
@@ -92,7 +91,6 @@ def __get_args(request):
         if isinstance(body, dict):
             args = body
         return args
-
 
     args = request.POST
 

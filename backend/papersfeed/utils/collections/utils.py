@@ -169,7 +169,6 @@ def select_collection_user(args):
 
 def update_paper_collection(args):
     """Update Paper Collection"""
-
     is_parameter_exists([
         constants.ID, constants.COLLECTION_IDS
     ], args)
