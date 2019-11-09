@@ -33,8 +33,8 @@ export default SVG;
 
 
 SVG.propTypes = {
-    width: PropTypes.number,
-    height: PropTypes.number,
+    width: PropTypes.string,
+    height: PropTypes.string,
     color: PropTypes.string,
     name: PropTypes.string,
 };

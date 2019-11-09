@@ -19,11 +19,6 @@
     font-size: 130%;
 }
 
-span.icon:before {
-    font-family: FontAwesome;
-    content: "\f003"
-}
-
 .collection .like-button{
     width: 17%;
     display: flex;
