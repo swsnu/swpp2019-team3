@@ -25,6 +25,13 @@ export const signinStatus = {
     WRONG_PW: "WRONG_PW",
 };
 
+export const signoutStatus = {
+    NONE: "NONE",
+    WAITING: "WAITING",
+    SUCCESS: "SUCCESS",
+    FAILURE: "FAILURE",
+};
+
 export const getPaperStatus = {
     NONE: "NONE",
     WAITING: "WAITING",

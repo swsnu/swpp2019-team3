@@ -4,6 +4,11 @@ import Form from "react-bootstrap/Form";
 import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
+
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { authActions } from "../../store/actions";
+import { signoutStatus } from "../../constants/constants";
 import "./Header.css";
 
 class Header extends Component {
@@ -15,6 +20,7 @@ class Header extends Component {
             notifications: [],
         };
 
+        this.clickSignoutButtonHandler = this.clickSignoutButtonHandler.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
 
@@ -23,6 +29,22 @@ class Header extends Component {
         this.setState({
             searchKeyword: e.target.value,
         });
+    }
+
+    clickSignoutButtonHandler() {
+        this.props.onSignout()
+            .then(() => {
+                switch (this.props.signoutStatus) {
+                case signoutStatus.WAITING:
+                    // TODO: we should handle timeout
+                    break;
+                case signoutStatus.SUCCESS:
+                    this.props.history.push("/");
+                    break;
+                default:
+                    break;
+                }
+            });
     }
 
     render() {
@@ -44,9 +66,9 @@ class Header extends Component {
                         <Dropdown>
                             <Dropdown.Toggle title="myaccount" className="myaccount-button">My Account</Dropdown.Toggle>
                             <Dropdown.Menu className="myaccount-menu">
-                                <Dropdown.Header>User className</Dropdown.Header>
+                                <Dropdown.Header>Username</Dropdown.Header>
                                 <Dropdown.Item className="my-profile-button" href="/profile/user_id">My Profile</Dropdown.Item>
-                                <Dropdown.Item className="logout-button" href="/">Logout</Dropdown.Item>
+                                <Dropdown.Item className="logout-button" onClick={this.clickSignoutButtonHandler}>Logout</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                     </div>
@@ -56,4 +78,24 @@ class Header extends Component {
     }
 }
 
-export default Header;
+const mapStateToProps = (state) => ({
+    signoutStatus: state.auth.signoutStatus,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onSignout: () => dispatch(authActions.signout()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
+
+Header.propTypes = {
+    history: PropTypes.objectOf(PropTypes.any),
+    onSignout: PropTypes.func,
+    signoutStatus: PropTypes.string,
+};
+
+Header.defaultProps = {
+    history: null,
+    onSignout: null,
+    signoutStatus: signoutStatus.NONE,
+};

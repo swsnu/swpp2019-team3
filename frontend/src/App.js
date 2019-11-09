@@ -20,7 +20,7 @@ function App(props) {
                 <Switch>
                     <Route path="/" exact component={Intro} />
                     <>
-                        <Header />
+                        <Header history={props.history} />
                         <SideBar />
                         <Switch>
                             <Route path="/main" exact component={Main} />
