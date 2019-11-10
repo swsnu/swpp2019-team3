@@ -159,8 +159,8 @@ class CollectionDetail extends Component {
                         </div>
                         <div id="collectionDescription">
                             <div id="date">
-                                <div id="creationDate">Created: {this.state.thisCollection.creationDate}</div>
-                                <div id="lastUpdateDate">Last Update: {this.state.thisCollection.lastUpdateDate}</div>
+                                <div id="creationDate"><p>Created: {this.props.thisCollection.creationDate}</p></div>
+                                <div id="lastUpdateDate"><p>Last Update: {this.props.thisCollection.lastUpdateDate}</p></div>
                             </div>
                             <p id="descriptionBox">{this.state.thisCollection.text}</p>
                         </div>

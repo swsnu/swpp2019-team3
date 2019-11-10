@@ -7,6 +7,7 @@ import Header from "./Header/Header";
 import IntroModal from "./Modal/IntroModal/IntroModal";
 import AddPaperModal from "./Modal/AddPaperModal/AddPaperModal";
 import Reply from "./Reply/Reply";
+import PrivateRoute from "./PrivateRoute/PrivateRoute";
 
 export {
     SideBar,
@@ -18,4 +19,5 @@ export {
     IntroModal,
     AddPaperModal,
     Reply,
+    PrivateRoute,
 };
