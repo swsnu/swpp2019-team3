@@ -65,10 +65,14 @@ class UserTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
-        # self.assertIn(
-        #     '{"data": {"id": 24, "username": "swpp", "email": "swpp@snu.ac.kr", "description": "",'
-        #     + ' "count": {"follower": 0, "following": 0}}}',
-        #     response.content.decode())
+
+        user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+
+        self.assertIn(
+            '{"data": {"id": ' + str(user_id)
+            + ', "username": "swpp", "email": "swpp@snu.ac.kr", "description": "",'
+            + ' "count": {"follower": 0, "following": 0}}}',
+            response.content.decode())
 
     def test_get_user_me(self):
         """GET CURRENT USER"""
@@ -87,10 +91,13 @@ class UserTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # self.assertIn(
-        #     '{"data": {"id": 21, "username": "swpp", "email": "swpp@snu.ac.kr", "description": "",'
-        #     + ' "count": {"follower": 0, "following": 0}}}',
-        #     response.content.decode())
+        user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+
+        self.assertIn(
+            '{"data": {"id": ' + str(user_id)
+            + ', "username": "swpp", "email": "swpp@snu.ac.kr", "description": "",'
+            + ' "count": {"follower": 0, "following": 0}}}',
+            response.content.decode())
 
     def test_sign_out(self):
         """ SIGN OUT """
