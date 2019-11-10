@@ -1,6 +1,5 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
-import json
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Exists, OuterRef, Count
@@ -180,7 +179,7 @@ def update_paper_collection(args):
     paper_id = args[constants.ID]
 
     # Collection IDs
-    collection_ids = json.loads(args[constants.COLLECTION_IDS])
+    collection_ids = args[constants.COLLECTION_IDS]
 
     # Containing Collections
     containing_collection_ids = __get_collections_contains_paper(paper_id, request_user)
