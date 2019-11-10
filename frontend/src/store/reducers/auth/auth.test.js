@@ -19,7 +19,6 @@ describe("Auth reducer", () => {
     it("should return default state", () => {
         const newState = reducer(undefined, {});
         expect(newState).toEqual({
-            me: null,
             signupStatus: signupStatus.NONE,
             signinStatus: signinStatus.NONE,
             signoutStatus: signoutStatus.NONE,
