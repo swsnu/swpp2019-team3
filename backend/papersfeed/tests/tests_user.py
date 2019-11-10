@@ -189,6 +189,7 @@ class UserTestCase(TestCase):
         # Sign In
         client.get('/api/session',
                    data={
+                       constants.DESCRIPTION: 'swpp team 3',
                        constants.EMAIL: 'swpp@snu.ac.kr',
                        constants.PASSWORD: 'iluvswpp1234'
                    },
@@ -196,6 +197,7 @@ class UserTestCase(TestCase):
 
         response = client.put('/api/user',
                               data=json.dumps({
+                                  constants.DESCRIPTION: 'papersfeed',
                                   constants.EMAIL: 'swppEdit@snu.ac.kr',
                                   constants.USERNAME: 'swppEdit',
                                   constants.PASSWORD: 'iluvswpp1234Edit'
