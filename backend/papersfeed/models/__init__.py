@@ -30,7 +30,6 @@ from papersfeed.models.replies.reply_review import ReplyReview
 # Reviews
 from papersfeed.models.reviews.review import Review
 from papersfeed.models.reviews.review_like import ReviewLike
-from papersfeed.models.reviews.review_paper import ReviewPaper
 
 # Users
 from papersfeed.models.users.user import User

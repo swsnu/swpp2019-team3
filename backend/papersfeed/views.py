@@ -80,7 +80,7 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
 
 def __get_args(request):
     if request.method == 'GET':
-        # request.GET은 QueryDict을 리턴하므로 이를 Python dict으로 바꿔준다
+        # request.GET은 QueryDict을 리턴하므로 이를 Python dict으로 바꿔준다.
         args = request.GET.dict()
         return args
 

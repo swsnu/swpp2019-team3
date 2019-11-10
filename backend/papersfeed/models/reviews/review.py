@@ -3,6 +3,7 @@ from django.db import models
 
 from papersfeed.models.base_models import BaseModel
 from papersfeed.models.users.user import User
+from papersfeed.models.papers.paper import Paper
 
 
 class Review(BaseModel):
@@ -12,6 +13,9 @@ class Review(BaseModel):
 
     # Text
     text = models.TextField(null=False)
+
+    # Paper
+    paper = models.ForeignKey(Paper, on_delete=models.CASCADE, default=None, related_name='review_paper')
 
     # 이메일
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name='review_user')
