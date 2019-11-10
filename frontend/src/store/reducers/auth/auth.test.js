@@ -33,7 +33,6 @@ describe("Auth reducer", () => {
             target: stubSigningUpUser,
         });
         expect(newState).toEqual({
-            me: null,
             signupStatus: signupStatus.SUCCESS,
             signinStatus: signinStatus.NONE,
             signoutStatus: signoutStatus.NONE,
@@ -48,7 +47,6 @@ describe("Auth reducer", () => {
             target: stubSigningUpUser,
         });
         expect(newState).toEqual({
-            me: null,
             signupStatus: signupStatus.DUPLICATE_EMAIL,
             signinStatus: signinStatus.NONE,
             signoutStatus: signoutStatus.NONE,
@@ -63,7 +61,6 @@ describe("Auth reducer", () => {
             target: stubSigningUpUser,
         });
         expect(newState).toEqual({
-            me: null,
             signupStatus: signupStatus.DUPLICATE_USERNAME,
             signinStatus: signinStatus.NONE,
             signoutStatus: signoutStatus.NONE,
@@ -100,7 +97,6 @@ describe("Auth reducer", () => {
             target: stubSigningInUser,
         });
         expect(newState).toEqual({
-            me: null,
             signupStatus: signupStatus.NONE,
             signinStatus: signinStatus.USER_NOT_EXIST,
             signoutStatus: signoutStatus.NONE,
@@ -115,7 +111,6 @@ describe("Auth reducer", () => {
             target: stubSigningInUser,
         });
         expect(newState).toEqual({
-            me: null,
             signupStatus: signupStatus.NONE,
             signinStatus: signinStatus.WRONG_PW,
             signoutStatus: signoutStatus.NONE,
