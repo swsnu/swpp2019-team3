@@ -48,7 +48,7 @@ class CollectionList extends Component {
         return (
             <div className="CollectionList">
                 <div className="CollectionListContent">
-                    <div id="collectionListText"><h>Your Colletion List</h></div>
+                    <div id="collectionListText"><h2>Your Colletion List</h2></div>
                     <div id="colletionCards">
                         <div id="collectionCardsLeft">{collectionCardsLeft}</div>
                         <div id="collectionCardsRight">{collectionCardsRight}</div>

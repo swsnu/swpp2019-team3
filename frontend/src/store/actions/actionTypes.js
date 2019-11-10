@@ -57,6 +57,10 @@ export const authConstants = {
     SIGNOUT_REQUEST: "SIGNOUT_REQUEST",
     SIGNOUT_SUCCESS: "SIGNOUT_SUCCESS",
     SIGNOUT_FAILURE: "SIGNOUT_FAILURE",
+
+    // GetMe
+    GETME_SUCCESS: "GETME_SUCCESS",
+    GETME_FAILURE: "GETME_FAILURE",
 };
 
 export const paperConstants = {
