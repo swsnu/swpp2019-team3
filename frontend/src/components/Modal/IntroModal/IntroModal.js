@@ -125,7 +125,15 @@ class IntroModal extends Component {
             signinMessage = "Wrong password";
         }
 
+        let keyPressHandler = null;
+        let disabled = true;
+
         if (this.state.isSignupOpen) {
+            disabled = !(this.state.email && this.state.username && this.state.password);
+            // if user press enter key, consider it as signup-button click
+            keyPressHandler = (e) => {
+                if (!disabled && e.charCode === 13) this.clickSignupButtonHandler();
+            };
             modalHeader = (
                 <Modal.Header>
                     <h2 id="create-account">Create account</h2>
@@ -139,6 +147,7 @@ class IntroModal extends Component {
                   placeholder="username"
                   value={this.state.username}
                   onChange={(e) => this.setState({ username: e.target.value })}
+                  onKeyPress={keyPressHandler}
                 />
             );
             modalFooter = (
@@ -147,12 +156,17 @@ class IntroModal extends Component {
                     <Button
                       className="signup-button"
                       onClick={this.clickSignupButtonHandler}
-                      disabled={!(this.state.email && this.state.username && this.state.password)}
+                      disabled={disabled}
                     >Sign Up
                     </Button>
                 </Modal.Footer>
             );
         } else if (this.state.isSigninOpen) {
+            disabled = !(this.state.email && this.state.password);
+            // if user press enter key, consider it as signin-button click
+            keyPressHandler = (e) => {
+                if (!disabled && e.charCode === 13) this.clickSigninButtonHandler();
+            };
             modalHeader = (
                 <Modal.Header>
                     <h2 id="welcome-back">Welcome back</h2>
@@ -165,7 +179,7 @@ class IntroModal extends Component {
                     <Button
                       className="signin-button"
                       onClick={this.clickSigninButtonHandler}
-                      disabled={!(this.state.email && this.state.password)}
+                      disabled={disabled}
                     >Sign In
                     </Button>
                 </Modal.Footer>
@@ -190,6 +204,7 @@ class IntroModal extends Component {
                           placeholder="email"
                           value={this.state.email}
                           onChange={(e) => this.setState({ email: e.target.value })}
+                          onKeyPress={keyPressHandler}
                         />
                         {usernameInput}
                         <FormControl
@@ -198,6 +213,7 @@ class IntroModal extends Component {
                           placeholder="password"
                           value={this.state.password}
                           onChange={(e) => this.setState({ password: e.target.value })}
+                          onKeyPress={keyPressHandler}
                         />
                     </Modal.Body>
                     {modalFooter}

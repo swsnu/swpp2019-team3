@@ -1,13 +1,17 @@
 import React, { Component } from "react";
-import {
-    Button, Tabs, Tab,
-} from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import {
+    Button, Tabs, Tab,
+} from "react-bootstrap";
+import {
     PaperCard, Reply,
 } from "../../../components";
+
+import { collectionActions } from "../../../store/actions";
+import { collectionStatus } from "../../../constants/constants";
 
 import "./CollectionDetail.css";
 
@@ -15,10 +19,41 @@ class CollectionDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            // getCollectionStatus: collectionStatus.NONE,
+            userCount: 0,
+            likeCount: 0,
+            // eslint-disable-next-line react/no-unused-state
+            paperCount: 0,
             newReplyContent: "",
-            replies: this.props.thisCollection.replies,
-            isLiked: this.props.thisCollection.isLiked,
+            isLiked: false,
+            // members: [],
+            replies: [],
+            papers: [],
+            thisCollection: {},
         };
+    }
+
+    componentDidMount() {
+        this.props.onGetCollection({ id: this.props.location.pathname.split("=")[1] })
+            .then(() => {
+                if (this.props.getCollectionStatus === collectionStatus.COLLECTION_NOT_EXIST) {
+                    this.props.history.push("/main");
+                    return;
+                }
+                if (this.props.getCollectionStatus === collectionStatus.SUCCESS) {
+                    this.setState({ thisCollection: this.props.selectedCollection });
+                }
+
+
+                // FIXME: Please uncomment this block if onGetPaper can get keywords
+                /* if (this.props.selectedPaper.keywords) {
+                    this.setState({ keywords: this.props.selectedPaper.keywords.join(", ") });
+                } */
+            });
+        this.props.onGetCollectionPapers({ id: this.props.location.pathname.split("=")[1] })
+            .then(() => {
+                this.setState({ papers: this.props.storedPapers });
+            });
     }
 
     // clickInviteButtonHandler(): Open ‘Invite to the collection’ popup.
@@ -65,6 +100,7 @@ class CollectionDetail extends Component {
           likeCount={paper.likeCount}
           reviewCount={paper.reviewCount}
           isLiked={paper.isLiked}
+          headerExists={false}
         />
     )
 
@@ -74,20 +110,20 @@ class CollectionDetail extends Component {
         const likeOrUnlike = this.state.isLiked ? unlikeButton : likeButton;
         const inviteButton = <Button id="inviteButton">Invite</Button>;
         const editButton = (
-            <Link id="editButtonLink" to={`/collections/${this.props.thisCollection.id}/edit/`}>
+            <Link id="editButtonLink" to={`/collection_id=${this.state.id}/edit/`}>
                 <Button id="editButton">Edit</Button>
             </Link>
         );
 
-        const paperCardsLeft = this.props.thisCollection.papers
-            .filter((x) => this.props.thisCollection.papers.indexOf(x) % 2 === 0)
+        const paperCardsLeft = this.state.papers
+            .filter((x) => this.state.papers.indexOf(x) % 2 === 0)
             .map((paper) => this.paperCardMaker(paper));
 
-        const paperCardsRight = this.props.thisCollection.papers
-            .filter((x) => this.props.thisCollection.papers.indexOf(x) % 2 === 1)
+        const paperCardsRight = this.state.papers
+            .filter((x) => this.state.papers.indexOf(x) % 2 === 1)
             .map((paper) => this.paperCardMaker(paper));
 
-        const replies = this.props.thisCollection.replies.map((reply) => (
+        const replies = this.state.replies.map((reply) => (
             <Reply
               key={reply.content} // shoud be fixed
               content={reply.content}
@@ -101,31 +137,32 @@ class CollectionDetail extends Component {
         return (
             <div className="CollectionDetail">
                 <div className="CollectionDetailContent">
+                    <div className="head">COLLECTION</div>
                     <div className="CollectionInfo">
                         <div id="collectionName">
-                            <h2 id="collectionName">{this.props.thisCollection.name}</h2>
+                            <h2 id="collectionName">{this.state.thisCollection.title}</h2>
                         </div>
                         <div id="collectionInfoMid">
                             <div id="likeStat">
-                                <h5 id="likeCount">{this.props.thisCollection.likesCount}</h5>
+                                <h5 id="likeCount">{this.state.likeCount}</h5>
                                 <h5 id="likeText">Likes</h5>
                             </div>
                             <div id="memberStat">
-                                <h5 id="memberCount">{this.props.thisCollection.members.length}</h5>
+                                <h5 id="memberCount">{this.state.userCount}</h5>
                                 <h5 id="memberText">Members</h5>
                             </div>
                             <div id="collectionButtons">
                                 {likeOrUnlike}
                                 {inviteButton}
-                                {this.props.thisCollection.amIMember ? editButton : <div />}
+                                {this.state.amIMember ? editButton : <div />}
                             </div>
                         </div>
                         <div id="collectionDescription">
                             <div id="date">
-                                <div id="creationDate"><h>Created: {this.props.thisCollection.creationDate}</h></div>
-                                <div id="lastUpdateDate"><h>Last Update: {this.props.thisCollection.lastUpdateDate}</h></div>
+                                <div id="creationDate">Created: {this.state.thisCollection.creationDate}</div>
+                                <div id="lastUpdateDate">Last Update: {this.state.thisCollection.lastUpdateDate}</div>
                             </div>
-                            <p id="descriptionBox">{this.props.thisCollection.description}</p>
+                            <p id="descriptionBox">{this.state.thisCollection.text}</p>
                         </div>
                     </div>
                     <div className="itemList">
@@ -136,7 +173,7 @@ class CollectionDetail extends Component {
                                     <div id="paperCardsRight">{paperCardsRight}</div>
                                 </div>
                             </Tab>
-                            <Tab eventKey="replyTab" title="Replies">
+                            <Tab className="reply-tab" eventKey="replyTab" title="Replies">
                                 <div id="replies">
                                     <div id="createNewReply">
                                         <textarea
@@ -162,134 +199,41 @@ class CollectionDetail extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+    getCollectionStatus: state.collection.selected.status,
+    selectedCollection: state.collection.selected.collection,
+    storedPapers: state.collection.selected.papers,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onGetCollection: (collectionId) => dispatch(collectionActions.getCollection(collectionId)),
+    onGetCollectionPapers: (collectionId) => dispatch(
+        collectionActions.getCollectionPapers(collectionId),
+    ),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CollectionDetail);
+
 CollectionDetail.propTypes = {
     currentUserID: PropTypes.number,
     currentUserName: PropTypes.string,
-    thisCollection: PropTypes.shape({
-        id: PropTypes.number,
-        name: PropTypes.string,
-        description: PropTypes.string,
-        creationDate: PropTypes.string,
-        lastUpdateDate: PropTypes.string,
-        papers: PropTypes.arrayOf(PropTypes.shape({
-            source: PropTypes.string,
-            id: PropTypes.number,
-            user: PropTypes.string,
-            title: PropTypes.string,
-            date: PropTypes.string,
-            authors: PropTypes.array,
-            keywords: PropTypes.array,
-            likeCount: PropTypes.number,
-            reviewCount: PropTypes.number,
-            isLiked: PropTypes.bool,
-        })),
-        members: PropTypes.arrayOf(PropTypes.string),
-        replies: PropTypes.arrayOf(PropTypes.shape({
-            content: PropTypes.string,
-            author: PropTypes.string,
-            authorId: PropTypes.number,
-            isLiked: PropTypes.bool,
-            likeCount: PropTypes.number,
-        })),
-        likesCount: PropTypes.number,
-        isLiked: PropTypes.bool,
-        amIMember: PropTypes.bool,
-    }),
+    history: PropTypes.objectOf(PropTypes.any),
+    location: PropTypes.objectOf(PropTypes.any),
+    onGetCollection: PropTypes.func,
+    onGetCollectionPapers: PropTypes.func,
+    getCollectionStatus: PropTypes.string,
+    selectedCollection: PropTypes.objectOf(PropTypes.any),
+    storedPapers: PropTypes.arrayOf(PropTypes.any),
 };
 
 CollectionDetail.defaultProps = {
     currentUserID: 1,
     currentUserName: "Girin",
-    thisCollection: {
-        id: 1,
-        name: "Papers for tasty cat cans",
-        description: "asdf",
-        creationDate: "180102",
-        lastUpdateDate: "191031",
-        papers: [
-            {
-                source: "added",
-                id: 1,
-                user: "Testing Module",
-                title: "title:test",
-                date: "date:111111",
-                authors: [{ first_name: "first", last_name: "last" }],
-                keywords: ["keywords:test"],
-                likeCount: 3,
-                reviewCount: 6,
-                isLiked: false,
-            },
-            {
-                source: "added",
-                id: 2,
-                user: "Testing Module",
-                title: "title:test2",
-                date: "date:111111",
-                authors: [{ first_name: "first", last_name: "last" }],
-                keywords: ["keywords:test"],
-                likeCount: 3,
-                reviewCount: 6,
-                isLiked: false,
-            },
-            {
-                source: "added",
-                id: 3,
-                user: "Testing Module",
-                title: "title:test3",
-                date: "date:111111",
-                authors: [{ first_name: "first", last_name: "last" }],
-                keywords: ["keywords:test"],
-                likeCount: 3,
-                reviewCount: 6,
-                isLiked: false,
-            },
-            {
-                source: "added",
-                id: 4,
-                user: "Testing Module",
-                title: "title:test4",
-                date: "date:111111",
-                authors: [{ first_name: "first", last_name: "last" }],
-                keywords: ["keywords:test"],
-                likeCount: 3,
-                reviewCount: 6,
-                isLiked: false,
-            },
-        ],
-        members: [
-            "Anna",
-            "Betty",
-            "Charlie",
-            "Dophio",
-            "Emily",
-        ],
-        replies: [
-            {
-                content: "asdf",
-                author: "qwer",
-                authorId: 1,
-                isLiked: false,
-                likeCount: 3,
-            },
-            {
-                content: "dsaf",
-                author: "zvcx",
-                authorId: 2,
-                isLiked: false,
-                likeCount: 7,
-            },
-            {
-                content: "rtyui",
-                author: "asfd",
-                authorId: 3,
-                isLiked: false,
-                likeCount: 9,
-            },
-        ],
-        likesCount: 15,
-        isLiked: false,
-        amIMember: true,
-    },
+    history: null,
+    location: null,
+    onGetCollection: null,
+    onGetCollectionPapers: null,
+    getCollectionStatus: collectionStatus.NONE,
+    selectedCollection: {},
+    storedPapers: [],
 };
-
-export default CollectionDetail;

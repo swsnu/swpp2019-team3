@@ -80,6 +80,9 @@ def insert_user(args):
         constants.EMAIL, constants.USERNAME, constants.PASSWORD
     ], args)
 
+    # # Request User
+    # request_user = args[constants.USER]
+
     # Email
     email = args[constants.EMAIL]
 
@@ -104,11 +107,18 @@ def insert_user(args):
     hashed, salt = __hash_password(password)
 
     try:
-        User.objects.create(
+        user = User.objects.create(
             description=None, email=email, username=username, password=hashed, salt=salt
         )
     except IntegrityError:
         raise ApiError(constants.USERNAME_ALREADY_EXISTS)
+
+    users, _, _ = __get_users(Q(id=user.id), user, None)
+
+    if not users:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    return users[0]
 
 
 def update_user(args):
@@ -116,6 +126,9 @@ def update_user(args):
 
     # User
     user = args[constants.USER]
+
+    # Descrpition
+    description = args[constants.DESCRIPTION] if constants.DESCRIPTION in args else None
 
     # Email
     email = args[constants.EMAIL] if constants.EMAIL in args else None
@@ -125,6 +138,11 @@ def update_user(args):
 
     # Password
     password = args[constants.PASSWORD] if constants.PASSWORD in args else None
+
+    # Update Descrpition
+    if description:
+        # Change Description
+        user.description = description
 
     # Update Email
     if email:
@@ -153,6 +171,13 @@ def update_user(args):
         user.salt = salt
 
     user.save()
+
+    users, _, _ = __get_users(Q(id=user.id), user, None)
+
+    if not users:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    return users[0]
 
 
 def remove_user(args):
@@ -192,6 +217,11 @@ def select_user(args):
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     return users[0]
+
+
+def get_users(filter_query, request_user, count):
+    """Public Get Users"""
+    return __get_users(filter_query, request_user, count)
 
 
 def __get_users(filter_query, request_user, count):

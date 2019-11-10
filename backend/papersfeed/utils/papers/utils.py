@@ -17,7 +17,7 @@ from papersfeed.models.papers.paper_like import PaperLike
 from papersfeed.models.papers.paper_publication import PaperPublication
 from papersfeed.models.papers.publication import Publication
 from papersfeed.models.papers.publisher import Publisher
-from papersfeed.models.reviews.review_paper import ReviewPaper
+from papersfeed.models.reviews.review import Review
 from papersfeed.models.collections.collection_paper import CollectionPaper
 
 
@@ -158,6 +158,11 @@ def get_paper_migration():
         Publisher.objects.bulk_create(publishers)
         Publication.objects.bulk_create(publications)
         PaperPublication.objects.bulk_create(paper_publications)
+
+
+def get_papers(filter_query, request_user, count):
+    """Public Get Papers"""
+    return __get_papers(filter_query, request_user, count)
 
 
 def __get_papers(filter_query, request_user, count):
@@ -532,7 +537,7 @@ def __get_paper_like_count(paper_ids, group_by_field):
 
 def __get_paper_review_count(paper_ids, group_by_field):
     """Get Number of Reviews of Papers"""
-    review_papers = ReviewPaper.objects.filter(
+    review_papers = Review.objects.filter(
         paper_id__in=paper_ids
     ).values(
         group_by_field

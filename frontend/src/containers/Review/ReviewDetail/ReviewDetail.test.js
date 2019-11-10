@@ -27,17 +27,18 @@ describe("<ReviewDetail />", () => {
 
         wrapper.simulate("click");
 
-        expect(component.state().likeCount).toEqual(6);
+        expect(component.state().likeCount).toEqual(15);
         expect(component.state().isLiked).toBe(true);
 
         wrapper.simulate("click");
-        expect(component.state().likeCount).toBe(5);
+        expect(component.state().likeCount).toBe(14);
         expect(component.state().isLiked).toBe(false);
     });
 
     it("should handle edit button", () => {
         const historyMock = { push: jest.fn() };
         const component = mount(<ReviewDetail history={historyMock} />);
+        component.setState({ authorId: 0 });
         const button = component.find(".review-extra .edit-button").hostNodes();
         button.simulate("click");
         expect(historyMock.push).toHaveBeenCalledTimes(1);
@@ -54,6 +55,7 @@ describe("<ReviewDetail />", () => {
     it("should handle delete button", () => {
         const historyMock = { push: jest.fn() };
         const component = mount(<ReviewDetail history={historyMock} />);
+        component.setState({ authorId: 0 });
         const button = component.find(".review-extra .delete-button").hostNodes();
         button.simulate("click");
         expect(historyMock.push).toHaveBeenCalledTimes(1);

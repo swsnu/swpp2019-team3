@@ -65,9 +65,13 @@ class UserTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+
+        user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+
         self.assertIn(
-            '{"id": 24, "username": "swpp", "email": "swpp@snu.ac.kr", "description": "",'
-            +' "count": {"follower": 0, "following": 0}}',
+            '{"data": {"id": ' + str(user_id)
+            + ', "username": "swpp", "email": "swpp@snu.ac.kr", "description": "",'
+            + ' "count": {"follower": 0, "following": 0}}}',
             response.content.decode())
 
     def test_get_user_me(self):
@@ -87,9 +91,12 @@ class UserTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+        user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+
         self.assertIn(
-            '{"id": 21, "username": "swpp", "email": "swpp@snu.ac.kr", "description": "",'
-            +' "count": {"follower": 0, "following": 0}}',
+            '{"data": {"id": ' + str(user_id)
+            + ', "username": "swpp", "email": "swpp@snu.ac.kr", "description": "",'
+            + ' "count": {"follower": 0, "following": 0}}}',
             response.content.decode())
 
     def test_sign_out(self):
@@ -189,6 +196,7 @@ class UserTestCase(TestCase):
         # Sign In
         client.get('/api/session',
                    data={
+                       constants.DESCRIPTION: 'swpp team 3',
                        constants.EMAIL: 'swpp@snu.ac.kr',
                        constants.PASSWORD: 'iluvswpp1234'
                    },
@@ -196,6 +204,7 @@ class UserTestCase(TestCase):
 
         response = client.put('/api/user',
                               data=json.dumps({
+                                  constants.DESCRIPTION: 'papersfeed',
                                   constants.EMAIL: 'swppEdit@snu.ac.kr',
                                   constants.USERNAME: 'swppEdit',
                                   constants.PASSWORD: 'iluvswpp1234Edit'

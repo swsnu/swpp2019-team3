@@ -4,17 +4,51 @@ import { Provider } from "react-redux";
 
 import PaperDetail from "./PaperDetail";
 import { paperActions } from "../../store/actions";
-import { getPaperStatus } from "../../constants/constants";
+import { getPaperStatus, collectionStatus, signinStatus } from "../../constants/constants";
 import { getMockStore } from "../../test-utils/mocks";
+
 
 let stubInitialState = {
     paper: {
         getPaperStatus: getPaperStatus.NONE,
         selectedPaper: {},
     },
-    auth: {},
-    collection: {},
+    auth: {
+        singinStatus: signinStatus.SUCCESS,
+        me: null,
+    },
+    collection: {
+        make: {
+            status: collectionStatus.NONE,
+            collection: {},
+            error: null,
+        },
+        list: {
+            status: collectionStatus.NONE,
+            list: [],
+            error: null,
+        },
+        edit: {
+            status: collectionStatus.NONE,
+            collection: {},
+            error: null,
+        },
+        delete: {
+            status: collectionStatus.NONE,
+            collection: {},
+            error: null,
+        },
+        selected: {
+            status: collectionStatus.NONE,
+            error: null,
+            collection: {},
+            papers: [],
+            members: [],
+            replies: [],
+        },
+    },
 };
+
 const mockHistory = { push: jest.fn() };
 const makeIntroModal = (initialState) => (
     <Provider store={getMockStore(initialState)}>
@@ -52,8 +86,40 @@ describe("<PaperDetail />", () => {
                 getPaperStatus: getPaperStatus.NONE,
                 selectedPaper: { count: { likes: 3, reviews: 5 } },
             },
-            auth: {},
-            collection: {},
+            auth: {
+                singinStatus: signinStatus.SUCCESS,
+                me: null,
+            },
+            collection: {
+                make: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                list: {
+                    status: collectionStatus.NONE,
+                    list: [],
+                    error: null,
+                },
+                edit: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                delete: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                selected: {
+                    status: collectionStatus.NONE,
+                    error: null,
+                    collection: {},
+                    papers: [],
+                    members: [],
+                    replies: [],
+                },
+            },
         };
         const component = mount(makeIntroModal(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
@@ -74,8 +140,40 @@ describe("<PaperDetail />", () => {
                     ],
                 },
             },
-            auth: {},
-            collection: {},
+            auth: {
+                singinStatus: signinStatus.SUCCESS,
+                me: null,
+            },
+            collection: {
+                make: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                list: {
+                    status: collectionStatus.NONE,
+                    list: [],
+                    error: null,
+                },
+                edit: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                delete: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                selected: {
+                    status: collectionStatus.NONE,
+                    error: null,
+                    collection: {},
+                    papers: [],
+                    members: [],
+                    replies: [],
+                },
+            },
         };
         const component = mount(makeIntroModal(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
@@ -91,8 +189,40 @@ describe("<PaperDetail />", () => {
                     publication: { date: "2019-11-06" },
                 },
             },
-            auth: {},
-            collection: {},
+            auth: {
+                singinStatus: signinStatus.SUCCESS,
+                me: null,
+            },
+            collection: {
+                make: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                list: {
+                    status: collectionStatus.NONE,
+                    list: [],
+                    error: null,
+                },
+                edit: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                delete: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                selected: {
+                    status: collectionStatus.NONE,
+                    error: null,
+                    collection: {},
+                    papers: [],
+                    members: [],
+                    replies: [],
+                },
+            },
         };
         const component = mount(makeIntroModal(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
@@ -106,8 +236,40 @@ describe("<PaperDetail />", () => {
                 getPaperStatus: getPaperStatus.FAILURE,
                 selectedPaper: {},
             },
-            auth: {},
-            collection: {},
+            auth: {
+                singinStatus: signinStatus.SUCCESS,
+                me: null,
+            },
+            collection: {
+                make: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                list: {
+                    status: collectionStatus.NONE,
+                    list: [],
+                    error: null,
+                },
+                edit: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                delete: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                selected: {
+                    status: collectionStatus.NONE,
+                    error: null,
+                    collection: {},
+                    papers: [],
+                    members: [],
+                    replies: [],
+                },
+            },
         };
         expect(mockHistory.push).toHaveBeenCalledTimes(0);
         // FIXME: actually, it should be '1'!

@@ -37,6 +37,7 @@ FOLLOWING = 'following'
 
 # Collection
 COLLECTION = 'collection'
+COLLECTIONS = 'collections'
 COLLECTION_IDS = 'collection_ids'
 TITLE = 'title'
 TEXT = 'text'
@@ -84,3 +85,7 @@ PUBLICATION = 'publication'
 # Publisher
 PUBLISHER = 'publisher'
 CITY = 'city'
+
+# Reply
+REPLY = 'reply'
+REPLIES = 'replies'

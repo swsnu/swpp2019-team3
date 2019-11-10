@@ -20,16 +20,19 @@ export const middlewares = [thunk, routerMiddleware(history)];
 export const getMockStore = (initialState) => {
     const mockAuthReducer = getMockReducer(initialState.auth);
     const mockPaperReducer = getMockReducer(initialState.paper);
+    const mockCollectionReducer = getMockReducer(initialState.collection);
     const rootReducer = (his) => combineReducers({
         router: connectRouter(his),
         auth: mockAuthReducer,
         paper: mockPaperReducer,
+        collection: mockCollectionReducer,
     });
 
     const mockStore = createStore(rootReducer(history), applyMiddleware(...middlewares));
     return mockStore;
 };
 
+// eslint-disable-next-line react/display-name
 export const mockComponent = (componentName) => (props) => (
     /* eslint-disable react/jsx-props-no-spreading */
     <div className={componentName} {...props} />

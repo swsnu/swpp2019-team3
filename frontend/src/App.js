@@ -6,21 +6,22 @@ import { Route, Switch } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
 
 import {
-    Intro, Main, ReviewDetail, PaperDetail, ReviewControl, ProfileDetail, ProfileEdit,
-    CollectionDetail, CollectionList,
+    Intro, Main, ReviewDetail, PaperDetail, ReviewControl,
+    ProfileDetail, ProfileEdit, CollectionDetail, CollectionList,
 } from "./containers";
 import {
-    Header, SideBar,
+    PrivateRoute, Header, SideBar,
 } from "./components";
 
 function App(props) {
     return (
         <ConnectedRouter history={props.history}>
             <div className="App">
+                <PrivateRoute history={props.history} />
                 <Switch>
                     <Route path="/" exact component={Intro} />
                     <>
-                        <Header />
+                        <Header history={props.history} />
                         <SideBar />
                         <Switch>
                             <Route path="/main" exact component={Main} />
@@ -47,7 +48,7 @@ function App(props) {
                             <Route path="/profile/:id" exact component={ProfileDetail} />
                             <Route path="/profile/:id/edit" exact component={ProfileEdit} />
                             <Route path="/collections" exact component={CollectionList} />
-                            <Route path="/collections/:collection_id" exact component={CollectionDetail} />
+                            <Route path="/collection_id=:collection_id" exact component={CollectionDetail} />
                         </Switch>
                     </>
                 </Switch>
