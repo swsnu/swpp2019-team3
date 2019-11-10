@@ -1,55 +1,54 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import {
-    PaperSpec, ReviewCard,
-} from "../../components";
+import { PaperSpec, ReviewCard } from "../../components";
+import { paperActions } from "../../store/actions";
+import { getPaperStatus } from "../../constants/constants";
 import "./PaperDetail.css";
 
 class PaperDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: 1,
-            title: "paper_title",
-            abstract: "abstract abstract abstract abstract abstract abstract abstract abstract ",
-            date: "2019.10.30.",
-            authors: "paper_authors",
-            keywords: "paper_keywords",
-            likeCount: 101,
-            reviewCount: 3,
-            isLiked: false,
-            reviews: [
-                {
-                    id: 5,
-                    paperId: 1,
-                    title: "review_title1",
-                    author: "review_author1",
-                    likeCount: 5,
-                    replyCount: 15,
-                },
-                {
-                    id: 6,
-                    paperId: 1,
-                    title: "review_title2",
-                    author: "review_author2",
-                    likeCount: 3,
-                    replyCount: 10,
-                },
-                {
-                    id: 7,
-                    paperId: 1,
-                    title: "review_title3",
-                    author: "review_author3",
-                    likeCount: 4,
-                    replyCount: 100,
-                },
-            ],
+            likeCount: 0,
+            /* eslint-disable react/no-unused-state */
+            reviewCount: 0,
+            /* eslint-enable react/no-unused-state */
+            authorNames: "",
+            keywords: "",
+            date: "",
+            reviews: [],
         };
         this.reviewMaker = this.reviewMaker.bind(this);
     }
 
     componentDidMount() {
-
+        this.props.onGetPaper({ id: this.props.location.pathname.split("=")[1] })
+            .then(() => {
+                if (this.props.getPaperStatus === getPaperStatus.FAILURE) {
+                    this.props.history.push("/main");
+                    return;
+                }
+                if (this.props.selectedPaper.count) {
+                    this.setState({ likeCount: this.props.selectedPaper.count.likes });
+                    /* eslint-disable react/no-unused-state */
+                    this.setState({ reviewCount: this.props.selectedPaper.count.reviews });
+                    /* eslint-enable react/no-unused-state */
+                }
+                if (this.props.selectedPaper.authors) {
+                    const { authors } = this.props.selectedPaper;
+                    const authorNames = authors.map((author) => `${author.first_name} ${author.last_name}`);
+                    this.setState({ authorNames: authorNames.join(", ") });
+                }
+                if (this.props.selectedPaper.publication) {
+                    this.setState({ date: this.props.selectedPaper.publication.date });
+                }
+                // FIXME: Please uncomment this block if onGetPaper can get keywords
+                /* if (this.props.selectedPaper.keywords) {
+                    this.setState({ keywords: this.props.selectedPaper.keywords.join(", ") });
+                } */
+            });
     }
 
     reviewMaker = (review) => (
@@ -80,16 +79,20 @@ class PaperDetail extends Component {
                 <div className="paperdetail">
                     <div className="paperdetail-content">
                         <PaperSpec
-                          id={this.state.id}
-                          title={this.state.title}
-                          abstract={this.state.abstract}
+                          id={this.props.selectedPaper.id}
+                          title={this.props.selectedPaper.title}
+                          abstract={this.props.selectedPaper.abstract}
                           date={this.state.date}
-                          authors={this.state.authors}
+                          authors={this.state.authorNames}
                           keywords={this.state.keywords}
                           likeCount={this.state.likeCount}
-                          reviewCount={this.state.reviewCount}
-                          isLiekd={this.state.isLiked}
+                          reviewCount={this.state.reviews.length}
+                          isLiked={this.props.selectedPaper.liked}
+                          addButtonExists
+                          history={this.props.history}
                         />
+                        {/* FIXME: review-count should reflect this.state.reviewCount */}
+                        <h3 id="review-count">{this.state.reviews.length} reviews</h3>
                         <div className="reviewcards">
                             <div className="reviewcards-left">{reviewCardsLeft}</div>
                             <div className="reviewcards-right">{reviewCardsRight}</div>
@@ -100,4 +103,29 @@ class PaperDetail extends Component {
         );
     }
 }
-export default PaperDetail;
+const mapStateToProps = (state) => ({
+    getPaperStatus: state.paper.getPaperStatus,
+    selectedPaper: state.paper.selectedPaper,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onGetPaper: (paperId) => dispatch(paperActions.getPaper(paperId)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PaperDetail);
+
+PaperDetail.propTypes = {
+    history: PropTypes.objectOf(PropTypes.any),
+    location: PropTypes.objectOf(PropTypes.any),
+    onGetPaper: PropTypes.func,
+    getPaperStatus: PropTypes.string,
+    selectedPaper: PropTypes.objectOf(PropTypes.any),
+};
+
+PaperDetail.defaultProps = {
+    history: null,
+    location: null,
+    onGetPaper: null,
+    getPaperStatus: getPaperStatus.NONE,
+    selectedPaper: {},
+};

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
+import { Button, Card } from "react-bootstrap";
 import PropTypes from "prop-types";
 import "./CollectionCard.css";
+import SVG from "../../svg";
 
 class CollectionCard extends Component {
     constructor(props) {
@@ -34,19 +34,30 @@ class CollectionCard extends Component {
     }
 
     render() {
+        let header = null;
+        if (this.props.headerExists) {
+            header = <Card.Header>{`${this.props.user} ${this.props.source} this collection.`}</Card.Header>;
+        }
         return (
             <div className="wrapper">
                 <Card className="collection">
-                    <Card.Header>{`${this.props.user} ${this.props.source} this collection.`}</Card.Header>
+                    {header}
                     <Card.Body className="body">
                         <div className="title">
-                            <Card.Link className="text" href={`/collections/${this.props.id}`}>{this.props.title}</Card.Link>
+                            <Card.Link className="text" href={`/collection_id=${this.props.id}`}>{this.props.title}</Card.Link>
                         </div>
-                        <Card.Text>Number of papers: {this.props.paperCount}</Card.Text>
+                        <Card.Text>papers: {this.props.paperCount}</Card.Text>
+                        <Card.Text>members: {this.props.memberCount}</Card.Text>
                     </Card.Body>
-                    <Card.Footer>
-                        <Button id="like-button" className="like-button" onClick={this.state.isLiked ? this.clickCollectionCardUnlikeHandler : this.clickCollectionCardLikeHandler}>{this.state.likeCount}</Button>
-                        <Button href={`/collections/${this.props.id}`}>{this.props.replyCount}</Button>
+                    <Card.Footer className="footer">
+
+                        <Button variant="light" id="like-button" className="like-button" onClick={this.state.isLiked ? this.clickCollectionCardUnlikeHandler : this.clickCollectionCardLikeHandler}>
+                            <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>
+
+                            {this.state.likeCount}
+                        </Button>
+
+                        <Button variant="light" className="reply-button" href={`/collection_id=${this.props.id}`}><div className="reply-image"><SVG name="zoom" height="70%" width="70%" /></div>{this.props.replyCount}</Button>
                     </Card.Footer>
                 </Card>
             </div>
@@ -59,10 +70,12 @@ CollectionCard.propTypes = {
     id: PropTypes.number,
     user: PropTypes.string,
     title: PropTypes.string,
+    memberCount: PropTypes.number,
     paperCount: PropTypes.number,
     replyCount: PropTypes.number,
     likeCount: PropTypes.number,
     isLiked: PropTypes.bool,
+    headerExists: PropTypes.bool,
 };
 
 CollectionCard.defaultProps = {
@@ -70,10 +83,12 @@ CollectionCard.defaultProps = {
     id: 0,
     user: "",
     title: "",
+    memberCount: 1,
     paperCount: 0,
     replyCount: 0,
     likeCount: 0,
     isLiked: false,
+    headerExists: true,
 };
 
 export default CollectionCard;

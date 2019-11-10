@@ -114,7 +114,7 @@ def get_paper_migration():
                         id=pk,
                         paper_id=paper_related_object['fields']['paper'],
                         author_id=paper_related_object['fields']['author'],
-                        type=paper_related_object['fields']['author_type'],
+                        type=paper_related_object['fields']['type'],
                         rank=paper_related_object['fields']['rank']
                     )
                 )
@@ -132,7 +132,7 @@ def get_paper_migration():
                     Publication(
                         id=pk,
                         name=paper_related_object['fields']['name'],
-                        type=paper_related_object['fields']['publication_type'],
+                        type=paper_related_object['fields']['type'],
                         publisher_id=paper_related_object['fields']['publisher']
                     )
                 )

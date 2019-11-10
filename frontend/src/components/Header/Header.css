@@ -1,6 +1,7 @@
 .header {
     justify-content: space-between;
-    display: flex;
+    justify-content: flex-start;
+    display: flexbox;
     position: sticky;
     border-bottom: 2px solid rgb(220,224,227);
 }
@@ -8,17 +9,19 @@
 .header .logo {
     font-weight: bold;
     text-decoration-color: #2f87ef;
-    font-size: 130%;
+    font-size: 150%;
+    font-style: oblique;
     padding: 1%;
-    margin-right: auto;
+    margin-right: 10%;
 }
 
 .header .search {
     display: flex;
-    align-items: stretch;
+    align-items: flex-start;
 }
 
 .header .search .search-input {
+    /* margin-left:18%; */
     width: 500px;
     background:rgb(242,243,247);
 }
@@ -27,7 +30,6 @@
     margin-left: auto;
     display: flex;
     flex-direction: row;
-
 }
 
 .header .buttons .myaccount-button {

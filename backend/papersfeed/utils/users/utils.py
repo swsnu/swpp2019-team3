@@ -39,7 +39,11 @@ def select_session(args):
         # Set Session Id
         request.session[constants.ID] = user.id
 
-    return {}
+    users, _, _ = __get_users(Q(id=user.id), user, None)
+    if not users:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    return users[0]
 
 
 def delete_session(args):
@@ -51,6 +55,23 @@ def delete_session(args):
         del request.session[constants.ID]
     except KeyError:
         pass
+
+
+def select_me(args):
+    """Get Current User"""
+
+    # Request User-
+    request_user = args[constants.USER] if constants.USER in args else None
+
+    # User ID
+    user_id = request_user.id
+
+    users, _, _ = __get_users(Q(id=user_id), request_user, None)
+
+    if not users:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    return users[0]
 
 
 def insert_user(args):

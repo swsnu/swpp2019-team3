@@ -1,7 +1,12 @@
+.reply-component {
+    background: white;
+}
+
 .reply-component .reply{
     width: 100%;
     text-align: left;
     margin-bottom: 2%;
+    
     border-bottom: 2px solid rgb(242,243,247);
 }
 
@@ -15,5 +20,14 @@
     margin-top: 2%;
     display: flex;
     justify-content: flex-end;
+    
     margin-bottom: 1%;
 }
+
+.reply-component .reply .buttons .like-button{
+    width: 10%;
+    display: flex;
+    justify-content: space-around;
+}
+
+
