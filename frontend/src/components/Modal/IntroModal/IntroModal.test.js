@@ -42,7 +42,6 @@ describe("<IntroModal />", () => {
         jest.clearAllMocks();
     });
 
-
     it("should render without errors", () => {
         const component = mount(introModal);
         const wrapper = component.find(".intromodal");

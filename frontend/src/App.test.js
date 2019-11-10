@@ -8,7 +8,11 @@ import { getMockStore, mockComponent, history } from "./test-utils/mocks";
 
 jest.mock("./components/PrivateRoute/PrivateRoute", () => jest.fn(() => (mockComponent("PrivateRoute")())));
 
-const mockStore = getMockStore({ auth: {}, paper: {} });
+const mockStore = getMockStore({
+    auth: {},
+    paper: {},
+    collection: {},
+});
 
 describe("App", () => {
     let app;

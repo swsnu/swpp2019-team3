@@ -1,6 +1,9 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
 import PaperCard from "./PaperCard";
+import { mockComponent } from "../../../test-utils/mocks";
+
+jest.mock("../../Modal/AddPaperModal/AddPaperModal", () => jest.fn(() => (mockComponent("GoMyCollectionsModal")())));
 
 describe("<PaperCard />", () => {
     it("should render without errors", () => {

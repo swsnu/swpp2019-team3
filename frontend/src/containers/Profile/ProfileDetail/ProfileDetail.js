@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import {
     Button, Image, Tabs, Tab,
 } from "react-bootstrap";
@@ -9,7 +10,8 @@ import PropTypes from "prop-types";
 import {
     CollectionCard, ReviewCard,
 } from "../../../components";
-
+import { collectionActions } from "../../../store/actions";
+// import { collectionStatus } from "../../../constants/constants";
 import "./ProfileDetail.css";
 import SamplePhoto from "./sample.jpg";
 // import * as actionCreators from "../../../store/actions/index";
@@ -18,8 +20,14 @@ class ProfileDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            // getCollectionsStatus: collectionStatus.NONE,
             doIFollow: this.props.thisUser.doIFollow,
+            // collections: [],
         };
+    }
+
+    componentDidMount() {
+
     }
 
     cardMaker = (card) => {
@@ -31,8 +39,11 @@ class ProfileDetail extends Component {
                   id={card.id}
                   user={card.user}
                   title={card.title}
+                  memberCount={card.memberCount}
                   paperCount={card.paperCount}
+                  likeCount={card.likeCount}
                   replyCount={card.replyCount}
+                  headerExists={false}
                 />
             );
         } if (card.type === "Review") {
@@ -142,7 +153,20 @@ class ProfileDetail extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+    me: state.auth.me,
+    getCollectionsStatus: state.collection.list.status,
+    storedCollections: state.collection.list.list,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onGetCollections: (userId) => dispatch(collectionActions.getCollectionsByUserId(userId)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileDetail);
+
 ProfileDetail.propTypes = {
+    // me: PropTypes.objectOf(PropTypes.any),
     currentUserID: PropTypes.number,
     thisUser: PropTypes.shape({
         id: PropTypes.number,
@@ -158,8 +182,10 @@ ProfileDetail.propTypes = {
         id: PropTypes.number,
         user: PropTypes.string,
         title: PropTypes.string,
+        memberCount: PropTypes.number,
         paperCount: PropTypes.number,
         replyCount: PropTypes.number,
+        likeCount: PropTypes.number,
     })),
     // thisUserCollections: PropTypes.arrayOf(PropTypes.instanceOf(Review))
     thisUserReviews: PropTypes.arrayOf(PropTypes.shape({
@@ -177,6 +203,7 @@ ProfileDetail.propTypes = {
 };
 
 ProfileDetail.defaultProps = {
+    // me: { id: 1 },
     currentUserID: 1,
     thisUser: {
         id: 1,
@@ -188,13 +215,15 @@ ProfileDetail.defaultProps = {
     },
     thisUserCollections: [
         {
-            source: "tested",
+            source: "is recently added",
             id: 1,
             type: "Collection",
             user: "Girin",
-            title: "Girin's Paper Collection",
-            paperCount: 32,
-            replyCount: 13,
+            title: "SWPP",
+            memberCount: 1,
+            likeCount: 0,
+            paperCount: 1,
+            replyCount: 0,
         },
         {
             source: "tasted",
@@ -202,15 +231,30 @@ ProfileDetail.defaultProps = {
             type: "Collection",
             user: "Girin",
             title: "Papers for tasty cat cans",
+            memberCount: 1,
+            likeCount: 0,
             paperCount: 4,
             replyCount: 1,
         },
         {
-            source: "hated",
+            source: "tested",
             id: 3,
             type: "Collection",
             user: "Girin",
+            title: "Girin's Paper Collection",
+            memberCount: 1,
+            likeCount: 0,
+            paperCount: 32,
+            replyCount: 13,
+        },
+        {
+            source: "hated",
+            id: 1,
+            type: "Collection",
+            user: "Girin",
             title: "Butler's Bad joke collection",
+            memberCount: 1,
+            likeCount: 0,
             paperCount: 62,
             replyCount: 23,
         },
@@ -257,5 +301,3 @@ ProfileDetail.defaultProps = {
         },
     ],
 };
-
-export default ProfileDetail;
