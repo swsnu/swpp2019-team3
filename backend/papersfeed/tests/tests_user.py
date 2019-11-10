@@ -69,9 +69,9 @@ class UserTestCase(TestCase):
         user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
 
         self.assertIn(
-            '{"data": {"id": ' + str(user_id)
+            '{"id": ' + str(user_id)
             + ', "username": "swpp", "email": "swpp@snu.ac.kr", "description": "",'
-            + ' "count": {"follower": 0, "following": 0}}}',
+            + ' "count": {"follower": 0, "following": 0}}',
             response.content.decode())
 
     def test_get_user_me(self):
@@ -94,9 +94,9 @@ class UserTestCase(TestCase):
         user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
 
         self.assertIn(
-            '{"data": {"id": ' + str(user_id)
+            '{"id": ' + str(user_id)
             + ', "username": "swpp", "email": "swpp@snu.ac.kr", "description": "",'
-            + ' "count": {"follower": 0, "following": 0}}}',
+            + ' "count": {"follower": 0, "following": 0}}',
             response.content.decode())
 
     def test_sign_out(self):
