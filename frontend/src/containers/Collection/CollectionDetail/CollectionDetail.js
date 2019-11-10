@@ -154,7 +154,7 @@ class CollectionDetail extends Component {
                             <div id="collectionButtons">
                                 {likeOrUnlike}
                                 {inviteButton}
-                                {editButton}
+                                {this.state.amIMember ? editButton : <div />}
                             </div>
                         </div>
                         <div id="collectionDescription">
