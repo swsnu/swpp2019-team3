@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
 import { Route, Switch } from "react-router-dom";
 import { collectionActions } from "../../../store/actions";
-import { collectionStatus } from "../../../constants/constants";
+import { collectionStatus, signinStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 import { history } from "../../../store/store";
 import CollectionDetail from "./CollectionDetail";
@@ -12,7 +12,10 @@ import CollectionDetail from "./CollectionDetail";
 const stubInitialState = {
     paper: {
     },
-    auth: {},
+    auth: {
+        singinStatus: signinStatus.SUCCESS,
+        me: null,
+    },
     collection: {
         make: {
             status: collectionStatus.NONE,

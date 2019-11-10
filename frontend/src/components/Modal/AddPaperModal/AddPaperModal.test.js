@@ -1,16 +1,19 @@
 import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
-import { collectionStatus } from "../../../constants/constants";
+import { collectionStatus, signinStatus } from "../../../constants/constants";
 import AddPaperModal from "./AddPaperModal";
 import { getMockStore, mockComponent } from "../../../test-utils/mocks";
-import { collectionActions } from "../../../store/actions";
+import { collectionActions, authActions } from "../../../store/actions";
 
 
 const stubInitialState = {
     paper: {
     },
-    auth: {},
+    auth: {
+        singinStatus: signinStatus.SUCCESS,
+        me: null,
+    },
     collection: {
         make: {
             status: collectionStatus.NONE,
@@ -66,17 +69,17 @@ const mockPromise = new Promise((resolve) => { resolve(); });
 
 describe("<AddPaperModal />", () => {
     let addPaperModal;
-    let spyGetCollections;
     let spyAddPaper;
+    let spyGetMe;
     let spyMakeNewCollection;
 
     beforeEach(() => {
         addPaperModal = makeAddPaperModal(stubInitialState);
-        spyGetCollections = jest.spyOn(collectionActions, "getCollectionsByUserId")
-            .mockImplementation(() => () => mockPromise);
         spyAddPaper = jest.spyOn(collectionActions, "addCollectionPaper")
             .mockImplementation(() => () => mockPromise);
         spyMakeNewCollection = jest.spyOn(collectionActions, "makeNewCollection")
+            .mockImplementation(() => () => mockPromise);
+        spyGetMe = jest.spyOn(authActions, "getMe")
             .mockImplementation(() => () => mockPromise);
     });
 
@@ -89,7 +92,7 @@ describe("<AddPaperModal />", () => {
         const component = mount(addPaperModal);
         const wrapper = component.find(".addpapermodal");
         expect(wrapper.length).toBe(1);
-        expect(spyGetCollections).toHaveBeenCalledTimes(1);
+        expect(spyGetMe).toHaveBeenCalledTimes(1);
     });
 
 

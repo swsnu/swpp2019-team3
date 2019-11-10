@@ -8,7 +8,7 @@ import {
 import GoMyCollectionsModal from "../GoMyCollectionsModal/GoMyCollectionsModal";
 import CollectionEntry from "../../Collection/CollectionEntry/CollectionEntry";
 import "./AddPaperModal.css";
-import { collectionActions } from "../../../store/actions";
+import { collectionActions, authActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
 
 class AddPaperModal extends Component {
@@ -23,6 +23,7 @@ class AddPaperModal extends Component {
             checkedCollections: [],
             collections: [],
             collectionName: "",
+            me: null,
         };
         this.openAddPaperHandler = this.openAddPaperHandler.bind(this);
         this.checkHandler = this.checkHandler.bind(this);
@@ -33,10 +34,18 @@ class AddPaperModal extends Component {
     componentDidMount() {
         this._isMounted = true;
 
-        this.props.onGetCollections({ id: 1 })
+        this.props.onGetMe()
             .then(() => {
                 if (this._isMounted) {
-                    this.setState({ collections: this.props.collectionList });
+                    this.setState({ me: this.props.me });
+
+                    this.props.onGetCollections({ id: this.state.me.id })
+                        .then(() => {
+                            if (this._isMounted) {
+                                this.setState({ collections: this.props.collectionList });
+                            }
+                        })
+                        .catch(() => {});
                 }
             })
             .catch(() => {});
@@ -186,6 +195,7 @@ const mapStateToProps = (state) => ({
     makeNewCollectionStatus: state.collection.make.status,
     collectionList: state.collection.list.list,
     selectedCollection: state.collection.make.collection,
+    me: state.auth.me,
 
 });
 
@@ -199,6 +209,7 @@ const mapDispatchToProps = (dispatch) => ({
     onAddPaper: (collectionsAndPaper) => dispatch(
         collectionActions.addCollectionPaper(collectionsAndPaper),
     ),
+    onGetMe: () => dispatch(authActions.getMe()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddPaperModal);
@@ -214,6 +225,8 @@ AddPaperModal.propTypes = {
     id: PropTypes.number,
     addPaperCollectionStatus: PropTypes.string,
     makeNewCollectionStatus: PropTypes.string,
+    me: PropTypes.objectOf(PropTypes.any),
+    onGetMe: PropTypes.func,
 };
 
 AddPaperModal.defaultProps = {
@@ -226,4 +239,6 @@ AddPaperModal.defaultProps = {
     id: 0,
     addPaperCollectionStatus: collectionStatus.NONE,
     makeNewCollectionStatus: collectionStatus.NONE,
+    me: null,
+    onGetMe: () => {},
 };

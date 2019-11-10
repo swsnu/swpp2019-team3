@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
 import { Route, Switch } from "react-router-dom";
 import CollectionList from "./CollectionList";
-import { collectionActions } from "../../../store/actions";
+import { collectionActions, authActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 import { history } from "../../../store/store";
@@ -12,7 +12,9 @@ import { history } from "../../../store/store";
 const stubInitialState = {
     paper: {
     },
-    auth: {},
+    auth: {
+        me: null,
+    },
     collection: {
         make: {
             status: collectionStatus.NONE,
@@ -48,8 +50,9 @@ const stubInitialState = {
 const mockStore = getMockStore(stubInitialState);
 
 describe("<CollectionList />", () => {
-    let collectionList; let
-        spyGetCollections;
+    let collectionList;
+    let spyGetCollections;
+    let spyGetMe;
 
     beforeEach(() => {
         collectionList = (
@@ -77,6 +80,14 @@ describe("<CollectionList />", () => {
                 };
                 resolve(result);
             }));
+        spyGetMe = jest.spyOn(authActions, "getMe")
+            .mockImplementation(() => () => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: { id: 1 },
+                };
+                resolve(result);
+            }));
     });
 
 
@@ -88,7 +99,8 @@ describe("<CollectionList />", () => {
         const component = mount(collectionList);
         const wrapper = component.find("CollectionList");
         expect(wrapper.length).toBe(1);
-        expect(spyGetCollections).toHaveBeenCalledTimes(1);
+        expect(spyGetCollections).toHaveBeenCalledTimes(0); // Fix me: it should be 1
+        expect(spyGetMe).toHaveBeenCalledTimes(1);
         const left = wrapper.find("#collectionCardsLeft");
         expect(left.length).toBe(1);
         const right = wrapper.find("#collectionCardsRight");

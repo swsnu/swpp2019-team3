@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 
 import PaperDetail from "./PaperDetail";
 import { paperActions } from "../../store/actions";
-import { getPaperStatus, collectionStatus } from "../../constants/constants";
+import { getPaperStatus, collectionStatus, signinStatus } from "../../constants/constants";
 import { getMockStore } from "../../test-utils/mocks";
 
 
@@ -13,7 +13,10 @@ let stubInitialState = {
         getPaperStatus: getPaperStatus.NONE,
         selectedPaper: {},
     },
-    auth: {},
+    auth: {
+        singinStatus: signinStatus.SUCCESS,
+        me: null,
+    },
     collection: {
         make: {
             status: collectionStatus.NONE,
@@ -83,7 +86,10 @@ describe("<PaperDetail />", () => {
                 getPaperStatus: getPaperStatus.NONE,
                 selectedPaper: { count: { likes: 3, reviews: 5 } },
             },
-            auth: {},
+            auth: {
+                singinStatus: signinStatus.SUCCESS,
+                me: null,
+            },
             collection: {
                 make: {
                     status: collectionStatus.NONE,
@@ -134,7 +140,10 @@ describe("<PaperDetail />", () => {
                     ],
                 },
             },
-            auth: {},
+            auth: {
+                singinStatus: signinStatus.SUCCESS,
+                me: null,
+            },
             collection: {
                 make: {
                     status: collectionStatus.NONE,
@@ -180,7 +189,10 @@ describe("<PaperDetail />", () => {
                     publication: { date: "2019-11-06" },
                 },
             },
-            auth: {},
+            auth: {
+                singinStatus: signinStatus.SUCCESS,
+                me: null,
+            },
             collection: {
                 make: {
                     status: collectionStatus.NONE,
@@ -224,7 +236,10 @@ describe("<PaperDetail />", () => {
                 getPaperStatus: getPaperStatus.FAILURE,
                 selectedPaper: {},
             },
-            auth: {},
+            auth: {
+                singinStatus: signinStatus.SUCCESS,
+                me: null,
+            },
             collection: {
                 make: {
                     status: collectionStatus.NONE,

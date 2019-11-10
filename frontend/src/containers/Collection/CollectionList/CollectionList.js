@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { CollectionCard } from "../../../components";
-import { collectionActions } from "../../../store/actions";
+import { collectionActions, authActions } from "../../../store/actions";
 // import { collectionStatus } from "../../../constants/constants";
 
 import "./CollectionList.css";
@@ -14,14 +14,21 @@ class CollectionList extends Component {
         this.state = {
             // makeNewCollectionStatus: collectionStatus.NONE,
             collections: [],
+            me: null,
         };
     }
 
     componentDidMount() {
-        this.props.onGetCollections({ id: 1 })
+        this.props.onGetMe()
             .then(() => {
-                this.setState({ collections: this.props.storedCollections });
-            });
+                this.setState({ me: this.props.me });
+                this.props.onGetCollections({ id: this.state.me.id })
+                    .then(() => {
+                        this.setState({ collections: this.props.storedCollections });
+                    })
+                    .catch(() => {});
+            })
+            .catch(() => {});
     }
 
     cardsMaker = (collection) => (
@@ -75,22 +82,25 @@ const mapDispatchToProps = (dispatch) => ({
         collectionActions.makeNewCollection(newCollection),
     ),
     onGetCollections: (userId) => dispatch(collectionActions.getCollectionsByUserId(userId)),
+    onGetMe: () => dispatch(authActions.getMe()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionList);
 
 CollectionList.propTypes = {
-    // me: PropTypes.objectOf(PropTypes.any),
+    me: PropTypes.objectOf(PropTypes.any),
     // onMakeNewCollection: PropTypes.func,
     onGetCollections: PropTypes.func,
     // makeNewCollectionStatus: PropTypes.string,
     storedCollections: PropTypes.arrayOf(PropTypes.any),
+    onGetMe: PropTypes.func,
 };
 
 CollectionList.defaultProps = {
-    // me: null,
+    me: null,
     // onMakeNewCollection: null,
     onGetCollections: null,
     // makeNewCollectionStatus: collectionStatus.NONE,
     storedCollections: [],
+    onGetMe: () => {},
 };

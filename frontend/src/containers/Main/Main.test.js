@@ -5,14 +5,17 @@ import { ConnectedRouter } from "connected-react-router";
 import { Route, Switch } from "react-router-dom";
 import { getMockStore } from "../../test-utils/mocks";
 import Main from "./Main";
-import { collectionStatus } from "../../constants/constants";
+import { collectionStatus, signinStatus } from "../../constants/constants";
 import { history } from "../../store/store";
 
 
 const stubInitialState = {
     paper: {
     },
-    auth: {},
+    auth: {
+        singinStatus: signinStatus.SUCCESS,
+        me: null,
+    },
     collection: {
         make: {
             status: collectionStatus.NONE,

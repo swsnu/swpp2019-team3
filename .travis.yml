@@ -53,7 +53,8 @@ matrix:
     - pylint --rcfile=./backend/.pylintrc backend --disable='fixme, duplicate-code'
     - cd backend
     - coverage run --source='.' ./manage.py test
-    - coverage report --fail-under=85
+    - coverage report --fail-under=90
     - coverage xml
     after_success:
+    - sonar-scanner
     - coveralls
