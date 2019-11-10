@@ -99,7 +99,9 @@ class AddPaperModal extends Component {
                             checkedCollections: [],
                             collectionName: "",
                         });
+                        console.log(this.props.selectedCollection);
                         collectionIds = collectionIds.concat(this.props.selectedCollection.id);
+                        console.log(collectionIds);
                         collectionsAndPaper = { id: paperId, collection_ids: collectionIds };
                         this.props.onAddPaper(collectionsAndPaper);
                         break;
