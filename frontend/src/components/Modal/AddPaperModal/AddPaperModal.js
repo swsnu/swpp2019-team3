@@ -74,31 +74,49 @@ class AddPaperModal extends Component {
     }
 
     clickAddButtonHandler() {
-        if (this.state.collectionName !== "") {
-            this.props.onMakeNewCollection({ title: this.state.collectionName, text: `This is ${this.state.collectionName} collection.` })
+        let collectionIds = this.state.checkedCollections;
+        const paperId = this.props.id;
+        let collectionsAndPaper = { id: paperId, collection_ids: collectionIds };
+        if (this.state.collectionName.length > 0) {
+            const newCollection = { title: this.state.collectionName, text: `This is ${this.state.collectionName} collection.` };
+            this.props.onMakeNewCollection(newCollection)
                 .then(() => {
-                    this.setState({
-                        makeNewCollectionStatus: collectionStatus.SUCCESS,
-                    });
-                    this.props.onAddPaper({
-                        id: this.props.id,
-                        collection_ids: [this.props.selectedCollection.id],
-                    });
-                })
-                .catch(() => {});
-        }
-
-        if (this.state.checkedCollections.length >= 1) {
-            this.props.onAddPaper({
-                id: this.props.id,
-                collection_ids: this.state.checkedCollections,
-            })
+                    switch (this.props.makeNewCollectionStatus) {
+                    case collectionStatus.SUCCESS:
+                        this.setState({
+                            addPaperCollectionStatus: collectionStatus.NONE,
+                            makeNewCollectionStatus: collectionStatus.SUCCESS,
+                            isAddPaperOpen: false,
+                            checkedCollections: [],
+                            collectionName: "",
+                        });
+                        collectionIds = collectionIds.concat(this.props.selectedCollection.id);
+                        collectionsAndPaper = { id: paperId, collection_ids: collectionIds };
+                        this.props.onAddPaper(collectionsAndPaper);
+                        break;
+                    default:
+                        this.setState({ makeNewCollectionStatus: collectionStatus.FAILURE });
+                        break;
+                    }
+                });
+        } else if (this.state.checkedCollections) {
+            this.props.onAddPaper(collectionsAndPaper)
                 .then(() => {
-                    this.setState({
-                        addPaperCollectionStatus: collectionStatus.SUCCESS,
-                    });
-                })
-                .catch(() => {});
+                    switch (this.props.addPaperCollectionStatus) {
+                    case collectionStatus.SUCCESS:
+                        this.setState({
+                            addPaperCollectionStatus: collectionStatus.SUCCESS,
+                            makeNewCollectionStatus: collectionActions.NONE,
+                            isAddPaperOpen: false,
+                            checkedCollections: [],
+                            collectionName: "",
+                        });
+                        break;
+                    default:
+                        this.setState({ addPaperCollectionStatus: collectionStatus.FAILURE });
+                        break;
+                    }
+                });
         }
     }
 
@@ -164,6 +182,8 @@ class AddPaperModal extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    addPaperCollectionStatus: state.collection.edit.status,
+    makeNewCollectionStatus: state.collection.make.status,
     collectionList: state.collection.list.list,
     selectedCollection: state.collection.make.collection,
 
@@ -192,6 +212,8 @@ AddPaperModal.propTypes = {
     onMakeNewCollection: PropTypes.func,
     onAddPaper: PropTypes.func,
     id: PropTypes.number,
+    addPaperCollectionStatus: PropTypes.string,
+    makeNewCollectionStatus: PropTypes.string,
 };
 
 AddPaperModal.defaultProps = {
@@ -202,4 +224,6 @@ AddPaperModal.defaultProps = {
     onMakeNewCollection: () => {},
     onAddPaper: () => {},
     id: 0,
+    addPaperCollectionStatus: collectionStatus.NONE,
+    makeNewCollectionStatus: collectionStatus.NONE,
 };
