@@ -1,14 +1,3 @@
-import {
-    getUserByUserId,
-    // getUserByUserName,
-    getFollowersByUserId,
-    getFollowingsByUserId,
-    addUserFollowing,
-    removeUserFollowing,
-    // addUserFollower,
-    // removeUserFollower,
-    setUserProfile,
-} from "./Profile/ProfileActions";
 import { signup, signin } from "./auth/auth";
 import getPaper from "./paper/paper";
 
@@ -29,19 +18,6 @@ import {
     // addCollectionLike,
     // removeCollectionLike,
 } from "./Collection/collection";
-
-
-export {
-    getUserByUserId,
-    // getUserByUserName,
-    getFollowersByUserId,
-    getFollowingsByUserId,
-    addUserFollowing,
-    removeUserFollowing,
-    // addUserFollower,
-    // removeUserFollower,
-    setUserProfile,
-};
 
 export const collectionActions = {
     makeNewCollection,

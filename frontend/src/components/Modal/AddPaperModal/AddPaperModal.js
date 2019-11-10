@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -11,6 +12,8 @@ import { collectionActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
 
 class AddPaperModal extends Component {
+    _isMounted = false;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -28,10 +31,19 @@ class AddPaperModal extends Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
+
         this.props.onGetCollections({ id: 1 })
             .then(() => {
-                this.setState({ collections: this.props.collectionList });
-            });
+                if (this._isMounted) {
+                    this.setState({ collections: this.props.collectionList });
+                }
+            })
+            .catch(() => {});
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     openAddPaperHandler() {
@@ -63,7 +75,7 @@ class AddPaperModal extends Component {
 
     clickAddButtonHandler() {
         if (this.state.collectionName !== "") {
-            this.props.onMakeNewCollection({ title: this.state.collectionName, text: " " })
+            this.props.onMakeNewCollection({ title: this.state.collectionName, text: `This is ${this.state.collectionName} collection.` })
                 .then(() => {
                     this.setState({
                         makeNewCollectionStatus: collectionStatus.SUCCESS,
@@ -72,7 +84,8 @@ class AddPaperModal extends Component {
                         id: this.props.id,
                         collection_ids: [this.props.selectedCollection.id],
                     });
-                });
+                })
+                .catch(() => {});
         }
 
         if (this.state.checkedCollections.length >= 1) {
@@ -84,7 +97,8 @@ class AddPaperModal extends Component {
                     this.setState({
                         addPaperCollectionStatus: collectionStatus.SUCCESS,
                     });
-                });
+                })
+                .catch(() => {});
         }
     }
 
