@@ -24,9 +24,11 @@ def get_session(args):
     """Get Session"""
     return users_utils.select_session(args)
 
+
 def get_user_me(args):
     """Get Current User"""
     return users_utils.select_me(args)
+
 
 def delete_session(args):
     """Delete Session"""
@@ -121,3 +123,16 @@ def get_review_paper(args):
 def get_review_user(args):
     """Get Review User"""
     return {constants.REVIEWS: reviews_utils.select_review_user(args)}
+
+
+def get_paper_search(args):
+    """Get Paper Search"""
+
+
+def get_collection_search(args):
+    """Get Collection Search"""
+    return {constants.COLLECTIONS: collections_utils.select_collection_search(args)}
+
+
+def get_user_search(args):
+    """Get User Search"""

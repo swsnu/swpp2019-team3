@@ -156,3 +156,82 @@ class CollectionTestCase(TestCase):
                                  content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+
+    def test_search_collection(self):
+        """ Search Collection """
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Make Collection
+        # Title : Title Keyword Test
+        # Text : foo boo
+        client.post('/api/collection',
+                    json.dumps({
+                        constants.TITLE: 'Title Keyword Test',
+                        constants.TEXT: 'foo boo'
+                    }),
+                    content_type='application/json')
+
+        # Make Collection
+        # Title : foo boo
+        # Text : Text Keyword Test
+        client.post('/api/collection',
+                    json.dumps({
+                        constants.TITLE: 'foo boo',
+                        constants.TEXT: 'Text Keyword Test'
+                    }),
+                    content_type='application/json')
+
+        # Make Collection
+        # Title : TitleKeywordTest
+        # Text : TextKeywordTest
+        client.post('/api/collection',
+                    json.dumps({
+                        constants.TITLE: 'TitleKeywordTest',
+                        constants.TEXT: 'TextKeywordTest'
+                    }),
+                    content_type='application/json')
+
+        # Make Collection
+        # Title : foo boo
+        # Text : foo boo
+        client.post('/api/collection',
+                    json.dumps({
+                        constants.TITLE: 'foo boo',
+                        constants.TEXT: 'foo boo'
+                    }),
+                    content_type='application/json')
+
+        # Search with Keyword 'swpp'
+        response = client.get('/api/collection/search',
+                              data={
+                                  constants.TEXT: 'swpp'
+                              },
+                              content_type='application/json')
+        self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 1)
+        self.assertEqual(response.status_code, 200)
+
+        # Search with Keyword 'keyword'
+        response = client.get('/api/collection/search',
+                              data={
+                                  constants.TEXT: 'keyword'
+                              },
+                              content_type='application/json')
+        self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 3)
+        self.assertEqual(response.status_code, 200)
+
+        # Search with Keyword 'blahblah'
+        response = client.get('/api/collection/search',
+                              data={
+                                  constants.TEXT: 'blahblah'
+                              },
+                              content_type='application/json')
+        self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 0)
+        self.assertEqual(response.status_code, 200)
