@@ -28,6 +28,7 @@ class AddPaperModal extends Component {
             me: null,
         };
         this.updateCollectionList = this.updateCollectionList.bind(this);
+        this.equalTwoChecked = this.equalTwoChecked.bind(this);
         this.openAddPaperHandler = this.openAddPaperHandler.bind(this);
         this.checkHandler = this.checkHandler.bind(this);
         this.clickCancelButtonHandler = this.clickCancelButtonHandler.bind(this);
@@ -41,16 +42,6 @@ class AddPaperModal extends Component {
             .then(() => {
                 if (this._isMounted) {
                     this.setState({ me: this.props.me });
-
-                    this.props.onGetCollectionsWithContains({
-                        id: this.state.me.id, paper: this.props.id,
-                    })
-                        .then(() => {
-                            if (this._isMounted) {
-                                this.updateCollectionList(this.props.collectionList);
-                            }
-                        })
-                        .catch(() => {});
                 }
             })
             .catch(() => {});
@@ -59,6 +50,8 @@ class AddPaperModal extends Component {
     componentWillUnmount() {
         this._isMounted = false;
     }
+
+    equalTwoChecked = (before, curr) => before.sort().toString() === curr.sort().toString()
 
     updateCollectionList(collectionList) {
         const checkedCollections = collectionList.filter(
@@ -71,7 +64,16 @@ class AddPaperModal extends Component {
         });
     }
 
+
     openAddPaperHandler() {
+        this.props.onGetCollectionsWithContains({
+            id: this.state.me.id, paper: this.props.id,
+        })
+            .then(() => {
+                this.updateCollectionList(this.props.collectionList);
+            })
+            .catch(() => {});
+
         this.setState({ isAddPaperOpen: true });
     }
 
@@ -105,6 +107,7 @@ class AddPaperModal extends Component {
         let collectionIds = this.state.checkedCollections;
         const paperId = this.props.id;
         let collectionsAndPaper = { id: paperId, collection_ids: collectionIds };
+
         // create new collection and update it with other collections
         if (this.state.collectionName.length > 0) {
             const newCollection = { title: this.state.collectionName, text: `This is ${this.state.collectionName} collection.` };
@@ -138,7 +141,8 @@ class AddPaperModal extends Component {
                     }
                 });
         // only add to or remove from existing collections
-        } else if (this.state.beforeCheckedCollections !== this.state.checkedCollections) {
+        } else if (!this.equalTwoChecked(this.state.beforeCheckedCollections,
+            this.state.checkedCollections)) {
             this.props.onAddPaper(collectionsAndPaper)
                 .then(() => {
                     switch (this.props.addPaperCollectionStatus) {
@@ -200,7 +204,7 @@ class AddPaperModal extends Component {
                 >
                     <Modal.Header className="modal-header">
                         <div className="header-content">
-                            <div id="add-paper-to-my-collections">Add Paper to My Collections</div>
+                            <div id="add-paper-to-my-collections">Add this Paper to My Collections</div>
                             <div id="header-buttons">
                                 <Button
                                   className="add-button"
@@ -243,7 +247,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     onGetCollectionsWithContains: (userAndPaper) => dispatch(
-        collectionActions.getCollectionsWithContainsByUserId(userAndPaper),
+        collectionActions.getCollectionsByUserId(userAndPaper),
     ),
     onMakeNewCollection: (collection) => dispatch(
         collectionActions.makeNewCollection(collection),

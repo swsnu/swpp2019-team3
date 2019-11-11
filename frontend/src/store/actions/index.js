@@ -6,7 +6,6 @@ import getPaper from "./paper/paper";
 import {
     makeNewCollection,
     getCollectionsByUserId,
-    getCollectionsWithContainsByUserId,
     getCollection,
     getCollectionPapers,
     // getCollectionMembers,
@@ -25,7 +24,6 @@ import {
 export const collectionActions = {
     makeNewCollection,
     getCollectionsByUserId,
-    getCollectionsWithContainsByUserId,
     getCollection,
     getCollectionPapers,
     // getCollectionMembers,

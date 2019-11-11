@@ -35,25 +35,10 @@ const getCollectionsByUserIdFailure = (error) => ({
     target: error,
 });
 
-export const getCollectionsByUserId = (userId) => (dispatch) => axios.get("api/collection/user", { params: userId })
+// params can be { id: user_id } or { id: user_id, paper: id }
+export const getCollectionsByUserId = (params) => (dispatch) => axios.get("api/collection/user", { params })
     .then((res) => { dispatch(getCollectionsByUserIdSuccess(res.data)); })
     .catch((err) => { (dispatch(getCollectionsByUserIdFailure(err))); });
-
-
-// getCollectionsWithContainsByUserId
-const getCollectionsWithContainsByUserIdSuccess = (collections) => ({
-    type: collectionConstants.GET_COLLECTIONS,
-    target: collections.collections,
-});
-
-const getCollectionsWithContainsByUserIdFailure = (error) => ({
-    type: null,
-    target: error,
-});
-
-export const getCollectionsWithContainsByUserId = (userAndPaper) => (dispatch) => axios.get("api/collection/user", { params: userAndPaper })
-    .then((res) => { dispatch(getCollectionsWithContainsByUserIdSuccess(res.data)); })
-    .catch((err) => { (dispatch(getCollectionsWithContainsByUserIdFailure(err))); });
 
 
 // getCollection
