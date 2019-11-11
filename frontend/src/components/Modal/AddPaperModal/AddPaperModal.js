@@ -8,7 +8,7 @@ import {
 import GoMyCollectionsModal from "../GoMyCollectionsModal/GoMyCollectionsModal";
 import CollectionEntry from "../../Collection/CollectionEntry/CollectionEntry";
 import "./AddPaperModal.css";
-import { collectionActions, authActions } from "../../../store/actions";
+import { collectionActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
 
 class AddPaperModal extends Component {

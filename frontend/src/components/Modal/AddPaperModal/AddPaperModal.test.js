@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
 import AddPaperModal from "./AddPaperModal";
 import { getMockStore, mockComponent } from "../../../test-utils/mocks";
-import { collectionActions, authActions } from "../../../store/actions";
+import { collectionActions } from "../../../store/actions";
 
 
 const stubInitialState = {
