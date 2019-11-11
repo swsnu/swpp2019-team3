@@ -40,6 +40,22 @@ export const getCollectionsByUserId = (userId) => (dispatch) => axios.get("api/c
     .catch((err) => { (dispatch(getCollectionsByUserIdFailure(err))); });
 
 
+// getCollectionsWithContainsByUserId
+const getCollectionsWithContainsByUserIdSuccess = (collections) => ({
+    type: collectionConstants.GET_COLLECTIONS,
+    target: collections.collections,
+});
+
+const getCollectionsWithContainsByUserIdFailure = (error) => ({
+    type: null,
+    target: error,
+});
+
+export const getCollectionsWithContainsByUserId = (userAndPaper) => (dispatch) => axios.get("api/collection/user", { params: userAndPaper })
+    .then((res) => { dispatch(getCollectionsWithContainsByUserIdSuccess(res.data)); })
+    .catch((err) => { (dispatch(getCollectionsWithContainsByUserIdFailure(err))); });
+
+
 // getCollection
 const getCollectionSuccess = (collection) => ({
     type: collectionConstants.GET_COLLECTION,

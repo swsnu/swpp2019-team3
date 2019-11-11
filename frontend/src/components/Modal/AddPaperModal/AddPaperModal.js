@@ -39,10 +39,17 @@ class AddPaperModal extends Component {
                 if (this._isMounted) {
                     this.setState({ me: this.props.me });
 
-                    this.props.onGetCollections({ id: this.state.me.id })
+                    this.props.onGetCollectionsWithContains({
+                        id: this.state.me.id, paper: this.props.id,
+                    })
                         .then(() => {
                             if (this._isMounted) {
-                                this.setState({ collections: this.props.collectionList });
+                                this.setState({
+                                    collections: this.props.collectionList,
+                                    checkedCollections: this.props.collectionList.filter(
+                                        (collection) => collection.contains_paper === true,
+                                    ).map((collection) => collection.id),
+                                });
                             }
                         })
                         .catch(() => {});
@@ -200,8 +207,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onGetCollections: (userId) => dispatch(
-        collectionActions.getCollectionsByUserId(userId),
+    onGetCollectionsWithContains: (userAndPaper) => dispatch(
+        collectionActions.getCollectionsWithContainsByUserId(userAndPaper),
     ),
     onMakeNewCollection: (collection) => dispatch(
         collectionActions.makeNewCollection(collection),
@@ -219,7 +226,7 @@ AddPaperModal.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
     collectionList: PropTypes.arrayOf(PropTypes.any),
     selectedCollection: PropTypes.objectOf(PropTypes.any),
-    onGetCollections: PropTypes.func,
+    onGetCollectionsWithContains: PropTypes.func,
     onMakeNewCollection: PropTypes.func,
     onAddPaper: PropTypes.func,
     id: PropTypes.number,
@@ -233,7 +240,7 @@ AddPaperModal.defaultProps = {
     history: null,
     collectionList: [],
     selectedCollection: {},
-    onGetCollections: () => {},
+    onGetCollectionsWithContains: () => {},
     onMakeNewCollection: () => {},
     onAddPaper: () => {},
     id: 0,
