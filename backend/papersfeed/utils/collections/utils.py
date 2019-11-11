@@ -189,7 +189,7 @@ def select_collection_search(args):
     # Search Keyword
     keyword = args[constants.TEXT]
 
-    # Collections
+    # Collection Ids
     collection_ids = Collection.objects.filter(Q(title__icontains=keyword) | Q(text__icontains=keyword))\
         .values_list('id', flat=True)
 

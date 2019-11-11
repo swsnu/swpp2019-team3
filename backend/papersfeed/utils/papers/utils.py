@@ -69,6 +69,31 @@ def select_paper_collection(args):
     return papers
 
 
+def select_paper_search(args):
+    """Select Paper Search"""
+    is_parameter_exists([
+        constants.TEXT
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Search Keyword
+    keyword = args[constants.TEXT]
+
+    # Paper Ids
+    paper_ids = Paper.objects.filter(Q(title__icontains=keyword) | Q(abstract__icontains=keyword)) \
+        .values_list('id', flat=True)
+
+    # Filter Query
+    filter_query = Q(id__in=paper_ids)
+
+    # Papers
+    papers, _, _ = __get_papers(filter_query, request_user, None)
+
+    return papers
+
+
 def get_paper_migration():
     """Paper Migration from json"""
     with open('papersfeed/fixtures/cs_500.json', 'r') as papers_json:

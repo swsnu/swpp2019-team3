@@ -127,6 +127,7 @@ def get_review_user(args):
 
 def get_paper_search(args):
     """Get Paper Search"""
+    return {constants.PAPERS: papers_utils.select_paper_collection(args)}
 
 
 def get_collection_search(args):
@@ -136,3 +137,4 @@ def get_collection_search(args):
 
 def get_user_search(args):
     """Get User Search"""
+    return {constants.USERS: users_utils.select_user_search(args)}
