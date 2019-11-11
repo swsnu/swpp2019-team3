@@ -23,6 +23,12 @@
     /* background: red; */
 }
 
+#update-message {
+    font-size: 100%;
+    color: #DC143C;
+    margin-top: 2%;
+}
+
 .cancel-button {
     padding-left: 10px;
 }

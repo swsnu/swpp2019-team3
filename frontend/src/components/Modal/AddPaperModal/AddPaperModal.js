@@ -20,11 +20,14 @@ class AddPaperModal extends Component {
             addPaperCollectionStatus: collectionStatus.NONE,
             makeNewCollectionStatus: collectionStatus.NONE,
             isAddPaperOpen: false,
+            beforeCheckedCollections: [],
             checkedCollections: [],
             collections: [],
             collectionName: "",
+            updateMessage: "",
             me: null,
         };
+        this.updateCollectionList = this.updateCollectionList.bind(this);
         this.openAddPaperHandler = this.openAddPaperHandler.bind(this);
         this.checkHandler = this.checkHandler.bind(this);
         this.clickCancelButtonHandler = this.clickCancelButtonHandler.bind(this);
@@ -44,12 +47,7 @@ class AddPaperModal extends Component {
                     })
                         .then(() => {
                             if (this._isMounted) {
-                                this.setState({
-                                    collections: this.props.collectionList,
-                                    checkedCollections: this.props.collectionList.filter(
-                                        (collection) => collection.contains_paper === true,
-                                    ).map((collection) => collection.id),
-                                });
+                                this.updateCollectionList(this.props.collectionList);
                             }
                         })
                         .catch(() => {});
@@ -60,6 +58,17 @@ class AddPaperModal extends Component {
 
     componentWillUnmount() {
         this._isMounted = false;
+    }
+
+    updateCollectionList(collectionList) {
+        const checkedCollections = collectionList.filter(
+            (collection) => collection.contains_paper === true,
+        ).map((collection) => collection.id);
+        this.setState({
+            collections: collectionList,
+            beforeCheckedCollections: checkedCollections,
+            checkedCollections,
+        });
     }
 
     openAddPaperHandler() {
@@ -80,19 +89,23 @@ class AddPaperModal extends Component {
     }
 
     clickCancelButtonHandler() {
+        const { beforeCheckedCollections } = this.state;
         this.setState({
             addPaperCollectionStatus: collectionStatus.NONE,
             makeNewCollectionStatus: collectionStatus.NONE,
             isAddPaperOpen: false,
-            checkedCollections: [],
+            checkedCollections: beforeCheckedCollections,
             collectionName: "",
+            updateMessage: "",
         });
     }
 
     clickAddButtonHandler() {
+        const { beforeCheckedCollections } = this.state;
         let collectionIds = this.state.checkedCollections;
         const paperId = this.props.id;
         let collectionsAndPaper = { id: paperId, collection_ids: collectionIds };
+        // create new collection and update it with other collections
         if (this.state.collectionName.length > 0) {
             const newCollection = { title: this.state.collectionName, text: `This is ${this.state.collectionName} collection.` };
             this.props.onMakeNewCollection(newCollection)
@@ -103,19 +116,29 @@ class AddPaperModal extends Component {
                             addPaperCollectionStatus: collectionStatus.NONE,
                             makeNewCollectionStatus: collectionStatus.SUCCESS,
                             isAddPaperOpen: false,
-                            checkedCollections: [],
+                            checkedCollections: beforeCheckedCollections,
                             collectionName: "",
+                            updateMessage: "",
                         });
                         collectionIds = collectionIds.concat(this.props.selectedCollection.id);
                         collectionsAndPaper = { id: paperId, collection_ids: collectionIds };
-                        this.props.onAddPaper(collectionsAndPaper);
+                        this.props.onAddPaper(collectionsAndPaper)
+                            .then(() => {
+                                this.props.onGetCollectionsWithContains({
+                                    id: this.state.me.id, paper: this.props.id,
+                                })
+                                    .then(() => {
+                                        this.updateCollectionList(this.props.collectionList);
+                                    });
+                            });
                         break;
                     default:
                         this.setState({ makeNewCollectionStatus: collectionStatus.FAILURE });
                         break;
                     }
                 });
-        } else if (this.state.checkedCollections) {
+        // only add to or remove from existing collections
+        } else if (this.state.beforeCheckedCollections !== this.state.checkedCollections) {
             this.props.onAddPaper(collectionsAndPaper)
                 .then(() => {
                     switch (this.props.addPaperCollectionStatus) {
@@ -124,15 +147,24 @@ class AddPaperModal extends Component {
                             addPaperCollectionStatus: collectionStatus.SUCCESS,
                             makeNewCollectionStatus: collectionActions.NONE,
                             isAddPaperOpen: false,
-                            checkedCollections: [],
                             collectionName: "",
+                            updateMessage: "",
                         });
+                        this.props.onGetCollectionsWithContains({
+                            id: this.state.me.id, paper: this.props.id,
+                        })
+                            .then(() => {
+                                this.updateCollectionList(this.props.collectionList);
+                            });
                         break;
                     default:
                         this.setState({ addPaperCollectionStatus: collectionStatus.FAILURE });
                         break;
                     }
                 });
+        // nothing changed
+        } else {
+            this.setState({ updateMessage: "Nothing changed!" });
         }
     }
 
@@ -167,16 +199,19 @@ class AddPaperModal extends Component {
                   centered
                 >
                     <Modal.Header className="modal-header">
-                        <div id="add-paper-to-my-collections">Add Paper to My Collections</div>
-                        <div id="header-buttons">
-                            <Button
-                              className="add-button"
-                              onClick={this.clickAddButtonHandler}
-                              disabled={false}
-                            >Add
-                            </Button>
-                            <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
+                        <div className="header-content">
+                            <div id="add-paper-to-my-collections">Add Paper to My Collections</div>
+                            <div id="header-buttons">
+                                <Button
+                                  className="add-button"
+                                  onClick={this.clickAddButtonHandler}
+                                  disabled={false}
+                                >Add
+                                </Button>
+                                <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
+                            </div>
                         </div>
+                        <h3 id="update-message">{this.state.updateMessage}</h3>
                     </Modal.Header>
                     <Modal.Body>
                         <FormControl
