@@ -33,7 +33,7 @@ const initialState = {
     },
 };
 
-const CollectionReducer = (state = initialState, action) => {
+const reducer = (state = initialState, action) => {
     switch (action.type) {
     case collectionConstants.ADD_COLLECTION:
         return {
@@ -180,4 +180,4 @@ const CollectionReducer = (state = initialState, action) => {
     }
 };
 
-export default CollectionReducer;
+export default reducer;
