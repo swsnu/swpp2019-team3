@@ -32,7 +32,7 @@ export const signup = (user) => (dispatch) => axios.post("/api/user", user)
 
 const signinSuccess = (user) => ({
     type: authConstants.SIGNIN_SUCCESS,
-    target: user.data,
+    target: user,
 });
 
 const signinFailure = (error) => {
@@ -83,5 +83,5 @@ const getMeFailure = (error) => ({
 });
 
 export const getMe = () => (dispatch) => axios.get("/api/user/me")
-    .then((res) => dispatch(getMeSuccess(res.data.data)))
+    .then((res) => dispatch(getMeSuccess(res.data)))
     .catch((err) => dispatch(getMeFailure(err)));
