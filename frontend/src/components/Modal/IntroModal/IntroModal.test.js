@@ -14,6 +14,7 @@ let stubInitialState = {
         signinStatus: signinStatus.NONE,
     },
     paper: {},
+    user: {},
 };
 const mockHistory = { push: jest.fn() };
 const makeIntroModal = (initialState) => (
@@ -289,6 +290,7 @@ describe("<IntroModal />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
         };
         let component = mount(makeIntroModal(stubInitialState));
         let openButton = component.find(".signup-open-button").hostNodes();
@@ -315,6 +317,7 @@ describe("<IntroModal />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
         };
         component = mount(makeIntroModal(stubInitialState));
         openButton = component.find(".signup-open-button").hostNodes();
@@ -341,6 +344,7 @@ describe("<IntroModal />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
         };
         component = mount(makeIntroModal(stubInitialState));
         openButton = component.find(".signup-open-button").hostNodes();
@@ -368,6 +372,7 @@ describe("<IntroModal />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
         };
         component = mount(makeIntroModal(stubInitialState));
         openButton = component.find(".signup-open-button").hostNodes();
@@ -397,6 +402,7 @@ describe("<IntroModal />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
         };
         let component = mount(makeIntroModal(stubInitialState));
         let openButton = component.find(".signin-open-button").hostNodes();
@@ -421,6 +427,7 @@ describe("<IntroModal />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
         };
         component = mount(makeIntroModal(stubInitialState));
         openButton = component.find(".signin-open-button").hostNodes();
@@ -445,6 +452,7 @@ describe("<IntroModal />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
         };
         component = mount(makeIntroModal(stubInitialState));
 
@@ -471,6 +479,7 @@ describe("<IntroModal />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
         };
         component = mount(makeIntroModal(stubInitialState));
 

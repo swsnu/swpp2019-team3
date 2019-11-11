@@ -2,12 +2,12 @@ import axios from "axios";
 import { userConstants } from "../actionTypes";
 
 // get a single user
-const getUserByuserIdSuccess = (user) => ({
+const getUserByUserIdSuccess = (user) => ({
     type: userConstants.GET_USER,
     target: user.data,
 });
 
-const getUserByuserIdFailure = (error) => {
+const getUserByUserIdFailure = (error) => {
     const actionType = error.response.status === 404
         ? userConstants.GET_USER_FAILURE_USER_NOT_EXIST : null;
     return {
@@ -16,9 +16,9 @@ const getUserByuserIdFailure = (error) => {
     };
 };
 
-export const getUserByuserId = (userId) => (dispatch) => axios.get("api/user", { params: userId })
-    .then((res) => { dispatch(getUserByuserIdSuccess(res.data.data)); })
-    .catch((err) => { dispatch(getUserByuserIdFailure(err)); });
+export const getUserByUserId = (userId) => (dispatch) => axios.get("api/user", { params: { id: userId } })
+    .then((res) => { dispatch(getUserByUserIdSuccess(res.data)); })
+    .catch((err) => { dispatch(getUserByUserIdFailure(err)); });
 
 // get a list of followers
 // export const getFollowers

@@ -14,6 +14,7 @@ let stubInitialState = {
         me: null,
     },
     paper: {},
+    user: {},
 };
 const mockHistory = { push: jest.fn() };
 const makeHeader = (initialState) => (
@@ -64,6 +65,7 @@ describe("<Header />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
         };
         const component = mount(makeHeader(stubInitialState));
         const wrapper = component.find(".signout-button").hostNodes();
@@ -81,6 +83,7 @@ describe("<Header />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
         };
         const component = mount(makeHeader(stubInitialState));
         const wrapper = component.find(".signout-button").hostNodes();
@@ -98,6 +101,7 @@ describe("<Header />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
         };
         const component = mount(makeHeader(stubInitialState));
         const wrapper = component.find(".username-header").hostNodes();

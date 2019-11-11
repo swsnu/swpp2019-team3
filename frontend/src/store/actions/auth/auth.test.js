@@ -15,6 +15,7 @@ const stubInitialState = {
     },
     collection: {},
     paper: {},
+    user: {},
 };
 const mockStore = getMockStore(stubInitialState);
 

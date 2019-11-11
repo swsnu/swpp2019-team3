@@ -42,7 +42,7 @@ const stubCollection = {
 };
 
 describe("Colelction CollectionReducer", () => {
-    it("should return defualt state", () => {
+    it("should return default state", () => {
         const newState = CollectionReducer(stubInitialState, {
             type: "Abc",
             target: "fddf",
