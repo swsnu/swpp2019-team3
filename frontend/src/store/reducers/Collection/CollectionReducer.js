@@ -54,6 +54,7 @@ const CollectionReducer = (state = initialState, action) => {
             },
         };
     case collectionConstants.GET_COLLECTIONS:
+        console.log(action.target);
         return {
             ...state,
             list: {
