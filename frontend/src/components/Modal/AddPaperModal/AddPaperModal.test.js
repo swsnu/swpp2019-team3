@@ -12,7 +12,7 @@ const stubInitialState = {
     },
     auth: {
         singinStatus: signinStatus.SUCCESS,
-        me: null,
+        me: { id: 1 },
     },
     collection: {
         make: {
@@ -71,7 +71,6 @@ describe("<AddPaperModal />", () => {
     let addPaperModal;
     let spyGetCollections;
     let spyAddPaper;
-    let spyGetMe;
     let spyMakeNewCollection;
 
     beforeEach(() => {
@@ -81,8 +80,6 @@ describe("<AddPaperModal />", () => {
         spyAddPaper = jest.spyOn(collectionActions, "addCollectionPaper")
             .mockImplementation(() => () => mockPromise);
         spyMakeNewCollection = jest.spyOn(collectionActions, "makeNewCollection")
-            .mockImplementation(() => () => mockPromise);
-        spyGetMe = jest.spyOn(authActions, "getMe")
             .mockImplementation(() => () => mockPromise);
     });
 
@@ -95,15 +92,11 @@ describe("<AddPaperModal />", () => {
         const component = mount(addPaperModal);
         const wrapper = component.find(".addpapermodal");
         expect(wrapper.length).toBe(1);
-        expect(spyGetMe).toHaveBeenCalledTimes(1);
     });
 
 
     it("should open addpapermodal if addpaper-open-button is clicked", () => {
         const component = mount(addPaperModal);
-        const addPaperModalInstance = component.find(AddPaperModal.WrappedComponent).instance();
-        addPaperModalInstance.setState({ me: { id: 1 } });
-        component.update();
 
         const openButton = component.find(".addpaper-open-button").hostNodes();
         expect(openButton.length).toBe(1);
@@ -121,8 +114,6 @@ describe("<AddPaperModal />", () => {
     it("should open if adding paper or creating collection succeeds", () => {
         const component = mount(addPaperModal);
         const addPaperModalInstance = component.find(AddPaperModal.WrappedComponent).instance();
-        addPaperModalInstance.setState({ me: { id: 1 } });
-        component.update();
 
         const openButton = component.find(".addpaper-open-button").hostNodes();
         openButton.simulate("click");
@@ -139,8 +130,6 @@ describe("<AddPaperModal />", () => {
     it("should be closed if cancelButton is clicked", () => {
         const component = mount(addPaperModal);
         const addPaperModalInstance = component.find(AddPaperModal.WrappedComponent).instance();
-        addPaperModalInstance.setState({ me: { id: 1 } });
-        component.update();
 
         const openButton = component.find(".addpaper-open-button").hostNodes();
         openButton.simulate("click");
@@ -157,8 +146,6 @@ describe("<AddPaperModal />", () => {
     it("should set state properly on collectionName inputs", () => {
         const component = mount(addPaperModal);
         const addPaperModalInstance = component.find(AddPaperModal.WrappedComponent).instance();
-        addPaperModalInstance.setState({ me: { id: 1 } });
-        component.update();
 
         const openButton = component.find(".addpaper-open-button").hostNodes();
         openButton.simulate("click");
@@ -178,7 +165,6 @@ describe("<AddPaperModal />", () => {
             collections: [{ id: 1, title: "collection_1" },
                 { id: 2, title: "collection_2" },
             ],
-            me: { id: 1 },
         });
 
         const openButton = component.find(".addpaper-open-button").hostNodes();
@@ -197,7 +183,6 @@ describe("<AddPaperModal />", () => {
             collections: [{ id: 1, title: "collection_1" },
                 { id: 2, title: "collection_2" },
             ],
-            me: { id: 1 },
         });
 
         const openButton = component.find(".addpaper-open-button").hostNodes();
@@ -219,7 +204,6 @@ describe("<AddPaperModal />", () => {
         addPaperModalInstance.setState({
             collectionName: "",
             checkedCollections: [1, 2],
-            me: { id: 1 },
         });
 
         component.setProps({
@@ -246,7 +230,6 @@ describe("<AddPaperModal />", () => {
         addPaperModalInstance.setState({
             collectionName: "",
             checkedCollections: [1, 2],
-            me: { id: 1 },
         });
         component.update();
 
@@ -268,7 +251,6 @@ describe("<AddPaperModal />", () => {
         addPaperModalInstance.setState({
             collectionName: "collection_3",
             checkedCollections: [1, 2],
-            me: { id: 1 },
         });
 
         component.setProps({
@@ -296,7 +278,6 @@ describe("<AddPaperModal />", () => {
         addPaperModalInstance.setState({
             collectionName: "collection_3",
             checkedCollections: [1, 2],
-            me: { id: 1 },
         });
 
         component.setProps({
@@ -324,7 +305,6 @@ describe("<AddPaperModal />", () => {
         addPaperModalInstance.setState({
             collectionName: "collection_3",
             checkedCollections: [1, 2],
-            me: { id: 1 },
         });
 
         component.setProps({
@@ -352,7 +332,6 @@ describe("<AddPaperModal />", () => {
         addPaperModalInstance.setState({
             beforeCheckedCollections: [3],
             checkedCollections: [3],
-            me: { id: 1 },
         });
         component.update();
 

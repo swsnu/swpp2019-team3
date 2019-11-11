@@ -12,8 +12,6 @@ import { collectionActions, authActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
 
 class AddPaperModal extends Component {
-    _isMounted = false;
-
     constructor(props) {
         super(props);
         this.state = {
@@ -25,7 +23,6 @@ class AddPaperModal extends Component {
             collections: [],
             collectionName: "",
             updateMessage: "",
-            me: null,
         };
         this.updateCollectionList = this.updateCollectionList.bind(this);
         this.equalTwoChecked = this.equalTwoChecked.bind(this);
@@ -33,22 +30,6 @@ class AddPaperModal extends Component {
         this.checkHandler = this.checkHandler.bind(this);
         this.clickCancelButtonHandler = this.clickCancelButtonHandler.bind(this);
         this.clickAddButtonHandler = this.clickAddButtonHandler.bind(this);
-    }
-
-    componentDidMount() {
-        this._isMounted = true;
-
-        this.props.onGetMe()
-            .then(() => {
-                if (this._isMounted) {
-                    this.setState({ me: this.props.me });
-                }
-            })
-            .catch(() => {});
-    }
-
-    componentWillUnmount() {
-        this._isMounted = false;
     }
 
     equalTwoChecked = (before, curr) => before.sort().toString() === curr.sort().toString()
@@ -67,7 +48,7 @@ class AddPaperModal extends Component {
 
     openAddPaperHandler() {
         this.props.onGetCollectionsWithContains({
-            id: this.state.me.id, paper: this.props.id,
+            id: this.props.me.id, paper: this.props.id,
         })
             .then(() => {
                 this.updateCollectionList(this.props.collectionList);
@@ -128,7 +109,7 @@ class AddPaperModal extends Component {
                         this.props.onAddPaper(collectionsAndPaper)
                             .then(() => {
                                 this.props.onGetCollectionsWithContains({
-                                    id: this.state.me.id, paper: this.props.id,
+                                    id: this.props.me.id, paper: this.props.id,
                                 })
                                     .then(() => {
                                         this.updateCollectionList(this.props.collectionList);
@@ -155,7 +136,7 @@ class AddPaperModal extends Component {
                             updateMessage: "",
                         });
                         this.props.onGetCollectionsWithContains({
-                            id: this.state.me.id, paper: this.props.id,
+                            id: this.props.me.id, paper: this.props.id,
                         })
                             .then(() => {
                                 this.updateCollectionList(this.props.collectionList);
@@ -242,7 +223,6 @@ const mapStateToProps = (state) => ({
     collectionList: state.collection.list.list,
     selectedCollection: state.collection.make.collection,
     me: state.auth.me,
-
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -255,7 +235,6 @@ const mapDispatchToProps = (dispatch) => ({
     onAddPaper: (collectionsAndPaper) => dispatch(
         collectionActions.addCollectionPaper(collectionsAndPaper),
     ),
-    onGetMe: () => dispatch(authActions.getMe()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddPaperModal);
@@ -272,7 +251,6 @@ AddPaperModal.propTypes = {
     addPaperCollectionStatus: PropTypes.string,
     makeNewCollectionStatus: PropTypes.string,
     me: PropTypes.objectOf(PropTypes.any),
-    onGetMe: PropTypes.func,
 };
 
 AddPaperModal.defaultProps = {
@@ -286,5 +264,4 @@ AddPaperModal.defaultProps = {
     addPaperCollectionStatus: collectionStatus.NONE,
     makeNewCollectionStatus: collectionStatus.NONE,
     me: null,
-    onGetMe: () => {},
 };
