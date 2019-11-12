@@ -71,8 +71,11 @@ def get_papers(filename):
     keywords = []
     paper_keywords = []
 
-    abstracts = {}
-    keywords_dict = {}
+    abstracts = {} # key: primary key of paper, value: abstract of the paper
+    keywords_dict = {} # key: keyword, value: tuple of (list of included papers, type)
+    # For now, type of PaperKeyword is 'au'('author') or 'ab'('abstract').
+    # 'au' means the keyword is defined by authors of the paper,
+    # and 'ab' means the keyword is extracted from the abstract of the paper.
 
     address_pattern = re.compile(r'(\[.*?\].*?)\;')
     address_author_pattern = re.compile(r'\[.*?\]')
@@ -207,27 +210,28 @@ def get_papers(filename):
         }
         paper_publications.append(paper_publication)
 
-        # 7-1. save abstracts with key of paper for extracting keywords later
+        # 7-1. save abstract with key of paper for extracting keywords later
         abstracts[pk['paper']] = row['AB']
 
-        # 7-2.
+        # 7-2. save information of mapping keyword to paper
         keywords_name = list(map(str.strip, row['DE'].split(';')))
         for keyword_name in keywords_name:
-            if not keyword_name:
+            if not keyword_name: # skip ''
                 continue
             keyword_name = keyword_name.lower()
-            if keyword_name in keywords_dict:
+            if keyword_name in keywords_dict: # if the same keyword was checked before
                 keywords_dict[keyword_name].append((pk['paper'], 'au'))
-            else:
+            else: # if this is a new keyword
                 keywords_dict[keyword_name] = [(pk['paper'], 'au')]
 
-
+    # for every abstract, extract keywords by calling 'get_key_phrases'
     doc_list = []
     request_len = 0
     request_cnt = 0
     for paper_key in abstracts:
         request_len += min(len(abstracts[paper_key]), MAX_DOC_SIZE)
 
+        # create as few as requests possible, considering maximum sizes of request and doc
         if request_len >= MAX_REQ_SIZE:
             documents = {"documents": doc_list}
             key_phrases = get_key_phrases(documents)
@@ -250,7 +254,7 @@ def get_papers(filename):
 
     # create Keyword and PaperKeyword records from keywords_dict
     for keyword_name in keywords_dict:
-        # 7. create a Keyword record
+        # create a Keyword record
         pk['keyword'] += 1
         keyword_fields = {
             "name": keyword_name.strip()
@@ -264,7 +268,7 @@ def get_papers(filename):
         keywords.append(keyword)
 
         for paper_key_and_type in keywords_dict[keyword_name]:
-            # 8. create a PaperKeyword record
+            # create a PaperKeyword record
             pk['paper_keyword'] += 1
             keyword_type = "author" if paper_key_and_type[1] == "au" else "abstract"
             paper_keyword_fields = {
