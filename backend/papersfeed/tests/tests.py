@@ -4,6 +4,7 @@ import json
 from django.test import TestCase, Client
 from papersfeed import constants
 
+
 class ApiEntryTestCase(TestCase):
     """api_entry test"""
 
@@ -43,4 +44,4 @@ class ApiEntryTestCase(TestCase):
                                data='{array: [1, 2, 3]}',
                                content_type='application/json')
 
-        self.assertEqual(response.status_code, 421)
+        self.assertEqual(response.status_code, 520)
