@@ -1,8 +1,58 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
+import { Provider } from "react-redux";
 import ReviewControl from "./ReviewControl";
+import { reviewActions, paperActions } from "../../../store/actions";
+import { reviewStatus, getPaperStatus } from "../../../constants/constants";
+import { getMockStore } from "../../../test-utils/mocks";
+import { history } from "../../../store/store";
+
+
+const stubInitialState = {
+    paper: {
+        getPaperStatus: getPaperStatus.NONE,
+        selectedPaper: {},
+    },
+    auth: {
+    },
+    collection: {
+
+    },
+    review: {
+        make: {
+            status: reviewStatus.NONE,
+            review: {},
+            error: null,
+        },
+        list: {
+            status: reviewStatus.NONE,
+            list: [],
+            error: null,
+        },
+        edit: {
+            status: reviewStatus.NONE,
+            review: {},
+            error: null,
+        },
+        delete: {
+            status: reviewStatus.NONE,
+            review: {},
+            error: null,
+        },
+        selected: {
+            status: reviewStatus.NONE,
+            review: { id: 1 },
+            error: null,
+            replies: [],
+        },
+    },
+};
 
 describe("<ReviewControl />", () => {
+    let reviewControl;
+    let spyOnGetPaper;
+    let spyOnGetReview;
+
     it("should render without errors", () => {
         const component = mount(<ReviewControl />);
         const wrapper = component.find(".review-control");

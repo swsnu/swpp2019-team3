@@ -4,7 +4,7 @@ import { connectRouter } from "connected-react-router";
 import CollectionReducer from "./Collection/CollectionReducer";
 import authReducer from "./auth/auth";
 import paperReducer from "./paper/paper";
-import ReviewReducer from "./Review/ReviewReducer";
+import ReviewReducer from "./review/review";
 
 const rootReducer = (history) => combineReducers({
     paper: paperReducer,

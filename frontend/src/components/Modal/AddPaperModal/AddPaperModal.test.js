@@ -44,6 +44,7 @@ const stubInitialState = {
             replies: [],
         },
     },
+    review: {},
 };
 
 const mockHistory = { push: jest.fn() };

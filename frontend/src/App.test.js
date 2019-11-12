@@ -12,6 +12,7 @@ const mockStore = getMockStore({
     auth: {},
     paper: {},
     collection: {},
+    review: {},
 });
 
 describe("App", () => {

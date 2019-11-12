@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-
+import { Button } from "react-bootstrap";
 import { PaperSpec, ReviewCard } from "../../components";
-import { paperActions } from "../../store/actions";
-import { getPaperStatus } from "../../constants/constants";
+import { paperActions, reviewActions } from "../../store/actions";
+import { getPaperStatus, reviewStatus } from "../../constants/constants";
 import "./PaperDetail.css";
 
 class PaperDetail extends Component {
@@ -21,6 +21,7 @@ class PaperDetail extends Component {
             reviews: [],
         };
         this.reviewMaker = this.reviewMaker.bind(this);
+        this.handleClickReviewAddButton = this.handleClickReviewAddButton.bind(this);
     }
 
     componentDidMount() {
@@ -49,6 +50,17 @@ class PaperDetail extends Component {
                     this.setState({ keywords: this.props.selectedPaper.keywords.join(", ") });
                 } */
             });
+
+        this.props.onGetReviewsByPaper({ id: this.props.location.pathname.split("=")[1] })
+            .then(() => {
+                if (this.props.reviewList.status === reviewStatus.SUCCESS) {
+                    this.setState({
+                        reviews: this.props.reviewList.list,
+                    });
+                } else {
+                    this.props.history.push("/main");
+                }
+            });
     }
 
     reviewMaker = (review) => (
@@ -64,6 +76,10 @@ class PaperDetail extends Component {
           headerExists={false}
         />
     )
+
+    handleClickReviewAddButton() {
+        return this.props.history.push(`/paper_id=${this.props.location.pathname.split("=")[1]}/create`);
+    }
 
     render() {
         const reviewCardsLeft = this.state.reviews
@@ -93,6 +109,7 @@ class PaperDetail extends Component {
                         />
                         {/* FIXME: review-count should reflect this.state.reviewCount */}
                         <h3 id="review-count">{this.state.reviews.length} reviews</h3>
+                        <Button className="review-add" onClick={this.handleClickReviewAddButton}>Add</Button>
                         <div className="reviewcards">
                             <div className="reviewcards-left">{reviewCardsLeft}</div>
                             <div className="reviewcards-right">{reviewCardsRight}</div>
@@ -106,10 +123,12 @@ class PaperDetail extends Component {
 const mapStateToProps = (state) => ({
     getPaperStatus: state.paper.getPaperStatus,
     selectedPaper: state.paper.selectedPaper,
+    reviewList: state.review.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onGetPaper: (paperId) => dispatch(paperActions.getPaper(paperId)),
+    onGetReviewsByPaper: (paperId) => dispatch(reviewActions.getReviewsByPaperId(paperId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PaperDetail);
@@ -120,6 +139,8 @@ PaperDetail.propTypes = {
     onGetPaper: PropTypes.func,
     getPaperStatus: PropTypes.string,
     selectedPaper: PropTypes.objectOf(PropTypes.any),
+    reviewList: PropTypes.arrayOf(PropTypes.any),
+    onGetReviewsByPaper: PropTypes.func,
 };
 
 PaperDetail.defaultProps = {
@@ -128,4 +149,6 @@ PaperDetail.defaultProps = {
     onGetPaper: null,
     getPaperStatus: getPaperStatus.NONE,
     selectedPaper: {},
+    reviewList: [],
+    onGetReviewsByPaper: () => {},
 };

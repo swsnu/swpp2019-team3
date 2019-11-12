@@ -17,6 +17,13 @@
     flex-direction: column;
 }
 
+.review-control .review-control-page .header{
+    margin-top: 10%;
+    font-size: 200%;
+    font-weight: bold;
+}
+
+
 .review-control .review-control-page .board .paper-spec{
     width: 80%;
     background: white;

@@ -47,6 +47,7 @@ let stubInitialState = {
             replies: [],
         },
     },
+    review: {},
 };
 
 const mockHistory = { push: jest.fn() };
@@ -120,6 +121,7 @@ describe("<PaperDetail />", () => {
                     replies: [],
                 },
             },
+            review: {},
         };
         const component = mount(makeIntroModal(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
@@ -174,6 +176,7 @@ describe("<PaperDetail />", () => {
                     replies: [],
                 },
             },
+            review: {},
         };
         const component = mount(makeIntroModal(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
@@ -223,6 +226,7 @@ describe("<PaperDetail />", () => {
                     replies: [],
                 },
             },
+            review: {},
         };
         const component = mount(makeIntroModal(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
@@ -270,6 +274,7 @@ describe("<PaperDetail />", () => {
                     replies: [],
                 },
             },
+            review: {},
         };
         expect(mockHistory.push).toHaveBeenCalledTimes(0);
         // FIXME: actually, it should be '1'!
