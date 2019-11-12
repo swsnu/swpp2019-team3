@@ -44,10 +44,10 @@ class PaperDetail extends Component {
                 if (this.props.selectedPaper.publication) {
                     this.setState({ date: this.props.selectedPaper.publication.date });
                 }
-                // FIXME: Please uncomment this block if onGetPaper can get keywords
-                /* if (this.props.selectedPaper.keywords) {
-                    this.setState({ keywords: this.props.selectedPaper.keywords.join(", ") });
-                } */
+                if (this.props.selectedPaper.keywords) {
+                    const keywordNames = this.props.selectedPaper.keywords.map((keyword) => keyword.name);
+                    this.setState({ keywords: keywordNames.join(", ") });
+                }
             });
     }
 
