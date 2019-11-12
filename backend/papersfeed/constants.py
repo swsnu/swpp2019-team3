@@ -41,6 +41,7 @@ COLLECTIONS = 'collections'
 COLLECTION_IDS = 'collection_ids'
 TITLE = 'title'
 TEXT = 'text'
+CONTAINS_PAPER = 'contains_paper'
 
 # Paper
 PAPER = 'paper'
