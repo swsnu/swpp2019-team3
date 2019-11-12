@@ -1,12 +1,12 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import {
     Form, Button, Card,
 } from "react-bootstrap";
-
-import {
-    Reply,
-} from "../../../components";
+import { reviewActions } from "../../../store/actions";
+import { reviewStatus } from "../../../constants/constants";
+import { Reply } from "../../../components";
 import "./ReviewDetail.css";
 import SVG from "../../../components/svg";
 
@@ -14,41 +14,20 @@ class ReviewDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            authorId: 1,
-            paperId: 4,
-            id: 2,
-            title: "What computer-lovers should read",
-            content: "I think everyone should read this paper. I could learn so many things from this.",
-            author: "Alpha",
-            likeCount: 14,
-            newReply: "",
-            isLiked: false,
-            replies: [{
-                id: 1,
-                authorId: 0,
-                author: "Girin",
-                review: 2,
-                likeCount: 7,
-                isLiked: false,
-                content: "You are right!",
-            },
-            {
-                id: 2,
-                authorId: 4,
-                author: "Goyangineun Yaong",
-                review: 2,
-                likeCount: 4,
-                isLiked: true,
-                content: "Interesting! I want to follow you",
-            }],
-            replyCount: 2,
+            thisReview: {},
+            replies: [],
         };
+
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
         this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
         this.clickEditButtonHandler = this.clickEditButtonHandler.bind(this);
         this.clickDeleteButtonHandler = this.clickDeleteButtonHandler.bind(this);
         this.clickReplyAddButtonHandler = this.clickReplyAddButtonHandler.bind(this);
         this.handleChange = this.handleChange.bind(this);
+    }
+
+    componentDidMount() {
+
     }
 
     handleChange(e) {
@@ -139,13 +118,24 @@ class ReviewDetail extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+    selectedReview: state.review.selected,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onGetReview: (reviewId) => dispatch(reviewActions.getReview(reviewId)),
+});
+
 ReviewDetail.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
-
+    selectedReview: PropTypes.objectOf(PropTypes.any),
+    onGetReview: PropTypes.func,
 };
 
 ReviewDetail.defaultProps = {
     history: null,
+    selectedReview: {},
+    onGetReview: () => {},
 };
 
-export default ReviewDetail;
+export default connect(mapStateToProps, mapDispatchToProps)(ReviewDetail);

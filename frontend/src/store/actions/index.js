@@ -21,6 +21,18 @@ import {
     // removeCollectionLike,
 } from "./Collection/collection";
 
+import {
+    makeNewReview,
+    getReviewsByPaperId,
+    getReviewsByUserId,
+    getReview,
+    setReviewContent,
+    // addReviewLike,
+    // removeReviewLike,
+    deleteReview,
+    //consume Review,
+} from "./Review/review";
+
 export const collectionActions = {
     makeNewCollection,
     getCollectionsByUserId,
@@ -37,6 +49,18 @@ export const collectionActions = {
     deleteCollection,
     // addCollectionLike,
     // removeCollectionLike,
+};
+
+export const reviewActions = {
+    makeNewReview,
+    getReviewsByPaperId,
+    getReviewsByUserId,
+    getReview,
+    setReviewContent,
+    // addReviewLike,
+    // removeReviewLike,
+    deleteReview,
+    //consume Review,
 };
 
 export const authActions = {
