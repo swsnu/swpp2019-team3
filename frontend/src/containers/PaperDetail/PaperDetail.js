@@ -45,7 +45,9 @@ class PaperDetail extends Component {
                     this.setState({ date: this.props.selectedPaper.publication.date });
                 }
                 if (this.props.selectedPaper.keywords) {
-                    const keywordNames = this.props.selectedPaper.keywords.map((keyword) => keyword.name);
+                    const keywordNames = this.props.selectedPaper.keywords.map(
+                        (keyword) => keyword.name,
+                    );
                     this.setState({ keywords: keywordNames.join(", ") });
                 }
             });

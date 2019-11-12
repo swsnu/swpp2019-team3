@@ -11,6 +11,8 @@ from abstract_analysis import get_key_phrases
 
 csv.field_size_limit(sys.maxsize)
 
+MAX_REQ_SIZE = 500000 # maxCharactersPerRequest of Text Analytics API is 524288
+MAX_DOC_SIZE = 5120 # size limit of one document is 5120 (request consists of multiple documents)
 PUBLICATION_TYPE_DICT = {
     'J': 'journal',
     'B': 'book',
@@ -36,7 +38,7 @@ MONTH_DICT = {
 }
 
 
-# pylint: disable=too-many-locals, too-many-statements
+# pylint: disable=too-many-locals, too-many-statements, too-many-branches
 def get_papers(filename):
     """
     Parser for tab seperated text files downloaded from Web of Science
@@ -224,21 +226,18 @@ def get_papers(filename):
     request_len = 0
     request_cnt = 0
     for paper_key in abstracts:
-        request_len += min(len(abstracts[paper_key]), 5120)
+        request_len += min(len(abstracts[paper_key]), MAX_DOC_SIZE)
 
-        if request_len >= 500000:
+        if request_len >= MAX_REQ_SIZE:
             documents = {"documents": doc_list}
             key_phrases = get_key_phrases(documents)
             request_cnt += 1
-
-            # To check struct of response struct, refer to
-            # https://koreacentral.dev.cognitive.microsoft.com/docs/services/TextAnalytics-v2-1/operations/56f30ceeeda5650db055a3c6
             process_key_phrases(key_phrases, keywords_dict, request_cnt)
 
             doc_list = []
-            request_len = min(len(abstracts[paper_key]), 5120)
+            request_len = min(len(abstracts[paper_key]), MAX_DOC_SIZE)
 
-        doc_list.append({"id": str(paper_key), "language": "en", "text": abstracts[paper_key][:5120]})
+        doc_list.append({"id": str(paper_key), "language": "en", "text": abstracts[paper_key][:MAX_DOC_SIZE]})
 
     if doc_list:
         documents = {"documents": doc_list}
@@ -287,9 +286,12 @@ def get_papers(filename):
     # pylint: enable=line-too-long
     json_filename = filename.split('/')[-1].split('.')[0].strip() + '.json'
     json.dump(models, open(json_filename, 'w'), indent=4)
-# pylint: enable=too-many-locals, too-many-statements
+# pylint: enable=too-many-locals, too-many-statements, too-many-branches
 
 def process_key_phrases(key_phrases, keywords_dict, request_cnt):
+    """process result of response and save them in keywords_dict"""
+    # To check struct of response struct, refer to
+    # https://koreacentral.dev.cognitive.microsoft.com/docs/services/TextAnalytics-v2-1/operations/56f30ceeeda5650db055a3c6
     if key_phrases['errors']:
         print("- Request {} error".format(request_cnt))
         pprint(key_phrases['errors'])

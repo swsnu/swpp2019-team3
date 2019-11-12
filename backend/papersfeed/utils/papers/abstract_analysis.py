@@ -1,4 +1,6 @@
-"""abstract_analysis.py"""
+""" This code is mainly similar with
+    that in https://docs.microsoft.com/ko-kr/azure/cognitive-services/text-analytics/quickstarts/text-analytics-sdk
+"""
 import os
 import argparse
 import requests
