@@ -4,7 +4,6 @@ import json
 
 from django.test import TestCase, Client
 from papersfeed import constants
-from papersfeed.utils.papers.utils import get_paper_migration
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.reviews.review import Review
 from papersfeed.models.users.user import User
@@ -34,10 +33,19 @@ class ReviewTestCase(TestCase):
                    },
                    content_type='application/json')
 
-        # Migrate
-        get_paper_migration()
+        # Creating papers
+        Paper.objects.create(
+            title="paper1",
+            language="English",
+            abstract="abstract1",
+            ISSN="1",
+            eISSN="1",
+            DOI="1",
+            creation_date="2019-11-13",
+            modification_date="2019-11-13"
+        )
 
-        paper_id = Paper.objects.filter(title='CERTIFIED LATTICE REDUCTION').first().id
+        paper_id = Paper.objects.filter(title='paper1').first().id
 
         client.post('/api/review',
                     data=json.dumps({
@@ -59,7 +67,7 @@ class ReviewTestCase(TestCase):
                    },
                    content_type='application/json')
 
-        paper_id = Paper.objects.filter(title='CERTIFIED LATTICE REDUCTION').first().id
+        paper_id = Paper.objects.filter(title='paper1').first().id
 
         # Make Review
         response = client.post('/api/review',
