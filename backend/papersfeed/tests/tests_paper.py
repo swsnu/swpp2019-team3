@@ -131,3 +131,35 @@ class PaperTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+
+    def test_paper_search(self):
+        """ PAPER SEARCH """
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Search with Keyword 'Computer'
+        response = client.get('/api/paper/search',
+                              data={
+                                  constants.TEXT: 'computer'
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        # cs_500.json 파일 기준 415개 이다.
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 415)
+
+        # Search with Keyword 'AI'
+        response = client.get('/api/paper/search',
+                              data={
+                                  constants.TEXT: 'AI'
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        # cs_500.json 파일 기준 376개 이다.
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 376)

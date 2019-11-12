@@ -215,8 +215,9 @@ class CollectionTestCase(TestCase):
                                   constants.TEXT: 'swpp'
                               },
                               content_type='application/json')
-        self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 1)
+
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 1)
 
         # Search with Keyword 'keyword'
         response = client.get('/api/collection/search',
@@ -224,8 +225,8 @@ class CollectionTestCase(TestCase):
                                   constants.TEXT: 'keyword'
                               },
                               content_type='application/json')
-        self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 3)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 3)
 
         # Search with Keyword 'blahblah'
         response = client.get('/api/collection/search',
@@ -233,5 +234,5 @@ class CollectionTestCase(TestCase):
                                   constants.TEXT: 'blahblah'
                               },
                               content_type='application/json')
-        self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 0)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 0)
