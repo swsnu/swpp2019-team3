@@ -62,8 +62,8 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
         except ApiError as error:
             status_code = error.args[0]
         except Exception as error:  # pylint: disable=broad-except
+            print(str(error))
             status_code = 500
-
             response_data[constants.DEBUG] = {constants.ERROR: str(error),
                                               constants.DESCRIPTION: traceback.format_exc()}
         else:

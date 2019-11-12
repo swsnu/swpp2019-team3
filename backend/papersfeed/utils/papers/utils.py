@@ -198,13 +198,16 @@ def __pack_papers(papers, request_user):  # pylint: disable=unused-argument
 
     # Paper Authors
     authors = __get_authors_paper(Q(paper_id__in=paper_ids))
-
+    print("#authors")
+    print(authors)
     # Paper Keywords
     keywords = __get_keywords_paper(Q(paper_id__in=paper_ids))
-
+    print("#keywords")
+    print(keywords)
     # Paper Publications
     paper_publications = __get_paper_publications(Q(paper_id__in=paper_ids))
-
+    print("#publications")
+    print(paper_publications)
     for paper in papers:
         paper_id = paper.id
 
