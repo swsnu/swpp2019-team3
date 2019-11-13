@@ -93,7 +93,7 @@ const ReviewReducer = (state = initialState, action) => {
             ...state,
             selected: {
                 ...state.selected,
-                status: reviewStatus.SUCCESS,
+                status: reviewStatus.REVIEW_NOT_EXIST,
                 error: action.target,
             },
         };
@@ -102,6 +102,7 @@ const ReviewReducer = (state = initialState, action) => {
             ...state,
             edit: {
                 ...state.edit,
+                status: reviewStatus.SUCCESS,
                 review: action.target,
             },
         };
@@ -110,6 +111,7 @@ const ReviewReducer = (state = initialState, action) => {
             ...state,
             edit: {
                 ...state.edit,
+                status: reviewStatus.REVIEW_NOT_EXIST,
                 error: action.target,
             },
         };
@@ -118,6 +120,7 @@ const ReviewReducer = (state = initialState, action) => {
             ...state,
             edit: {
                 ...state.edit,
+                status: reviewStatus.AUTH_ERROR,
                 error: action.target,
             },
         };

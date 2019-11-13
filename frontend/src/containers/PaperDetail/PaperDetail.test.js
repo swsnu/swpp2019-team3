@@ -180,7 +180,7 @@ describe("<PaperDetail />", () => {
         };
         const component = mount(makeIntroModal(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
-        expect(instance.state.authorNames).toBe("");
+        expect(instance.state.authorNames).toEqual([]);
         // FIXME: actually, it should be 'A_f A_l, B_f B_l'!
     });
 

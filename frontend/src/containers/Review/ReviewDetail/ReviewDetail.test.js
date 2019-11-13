@@ -139,8 +139,11 @@ describe("<ReviewDetail />", () => {
 
     it("should handle delete button", () => {
         const spyOnDeleteReview = jest.spyOn(reviewActions, "deleteReview")
-            .mockImplementation(() => () => new Promise((resolve) => { resolve({ status: 200 }); }));
-        const spyPush = jest.spyOn(history, "push");
+            .mockImplementation(() => () => new Promise(
+                (resolve) => {
+                    resolve({ status: 200 });
+                },
+            ));
         const component = mount(reviewDetail);
 
         const button = component.find(".review-extra .delete-button").hostNodes();

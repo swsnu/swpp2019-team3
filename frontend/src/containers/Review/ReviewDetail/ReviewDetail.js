@@ -50,7 +50,6 @@ class ReviewDetail extends Component {
                     this.history.push("/");
                 }
             }).catch(() => {
-                this.histlikory.push("/");
             });
 
         this.props.onGetReview({ id: this.props.match.params.review_id })
@@ -64,7 +63,7 @@ class ReviewDetail extends Component {
                 } else {
                     this.props.history.push("/main");
                 }
-            });
+            }).catch(() => {});
     }
 
     handleChange(e) {

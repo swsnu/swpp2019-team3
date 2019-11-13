@@ -31,7 +31,6 @@ class ReviewControl extends Component {
         this.props.onGetPaper({ id: this.props.match.params.paper_id })
             .then(() => {
                 if (this.props.getPaperStatus === getPaperStatus.SUCCESS) {
-                    console.log(this.props.selectedPaper);
                     this.setState({
                         paper: this.props.selectedPaper,
                         likeCount: this.props.selectedPaper.count.likes,
@@ -42,13 +41,12 @@ class ReviewControl extends Component {
                     this.props.history.push(`/paper_id=${this.props.match.params.paper_id}`);
                 }
             }).catch(() => {
-                this.props.history.push(`/paper_id=${this.props.match.params.paper_id}`);
             });
 
         if (this.props.mode === 0) {
             this.setState({
                 title: "Enter title here.",
-                content: "Enter content here",
+                content: "Enter content here.",
             });
         } else if (this.props.mode === 1) {
             this.props.onGetReview({ id: this.props.match.params.review_id })
@@ -63,7 +61,7 @@ class ReviewControl extends Component {
                         this.props.history.push(`/review_id=${this.props.match.params.review_id}`);
                     }
                 }).catch(() => {
-                    this.props.history.push(`/review_id=${this.props.match.params.review_id}`);
+                   
                 });
         }
     }
@@ -80,7 +78,6 @@ class ReviewControl extends Component {
                         this.props.history.push(`/paper_id=${this.state.paper.id}`);
                     }
                 }).catch(() => {
-                    this.props.history.push(`/paper_id=${this.state.paper.id}`);
                 });
         } else if (this.props.mode === 1) {
             review = {
@@ -92,7 +89,7 @@ class ReviewControl extends Component {
                 .then(() => {
                     this.props.history(`/review_id=${this.props.editedReview.review.id}`);
                 }).catch(() => {
-                    this.props.history(`/review_id=${this.props.editedReview.review.id}`);
+                    
                 });
         }
     }

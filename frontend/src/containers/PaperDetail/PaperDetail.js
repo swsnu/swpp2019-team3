@@ -15,8 +15,8 @@ class PaperDetail extends Component {
             /* eslint-disable react/no-unused-state */
             reviewCount: 0,
             /* eslint-enable react/no-unused-state */
-            authorNames: "",
-            keywords: "",
+            authorNames: [],
+            keywords: [],
             date: "",
             reviews: [],
         };
@@ -40,7 +40,7 @@ class PaperDetail extends Component {
                 if (this.props.selectedPaper.authors) {
                     const { authors } = this.props.selectedPaper;
                     const authorNames = authors.map((author) => `${author.first_name} ${author.last_name}`);
-                    this.setState({ authorNames: authorNames.join(", ") });
+                    this.setState({ authorNames });
                 }
                 if (this.props.selectedPaper.publication) {
                     this.setState({ date: this.props.selectedPaper.publication.date });
