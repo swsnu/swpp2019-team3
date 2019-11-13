@@ -9,7 +9,6 @@ import traceback
 from django.http import JsonResponse, HttpResponse, HttpResponseNotAllowed
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import ensure_csrf_cookie
-from django.views.decorators.csrf import csrf_exempt
 
 # Internal Modules
 from papersfeed.utils.base_utils import ApiError
@@ -31,7 +30,7 @@ def token(request):
         return HttpResponseNotAllowed(['GET'])
 
 
-@csrf_exempt
+@ensure_csrf_cookie
 def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
     """api_entry"""
     # API 요청에 Return 할 Response Initialize
