@@ -1,14 +1,14 @@
 import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
 
-import CollectionReducer from "./Collection/CollectionReducer";
+import collectionReducer from "./collection/collection";
 import authReducer from "./auth/auth";
 import paperReducer from "./paper/paper";
 import UserReducer from "./user/UserReducer";
 
 const rootReducer = (history) => combineReducers({
     paper: paperReducer,
-    collection: CollectionReducer,
+    collection: collectionReducer,
     auth: authReducer,
     user: UserReducer,
     router: connectRouter(history),

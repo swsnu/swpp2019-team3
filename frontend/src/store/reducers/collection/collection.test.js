@@ -1,4 +1,4 @@
-import CollectionReducer from "./CollectionReducer";
+import reducer from "./collection";
 import { collectionStatus } from "../../../constants/constants";
 import { collectionConstants } from "../../actions/actionTypes";
 
@@ -42,8 +42,8 @@ const stubCollection = {
 };
 
 describe("Colelction CollectionReducer", () => {
-    it("should return default state", () => {
-        const newState = CollectionReducer(stubInitialState, {
+    it("should return defualt state", () => {
+        const newState = reducer(stubInitialState, {
             type: "Abc",
             target: "fddf",
         });
@@ -51,7 +51,7 @@ describe("Colelction CollectionReducer", () => {
     });
 
     it("should return add_collection state", () => {
-        const newState = CollectionReducer(stubInitialState, {
+        const newState = reducer(stubInitialState, {
             type: collectionConstants.ADD_COLLECTION,
             target: stubCollection,
         });
@@ -60,7 +60,7 @@ describe("Colelction CollectionReducer", () => {
     });
 
     it("should return add_collection_failure_missing_param", () => {
-        const newState = CollectionReducer(stubInitialState, {
+        const newState = reducer(stubInitialState, {
             type: collectionConstants.ADD_COLLECTION_FAILURE_MISSING_PARAM,
             target: stubCollection,
         });
@@ -69,7 +69,7 @@ describe("Colelction CollectionReducer", () => {
     });
 
     it("should return get_collections", () => {
-        const newState = CollectionReducer(stubInitialState, {
+        const newState = reducer(stubInitialState, {
             type: collectionConstants.GET_COLLECTIONS,
             target: stubCollection,
         });
@@ -78,7 +78,7 @@ describe("Colelction CollectionReducer", () => {
     });
 
     it("should return get_collection", () => {
-        const newState = CollectionReducer(stubInitialState, {
+        const newState = reducer(stubInitialState, {
             type: collectionConstants.GET_COLLECTION,
             target: stubCollection,
         });
@@ -87,7 +87,7 @@ describe("Colelction CollectionReducer", () => {
     });
 
     it("should return get_collection_papers", () => {
-        const newState = CollectionReducer(stubInitialState, {
+        const newState = reducer(stubInitialState, {
             type: collectionConstants.GET_COLLECTION_PAPERS,
             target: stubCollection,
         });
@@ -96,7 +96,7 @@ describe("Colelction CollectionReducer", () => {
     });
 
     it("should return get_collection_failure_collection_not_exist", () => {
-        const newState = CollectionReducer(stubInitialState, {
+        const newState = reducer(stubInitialState, {
             type: collectionConstants.GET_COLLECTION_FAILURE_COLLECTION_NOT_EXIST,
             target: stubCollection,
         });
@@ -105,7 +105,7 @@ describe("Colelction CollectionReducer", () => {
     });
 
     it("should return edit_collection", () => {
-        const newState = CollectionReducer(stubInitialState, {
+        const newState = reducer(stubInitialState, {
             type: collectionConstants.EDIT_COLLECTION,
             target: stubCollection,
         });
@@ -114,7 +114,7 @@ describe("Colelction CollectionReducer", () => {
     });
 
     it("should return edit_collection_papers_failure_collection_not_exist", () => {
-        const newState = CollectionReducer(stubInitialState, {
+        const newState = reducer(stubInitialState, {
             type: collectionConstants.EDIT_COLLECTION_FAILURE_COLLECTION_NOT_EXIST,
             target: stubCollection,
         });
@@ -124,7 +124,7 @@ describe("Colelction CollectionReducer", () => {
 
 
     it("should return edit_collection_failure_collection_auth_error", () => {
-        const newState = CollectionReducer(stubInitialState, {
+        const newState = reducer(stubInitialState, {
             type: collectionConstants.EDIT_COLLECTION_FAILURE_AUTH_ERROR,
             target: stubCollection,
         });
@@ -133,7 +133,7 @@ describe("Colelction CollectionReducer", () => {
     });
 
     it("should return add_collection_papers", () => {
-        const newState = CollectionReducer(stubInitialState, {
+        const newState = reducer(stubInitialState, {
             type: collectionConstants.ADD_COLLECTION_PAPER,
             target: stubCollection,
         });
@@ -142,7 +142,7 @@ describe("Colelction CollectionReducer", () => {
     });
 
     it("should return delete_collection_paper", () => {
-        const newState = CollectionReducer(stubInitialState, {
+        const newState = reducer(stubInitialState, {
             type: collectionConstants.DEL_COLLECTION_PAPER,
             target: stubCollection,
         });
@@ -152,7 +152,7 @@ describe("Colelction CollectionReducer", () => {
 
 
     it("should return delete_collectionr", () => {
-        const newState = CollectionReducer(stubInitialState, {
+        const newState = reducer(stubInitialState, {
             type: collectionConstants.DEL_COLLECTION,
             target: stubCollection,
         });
@@ -161,7 +161,7 @@ describe("Colelction CollectionReducer", () => {
     });
 
     it("should return delete_collection_failure_auth_error", () => {
-        const newState = CollectionReducer(stubInitialState, {
+        const newState = reducer(stubInitialState, {
             type: collectionConstants.DEL_COLLECTION_FAILURE_AUTH_ERROR,
             target: stubCollection,
         });
@@ -171,7 +171,7 @@ describe("Colelction CollectionReducer", () => {
 
 
     it("should return delete_collection_failure_not_exist", () => {
-        const newState = CollectionReducer(stubInitialState, {
+        const newState = reducer(stubInitialState, {
             type: collectionConstants.DEL_COLLECTION_FAILURE_COLLECTION_NOT_EXIST,
             target: stubCollection,
         });

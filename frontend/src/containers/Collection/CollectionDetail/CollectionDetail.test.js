@@ -123,9 +123,9 @@ describe("CollectionDetail Test", () => {
         });
         component.update();
         let wrapper = component.find("#editButtonLink").hostNodes();
-        expect(wrapper.length).toBe(0); // Fix me: it should be 1
+        expect(wrapper.length).toBe(1);
 
-        component.setProps({
+        component.find("CollectionDetail").instance().setState({
             thisCollection: {
                 papers: [], replies: [], members: [], amIMember: false,
             },

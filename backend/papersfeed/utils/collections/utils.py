@@ -171,8 +171,12 @@ def select_collection_user(args):
     # Filter Query
     filter_query = Q(id__in=collection_ids)
 
+    paper_id = None
+    if constants.PAPER in args and args[constants.PAPER] is not None:
+        paper_id = args[constants.PAPER]
+
     # Collections
-    collections, _, _ = __get_collections(filter_query, request_user, None)
+    collections, _, _ = __get_collections(filter_query, request_user, None, paper_id)
 
     return collections
 
@@ -237,13 +241,13 @@ def __add_paper_to_collections(paper_id, collection_ids):
         )
 
 
-def __get_collections(filter_query, request_user, count):
+def __get_collections(filter_query, request_user, count, paper_id=None):
     """Get Collections By Query"""
     queryset = Collection.objects.filter(
         filter_query
     ).annotate(
-        is_liked=__is_collection_liked('id', request_user)
-    )
+        is_liked=__is_collection_liked('id', request_user),
+        contains_paper=__contains_paper('id', paper_id))
 
     collections = get_results_from_queryset(queryset, count)
 
@@ -282,6 +286,7 @@ def __pack_collections(collections, request_user):  # pylint: disable=unused-arg
             constants.TITLE: collection.title,
             constants.TEXT: collection.text,
             constants.LIKED: collection.is_liked,
+            constants.CONTAINS_PAPER: collection.contains_paper,
             constants.COUNT: {
                 constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0,
                 constants.PAPERS: paper_counts[collection_id] if collection_id in paper_counts else 0,
@@ -361,3 +366,10 @@ def __get_collection_reply_count(collection_ids, group_by_field):
     )
 
     return {collection_reply[group_by_field]: collection_reply['count'] for collection_reply in collection_replies}
+
+
+def __contains_paper(outer_ref, paper_id):
+    """Check If Collection contains the given Paper"""
+    return Exists(
+        CollectionPaper.objects.filter(collection_id=OuterRef(outer_ref), paper_id=paper_id if paper_id else None)
+    )
