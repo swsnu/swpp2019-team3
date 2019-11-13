@@ -131,7 +131,7 @@ describe("<PaperDetail />", () => {
         // FIXME: actually, it should be '5'!
     });
 
-    it("should handle when authors is ready", () => {
+    it("should handle when selectedPaper is ready", () => {
         stubInitialState = {
             paper: {
                 getPaperStatus: getPaperStatus.NONE,
@@ -140,6 +140,11 @@ describe("<PaperDetail />", () => {
                         { first_name: "A_f", last_name: "A_l" },
                         { first_name: "B_f", last_name: "B_l" },
                     ],
+                    keywords: [
+                        { name: "author-defined keyword", type: "author" },
+                        { name: "extracted keyword", type: "abstract" },
+                    ],
+                    publication: { date: "2019-11-06" },
                 },
             },
             auth: {
@@ -182,57 +187,10 @@ describe("<PaperDetail />", () => {
         const instance = component.find(PaperDetail.WrappedComponent).instance();
         expect(instance.state.authorNames).toBe("");
         // FIXME: actually, it should be 'A_f A_l, B_f B_l'!
-    });
-
-    it("should handle when publication is ready", () => {
-        stubInitialState = {
-            paper: {
-                getPaperStatus: getPaperStatus.NONE,
-                selectedPaper: {
-                    publication: { date: "2019-11-06" },
-                },
-            },
-            auth: {
-                singinStatus: signinStatus.SUCCESS,
-                me: null,
-            },
-            collection: {
-                make: {
-                    status: collectionStatus.NONE,
-                    collection: {},
-                    error: null,
-                },
-                list: {
-                    status: collectionStatus.NONE,
-                    list: [],
-                    error: null,
-                },
-                edit: {
-                    status: collectionStatus.NONE,
-                    collection: {},
-                    error: null,
-                },
-                delete: {
-                    status: collectionStatus.NONE,
-                    collection: {},
-                    error: null,
-                },
-                selected: {
-                    status: collectionStatus.NONE,
-                    error: null,
-                    collection: {},
-                    papers: [],
-                    members: [],
-                    replies: [],
-                },
-            },
-            user: {},
-        };
-        const component = mount(makeIntroModal(stubInitialState));
-        const instance = component.find(PaperDetail.WrappedComponent).instance();
         expect(instance.state.date).toBe("");
         // FIXME: actually, it should be '2019-11-06'!
     });
+
 
     it("should handle when getPaper failed", () => {
         stubInitialState = {

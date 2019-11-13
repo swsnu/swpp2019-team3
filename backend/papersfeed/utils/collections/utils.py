@@ -181,6 +181,31 @@ def select_collection_user(args):
     return collections
 
 
+def select_collection_search(args):
+    """Select Collection Search"""
+    is_parameter_exists([
+        constants.TEXT
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Search Keyword
+    keyword = args[constants.TEXT]
+
+    # Collection Ids
+    collection_ids = Collection.objects.filter(Q(title__icontains=keyword) | Q(text__icontains=keyword))\
+        .values_list('id', flat=True)
+
+    # Filter Query
+    filter_query = Q(id__in=collection_ids)
+
+    # Collections
+    collections, _, _ = __get_collections(filter_query, request_user, None)
+
+    return collections
+
+
 def update_paper_collection(args):
     """Update Paper Collection"""
 

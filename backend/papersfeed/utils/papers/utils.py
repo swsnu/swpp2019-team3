@@ -1,8 +1,8 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
 
-import json
-import datetime
+# import json
+# import datetime
 
 from django.db.models import Q, Exists, OuterRef, Count
 
@@ -69,95 +69,120 @@ def select_paper_collection(args):
     return papers
 
 
-def get_paper_migration():
-    """Paper Migration from json"""
-    with open('papersfeed/fixtures/cs_500.json', 'r') as papers_json:
-        paper_related_objects = json.load(papers_json)
+def select_paper_search(args):
+    """Select Paper Search"""
+    is_parameter_exists([
+        constants.TEXT
+    ], args)
 
-        papers = []
-        authors = []
-        paper_authors = []
-        publishers = []
-        publications = []
-        paper_publications = []
+    # Request User
+    request_user = args[constants.USER]
 
-        for paper_related_object in paper_related_objects:
-            model = paper_related_object['model'].split('.')[1]
+    # Search Keyword
+    keyword = args[constants.TEXT]
 
-            pk = paper_related_object['pk']
-            if model == 'paper':
-                papers.append(
-                    Paper(
-                        id=pk,
-                        title=paper_related_object['fields']['title'],
-                        language=paper_related_object['fields']['language'],
-                        abstract=paper_related_object['fields']['abstract'],
-                        ISSN=paper_related_object['fields']['ISSN'],
-                        eISSN=paper_related_object['fields']['eISSN'],
-                        DOI=paper_related_object['fields']['DOI']
-                    )
-                )
-            elif model == 'author':
-                authors.append(
-                    Author(
-                        id=pk,
-                        first_name=paper_related_object['fields']['first_name'],
-                        last_name=paper_related_object['fields']['last_name'],
-                        email=paper_related_object['fields']['email'],
-                        address=paper_related_object['fields']['address'],
-                        researcher_id=paper_related_object['fields']['researcher_id']
-                    )
-                )
-            elif model == 'paperauthor':
-                paper_authors.append(
-                    PaperAuthor(
-                        id=pk,
-                        paper_id=paper_related_object['fields']['paper'],
-                        author_id=paper_related_object['fields']['author'],
-                        type=paper_related_object['fields']['type'],
-                        rank=paper_related_object['fields']['rank']
-                    )
-                )
-            elif model == 'publisher':
-                publishers.append(
-                    Publisher(
-                        id=pk,
-                        name=paper_related_object['fields']['name'],
-                        city=paper_related_object['fields']['city'],
-                        address=paper_related_object['fields']['address']
-                    )
-                )
-            elif model == 'publication':
-                publications.append(
-                    Publication(
-                        id=pk,
-                        name=paper_related_object['fields']['name'],
-                        type=paper_related_object['fields']['type'],
-                        publisher_id=paper_related_object['fields']['publisher']
-                    )
-                )
-            elif model == 'paperpublication':
-                paper_publications.append(
-                    PaperPublication(
-                        id=pk,
-                        paper_id=paper_related_object['fields']['paper'],
-                        publication_id=paper_related_object['fields']['publication'],
-                        volume=paper_related_object['fields']['volume'],
-                        issue=paper_related_object['fields']['issue'],
-                        date=datetime.datetime.strptime(paper_related_object['fields']['date'], '%Y-%m-%d')
-                        if paper_related_object['fields']['date'] else None,
-                        beginning_page=paper_related_object['fields']['beginning_page'],
-                        ending_page=paper_related_object['fields']['ending_page'],
-                        ISBN=paper_related_object['fields']['ISBN']
-                    )
-                )
+    # Paper Ids
+    paper_ids = Paper.objects.filter(Q(title__icontains=keyword) | Q(abstract__icontains=keyword)) \
+        .values_list('id', flat=True)
 
-        Paper.objects.bulk_create(papers)
-        Author.objects.bulk_create(authors)
-        PaperAuthor.objects.bulk_create(paper_authors)
-        Publisher.objects.bulk_create(publishers)
-        Publication.objects.bulk_create(publications)
-        PaperPublication.objects.bulk_create(paper_publications)
+    # Filter Query
+    filter_query = Q(id__in=paper_ids)
+
+    # Papers
+    papers, _, _ = __get_papers(filter_query, request_user, None)
+
+    return papers
+
+
+# def get_paper_migration():
+#     """Paper Migration from json"""
+#     with open('papersfeed/fixtures/cs_500.json', 'r') as papers_json:
+#         paper_related_objects = json.load(papers_json)
+#
+#         papers = []
+#         authors = []
+#         paper_authors = []
+#         publishers = []
+#         publications = []
+#         paper_publications = []
+#
+#         for paper_related_object in paper_related_objects:
+#             model = paper_related_object['model'].split('.')[1]
+#
+#             pk = paper_related_object['pk']
+#             if model == 'paper':
+#                 papers.append(
+#                     Paper(
+#                         id=pk,
+#                         title=paper_related_object['fields']['title'],
+#                         language=paper_related_object['fields']['language'],
+#                         abstract=paper_related_object['fields']['abstract'],
+#                         ISSN=paper_related_object['fields']['ISSN'],
+#                         eISSN=paper_related_object['fields']['eISSN'],
+#                         DOI=paper_related_object['fields']['DOI']
+#                     )
+#                 )
+#             elif model == 'author':
+#                 authors.append(
+#                     Author(
+#                         id=pk,
+#                         first_name=paper_related_object['fields']['first_name'],
+#                         last_name=paper_related_object['fields']['last_name'],
+#                         email=paper_related_object['fields']['email'],
+#                         address=paper_related_object['fields']['address'],
+#                         researcher_id=paper_related_object['fields']['researcher_id']
+#                     )
+#                 )
+#             elif model == 'paperauthor':
+#                 paper_authors.append(
+#                     PaperAuthor(
+#                         id=pk,
+#                         paper_id=paper_related_object['fields']['paper'],
+#                         author_id=paper_related_object['fields']['author'],
+#                         type=paper_related_object['fields']['type'],
+#                         rank=paper_related_object['fields']['rank']
+#                     )
+#                 )
+#             elif model == 'publisher':
+#                 publishers.append(
+#                     Publisher(
+#                         id=pk,
+#                         name=paper_related_object['fields']['name'],
+#                         city=paper_related_object['fields']['city'],
+#                         address=paper_related_object['fields']['address']
+#                     )
+#                 )
+#             elif model == 'publication':
+#                 publications.append(
+#                     Publication(
+#                         id=pk,
+#                         name=paper_related_object['fields']['name'],
+#                         type=paper_related_object['fields']['type'],
+#                         publisher_id=paper_related_object['fields']['publisher']
+#                     )
+#                 )
+#             elif model == 'paperpublication':
+#                 paper_publications.append(
+#                     PaperPublication(
+#                         id=pk,
+#                         paper_id=paper_related_object['fields']['paper'],
+#                         publication_id=paper_related_object['fields']['publication'],
+#                         volume=paper_related_object['fields']['volume'],
+#                         issue=paper_related_object['fields']['issue'],
+#                         date=datetime.datetime.strptime(paper_related_object['fields']['date'], '%Y-%m-%d')
+#                         if paper_related_object['fields']['date'] else None,
+#                         beginning_page=paper_related_object['fields']['beginning_page'],
+#                         ending_page=paper_related_object['fields']['ending_page'],
+#                         ISBN=paper_related_object['fields']['ISBN']
+#                     )
+#                 )
+#
+#         Paper.objects.bulk_create(papers)
+#         Author.objects.bulk_create(authors)
+#         PaperAuthor.objects.bulk_create(paper_authors)
+#         Publisher.objects.bulk_create(publishers)
+#         Publication.objects.bulk_create(publications)
+#         PaperPublication.objects.bulk_create(paper_publications)
 
 
 def get_papers(filter_query, request_user, count):
@@ -483,11 +508,13 @@ def __pack_publications(publications):
 
 def __get_publishers(filter_query):
     """Get Publishers By Query"""
-    queryset = Keyword.objects.filter(
+    queryset = Publisher.objects.filter(
         filter_query
     )
 
     publishers = get_results_from_queryset(queryset, None)
+
+    publishers = __pack_publisher(publishers)
 
     return publishers
 

@@ -19,7 +19,7 @@ class ReviewControl extends Component {
                 abstract: "abstract abstract abstract abstract abstract abstract abstract abstract ",
                 date: "2019.10.30.",
                 authors: "paper_authors",
-                keywords: "paper_keywords",
+                keywords: [{ name: "paper_keywords", type: "author" }],
                 likeCount: 101,
                 reviewCount: 3,
             },

@@ -43,7 +43,9 @@ class Main extends Component {
                 user: "Ha",
                 likeCount: 0,
                 reviewCount: 1,
-                keywords: ["Combinational optimization Problems", "Facility Layout Problem", "Quadratic Assignment Problem"],
+                keywords: [{ name: "Combinational optimization Problems", type: "author" },
+                    { name: "Facility Layout Problem", type: "author" },
+                    { name: "Quadratic Assignment Problem", type: "author" }],
             },
             {
                 type: "Review",

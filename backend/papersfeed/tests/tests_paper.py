@@ -6,7 +6,6 @@ from django.test import TestCase, Client
 from papersfeed import constants
 from papersfeed.models.collections.collection import Collection
 from papersfeed.models.papers.paper import Paper
-from papersfeed.utils.papers.utils import get_paper_migration
 
 
 class PaperTestCase(TestCase):
@@ -33,8 +32,17 @@ class PaperTestCase(TestCase):
                    },
                    content_type='application/json')
 
-        # Migrate
-        get_paper_migration()
+        # Creating papers
+        Paper.objects.create(
+            title="paper1",
+            language="English",
+            abstract="abstract1",
+            ISSN="1",
+            eISSN="1",
+            DOI="1",
+            creation_date="2019-11-13",
+            modification_date="2019-11-13"
+        )
 
         # Make Collections
         client.post('/api/collection',
@@ -52,7 +60,7 @@ class PaperTestCase(TestCase):
 
         test_collection_1_id = Collection.objects.filter(title='test_collection_1').first().id
 
-        paper_id = Paper.objects.filter(title='CERTIFIED LATTICE REDUCTION').first().id
+        paper_id = Paper.objects.filter(title='paper1').first().id
 
         # Add paper to test_collection_1
         client.put('/api/paper/collection',
@@ -74,7 +82,7 @@ class PaperTestCase(TestCase):
                    },
                    content_type='application/json')
 
-        paper_id = Paper.objects.filter(title='CERTIFIED LATTICE REDUCTION').first().id
+        paper_id = Paper.objects.filter(title='paper1').first().id
 
         # Get Collection
         response = client.get('/api/paper',
@@ -119,7 +127,7 @@ class PaperTestCase(TestCase):
                    },
                    content_type='application/json')
 
-        paper_id = Paper.objects.filter(title='CERTIFIED LATTICE REDUCTION').first().id
+        paper_id = Paper.objects.filter(title='paper1').first().id
         test_collection_2_id = Collection.objects.filter(title='test_collection_2').first().id
 
         # Remove from test_collection_1 and Add to test_collection_2
@@ -131,3 +139,86 @@ class PaperTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+
+    def test_paper_search(self):
+        """ PAPER SEARCH """
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Creating papers
+        Paper.objects.create(
+            title="computer",
+            language="English",
+            abstract="test",
+            ISSN="1",
+            eISSN="1",
+            DOI="1",
+            creation_date="2019-11-13",
+            modification_date="2019-11-13"
+        )
+        Paper.objects.create(
+            title="test",
+            language="English",
+            abstract="AI",
+            ISSN="1",
+            eISSN="1",
+            DOI="1",
+            creation_date="2019-11-13",
+            modification_date="2019-11-13"
+        )
+        Paper.objects.create(
+            title="paper2",
+            language="English",
+            abstract="abstract2",
+            ISSN="1",
+            eISSN="1",
+            DOI="1",
+            creation_date="2019-11-13",
+            modification_date="2019-11-13"
+        )
+        # Search with Keyword 'Paper'
+        response = client.get('/api/paper/search',
+                              data={
+                                  constants.TEXT: 'paper'
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 2)
+
+        # Search with Keyword 'AI'
+        response = client.get('/api/paper/search',
+                              data={
+                                  constants.TEXT: 'AI'
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
+
+        # Search with Keyword 'Computer'
+        response = client.get('/api/paper/search',
+                              data={
+                                  constants.TEXT: 'Computer'
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
+
+        # Search with Keyword 'blahblah'
+        response = client.get('/api/paper/search',
+                              data={
+                                  constants.TEXT: 'blahblah'
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 0)
