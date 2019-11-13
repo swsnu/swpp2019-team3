@@ -48,17 +48,19 @@ class PaperDetail extends Component {
                 if (this.props.selectedPaper.keywords) {
                     const authorKeywords = this.props.selectedPaper.keywords.filter(
                         (keyword) => keyword.type === "author",
-                    )
-                        .map(
-                            (keyword) => keyword.name,
-                        );
+                    ).sort(
+                        (a, b) => a.id - b.id,
+                    ).map(
+                        (keyword) => keyword.name,
+                    );
                     this.setState({ authorKeywords: authorKeywords.join(", ") });
                     const abstractKeywords = this.props.selectedPaper.keywords.filter(
                         (keyword) => keyword.type === "abstract",
-                    )
-                        .map(
-                            (keyword) => keyword.name,
-                        );
+                    ).sort(
+                        (a, b) => a.id - b.id,
+                    ).map(
+                        (keyword) => keyword.name,
+                    );
                     this.setState({ abstractKeywords: abstractKeywords.join(", ") });
                 }
             });
