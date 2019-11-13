@@ -72,8 +72,8 @@ class PaperCard extends Component {
                             <Card.Link href={`/paper_id=${this.props.id}`} className="text">{this.props.title}</Card.Link>
                         </div>
                         <Card.Text>{this.props.date}</Card.Text>
-                        <Card.Text>{this.state.authorNames}</Card.Text>
-                        <Card.Text>{this.state.keywords}</Card.Text>
+                        <Card.Text className="authors">{this.state.authorNames}</Card.Text>
+                        <Card.Text className="keywords">{this.state.keywords}</Card.Text>
                     </Card.Body>
                     <Card.Footer className="footer">
 
