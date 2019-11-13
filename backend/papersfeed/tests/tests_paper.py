@@ -152,15 +152,46 @@ class PaperTestCase(TestCase):
                    },
                    content_type='application/json')
 
-        # Search with Keyword 'Computer'
+        # Creating papers
+        Paper.objects.create(
+            title="computer",
+            language="English",
+            abstract="test",
+            ISSN="1",
+            eISSN="1",
+            DOI="1",
+            creation_date="2019-11-13",
+            modification_date="2019-11-13"
+        )
+        Paper.objects.create(
+            title="test",
+            language="English",
+            abstract="AI",
+            ISSN="1",
+            eISSN="1",
+            DOI="1",
+            creation_date="2019-11-13",
+            modification_date="2019-11-13"
+        )
+        Paper.objects.create(
+            title="paper2",
+            language="English",
+            abstract="abstract2",
+            ISSN="1",
+            eISSN="1",
+            DOI="1",
+            creation_date="2019-11-13",
+            modification_date="2019-11-13"
+        )
+        # Search with Keyword 'Paper'
         response = client.get('/api/paper/search',
                               data={
-                                  constants.TEXT: 'computer'
+                                  constants.TEXT: 'paper'
                               },
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        # cs_500.json 파일 기준 415개 이다.
-        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 415)
+
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 2)
 
         # Search with Keyword 'AI'
         response = client.get('/api/paper/search',
@@ -169,5 +200,25 @@ class PaperTestCase(TestCase):
                               },
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        # cs_500.json 파일 기준 376개 이다.
-        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 376)
+
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
+
+        # Search with Keyword 'Computer'
+        response = client.get('/api/paper/search',
+                              data={
+                                  constants.TEXT: 'Computer'
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
+
+        # Search with Keyword 'blahblah'
+        response = client.get('/api/paper/search',
+                              data={
+                                  constants.TEXT: 'blahblah'
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 0)
