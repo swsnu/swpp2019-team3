@@ -215,7 +215,6 @@ class UserTestCase(TestCase):
 
     def test_delete_user(self):
         """" DELETE USER """
-
         client = Client()
 
         # Sign In
@@ -229,3 +228,62 @@ class UserTestCase(TestCase):
         response = client.delete('/api/user')
 
         self.assertEqual(response.status_code, 200)
+
+    def test_user_search(self):
+        """ SEARCH USER """
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Make User
+        # Username: IamKeyword
+        client.post('/api/user',
+                    json.dumps({
+                        constants.EMAIL: 'IamKeyword@snu.ac.kr',
+                        constants.USERNAME: 'IamKeyword',
+                        constants.PASSWORD: 'iluvswpp1234'
+                    }),
+                    content_type='application/json')
+
+        # Make User
+        # Username: keywordUser
+        client.post('/api/user',
+                    json.dumps({
+                        constants.EMAIL: 'keywordUser@snu.ac.kr',
+                        constants.USERNAME: 'keywordUser',
+                        constants.PASSWORD: 'iluvswpp1234'
+                    }),
+                    content_type='application/json')
+
+        # Search with Keyword 'swpp'
+        response = client.get('/api/user/search',
+                              data={
+                                  constants.TEXT: 'swpp'
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 3)
+
+        # Search with Keyword 'keyword'
+        response = client.get('/api/user/search',
+                              data={
+                                  constants.TEXT: 'keyword'
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 2)
+
+        # Search with Keyword 'blahblah'
+        response = client.get('/api/user/search',
+                              data={
+                                  constants.TEXT: 'blahblah'
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 0)
