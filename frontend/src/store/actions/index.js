@@ -1,3 +1,7 @@
+/*
+    import actions from here
+*/
+
 import {
     signup, signin, signout, getMe,
 } from "./auth/auth";
@@ -20,6 +24,20 @@ import {
     // addCollectionLike,
     // removeCollectionLike,
 } from "./Collection/collection";
+
+import {
+    getUserByUserId,
+    // getFollowers,
+    // getFollowings,
+    addUserFollowing,
+    removeUserFollowing,
+    editUserInfo,
+} from "./user/user";
+
+
+/*
+    export actions from here
+*/
 
 export const collectionActions = {
     makeNewCollection,
@@ -47,4 +65,13 @@ export const authActions = {
 };
 export const paperActions = {
     getPaper,
+};
+
+export const userActions = {
+    getUserByUserId,
+    // getFollowers,
+    // getFollowings,
+    addUserFollowing,
+    removeUserFollowing,
+    editUserInfo,
 };

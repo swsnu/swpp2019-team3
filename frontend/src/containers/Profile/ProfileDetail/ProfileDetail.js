@@ -10,7 +10,7 @@ import PropTypes from "prop-types";
 import {
     CollectionCard, ReviewCard,
 } from "../../../components";
-import { collectionActions } from "../../../store/actions";
+import { collectionActions, userActions } from "../../../store/actions";
 // import { collectionStatus } from "../../../constants/constants";
 import "./ProfileDetail.css";
 import SamplePhoto from "./sample.jpg";
@@ -27,7 +27,9 @@ class ProfileDetail extends Component {
     }
 
     componentDidMount() {
-
+        this.props.onGetCollections();
+        // this.props.onGetReviews();
+        this.props.onGetUser();
     }
 
     cardMaker = (card) => {
@@ -63,7 +65,7 @@ class ProfileDetail extends Component {
                 />
             );
         }
-        return 0;
+        return null;
     }
 
     render() {
@@ -76,7 +78,7 @@ class ProfileDetail extends Component {
         const unfollowButton = <Button id="unfollowButton" onClick={() => this.setState({ doIFollow: false })}>Unfollow</Button>;
         // only one button will be displayed among "edit", "follow", and "unfollow" buttons
         let buttonDisplayed;
-        if (this.props.currentUserID === this.props.thisUser.id) {
+        if (this.props.me.id === this.props.thisUser.id) {
             buttonDisplayed = editButton;
         } else if (this.state.doIFollow) {
             buttonDisplayed = unfollowButton;
@@ -156,55 +158,64 @@ class ProfileDetail extends Component {
 const mapStateToProps = (state) => ({
     me: state.auth.me,
     getCollectionsStatus: state.collection.list.status,
-    storedCollections: state.collection.list.list,
+    thisUserCollections: state.collection.list.list,
+    thisUser: state.user.selectedUser,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onGetCollections: (userId) => dispatch(collectionActions.getCollectionsByUserId(userId)),
+    // onGetReviews: (userId) => dispatch(reviewActions.getReviewsByUserId(userId)),
+    onGetUser: (userId) => dispatch(userActions.getUserByUserId(userId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileDetail);
 
 ProfileDetail.propTypes = {
-    // me: PropTypes.objectOf(PropTypes.any),
-    currentUserID: PropTypes.number,
-    thisUser: PropTypes.shape({
-        id: PropTypes.number,
-        name: PropTypes.string,
-        description: PropTypes.string,
-        followersCount: PropTypes.number,
-        followingsCount: PropTypes.number,
-        doIFollow: false,
-    }),
-    // thisUserCollections: PropTypes.arrayOf(PropTypes.instanceOf(Collection))
-    thisUserCollections: PropTypes.arrayOf(PropTypes.shape({
-        source: PropTypes.string,
-        id: PropTypes.number,
-        user: PropTypes.string,
-        title: PropTypes.string,
-        memberCount: PropTypes.number,
-        paperCount: PropTypes.number,
-        replyCount: PropTypes.number,
-        likeCount: PropTypes.number,
-    })),
+    me: PropTypes.objectOf(PropTypes.any),
+    thisUserCollections: PropTypes.arrayOf(PropTypes.any),
+    thisUserReviews: PropTypes.arrayOf(PropTypes.any),
+    thisUser: PropTypes.objectOf(PropTypes.any),
+    onGetCollections: PropTypes.func,
+    // onGetReviews: PropTypes.func,
+    onGetUser: PropTypes.func,
+    // currentUserID: PropTypes.number,
+    // thisUser: PropTypes.shape({
+    //     id: PropTypes.number,
+    //     name: PropTypes.string,
+    //     description: PropTypes.string,
+    //     followersCount: PropTypes.number,
+    //     followingsCount: PropTypes.number,
+    //     doIFollow: false,
+    // }),
+    // thisUserCollections: PropTypes.arrayOf(PropTypes.instanceOf(Collection)),
+    // thisUserCollections: PropTypes.arrayOf(PropTypes.shape({
+    //     source: PropTypes.string,
+    //     id: PropTypes.number,
+    //     user: PropTypes.string,
+    //     title: PropTypes.string,
+    //     memberCount: PropTypes.number,
+    //     paperCount: PropTypes.number,
+    //     replyCount: PropTypes.number,
+    //     likeCount: PropTypes.number,
+    // })),
     // thisUserCollections: PropTypes.arrayOf(PropTypes.instanceOf(Review))
-    thisUserReviews: PropTypes.arrayOf(PropTypes.shape({
-        author: PropTypes.string,
-        paperId: PropTypes.number,
-        source: PropTypes.string,
-        id: PropTypes.number,
-        user: PropTypes.string,
-        title: PropTypes.string,
-        date: PropTypes.string,
-        likeCount: PropTypes.number,
-        replyCount: PropTypes.number,
-        headerExists: PropTypes.bool,
-    })),
+    // thisUserReviews: PropTypes.arrayOf(PropTypes.shape({
+    //     author: PropTypes.string,
+    //     paperId: PropTypes.number,
+    //     source: PropTypes.string,
+    //     id: PropTypes.number,
+    //     user: PropTypes.string,
+    //     title: PropTypes.string,
+    //     date: PropTypes.string,
+    //     likeCount: PropTypes.number,
+    //     replyCount: PropTypes.number,
+    //     headerExists: PropTypes.bool,
+    // })),
 };
 
 ProfileDetail.defaultProps = {
-    // me: { id: 1 },
-    currentUserID: 1,
+    me: { id: 1 },
+    // currentUserID: 1,
     thisUser: {
         id: 1,
         name: "Girin",
@@ -300,4 +311,8 @@ ProfileDetail.defaultProps = {
             headerExists: false,
         },
     ],
+    /* eslint-disable no-alert */
+    onGetCollections: () => { alert("Default Props: seems onGetCollections is not working!"); },
+    // onGetReviews: () => { alert("Default Props: seems onGetReviews is not working!") ;},
+    onGetUser: () => { alert("Default Props: seems onGetUser is not working!"); },
 };
