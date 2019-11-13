@@ -5,7 +5,6 @@ import {
     Form, Button, Card,
 } from "react-bootstrap";
 import { reviewActions, authActions } from "../../../store/actions";
-import { reviewStatus, getMeStatus } from "../../../constants/constants";
 import { Reply } from "../../../components";
 import "./ReviewDetail.css";
 import SVG from "../../../components/svg";
@@ -43,28 +42,19 @@ class ReviewDetail extends Component {
     componentDidMount() {
         this.props.onGetMe()
             .then(() => {
-                if (this.props.me.getMeStatus === getMeStatus.SUCCESS) {
-                    this.setState({
-                        user: this.props.me.me,
-                    });
-                } else {
-                    this.history.push("/");
-                }
-            }).catch(() => {
-            });
+                this.setState({
+                    user: this.props.me.me,
+                });
+            }).catch(() => {});
 
         this.props.onGetReview({ id: this.props.match.params.review_id })
             .then(() => {
-                if (this.props.selectedReview.status === reviewStatus.SUCCESS) {
-                    this.setState({
-                        thisReview: this.props.selectedReview.review,
-                        likeCount: this.props.selectedReview.review.count.likes,
-                        author: this.props.selectedReview.review.user,
-                        paperId: this.props.selectedReview.review.paper.id,
-                    });
-                } else {
-                    this.props.history.push("/main");
-                }
+                this.setState({
+                    thisReview: this.props.selectedReview.review,
+                    likeCount: this.props.selectedReview.review.count.likes,
+                    author: this.props.selectedReview.review.user,
+                    paperId: this.props.selectedReview.review.paper.id,
+                });
             }).catch(() => {});
     }
 

@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import { PaperSpec } from "../../../components";
-import { getPaperStatus } from "../../../constants/constants";
 import { reviewActions, paperActions } from "../../../store/actions";
 import "./ReviewControl.css";
 
@@ -47,8 +46,9 @@ class ReviewControl extends Component {
                         thisReview: this.props.selectedReview.review,
                         title: this.props.selectedReview.review.title,
                         content: this.props.selectedReview.review.text,
+                        paper: this.props.selectedReview.review.paper,
                     });
-                    this.props.onGetPaper({ id: this.state.thisReview.id })
+                    this.props.onGetPaper({ id: this.state.paper.id })
                         .then(() => {
                             this.setState({
                                 paper: this.props.selectedPaper,
@@ -154,7 +154,6 @@ ReviewControl.propTypes = {
     onGetReview: PropTypes.func,
     selectedPaper: PropTypes.objectOf(PropTypes.any),
     onGetPaper: PropTypes.func,
-    getPaperStatus: PropTypes.string,
     newReview: PropTypes.objectOf(PropTypes.any),
 };
 
@@ -168,7 +167,6 @@ ReviewControl.defaultProps = {
     onGetReview: () => {},
     selectedPaper: {},
     onGetPaper: () => {},
-    getPaperStatus: getPaperStatus.NONE,
     newReview: {},
 };
 

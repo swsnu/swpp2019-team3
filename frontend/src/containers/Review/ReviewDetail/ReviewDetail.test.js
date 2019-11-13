@@ -163,4 +163,17 @@ describe("<ReviewDetail />", () => {
 
         expect(instance.state.replyCount).toBe(1);
     });
+
+    it("should handle replies well", () => {
+        const component = mount(reviewDetail);
+        const instance = component.find("ReviewDetail").instance();
+        instance.setState(
+            {
+                replies: [{ id: 1 }, { id: 2 }, { id: 3 }],
+            },
+        );
+        component.update();
+        const replies = component.find(".replies");
+        expect(replies.length).toBe(1);
+    });
 });
