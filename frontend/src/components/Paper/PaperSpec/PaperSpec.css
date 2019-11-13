@@ -29,20 +29,46 @@
     font-weight: 700;
 }
 
-.paperspec #keywords {
+.paperspec .author-keywords {
     text-align: left;
+    margin-top: 2%;
     margin-left: 5%;
+    font-size: 100%;
+    font-weight: 600;
+    font-style: bold;
+}
+
+.paperspec #author-keywords-content {
+    text-align: left;
+    margin-left: 2%;
+    margin-right: 5%;
+    font-size: 100%;
+    font-weight: 300;
+    font-style: italic;
+}
+
+.paperspec .abstract-keywords {
+    text-align: left;
+    margin-top: 2%;
+    margin-left: 5%;
+    font-size: 100%;
+    font-weight: 600;
+    font-style: bold;
+}
+
+.paperspec #abstract-keywords-content {
+    text-align: left;
+    margin-left: 2%;
+    margin-right: 5%;
     font-size: 100%;
     font-weight: 300;
     font-style: italic;
 }
 
 .paperspec .buttons {
-    /* width: 200px; */
+    margin-top: 2%;
     margin-left: 5%;
     margin-right: 4%;
-    /* margin-top: 15px; */
-    /* background: red; */
     padding-left: 15px;
     display: flex;
     flex-direction: row;

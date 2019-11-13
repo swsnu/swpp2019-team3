@@ -16,9 +16,9 @@ class PaperDetail extends Component {
             reviewCount: 0,
             /* eslint-enable react/no-unused-state */
             authorNames: "",
-            keywords: "",
             date: "",
             reviews: [],
+            keywords: [],
         };
         this.reviewMaker = this.reviewMaker.bind(this);
     }
@@ -44,10 +44,9 @@ class PaperDetail extends Component {
                 if (this.props.selectedPaper.publication) {
                     this.setState({ date: this.props.selectedPaper.publication.date });
                 }
-                // FIXME: Please uncomment this block if onGetPaper can get keywords
-                /* if (this.props.selectedPaper.keywords) {
-                    this.setState({ keywords: this.props.selectedPaper.keywords.join(", ") });
-                } */
+                if (this.props.selectedPaper.keywords) {
+                    this.setState({ keywords: this.props.selectedPaper.keywords });
+                }
             });
     }
 

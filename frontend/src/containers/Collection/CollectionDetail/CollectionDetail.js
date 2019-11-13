@@ -43,12 +43,6 @@ class CollectionDetail extends Component {
                 if (this.props.getCollectionStatus === collectionStatus.SUCCESS) {
                     this.setState({ thisCollection: this.props.selectedCollection });
                 }
-
-
-                // FIXME: Please uncomment this block if onGetPaper can get keywords
-                /* if (this.props.selectedPaper.keywords) {
-                    this.setState({ keywords: this.props.selectedPaper.keywords.join(", ") });
-                } */
             });
         this.props.onGetCollectionPapers({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
