@@ -24,7 +24,14 @@ class PaperCard extends Component {
             this.setState({ authorNames: authorNames.join(", ") });
         }
         if (this.props.keywords.length > 0) {
-            this.setState({ keywords: this.props.keywords.join(", ") });
+            const keywords = this.props.keywords.filter(
+                (keyword) => keyword.type === "author",
+            ).sort(
+                (a, b) => a.id - b.id,
+            ).map(
+                (keyword) => keyword.name,
+            );
+            this.setState({ keywords: keywords.join(", ") });
         }
     }
 
@@ -65,8 +72,8 @@ class PaperCard extends Component {
                             <Card.Link href={`/paper_id=${this.props.id}`} className="text">{this.props.title}</Card.Link>
                         </div>
                         <Card.Text>{this.props.date}</Card.Text>
-                        <Card.Text>{this.state.authorNames}</Card.Text>
-                        <Card.Text>{this.state.keywords}</Card.Text>
+                        <Card.Text className="authors">{this.state.authorNames}</Card.Text>
+                        <Card.Text className="keywords">{this.state.keywords}</Card.Text>
                     </Card.Body>
                     <Card.Footer className="footer">
 
@@ -91,7 +98,7 @@ PaperCard.propTypes = {
     title: PropTypes.string,
     date: PropTypes.string,
     authors: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
-    keywords: PropTypes.arrayOf(PropTypes.string),
+    keywords: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
     likeCount: PropTypes.number,
     reviewCount: PropTypes.number,
     isLiked: PropTypes.bool,

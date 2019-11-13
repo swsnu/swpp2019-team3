@@ -31,7 +31,7 @@ class GoMyCollectionsModal extends Component {
                   centered
                 >
                     <Modal.Header>
-                        <h2 id="added-paper-to-collections">Added paper to collections!</h2>
+                        <h2 id="updated-paper-to-collections">Updated collections!</h2>
 
                     </Modal.Header>
                     <Modal.Body>

@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
 import AddPaperModal from "./AddPaperModal";
 import { getMockStore, mockComponent } from "../../../test-utils/mocks";
-import { collectionActions, authActions } from "../../../store/actions";
+import { collectionActions } from "../../../store/actions";
 
 
 const stubInitialState = {
@@ -12,7 +12,7 @@ const stubInitialState = {
     },
     auth: {
         singinStatus: signinStatus.SUCCESS,
-        me: null,
+        me: { id: 1 },
     },
     collection: {
         make: {
@@ -70,17 +70,17 @@ const mockPromise = new Promise((resolve) => { resolve(); });
 
 describe("<AddPaperModal />", () => {
     let addPaperModal;
+    let spyGetCollections;
     let spyAddPaper;
-    let spyGetMe;
     let spyMakeNewCollection;
 
     beforeEach(() => {
         addPaperModal = makeAddPaperModal(stubInitialState);
+        spyGetCollections = jest.spyOn(collectionActions, "getCollectionsByUserId")
+            .mockImplementation(() => () => mockPromise);
         spyAddPaper = jest.spyOn(collectionActions, "addCollectionPaper")
             .mockImplementation(() => () => mockPromise);
         spyMakeNewCollection = jest.spyOn(collectionActions, "makeNewCollection")
-            .mockImplementation(() => () => mockPromise);
-        spyGetMe = jest.spyOn(authActions, "getMe")
             .mockImplementation(() => () => mockPromise);
     });
 
@@ -93,12 +93,12 @@ describe("<AddPaperModal />", () => {
         const component = mount(addPaperModal);
         const wrapper = component.find(".addpapermodal");
         expect(wrapper.length).toBe(1);
-        expect(spyGetMe).toHaveBeenCalledTimes(1);
     });
 
 
     it("should open addpapermodal if addpaper-open-button is clicked", () => {
         const component = mount(addPaperModal);
+
         const openButton = component.find(".addpaper-open-button").hostNodes();
         expect(openButton.length).toBe(1);
 
@@ -106,6 +106,7 @@ describe("<AddPaperModal />", () => {
         expect(wrapper.length).toBe(0);
 
         openButton.simulate("click");
+        expect(spyGetCollections).toHaveBeenCalledTimes(1);
 
         wrapper = component.find(".add-button").hostNodes();
         expect(wrapper.length).toBe(1);
@@ -113,7 +114,7 @@ describe("<AddPaperModal />", () => {
 
     it("should open if adding paper or creating collection succeeds", () => {
         const component = mount(addPaperModal);
-        const addPaperModalInstance = component.find("AddPaperModal").instance();
+        const addPaperModalInstance = component.find(AddPaperModal.WrappedComponent).instance();
 
         const openButton = component.find(".addpaper-open-button").hostNodes();
         openButton.simulate("click");
@@ -129,7 +130,7 @@ describe("<AddPaperModal />", () => {
 
     it("should be closed if cancelButton is clicked", () => {
         const component = mount(addPaperModal);
-        const addPaperModalInstance = component.find("AddPaperModal").instance();
+        const addPaperModalInstance = component.find(AddPaperModal.WrappedComponent).instance();
 
         const openButton = component.find(".addpaper-open-button").hostNodes();
         openButton.simulate("click");
@@ -145,7 +146,7 @@ describe("<AddPaperModal />", () => {
 
     it("should set state properly on collectionName inputs", () => {
         const component = mount(addPaperModal);
-        const addPaperModalInstance = component.find("AddPaperModal").instance();
+        const addPaperModalInstance = component.find(AddPaperModal.WrappedComponent).instance();
 
         const openButton = component.find(".addpaper-open-button").hostNodes();
         openButton.simulate("click");
@@ -203,9 +204,7 @@ describe("<AddPaperModal />", () => {
 
         addPaperModalInstance.setState({
             collectionName: "",
-            checkedCollections: [{ id: 1, title: "collection_1" },
-                { id: 2, title: "collection_2" },
-            ],
+            checkedCollections: [1, 2],
         });
 
         component.setProps({
@@ -220,7 +219,7 @@ describe("<AddPaperModal />", () => {
         const addButton = component.find(".add-button").hostNodes();
         addButton.simulate("click");
 
-        expect(spyAddPaper).toHaveBeenCalledTimes(1); // Fix me: it should be 1
+        expect(spyAddPaper).toHaveBeenCalledTimes(1);
         // Fix me: it should be success
         expect(addPaperModalInstance.state.addPaperCollectionStatus).toBe(collectionStatus.NONE);
     });
@@ -231,15 +230,8 @@ describe("<AddPaperModal />", () => {
 
         addPaperModalInstance.setState({
             collectionName: "",
-            checkedCollections: [{ id: 1, title: "collection_1" },
-                { id: 2, title: "collection_2" },
-            ],
+            checkedCollections: [1, 2],
         });
-
-        component.setProps({
-            addPaperCollectionStatus: collectionStatus.NONE,
-        });
-
         component.update();
 
         const openButton = component.find(".addpaper-open-button").hostNodes();
@@ -248,7 +240,7 @@ describe("<AddPaperModal />", () => {
         const addButton = component.find(".add-button").hostNodes();
         addButton.simulate("click");
 
-        expect(spyAddPaper).toHaveBeenCalledTimes(1); // Fix me: it should be 1
+        expect(spyAddPaper).toHaveBeenCalledTimes(1);
         // Fix me: it should be failure
         expect(addPaperModalInstance.state.addPaperCollectionStatus).toBe(collectionStatus.NONE);
     });
@@ -259,9 +251,61 @@ describe("<AddPaperModal />", () => {
 
         addPaperModalInstance.setState({
             collectionName: "collection_3",
-            checkedCollections: [{ id: 1, title: "collection_1" },
-                { id: 2, title: "collection_2" },
-            ],
+            checkedCollections: [1, 2],
+        });
+
+        component.setProps({
+            addPaperCollectionStatus: collectionStatus.SUCCESS,
+        });
+
+        component.update();
+
+        const openButton = component.find(".addpaper-open-button").hostNodes();
+        openButton.simulate("click");
+
+        const addButton = component.find(".add-button").hostNodes();
+        addButton.simulate("click");
+
+        expect(spyMakeNewCollection).toHaveBeenCalledTimes(1);
+        expect(spyAddPaper).toHaveBeenCalledTimes(0); // Fix me: it should be 1
+        // Fix me: it should be success
+        expect(addPaperModalInstance.state.addPaperCollectionStatus).toBe(collectionStatus.NONE);
+    });
+
+    it("should handle make a new colelction and add paper to collection", () => {
+        const component = mount(addPaperModal);
+        const addPaperModalInstance = component.find("AddPaperModal").instance();
+
+        addPaperModalInstance.setState({
+            collectionName: "collection_3",
+            checkedCollections: [1, 2],
+        });
+
+        component.setProps({
+            addPaperCollectionStatus: collectionStatus.SUCCESS,
+        });
+
+        component.update();
+
+        const openButton = component.find(".addpaper-open-button").hostNodes();
+        openButton.simulate("click");
+
+        const addButton = component.find(".add-button").hostNodes();
+        addButton.simulate("click");
+
+        expect(spyMakeNewCollection).toHaveBeenCalledTimes(1);
+        expect(spyAddPaper).toHaveBeenCalledTimes(0); // Fix me: it should be 1
+        // Fix me: it should be failure
+        expect(addPaperModalInstance.state.addPaperCollectionStatus).toBe(collectionStatus.NONE);
+    });
+
+    it("should handle make a new colelction and add paper to collection", () => {
+        const component = mount(addPaperModal);
+        const addPaperModalInstance = component.find("AddPaperModal").instance();
+
+        addPaperModalInstance.setState({
+            collectionName: "collection_3",
+            checkedCollections: [1, 2],
         });
 
         component.setProps({
@@ -282,21 +326,14 @@ describe("<AddPaperModal />", () => {
         expect(addPaperModalInstance.state.addPaperCollectionStatus).toBe(collectionStatus.NONE);
     });
 
-    it("should handle make a new colelction and add paper to collection", () => {
+    it("should handle when nothing changed", () => {
         const component = mount(addPaperModal);
-        const addPaperModalInstance = component.find("AddPaperModal").instance();
+        const addPaperModalInstance = component.find(AddPaperModal.WrappedComponent).instance();
 
         addPaperModalInstance.setState({
-            collectionName: "collection_3",
-            checkedCollections: [{ id: 1, title: "collection_1" },
-                { id: 2, title: "collection_2" },
-            ],
+            beforeCheckedCollections: [3],
+            checkedCollections: [3],
         });
-
-        component.setProps({
-            addPaperCollectionStatus: collectionStatus.SUCCESS,
-        });
-
         component.update();
 
         const openButton = component.find(".addpaper-open-button").hostNodes();
@@ -304,10 +341,6 @@ describe("<AddPaperModal />", () => {
 
         const addButton = component.find(".add-button").hostNodes();
         addButton.simulate("click");
-
-        expect(spyMakeNewCollection).toHaveBeenCalledTimes(1); // Fix me: it should be 1
-        expect(spyAddPaper).toHaveBeenCalledTimes(0); // Fix me: it should be 1
-        // Fix me: it should be failure
-        expect(addPaperModalInstance.state.addPaperCollectionStatus).toBe(collectionStatus.NONE);
+        expect(addPaperModalInstance.state.updateMessage).toEqual("Nothing changed!");
     });
 });

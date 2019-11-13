@@ -19,7 +19,7 @@ import {
     deleteCollection,
     // addCollectionLike,
     // removeCollectionLike,
-} from "./Collection/collection";
+} from "./collection/collection";
 
 import {
     makeNewReview,

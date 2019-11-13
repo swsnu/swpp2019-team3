@@ -4,6 +4,7 @@ import json
 from django.test import TestCase, Client
 from papersfeed import constants
 
+
 class ApiEntryTestCase(TestCase):
     """api_entry test"""
 
@@ -34,3 +35,13 @@ class ApiEntryTestCase(TestCase):
                                content_type='application/json')
 
         self.assertEqual(response.status_code, 403)
+
+    def test_invalid_json_error(self):
+        """response status should be 421 if json.loads failed"""
+        client = Client()
+
+        response = client.post('/api/collection',
+                               data='{array: [1, 2, 3]}',
+                               content_type='application/json')
+
+        self.assertEqual(response.status_code, 520)
