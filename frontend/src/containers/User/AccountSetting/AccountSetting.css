@@ -1,4 +1,4 @@
-.ProfileEditContent {
+.AccountSettingContent {
     min-height: 1000px;
     background: rgb(242,243,247);
     margin-left: 250px;
@@ -16,6 +16,18 @@
 }
 
 .EditDescArea #editDescTag {
+    align-self: flex-start;
+}
+
+.EditEmailArea {
+    display:flex;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+    flex-direction: column;
+}
+
+.EditEmailArea #editEmailTag {
     align-self: flex-start;
 }
 

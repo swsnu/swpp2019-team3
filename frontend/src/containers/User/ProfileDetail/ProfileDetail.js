@@ -5,16 +5,12 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-// import { connect } from "react-redux";
 
-import {
-    CollectionCard, ReviewCard,
-} from "../../../components";
+import { CollectionCard, ReviewCard } from "../../../components";
 import { collectionActions, userActions } from "../../../store/actions";
-// import { collectionStatus } from "../../../constants/constants";
+
 import "./ProfileDetail.css";
 import SamplePhoto from "./sample.jpg";
-// import * as actionCreators from "../../../store/actions/index";
 
 class ProfileDetail extends Component {
     constructor(props) {
@@ -23,13 +19,14 @@ class ProfileDetail extends Component {
             // getCollectionsStatus: collectionStatus.NONE,
             doIFollow: this.props.thisUser.doIFollow,
             // collections: [],
+            thisUserId: this.props.location.pathname.split("=")[1],
         };
     }
 
     componentDidMount() {
-        this.props.onGetCollections();
-        // this.props.onGetReviews();
-        this.props.onGetUser();
+        this.props.onGetCollections(this.state.thisUserId);
+        // this.props.onGetReviews(this.state.thisUserId);
+        this.props.onGetUser(this.state.thisUserId);
     }
 
     cardMaker = (card) => {
@@ -178,6 +175,8 @@ ProfileDetail.propTypes = {
     onGetCollections: PropTypes.func,
     // onGetReviews: PropTypes.func,
     onGetUser: PropTypes.func,
+    location: PropTypes.objectOf(PropTypes.any),
+
     // currentUserID: PropTypes.number,
     // thisUser: PropTypes.shape({
     //     id: PropTypes.number,
@@ -215,7 +214,6 @@ ProfileDetail.propTypes = {
 
 ProfileDetail.defaultProps = {
     me: { id: 1 },
-    // currentUserID: 1,
     thisUser: {
         id: 1,
         name: "Girin",
@@ -315,4 +313,5 @@ ProfileDetail.defaultProps = {
     onGetCollections: () => { alert("Default Props: seems onGetCollections is not working!"); },
     // onGetReviews: () => { alert("Default Props: seems onGetReviews is not working!") ;},
     onGetUser: () => { alert("Default Props: seems onGetUser is not working!"); },
+    location: null,
 };
