@@ -73,7 +73,7 @@ describe("Colelction ReviewReducer", () => {
         });
         expect(newState.make.status).toBe(reviewStatus.PAPER_NOT_EXIST);
         expect(newState.make.error).toBe(stubReview);
-    })
+    });
 
     it("should return get_reviews_by_paper", () => {
         const newState = ReviewReducer(stubInitialState, {

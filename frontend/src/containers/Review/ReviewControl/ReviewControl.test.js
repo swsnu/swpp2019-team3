@@ -13,7 +13,7 @@ import { history } from "../../../store/store";
 const stubInitialState = {
     paper: {
         getPaperStatus: getPaperStatus.NONE,
-        selectedPaper: {},
+        selectedPaper: { id: 1 },
     },
     auth: {
     },

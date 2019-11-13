@@ -30,7 +30,7 @@ import {
     // addReviewLike,
     // removeReviewLike,
     deleteReview,
-    //consume Review,
+    // consume Review,
 } from "./Review/review";
 
 export const collectionActions = {
@@ -60,7 +60,7 @@ export const reviewActions = {
     // addReviewLike,
     // removeReviewLike,
     deleteReview,
-    //consume Review,
+    // consume Review,
 };
 
 export const authActions = {

@@ -14,12 +14,13 @@ class ReviewControl extends Component {
         this.state = {
             title: "",
             content: "",
-            paper: {},
+            paper: { },
             likeCount: 0,
             authorNames: [],
             // keywords: [],
             date: "",
-            thisReview: {},
+            thisReview: { id: 0 },
+            paperId: 0,
         };
         this.handleChange = this.handleChange.bind(this);
         this.clickButtonHandler = this.clickButtonHandler.bind(this);
@@ -46,9 +47,9 @@ class ReviewControl extends Component {
                         thisReview: this.props.selectedReview.review,
                         title: this.props.selectedReview.review.title,
                         content: this.props.selectedReview.review.text,
-                        paper: this.props.selectedReview.review.paper,
+                        paperId: this.props.selectedReview.review.paper.id,
                     });
-                    this.props.onGetPaper({ id: this.state.paper.id })
+                    this.props.onGetPaper({ id: this.state.paperId })
                         .then(() => {
                             this.setState({
                                 paper: this.props.selectedPaper,
