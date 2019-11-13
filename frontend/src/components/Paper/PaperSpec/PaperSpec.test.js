@@ -41,7 +41,9 @@ describe("<PaperSpec />", () => {
             { name: "B", type: "abstract" },
             { name: "C", type: "author" }]}
         />);
-        const wrapper = component.find("#author-keywords-content");
+        let wrapper = component.find("#author-keywords-content");
         expect(wrapper.text()).toEqual("A, C");
+        wrapper = component.find("#abstract-keywords-content");
+        expect(wrapper.text()).toEqual("B");
     });
 });
