@@ -16,10 +16,9 @@ class PaperDetail extends Component {
             reviewCount: 0,
             /* eslint-enable react/no-unused-state */
             authorNames: "",
-            authorKeywords: "",
-            abstractKeywords: "",
             date: "",
             reviews: [],
+            keywords: [],
         };
         this.reviewMaker = this.reviewMaker.bind(this);
     }
@@ -46,22 +45,7 @@ class PaperDetail extends Component {
                     this.setState({ date: this.props.selectedPaper.publication.date });
                 }
                 if (this.props.selectedPaper.keywords) {
-                    const authorKeywords = this.props.selectedPaper.keywords.filter(
-                        (keyword) => keyword.type === "author",
-                    ).sort(
-                        (a, b) => a.id - b.id,
-                    ).map(
-                        (keyword) => keyword.name,
-                    );
-                    this.setState({ authorKeywords: authorKeywords.join(", ") });
-                    const abstractKeywords = this.props.selectedPaper.keywords.filter(
-                        (keyword) => keyword.type === "abstract",
-                    ).sort(
-                        (a, b) => a.id - b.id,
-                    ).map(
-                        (keyword) => keyword.name,
-                    );
-                    this.setState({ abstractKeywords: abstractKeywords.join(", ") });
+                    this.setState({ keywords: this.props.selectedPaper.keywords });
                 }
             });
     }
@@ -99,8 +83,7 @@ class PaperDetail extends Component {
                           abstract={this.props.selectedPaper.abstract}
                           date={this.state.date}
                           authors={this.state.authorNames}
-                          authorKeywords={this.state.authorKeywords}
-                          abstractKeywords={this.state.abstractKeywords}
+                          keywords={this.state.keywords}
                           likeCount={this.state.likeCount}
                           reviewCount={this.state.reviews.length}
                           isLiked={this.props.selectedPaper.liked}

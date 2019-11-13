@@ -13,8 +13,20 @@ class PaperSpec extends Component {
             isLiked: this.props.isLiked,
             likeCount: this.props.likeCount,
         };
+        this.processKeywords = this.processKeywords.bind(this);
         this.clickPaperSpecUnlikeHandler = this.clickPaperSpecUnlikeHandler.bind(this);
         this.clickPaperSpecLikeHandler = this.clickPaperSpecLikeHandler.bind(this);
+    }
+
+    processKeywords = (type) => {
+        const keywords = this.props.keywords.filter(
+            (keyword) => keyword.type === type,
+        ).sort(
+            (a, b) => a.id - b.id,
+        ).map(
+            (keyword) => keyword.name,
+        );
+        return keywords.join(", ");
     }
 
     // handle click 'Like' button
@@ -42,6 +54,13 @@ class PaperSpec extends Component {
             addButton = <AddPaperModal className="add-button" id={this.props.id} history={this.props.history} />;
         }
 
+        let authorKeywords = "";
+        let abstractKeywords = "";
+        if (this.props.keywords.length > 0) {
+            authorKeywords = this.processKeywords("author");
+            abstractKeywords = this.processKeywords("abstract");
+        }
+
         return (
             <div className="paperspec">
                 <div className="paperInfo">
@@ -51,11 +70,11 @@ class PaperSpec extends Component {
                     <h3 id="authors">{this.props.authors}</h3>
                     <div className="author-keywords">
                         Defined by Authors
-                        <h3 id="author-keywords-content">{this.props.authorKeywords}</h3>
+                        <h3 id="author-keywords-content">{authorKeywords}</h3>
                     </div>
                     <div className="abstract-keywords">
                         Extracted from Abstract
-                        <h3 id="abstract-keywords-content">{this.props.abstractKeywords}</h3>
+                        <h3 id="abstract-keywords-content">{abstractKeywords}</h3>
                     </div>
                 </div>
                 <div className="buttons">
@@ -81,8 +100,7 @@ PaperSpec.propTypes = {
     abstract: PropTypes.string,
     date: PropTypes.string,
     authors: PropTypes.string,
-    authorKeywords: PropTypes.string,
-    abstractKeywords: PropTypes.string,
+    keywords: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
     likeCount: PropTypes.number,
     isLiked: PropTypes.bool,
     addButtonExists: PropTypes.bool,
@@ -96,8 +114,7 @@ PaperSpec.defaultProps = {
     abstract: "",
     date: "",
     authors: "",
-    authorKeywords: "",
-    abstractKeywords: "",
+    keywords: [],
     likeCount: 0,
     isLiked: false,
     addButtonExists: false,

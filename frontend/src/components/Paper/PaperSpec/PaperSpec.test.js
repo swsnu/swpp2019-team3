@@ -34,4 +34,14 @@ describe("<PaperSpec />", () => {
 
         expect(spyOpen).toHaveBeenCalledTimes(1);
     });
+
+    it("if keywords are given, join them and set keywords appropriately", () => {
+        const component = mount(<PaperSpec keywords={[
+            { name: "A", type: "author" },
+            { name: "B", type: "abstract" },
+            { name: "C", type: "author" }]}
+        />);
+        const wrapper = component.find("#author-keywords-content");
+        expect(wrapper.text()).toEqual("A, C");
+    });
 });
