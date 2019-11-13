@@ -9,7 +9,7 @@ INVALID_SESSION = 440  # 잘못된 세션
 NOT_EXIST_OBJECT = 404  # 존재하지 않는 Object
 USERNAME_ALREADY_EXISTS = 419  # 이미 존재하는 사용자 이름
 EMAIL_ALREADY_EXISTS = 420  # 이미 존재하는 이메일
-
+INVALID_JSON = 520  # json.loads 에러
 
 # Common
 DATA = 'data'
