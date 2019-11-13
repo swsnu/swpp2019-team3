@@ -27,8 +27,8 @@ import {
 
 import {
     getUserByUserId,
-    // getFollowers,
-    // getFollowings,
+    getFollowersByUserId,
+    getFollowingsByUserId,
     addUserFollowing,
     removeUserFollowing,
     editUserInfo,
@@ -69,8 +69,8 @@ export const paperActions = {
 
 export const userActions = {
     getUserByUserId,
-    // getFollowers,
-    // getFollowings,
+    getFollowersByUserId,
+    getFollowingsByUserId,
     addUserFollowing,
     removeUserFollowing,
     editUserInfo,

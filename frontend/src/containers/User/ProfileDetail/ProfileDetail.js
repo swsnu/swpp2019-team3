@@ -29,6 +29,16 @@ class ProfileDetail extends Component {
         this.props.onGetUser(this.state.thisUserId);
     }
 
+    clickFollowHandler = () => {
+        this.setState({ doIFollow: true });
+        this.props.onFollow(this.state.thisUserId);
+    }
+
+    clickUnfollowHandler = () => {
+        this.setState({ doIFollow: false });
+        this.props.onUnFollow(this.state.thisUserId);
+    }
+
     cardMaker = (card) => {
         if (card.type === "Collection") {
             return (
@@ -66,17 +76,29 @@ class ProfileDetail extends Component {
     }
 
     render() {
-        const editButton = (
-            <Link to={`/profile/${this.props.thisUser.id}/edit`}>
-                <Button id="editButton">Edit</Button>
+        const settingButton = (
+            <Link to="/account_setting">
+                <Button id="settingButton">Setting</Button>
             </Link>
         );
-        const followButton = <Button id="followButton" onClick={() => this.setState({ doIFollow: true })}>Follow</Button>;
-        const unfollowButton = <Button id="unfollowButton" onClick={() => this.setState({ doIFollow: false })}>Unfollow</Button>;
+        const followButton = (
+            <Button
+              id="followButton"
+              onClick={() => this.clickFollowHandler()}
+            >Follow
+            </Button>
+        );
+        const unfollowButton = (
+            <Button
+              id="unfollowButton"
+              onClick={() => this.clickUnfollowHandler()}
+            >Unfollow
+            </Button>
+        );
         // only one button will be displayed among "edit", "follow", and "unfollow" buttons
         let buttonDisplayed;
         if (this.props.me.id === this.props.thisUser.id) {
-            buttonDisplayed = editButton;
+            buttonDisplayed = settingButton;
         } else if (this.state.doIFollow) {
             buttonDisplayed = unfollowButton;
         } else {
@@ -116,11 +138,11 @@ class ProfileDetail extends Component {
                                 <h5 id="reviewCount">{this.props.thisUserReviews.length}</h5>
                                 <h5 id="reviewText">Reviews</h5>
                             </div>
-                            <Link id="followerStat" to={`/profile/${this.props.thisUser.id}/followers`}>
+                            <Link id="followerStat" to={`/profile_id=${this.props.thisUser.id}/followers`}>
                                 <h5 id="followerCount">{this.props.thisUser.followersCount}</h5>
                                 <h5 id="followerText">Follower</h5>
                             </Link>
-                            <Link id="followingStat" to={`/profile/${this.props.thisUser.id}/followings`}>
+                            <Link id="followingStat" to={`/profile_id=${this.props.thisUser.id}/followings`}>
                                 <h5 id="followingCount">{this.props.thisUser.followingsCount}</h5>
                                 <h5 id="followingText">Following</h5>
                             </Link>
@@ -156,6 +178,7 @@ const mapStateToProps = (state) => ({
     me: state.auth.me,
     getCollectionsStatus: state.collection.list.status,
     thisUserCollections: state.collection.list.list,
+    // thisUserReviews: state.review.asdf
     thisUser: state.user.selectedUser,
 });
 
@@ -163,6 +186,8 @@ const mapDispatchToProps = (dispatch) => ({
     onGetCollections: (userId) => dispatch(collectionActions.getCollectionsByUserId(userId)),
     // onGetReviews: (userId) => dispatch(reviewActions.getReviewsByUserId(userId)),
     onGetUser: (userId) => dispatch(userActions.getUserByUserId(userId)),
+    onFollow: (targetId) => dispatch(userActions.addUserFollowing(targetId)),
+    onUnFollow: (targetId) => dispatch(userActions.removeUserFollowing(targetId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileDetail);
@@ -172,44 +197,13 @@ ProfileDetail.propTypes = {
     thisUserCollections: PropTypes.arrayOf(PropTypes.any),
     thisUserReviews: PropTypes.arrayOf(PropTypes.any),
     thisUser: PropTypes.objectOf(PropTypes.any),
+    location: PropTypes.objectOf(PropTypes.any),
+
     onGetCollections: PropTypes.func,
     // onGetReviews: PropTypes.func,
     onGetUser: PropTypes.func,
-    location: PropTypes.objectOf(PropTypes.any),
-
-    // currentUserID: PropTypes.number,
-    // thisUser: PropTypes.shape({
-    //     id: PropTypes.number,
-    //     name: PropTypes.string,
-    //     description: PropTypes.string,
-    //     followersCount: PropTypes.number,
-    //     followingsCount: PropTypes.number,
-    //     doIFollow: false,
-    // }),
-    // thisUserCollections: PropTypes.arrayOf(PropTypes.instanceOf(Collection)),
-    // thisUserCollections: PropTypes.arrayOf(PropTypes.shape({
-    //     source: PropTypes.string,
-    //     id: PropTypes.number,
-    //     user: PropTypes.string,
-    //     title: PropTypes.string,
-    //     memberCount: PropTypes.number,
-    //     paperCount: PropTypes.number,
-    //     replyCount: PropTypes.number,
-    //     likeCount: PropTypes.number,
-    // })),
-    // thisUserCollections: PropTypes.arrayOf(PropTypes.instanceOf(Review))
-    // thisUserReviews: PropTypes.arrayOf(PropTypes.shape({
-    //     author: PropTypes.string,
-    //     paperId: PropTypes.number,
-    //     source: PropTypes.string,
-    //     id: PropTypes.number,
-    //     user: PropTypes.string,
-    //     title: PropTypes.string,
-    //     date: PropTypes.string,
-    //     likeCount: PropTypes.number,
-    //     replyCount: PropTypes.number,
-    //     headerExists: PropTypes.bool,
-    // })),
+    onFollow: PropTypes.func,
+    onUnFollow: PropTypes.func,
 };
 
 ProfileDetail.defaultProps = {
@@ -309,9 +303,10 @@ ProfileDetail.defaultProps = {
             headerExists: false,
         },
     ],
-    /* eslint-disable no-alert */
-    onGetCollections: () => { alert("Default Props: seems onGetCollections is not working!"); },
-    // onGetReviews: () => { alert("Default Props: seems onGetReviews is not working!") ;},
-    onGetUser: () => { alert("Default Props: seems onGetUser is not working!"); },
+    onGetCollections: null,
+    // onGetReviews: null,
+    onGetUser: null,
+    onFollow: null,
+    onUnFollow: null,
     location: null,
 };

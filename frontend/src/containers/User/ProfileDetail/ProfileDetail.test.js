@@ -3,136 +3,137 @@ import { mount } from "enzyme";
 import { Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
+
 import ProfileDetail from "./ProfileDetail";
-// import { collectionActions } from "../../../store/actions";
+import { userActions } from "../../../store/actions/index";
 import { collectionStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 import { history } from "../../../store/store";
 
+const makeStubState = (myId, targetId, follow) => (
+    {
+        paper: {},
+        auth: {
+            signupStatus: null,
+            signinStatus: null,
+            signoutStatus: null,
+            getMeStatus: null,
+            me: {
+                id: myId,
+            },
+        },
+        collection: {
+            list: {
+                status: collectionStatus.NONE,
+                list: [],
+                error: null,
+            },
+        },
+        user: {
+            userSearchResult: [],
+            selectedUser: {
+                id: targetId,
+                doIFollow: follow,
+            },
+            selectedFollowers: [],
+            selectedFollowings: [],
+            status: null,
+            error: null,
+        },
+    }
+);
 
-const stubInitialState = {
-    paper: {
-    },
-    auth: {},
-    collection: {
-        make: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        list: {
-            status: collectionStatus.NONE,
-            list: [],
-            error: null,
-        },
-        edit: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        delete: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        selected: {
-            status: collectionStatus.NONE,
-            error: null,
-            collection: {},
-            papers: [],
-            members: [],
-            replies: [],
-        },
-    },
-    user: {},
-};
+const setMockStore = (stubState) => getMockStore(stubState);
+// const mockHistory = { push: jest.fn() };
 
-const mockStore = getMockStore(stubInitialState);
+const setProfileDetail = (stubInit) => (
+    <Provider store={setMockStore(stubInit)}>
+        <ConnectedRouter history={history}>
+            <Switch>
+                <Route
+                  path="/"
+                  exact
+                  render={() => (
+                      <div>
+                          <ProfileDetail location={{ pathname: "/profile_id=1" }} />
+                      </div>
+                  )}
+                />
+            </Switch>
+        </ConnectedRouter>
+    </Provider>
+);
 
 describe("<ProfileDetail />", () => {
-    let profileDetail;
-
-    beforeEach(() => {
-        profileDetail = (
-            <Provider store={mockStore}>
-                <ConnectedRouter history={history}>
-                    <Switch>
-                        <Route
-                          path="/"
-                          exact
-                          render={() => (
-                              <div>
-                                  <ProfileDetail />
-                              </div>
-                          )}
-                        />
-                    </Switch>
-                </ConnectedRouter>
-            </Provider>
-        );
-    });
     it("should render without errors", () => {
+        const stubInitState = makeStubState(1, 1, false);
+        const profileDetail = setProfileDetail(stubInitState);
         const component = mount(profileDetail);
-        const wrapper = component.find("ProfileDetail");
+
+        const wrapper = component.find(".ProfileDetailContent");
         expect(wrapper.length).toBe(1);
-        const section = wrapper.find(".itemTabSection");
-        expect(section.length).toBe(1);
     });
 
-    it("button should be differ for whether the user is the owner of the profile", () => {
+    it("should go to account setting by clicking settingButton", () => {
+        const stubInitState = makeStubState(1, 1, false);
+        const profileDetail = setProfileDetail(stubInitState);
         const component = mount(profileDetail);
-        const wrapper = component.find("ProfileDetail");
-        component.setProps({ currentUserID: 1, thisUser: { id: 1 } });
-        component.update();
-        let button = component.find("#editButton").hostNodes();
-        expect(button.length).toBe(1);
-        component.setProps({ currentUserID: 2, thisUser: { id: 1 } });
-        component.update();
-        // wrapper = component.find("#followButton").hostNodes();
-        // expect(wrapper.length).toBe(1);
-        component.setProps({ currentUserID: 2, thisUser: { id: 1 } });
-        component.update();
-        wrapper.setState({ doIFollow: true });
-
-        button = component.find("#unfollowButton").hostNodes();
-        // expect(button.length).toBe(1);
+        expect(component.find("Link").at(2).prop("to")).toBe("/account_setting");
     });
 
-    /* it("follow / unfollow", () => {
-        const component = mount(profileDetail);
-        component.setProps({ currentUserID: 1, thisUser: { id: 2 } });
-        component.update();
+    it("should handle follow feature", () => {
+        /* eslint-disable no-unused-vars */
+        const mockPromise = new Promise((resolve, reject) => { resolve(); });
+        /* eslint-enable no-unused-vars */
+        const spyFollow = jest.spyOn(userActions, "addUserFollowing")
+            .mockImplementation(() => () => mockPromise);
 
-        let wrapper = component.find("#followButton");
-        expect(wrapper.length).toBe(1);
-        wrapper.simulate("click");
-        wrapper = component.find("#unfollowButton");
-        expect(wrapper.length).toBe(1);
-        wrapper.simulate("click");
-        wrapper = component.find("#followButton");
-        expect(wrapper.length).toBe(1);
-    }); */
-
-    /* it("click follower number and moves to follower list page", () => {
+        const stubInitState = makeStubState(2, 1, false);
+        const profileDetail = setProfileDetail(stubInitState);
         const component = mount(profileDetail);
-        component.setProps({ thisUser: { id: 1 } });
-        component.update();
-        const wrapper = component.find("#followerStat").hostNodes();
+
+        const wrapper = component.find("#followButton").at(0);
+        expect(wrapper.length).toBe(1);
         wrapper.simulate("click");
-        expect(wrapper.find("#followerStat").props().to).toBe("/profile/1/followers");
+        expect(spyFollow).toHaveBeenCalled();
+    });
+
+    it("should handle unfollow feature", () => {
+        /* eslint-disable no-unused-vars */
+        const mockPromise = new Promise((resolve, reject) => { resolve(); });
+        /* eslint-enable no-unused-vars */
+        const spyUnFollow = jest.spyOn(userActions, "removeUserFollowing")
+            .mockImplementation(() => () => mockPromise);
+
+        const stubInitState = makeStubState(2, 1, true);
+        const profileDetail = setProfileDetail(stubInitState);
+        const component = mount(profileDetail);
+
+        const wrapper = component.find("#unfollowButton").at(0);
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+        expect(spyUnFollow).toHaveBeenCalled();
+    });
+
+    it("click follower number and moves to follower list page", () => {
+        const stubInitState = makeStubState(1, 1, false);
+        const profileDetail = setProfileDetail(stubInitState);
+        const component = mount(profileDetail);
+        expect(component.find("Link").at(0).prop("to")).toBe("/profile_id=1/followers");
     });
 
     it("click following number and moves to follower list page", () => {
+        const stubInitState = makeStubState(1, 1, false);
+        const profileDetail = setProfileDetail(stubInitState);
         const component = mount(profileDetail);
-        component.setProps({ thisUser: { id: 1 } });
-        component.update();
-        const wrapper = component.find("#followingStat").hostNodes();
-        wrapper.simulate("click");
-        expect(wrapper.find("#followingStat").props().to).toBe("/profile/1/followings");
-    }); */
+        expect(component.find("Link").at(1).prop("to")).toBe("/profile_id=1/followings");
+    });
 
     it("should make card", () => {
+        const stubInitState = makeStubState(1, 1, false);
+        const profileDetail = setProfileDetail(stubInitState);
         const component = mount(profileDetail);
+
         component.setProps({
             thisUserCollections: [{
                 type: "Collection",
@@ -169,6 +170,11 @@ describe("<ProfileDetail />", () => {
                 numReplies: 15,
             }],
         });
+        // const instance = component.find("ProfileDetail").instance();
+        // expect()
+
+        // const spyCardMaker =
+
         const wrapperCollectionLeft = component.find("#collectionCardsLeft");
         const wrapperCollectionRight = component.find("#collectionCardsRight");
         const wrapperReviewLeft = component.find("#reviewCardsLeft");

@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 // import { Route, Switch } from "react-router-dom";
 
 import AccountSetting from "./AccountSetting";
-import { userActions } from "../../store/actions";
+import { userActions } from "../../../store/actions/index";
 import { getMockStore } from "../../../test-utils/mocks";
 
 const stubInitialState = {
@@ -38,6 +38,8 @@ describe("AccountSetting Test", () => {
         );
     });
 
+    afterEach(() => { jest.clearAllMocks(); });
+
     it("should render without errors", () => {
         const component = mount(accountSetting);
         const wrapper = component.find(".AccountSettingContent");
@@ -66,11 +68,11 @@ describe("AccountSetting Test", () => {
         /* eslint-disable no-unused-vars */
         const mockPromise = new Promise((resolve, reject) => { resolve(); });
         /* eslint-enable no-unused-vars */
-        const spyEditMyInfo = jest.spyOn(userActions, "getPaper")
+        const spyEditMyInfo = jest.spyOn(userActions, "editUserInfo")
             .mockImplementation(() => () => mockPromise);
 
         const component = mount(accountSetting);
-        const wrapper = component.find("#applyButton");
+        const wrapper = component.find("#applyButton").at(0);
         wrapper.simulate("click");
         expect(spyEditMyInfo).toHaveBeenCalled();
     });

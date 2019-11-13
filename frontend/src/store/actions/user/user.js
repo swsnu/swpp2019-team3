@@ -4,7 +4,7 @@ import { userConstants } from "../actionTypes";
 // get a single user
 const getUserByUserIdSuccess = (user) => ({
     type: userConstants.GET_USER,
-    target: user.data,
+    target: user,
 });
 
 const getUserByUserIdFailure = (error) => {
@@ -21,10 +21,42 @@ export const getUserByUserId = (userId) => (dispatch) => axios.get("api/user", {
     .catch((err) => { dispatch(getUserByUserIdFailure(err)); });
 
 // get a list of followers
-// export const getFollowers
+const getFollowersByUserIdSuccess = (followers) => ({
+    type: userConstants.GET_FOLLOWERS,
+    target: followers,
+});
+
+const getFollowersByUserIdFailure = (error) => {
+    const actionType = error.response.status === 404
+        ? userConstants.GET_FOLLOWERS_FAILURE_USER_NOT_EXIST : null;
+    return {
+        type: actionType,
+        target: error,
+    };
+};
+
+export const getFollowersByUserId = (userId) => (dispatch) => axios.get("api/user/followed", { params: { id: userId } })
+    .then((res) => { dispatch(getFollowersByUserIdSuccess(res.data)); })
+    .catch((err) => { dispatch(getFollowersByUserIdFailure(err)); });
 
 // get a list of followings
-// export const getFollowings
+const getFollowingsByUserIdSuccess = (followers) => ({
+    type: userConstants.GET_FOLLOWERS,
+    target: followers,
+});
+
+const getFollowingsByUserIdFailure = (error) => {
+    const actionType = error.response.status === 404
+        ? userConstants.GET_FOLLOWINGS_FAILURE_USER_NOT_EXIST : null;
+    return {
+        type: actionType,
+        target: error,
+    };
+};
+
+export const getFollowingsByUserId = (userId) => (dispatch) => axios.get("api/user/following", { params: { id: userId } })
+    .then((res) => { dispatch(getFollowingsByUserIdSuccess(res.data)); })
+    .catch((err) => { dispatch(getFollowingsByUserIdFailure(err)); });
 
 // follow a user
 const addUserFollowingSuccess = (user) => ({

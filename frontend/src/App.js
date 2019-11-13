@@ -45,7 +45,7 @@ function App(props) {
                               )}
                             />
                             <Route path="/paper_id=:paper_id" exact component={PaperDetail} />
-                            <Route path="/profile/:id" exact component={ProfileDetail} />
+                            <Route path="/profile_id=:profile_id" exact component={ProfileDetail} />
                             <Route path="/account_setting" exact component={AccountSetting} />
                             <Route path="/collections" exact component={CollectionList} />
                             <Route path="/collection_id=:collection_id" exact component={CollectionDetail} />

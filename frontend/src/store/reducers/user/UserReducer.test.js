@@ -64,6 +64,15 @@ describe("UserReducer Test", () => {
         expect(newState.status).toBe(userStatus.SUCCESS);
     });
 
+    it("should handle 'GET_FOLLOWERS_FAILURE_USER_NOT_EXIST'", () => {
+        const newState = UserReducer(stubInitialState, {
+            type: userConstants.GET_FOLLOWERS_FAILURE_USER_NOT_EXIST,
+            target: stubError,
+        });
+        expect(newState.status).toBe(userStatus.USER_NOT_EXIST);
+        expect(newState.error).toBe(stubError);
+    });
+
     it("should handle 'GET_FOLLOWINGS'", () => {
         const newState = UserReducer(stubInitialState, {
             type: userConstants.GET_FOLLOWINGS,
@@ -71,6 +80,15 @@ describe("UserReducer Test", () => {
         });
         expect(newState.selectedFollowings).toBe(stubFollowings);
         expect(newState.status).toBe(userStatus.SUCCESS);
+    });
+
+    it("should handle 'GET_FOLLOWINGS_FAILURE_USER_NOT_EXIST'", () => {
+        const newState = UserReducer(stubInitialState, {
+            type: userConstants.GET_FOLLOWINGS_FAILURE_USER_NOT_EXIST,
+            target: stubError,
+        });
+        expect(newState.status).toBe(userStatus.USER_NOT_EXIST);
+        expect(newState.error).toBe(stubError);
     });
 
     // NOTE : This test may need to be modified

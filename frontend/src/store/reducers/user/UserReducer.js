@@ -1,7 +1,6 @@
 import { userConstants } from "../../actions/actionTypes";
 import { userStatus } from "../../../constants/constants";
 
-// may need to be modified after more APIs implemented
 const initialState = {
     userSearchResult: [],
     selectedUser: null,
@@ -31,11 +30,23 @@ const UserReducer = (state = initialState, action) => {
             selectedFollowers: action.target,
             status: userStatus.SUCCESS,
         };
+    case userConstants.GET_FOLLOWERS_FAILURE_USER_NOT_EXIST:
+        return {
+            ...state,
+            status: userStatus.USER_NOT_EXIST,
+            error: action.target,
+        };
     case userConstants.GET_FOLLOWINGS:
         return {
             ...state,
             selectedFollowings: action.target,
             status: userStatus.SUCCESS,
+        };
+    case userConstants.GET_FOLLOWINGS_FAILURE_USER_NOT_EXIST:
+        return {
+            ...state,
+            status: userStatus.USER_NOT_EXIST,
+            error: action.target,
         };
     case userConstants.ADD_FOLLOWING:
         return {

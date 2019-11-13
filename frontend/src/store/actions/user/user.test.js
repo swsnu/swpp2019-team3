@@ -50,7 +50,6 @@ describe("userActions", () => {
         jest.clearAllMocks();
     });
 
-    // FIXME: This test has a problem
     it("'getUserByUserId' should call axios.get", (done) => {
         const spy = jest.spyOn(axios, "get")
             .mockImplementation(() => new Promise((resolve) => {
@@ -106,8 +105,115 @@ describe("userActions", () => {
             });
     });
 
-    // test for 'getFollowers' and 'getFollowings' should be here
-    // once those actions are implemented
+    it("'getFollowersByUserId' should call axios.get", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: stubUser,
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(userActions.getFollowersByUserId(stubUser.id))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("api/user/followed", { params: { id: 1 } });
+                done();
+            });
+    });
+
+    it("'getFollowersByUserId' should handle user-not-exist error", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(userActions.getFollowersByUserId(stubUser.id))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("api/user/followed", { params: { id: 1 } });
+                done();
+            });
+    });
+
+    it("'getFollowersByUserId' should handle session expired", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 440,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(userActions.getFollowersByUserId(stubUser.id))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("api/user/followed", { params: { id: 1 } });
+                done();
+            });
+    });
+
+    it("'getFollowingsByUserId' should call axios.get", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: stubUser,
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(userActions.getFollowingsByUserId(stubUser.id))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("api/user/following", { params: { id: 1 } });
+                done();
+            });
+    });
+
+    it("'getFollowingsByUserId' should handle user-not-exist error", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(userActions.getFollowingsByUserId(stubUser.id))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("api/user/following", { params: { id: 1 } });
+                done();
+            });
+    });
+
+    it("'getFollowingsByUserId' should handle session expired", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 440,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(userActions.getFollowingsByUserId(stubUser.id))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("api/user/following", { params: { id: 1 } });
+                done();
+            });
+    });
 
     it("'addUserFollowing' should call axios.post", (done) => {
         const spy = jest.spyOn(axios, "post")
