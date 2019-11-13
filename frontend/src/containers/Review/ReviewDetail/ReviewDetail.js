@@ -29,6 +29,7 @@ class ReviewDetail extends Component {
                 username: "",
             },
             newReply: "",
+            paperId: 0,
         };
 
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
@@ -59,6 +60,7 @@ class ReviewDetail extends Component {
                         thisReview: this.props.selectedReview.review,
                         likeCount: this.props.selectedReview.review.count.likes,
                         author: this.props.selectedReview.review.user,
+                        paperId: this.props.selectedReview.review.paper.id,
                     });
                 } else {
                     this.props.history.push("/main");
@@ -77,8 +79,8 @@ class ReviewDetail extends Component {
             thisReview: {
                 ...this.state.thisReview,
                 liked: true,
-                likeCount: this.state.likeCount + 1,
             },
+            likeCount: this.state.likeCount + 1,
         };
         this.setState(nextState);
     }
@@ -88,8 +90,8 @@ class ReviewDetail extends Component {
             thisReview: {
                 ...this.state.thisReview,
                 liked: false,
-                likeCount: this.state.likeCount - 1,
             },
+            likeCount: this.state.likeCount - 1,
         };
         this.setState(nextState);
     }
@@ -99,9 +101,9 @@ class ReviewDetail extends Component {
     }
 
     clickDeleteButtonHandler() {
-        this.props.onDeleteReview(this.state.thisReview.id)
+        this.props.onDeleteReview({ id: this.state.thisReview.id })
             .then(() => {
-                this.props.history.push(`/paper_id=${this.state.thisReview.paperId}`);
+                this.props.history.push(`/paper_id=${this.state.paperId}`);
             });
     }
 
@@ -109,8 +111,8 @@ class ReviewDetail extends Component {
         const nextState = ({
             thisReview: {
                 ...this.state.thisReview,
-                replyCount: this.state.replyCount + 1,
             },
+            replyCount: this.state.replyCount + 1,
         });
         this.setState(nextState);
     }

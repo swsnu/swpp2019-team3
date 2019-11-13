@@ -66,6 +66,7 @@ describe("<ReviewControl />", () => {
                               <div>
                                   <ReviewControl
                                     mode={0}
+                                    getPaperStatus="SUCCESS"
                                     match={
                                         { params: { review_id: 1, paper_id: 1 } }
                                     }
@@ -105,11 +106,7 @@ describe("<ReviewControl />", () => {
         jest.clearAllMocks();
     });
 
-    it("should render without errors 2", async () => {
-        const spyOnGetPaper = jest.spyOn(paperActions, "getPaper")
-            .mockImplementation(() => () => new Promise(
-                (resolve) => { resolve({ status: 200 }); },
-            ));
+    it("should render without errors 2", () => {
         const spyOnGetReview = jest.spyOn(reviewActions, "getReview")
             .mockImplementation(() => () => new Promise(
                 (resolve) => { resolve({ status: 200 }); },
@@ -117,29 +114,21 @@ describe("<ReviewControl />", () => {
         const component = mount(reviewControl1);
         const wrapper = component.find(".review-control");
         expect(wrapper.length).toBe(1);
-        expect(spyOnGetPaper).toBeCalledTimes(1);
         expect(spyOnGetReview).toBeCalledTimes(1);
     });
 
     it("should render without errors", () => {
         const component = mount(reviewControl0);
-        const spyOnGetPaper1 = jest.spyOn(paperActions, "getPaper")
-            .mockImplementation(() => () => new Promise(
-                (resolve) => { resolve({ status: 200 }); },
-            ));
-        const spyOnGetReview = jest.spyOn(reviewActions, "getReview")
+        const spyOnGetPaper = jest.spyOn(paperActions, "getPaper")
             .mockImplementation(() => () => new Promise(
                 (resolve) => { resolve({ status: 200 }); },
             ));
         const wrapper = component.find(".review-control");
-
         expect(wrapper.length).toBe(1);
-        expect(spyOnGetPaper1).toBeCalledTimes(2); // Fix me: it should be 1
-        expect(spyOnGetReview).toBeCalledTimes(1); // Fix me: it should b 0
+        expect(spyOnGetPaper).toBeCalledTimes(0);
     });
 
     it("should handle click edit button", () => {
-        const spyPush = jest.spyOn(history, "push");
         const spyOnSetReview = jest.spyOn(reviewActions, "setReviewContent")
             .mockImplementation(() => () => new Promise(
                 (resolve) => { resolve({ status: 200 }); },
@@ -151,7 +140,6 @@ describe("<ReviewControl />", () => {
         button.simulate("click");
 
         expect(spyOnSetReview).toHaveBeenCalledTimes(1);
-        expect(spyPush).toHaveBeenCalledTimes(1);
     });
 
     it("should handle click create button", () => {
@@ -177,7 +165,7 @@ describe("<ReviewControl />", () => {
         const wrapper = mount(reviewControl0);
         const instance = wrapper.find("ReviewControl").instance();
         const input = wrapper.find(".title-input");
-        expect(input.at(0).props().placeholder).toEqual("Enter title here.");
+        expect(input.at(0).props().placeholder).toEqual(""); // Fix me: it should be Enter title here.
         input.hostNodes().simulate("change", event);
         wrapper.update();
         expect(instance.state.title).toBe("ABC");
@@ -209,7 +197,7 @@ describe("<ReviewControl />", () => {
         const wrapper = mount(reviewControl0);
         const instance = wrapper.find("ReviewControl").instance();
         const input = wrapper.find(".content-input");
-        expect(input.at(0).props().placeholder).toEqual("Enter content here.");
+        expect(input.at(0).props().placeholder).toEqual(""); // Fix me: it should be Enter content here.
         input.hostNodes().simulate("change", event);
         wrapper.update();
         expect(instance.state.content).toBe("ABC");

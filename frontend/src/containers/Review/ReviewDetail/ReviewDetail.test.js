@@ -109,7 +109,7 @@ describe("<ReviewDetail />", () => {
         component.update();
 
         expect(instance.state.thisReview.liked).toBe(true);
-        expect(instance.state.likeCount).toEqual(0); // Fix me: it should be 1
+        expect(instance.state.likeCount).toEqual(1);
 
         wrapper.simulate("click");
         component.update();
@@ -161,6 +161,6 @@ describe("<ReviewDetail />", () => {
         const button = component.find(".new-reply .new-reply-button").hostNodes();
         button.simulate("click");
 
-        expect(instance.state.replyCount).toBe(0); // Fix me: it should be 0
+        expect(instance.state.replyCount).toBe(1);
     });
 });
