@@ -6,8 +6,9 @@ import json
 import traceback
 
 # Django Modules
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseNotAllowed
 from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 
 # Internal Modules
@@ -20,6 +21,14 @@ from . import constants
 def api_not_found():
     """api_not_found"""
     raise ApiError(404)
+
+
+@ensure_csrf_cookie
+def token(request):
+    if request.method == 'GET':
+        return HttpResponse(status=204)
+    else:
+        return HttpResponseNotAllowed(['GET'])
 
 
 @csrf_exempt
