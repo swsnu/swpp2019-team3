@@ -41,6 +41,7 @@ class UserTestCase(TestCase):
                     content_type='application/json')
 
     def test_csrf(self):
+        """ CSRF TOKEN TEST """
         # By default, csrf checks are disabled in test client
         # To test csrf protection we enforce csrf checks here
         client = Client(enforce_csrf_checks=True)

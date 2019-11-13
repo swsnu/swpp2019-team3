@@ -24,10 +24,11 @@ def api_not_found():
 
 @ensure_csrf_cookie
 def token(request):
+    """token"""
     if request.method == 'GET':
         return HttpResponse(status=204)
-    else:
-        return HttpResponseNotAllowed(['GET'])
+
+    return HttpResponseNotAllowed(['GET'])
 
 
 @ensure_csrf_cookie
