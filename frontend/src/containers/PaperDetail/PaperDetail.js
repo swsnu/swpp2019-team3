@@ -16,7 +16,8 @@ class PaperDetail extends Component {
             reviewCount: 0,
             /* eslint-enable react/no-unused-state */
             authorNames: "",
-            keywords: "",
+            authorKeywords: "",
+            abstractKeywords: "",
             date: "",
             reviews: [],
         };
@@ -45,10 +46,20 @@ class PaperDetail extends Component {
                     this.setState({ date: this.props.selectedPaper.publication.date });
                 }
                 if (this.props.selectedPaper.keywords) {
-                    const keywordNames = this.props.selectedPaper.keywords.map(
-                        (keyword) => keyword.name,
-                    );
-                    this.setState({ keywords: keywordNames.join(", ") });
+                    const authorKeywords = this.props.selectedPaper.keywords.filter(
+                        (keyword) => keyword.type === "author",
+                    )
+                        .map(
+                            (keyword) => keyword.name,
+                        );
+                    this.setState({ authorKeywords: authorKeywords.join(", ") });
+                    const abstractKeywords = this.props.selectedPaper.keywords.filter(
+                        (keyword) => keyword.type === "abstract",
+                    )
+                        .map(
+                            (keyword) => keyword.name,
+                        );
+                    this.setState({ abstractKeywords: abstractKeywords.join(", ") });
                 }
             });
     }
@@ -86,7 +97,8 @@ class PaperDetail extends Component {
                           abstract={this.props.selectedPaper.abstract}
                           date={this.state.date}
                           authors={this.state.authorNames}
-                          keywords={this.state.keywords}
+                          authorKeywords={this.state.authorKeywords}
+                          abstractKeywords={this.state.abstractKeywords}
                           likeCount={this.state.likeCount}
                           reviewCount={this.state.reviews.length}
                           isLiked={this.props.selectedPaper.liked}

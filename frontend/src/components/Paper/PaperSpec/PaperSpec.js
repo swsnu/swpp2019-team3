@@ -49,7 +49,14 @@ class PaperSpec extends Component {
                     <h3 id="date">{this.props.date}</h3>
                     <Button className="url-button" onClick={() => window.open(this.props.link)}>URL</Button>
                     <h3 id="authors">{this.props.authors}</h3>
-                    <h3 id="keywords">{this.props.keywords}</h3>
+                    <h3 id="author-keywords">
+                        Defined by Authors
+                        <h3 id="author-keywords-content">{this.props.authorKeywords}</h3>
+                    </h3>
+                    <h3 id="abstract-keywords">
+                        Extracted from Abstract
+                        <h3 id="abstract-keywords-content">{this.props.abstractKeywords}</h3>
+                    </h3>
                 </div>
                 <div className="buttons">
                     <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
@@ -74,7 +81,8 @@ PaperSpec.propTypes = {
     abstract: PropTypes.string,
     date: PropTypes.string,
     authors: PropTypes.string,
-    keywords: PropTypes.string,
+    authorKeywords: PropTypes.string,
+    abstractKeywords: PropTypes.string,
     likeCount: PropTypes.number,
     isLiked: PropTypes.bool,
     addButtonExists: PropTypes.bool,
@@ -88,7 +96,8 @@ PaperSpec.defaultProps = {
     abstract: "",
     date: "",
     authors: "",
-    keywords: "",
+    authorKeywords: "",
+    abstractKeywords: "",
     likeCount: 0,
     isLiked: false,
     addButtonExists: false,

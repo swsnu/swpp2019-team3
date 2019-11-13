@@ -213,7 +213,7 @@ def get_papers(filename):
         # 7-1. save abstract with key of paper for extracting keywords later
         abstracts[pk['paper']] = row['AB']
 
-        # 7-2. save information of mapping keyword to paper
+        # 7-2. save information of mapping keyword to paper (author)
         keywords_name = list(map(str.strip, row['DE'].split(';')))
         for keyword_name in keywords_name:
             if not keyword_name: # skip ''
@@ -223,6 +223,7 @@ def get_papers(filename):
                 keywords_dict[keyword_name].append((pk['paper'], 'au'))
             else: # if this is a new keyword
                 keywords_dict[keyword_name] = [(pk['paper'], 'au')]
+
 
     # for every abstract, extract keywords by calling 'get_key_phrases'
     doc_list = []
@@ -243,6 +244,7 @@ def get_papers(filename):
 
         doc_list.append({"id": str(paper_key), "language": "en", "text": abstracts[paper_key][:MAX_DOC_SIZE]})
 
+    # create a request with remaining abstracts
     if doc_list:
         documents = {"documents": doc_list}
         key_phrases = get_key_phrases(documents)
@@ -284,6 +286,7 @@ def get_papers(filename):
             }
             paper_keywords.append(paper_keyword)
 
+
     # create one json file with all record information
     # pylint: disable=line-too-long
     models = papers + authors + paper_authors + publishers + publications + paper_publications + keywords + paper_keywords
@@ -292,14 +295,19 @@ def get_papers(filename):
     json.dump(models, open(json_filename, 'w'), indent=4)
 # pylint: enable=too-many-locals, too-many-statements, too-many-branches
 
+
 def process_key_phrases(key_phrases, keywords_dict, request_cnt):
-    """process result of response and save them in keywords_dict"""
-    # To check struct of response struct, refer to
-    # https://koreacentral.dev.cognitive.microsoft.com/docs/services/TextAnalytics-v2-1/operations/56f30ceeeda5650db055a3c6
+    """ process result of response and save them in keywords_dict
+        To check struct of response struct, refer to
+        https://koreacentral.dev.cognitive.microsoft.com/docs/services/TextAnalytics-v2-1/operations/56f30ceeeda5650db055a3c6
+    """
+
+    # print errors if exist
     if key_phrases['errors']:
         print("- Request {} error".format(request_cnt))
         pprint(key_phrases['errors'])
 
+    # save information of mapping keyword to paper (abstract)
     if key_phrases['documents']:
         for result in key_phrases['documents']:
             for key_phrase in result['keyPhrases']:
@@ -309,6 +317,7 @@ def process_key_phrases(key_phrases, keywords_dict, request_cnt):
                     keywords_dict[key_phrase].append((paper_key, 'ab'))
                 elif key_phrase not in keywords_dict:
                     keywords_dict[key_phrase] = [(paper_key, 'ab')]
+
 
 if __name__ == '__main__':
     # pylint: disable=invalid-name
