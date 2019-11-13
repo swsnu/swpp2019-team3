@@ -48,8 +48,12 @@ describe("<PaperCard />", () => {
     });
 
     it("if keywords are given, join them and set keywords appropriately", () => {
-        const component = mount(<PaperCard keywords={["A", "B"]} />);
+        const component = mount(<PaperCard keywords={[
+            { name: "A", type: "author" },
+            { name: "B", type: "abstract" },
+            { name: "C", type: "author" }]}
+        />);
         const paperCardInstance = component.find(PaperCard).instance();
-        expect(paperCardInstance.state.keywords).toBe("A, B");
+        expect(paperCardInstance.state.keywords).toBe("A, C");
     });
 });

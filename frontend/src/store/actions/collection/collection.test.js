@@ -63,6 +63,7 @@ describe("collectionActions", () => {
         jest.clearAllMocks();
     });
 
+
     it("'makeNewCollection should call axios.post", (done) => {
         const spy = jest.spyOn(axios, "post")
             .mockImplementation(() => new Promise((resolve) => {
@@ -75,7 +76,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.makeNewCollection({ title: "abc", text: "def" }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", { text: "def", title: "abc" });
+                expect(spy).toHaveBeenCalledWith("/api/collection", { text: "def", title: "abc" });
                 done();
             });
     });
@@ -93,7 +94,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.makeNewCollection({ title: "def" }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", { text: undefined, title: "def" });
+                expect(spy).toHaveBeenCalledWith("/api/collection", { text: undefined, title: "def" });
                 done();
             });
     });
@@ -112,10 +113,11 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.makeNewCollection({ title: "def" }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", { text: undefined, title: "def" });
+                expect(spy).toHaveBeenCalledWith("/api/collection", { text: undefined, title: "def" });
                 done();
             });
     });
+
 
     it("getCollectionsByUserId should call axios.get", (done) => {
         const spy = jest.spyOn(axios, "get")
@@ -129,7 +131,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.getCollectionsByUserId({ id: stubUser.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection/user", { params: { id: stubUser.id } });
+                expect(spy).toHaveBeenCalledWith("/api/collection/user", { params: { id: stubUser.id } });
                 done();
             });
     });
@@ -148,7 +150,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.getCollectionsByUserId({ id: stubUser.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection/user", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/collection/user", { params: { id: 1 } });
                 done();
             });
     });
@@ -167,12 +169,13 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.getCollectionsByUserId({ id: stubUser.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection/user", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/collection/user", { params: { id: 1 } });
                 done();
             });
     });
 
-    /* it("get collection should call axios.get", (done) => {
+
+    it("get collection should call axios.get", (done) => {
         const spy = jest.spyOn(axios, "get")
             .mockImplementation(() => new Promise((resolve) => {
                 const result = {
@@ -182,31 +185,51 @@ describe("collectionActions", () => {
                 resolve(result);
             }));
 
-        mockStore.dispatch(collectionActions.getCollection({id:1}))
+        mockStore.dispatch(collectionActions.getCollection({ id: 1 }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", { params:  {id:1}  });
+                expect(spy).toHaveBeenCalledWith("/api/collection", { params: { id: 1 } });
                 done();
             });
-    }); */
+    });
 
     it("getCollection should handle collectionnotexist", (done) => {
         const spy = jest.spyOn(axios, "get")
             .mockImplementation(() => new Promise((_, reject) => {
-                const result = {
+                const error = {
                     response: {
                         status: 404,
                         data: {},
                     },
                 };
-                reject(result);
+                reject(error);
             }));
 
         mockStore.dispatch(collectionActions.getCollection({ id: stubCollection.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/collection", { params: { id: 1 } });
                 done();
             });
     });
+
+    it("getCollection should handle session expired", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 440,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(collectionActions.getCollection({ id: stubCollection.id }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/collection", { params: { id: 1 } });
+                done();
+            });
+    });
+
 
     it("getCollectionPapers should call axios.get", (done) => {
         const spy = jest.spyOn(axios, "get")
@@ -220,7 +243,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.getCollectionPapers({ id: stubCollection.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/paper/collection", { params: { id: stubCollection.id } });
+                expect(spy).toHaveBeenCalledWith("/api/paper/collection", { params: { id: stubCollection.id } });
                 done();
             });
     });
@@ -230,7 +253,7 @@ describe("collectionActions", () => {
             .mockImplementation(() => new Promise((_, reject) => {
                 const error = {
                     response: {
-                        status: 407,
+                        status: 404,
                         data: [],
                     },
                 };
@@ -239,10 +262,11 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.getCollectionPapers({ id: stubCollection.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/paper/collection", { params: { id: stubCollection.id } });
+                expect(spy).toHaveBeenCalledWith("/api/paper/collection", { params: { id: stubCollection.id } });
                 done();
             });
     });
+
 
     it("setTitleandDescription should call axios.put", (done) => {
         const spy = jest.spyOn(axios, "put")
@@ -256,7 +280,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.setTitleAndDescription({ id: stubCollection.id, title: "dfd", text: "dfder" }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", { id: 1, text: "dfder", title: "dfd" });
+                expect(spy).toHaveBeenCalledWith("/api/collection", { id: 1, text: "dfder", title: "dfd" });
                 done();
             });
     });
@@ -275,7 +299,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.setTitleAndDescription({ id: stubCollection.id, title: "dfd", text: "dfder" }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", { id: 1, text: "dfder", title: "dfd" });
+                expect(spy).toHaveBeenCalledWith("/api/collection", { id: 1, text: "dfder", title: "dfd" });
                 done();
             });
     });
@@ -294,10 +318,11 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.setTitleAndDescription({ id: stubCollection.id, title: "dfd", text: "dfder" }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", { id: 1, text: "dfder", title: "dfd" });
+                expect(spy).toHaveBeenCalledWith("/api/collection", { id: 1, text: "dfder", title: "dfd" });
                 done();
             });
     });
+
 
     it("addCollectionPaper should call axios.put", (done) => {
         const spy = jest.spyOn(axios, "put")
@@ -313,7 +338,7 @@ describe("collectionActions", () => {
             { collection_ids: [stubCollection.id], id: 1 },
         ))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/paper/collection", { collection_ids: [1], id: 1 });
+                expect(spy).toHaveBeenCalledWith("/api/paper/collection", { collection_ids: [1], id: 1 });
                 done();
             });
     });
@@ -334,10 +359,11 @@ describe("collectionActions", () => {
             { collection_ids: [stubCollection.id], id: 1 },
         ))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/paper/collection", { collection_ids: [1], id: 1 });
+                expect(spy).toHaveBeenCalledWith("/api/paper/collection", { collection_ids: [1], id: 1 });
                 done();
             });
     });
+
 
     it("removeCollectionPaper should call axios.put", (done) => {
         const spy = jest.spyOn(axios, "put")
@@ -353,7 +379,7 @@ describe("collectionActions", () => {
             { collection_ids: [stubCollection.id], id: 1 },
         ))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/paper/collection", { collection_ids: [1], id: 1 });
+                expect(spy).toHaveBeenCalledWith("/api/paper/collection", { collection_ids: [1], id: 1 });
                 done();
             });
     });
@@ -374,10 +400,12 @@ describe("collectionActions", () => {
             { collection_ids: [stubCollection.id], id: 1 },
         ))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/paper/collection", { collection_ids: [1], id: 1 });
+                expect(spy).toHaveBeenCalledWith("/api/paper/collection", { collection_ids: [1], id: 1 });
                 done();
             });
     });
+
+
     it("deleteCollection should call axios.delete", (done) => {
         const spy = jest.spyOn(axios, "delete")
             .mockImplementation(() => new Promise((resolve) => {
@@ -390,7 +418,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.deleteCollection({ id: stubCollection.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/collection", { params: { id: 1 } });
                 done();
             });
     });
@@ -409,7 +437,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.deleteCollection({ id: stubCollection.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/collection", { params: { id: 1 } });
                 done();
             });
     });
@@ -428,7 +456,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.deleteCollection({ id: stubCollection.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/collection", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/collection", { params: { id: 1 } });
                 done();
             });
     });

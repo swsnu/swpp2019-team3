@@ -134,6 +134,63 @@ class CollectionTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+        collection_id = Collection.objects.filter(title='SWPP Papers').first().id
+        self.assertJSONEqual(response.content, {
+            constants.COLLECTIONS: [{
+                constants.ID: collection_id,
+                constants.TITLE: 'SWPP Papers',
+                constants.TEXT: 'papers for swpp 2019 class',
+                constants.LIKED: False,
+                constants.CONTAINS_PAPER: False,
+                constants.COUNT: {
+                    constants.USERS: 1,
+                    constants.PAPERS: 0,
+                    constants.LIKES: 0,
+                    constants.REPLIES: 0,
+                }
+            }]
+        })
+
+    def test_get_collections_of_user_with_paper(self):
+        """ GET USER'S COLLECTIONS """
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+
+        # Get User's Collections
+        response = client.get('/api/collection/user',
+                              data={
+                                  constants.ID: user_id,
+                                  constants.PAPER: 1,
+                              },
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        collection_id = Collection.objects.filter(title='SWPP Papers').first().id
+        self.assertJSONEqual(response.content, {
+            constants.COLLECTIONS: [{
+                constants.ID: collection_id,
+                constants.TITLE: 'SWPP Papers',
+                constants.TEXT: 'papers for swpp 2019 class',
+                constants.LIKED: False,
+                constants.CONTAINS_PAPER: False,
+                constants.COUNT: {
+                    constants.USERS: 1,
+                    constants.PAPERS: 0,
+                    constants.LIKES: 0,
+                    constants.REPLIES: 0,
+                }
+            }]
+        })
+
     def test_delete_collection(self):
         """ DELETE Collection """
         client = Client()

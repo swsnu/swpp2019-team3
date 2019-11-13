@@ -508,11 +508,13 @@ def __pack_publications(publications):
 
 def __get_publishers(filter_query):
     """Get Publishers By Query"""
-    queryset = Keyword.objects.filter(
+    queryset = Publisher.objects.filter(
         filter_query
     )
 
     publishers = get_results_from_queryset(queryset, None)
+
+    publishers = __pack_publisher(publishers)
 
     return publishers
 

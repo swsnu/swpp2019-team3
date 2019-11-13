@@ -61,9 +61,12 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
 
         except ApiError as error:
             status_code = error.args[0]
+        except ValueError as error:
+            status_code = 520
+            response_data[constants.DEBUG] = {constants.ERROR: str(error)}
         except Exception as error:  # pylint: disable=broad-except
+            print("ERROR:" + str(error))
             status_code = 500
-
             response_data[constants.DEBUG] = {constants.ERROR: str(error),
                                               constants.DESCRIPTION: traceback.format_exc()}
         else:
@@ -92,7 +95,6 @@ def __get_args(request):
         if isinstance(body, dict):
             args = body
         return args
-
 
     args = request.POST
 
