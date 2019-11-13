@@ -61,7 +61,7 @@ class ReviewControl extends Component {
                         this.props.history.push(`/review_id=${this.props.match.params.review_id}`);
                     }
                 }).catch(() => {
-                   
+
                 });
         }
     }
@@ -89,7 +89,7 @@ class ReviewControl extends Component {
                 .then(() => {
                     this.props.history(`/review_id=${this.props.editedReview.review.id}`);
                 }).catch(() => {
-                    
+
                 });
         }
     }

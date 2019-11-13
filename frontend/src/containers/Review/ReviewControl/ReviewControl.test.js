@@ -105,7 +105,7 @@ describe("<ReviewControl />", () => {
         jest.clearAllMocks();
     });
 
-    it("should render without errors 2", () => {
+    it("should render without errors 2", async () => {
         const spyOnGetPaper = jest.spyOn(paperActions, "getPaper")
             .mockImplementation(() => () => new Promise(
                 (resolve) => { resolve({ status: 200 }); },
