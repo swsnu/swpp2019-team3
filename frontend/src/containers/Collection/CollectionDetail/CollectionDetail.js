@@ -91,9 +91,9 @@ class CollectionDetail extends Component {
           date={paper.date}
           authors={paper.authors}
           keywords={paper.keywords}
-          likeCount={paper.likeCount}
+          likeCount={paper.count.likes}
           reviewCount={paper.reviewCount}
-          isLiked={paper.isLiked}
+          isLiked={paper.liked}
           headerExists={false}
         />
     )

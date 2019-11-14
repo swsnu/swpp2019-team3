@@ -3,14 +3,11 @@ import { mount } from "enzyme";
 import { Provider } from "react-redux";
 
 import PaperSpec from "./PaperSpec";
-import { paperStatus, signinStatus } from "../../../constants/constants";
 import { getMockStore, mockComponent } from "../../../test-utils/mocks";
 import { paperActions } from "../../../store/actions";
 
 const stubInitialState = {
-    paper: {
-
-    },
+    paper: {},
     auth: {},
     collection: {},
     review: {},
