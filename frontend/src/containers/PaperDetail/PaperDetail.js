@@ -45,10 +45,9 @@ class PaperDetail extends Component {
                 if (this.props.selectedPaper.publication) {
                     this.setState({ date: this.props.selectedPaper.publication.date });
                 }
-                // FIXME: Please uncomment this block if onGetPaper can get keywords
-                /* if (this.props.selectedPaper.keywords) {
-                    this.setState({ keywords: this.props.selectedPaper.keywords.join(", ") });
-                } */
+                if (this.props.selectedPaper.keywords) {
+                    this.setState({ keywords: this.props.selectedPaper.keywords });
+                }
             });
 
         this.props.onGetReviewsByPaper({ id: this.props.location.pathname.split("=")[1] })
@@ -107,7 +106,6 @@ class PaperDetail extends Component {
                           addButtonExists
                           history={this.props.history}
                         />
-                        {/* FIXME: review-count should reflect this.state.reviewCount */}
                         <h3 id="review-count">{this.state.reviews.length} reviews</h3>
                         <Button className="review-add" onClick={this.handleClickReviewAddButton}>Add</Button>
                         <div className="reviewcards">
@@ -139,7 +137,7 @@ PaperDetail.propTypes = {
     onGetPaper: PropTypes.func,
     getPaperStatus: PropTypes.string,
     selectedPaper: PropTypes.objectOf(PropTypes.any),
-    reviewList: PropTypes.arrayOf(PropTypes.any),
+    reviewList: PropTypes.objectOf(PropTypes.any),
     onGetReviewsByPaper: PropTypes.func,
 };
 
@@ -149,6 +147,6 @@ PaperDetail.defaultProps = {
     onGetPaper: null,
     getPaperStatus: getPaperStatus.NONE,
     selectedPaper: {},
-    reviewList: [],
+    reviewList: null,
     onGetReviewsByPaper: () => {},
 };

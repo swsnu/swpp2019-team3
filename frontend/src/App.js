@@ -30,7 +30,11 @@ function App(props) {
                               exact
                               render={() => (
                                   <div>
-                                      <ReviewControl mode={0} match={props.match} history={props.history} />
+                                      <ReviewControl
+                                        mode={0}
+                                        match={props.match}
+                                        history={props.history}
+                                      />
                                   </div>
                               )}
                             />
@@ -40,7 +44,11 @@ function App(props) {
                               exact
                               render={() => (
                                   <div>
-                                      <ReviewControl mode={1} match={props.match} history={props.history} />
+                                      <ReviewControl
+                                        mode={1}
+                                        match={props.match}
+                                        history={props.history}
+                                      />
                                   </div>
                               )}
                             />

@@ -5,7 +5,6 @@ import {
     Form, Button, Card,
 } from "react-bootstrap";
 import { reviewActions, authActions } from "../../../store/actions";
-import { reviewStatus, getMeStatus } from "../../../constants/constants";
 import { Reply } from "../../../components";
 import "./ReviewDetail.css";
 import SVG from "../../../components/svg";
@@ -29,6 +28,7 @@ class ReviewDetail extends Component {
                 username: "",
             },
             newReply: "",
+            paperId: 0,
         };
 
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
@@ -42,27 +42,19 @@ class ReviewDetail extends Component {
     componentDidMount() {
         this.props.onGetMe()
             .then(() => {
-                if (this.props.me.getMeStatus === getMeStatus.SUCCESS) {
-                    this.setState({
-                        user: this.props.me.me,
-                    });
-                } else {
-                    this.history.push("/");
-                }
-            }).catch(() => {
-            });
+                this.setState({
+                    user: this.props.me.me,
+                });
+            }).catch(() => {});
 
         this.props.onGetReview({ id: this.props.match.params.review_id })
             .then(() => {
-                if (this.props.selectedReview.status === reviewStatus.SUCCESS) {
-                    this.setState({
-                        thisReview: this.props.selectedReview.review,
-                        likeCount: this.props.selectedReview.review.count.likes,
-                        author: this.props.selectedReview.review.user,
-                    });
-                } else {
-                    this.props.history.push("/main");
-                }
+                this.setState({
+                    thisReview: this.props.selectedReview.review,
+                    likeCount: this.props.selectedReview.review.count.likes,
+                    author: this.props.selectedReview.review.user,
+                    paperId: this.props.selectedReview.review.paper.id,
+                });
             }).catch(() => {});
     }
 
@@ -77,8 +69,8 @@ class ReviewDetail extends Component {
             thisReview: {
                 ...this.state.thisReview,
                 liked: true,
-                likeCount: this.state.likeCount + 1,
             },
+            likeCount: this.state.likeCount + 1,
         };
         this.setState(nextState);
     }
@@ -88,8 +80,8 @@ class ReviewDetail extends Component {
             thisReview: {
                 ...this.state.thisReview,
                 liked: false,
-                likeCount: this.state.likeCount - 1,
             },
+            likeCount: this.state.likeCount - 1,
         };
         this.setState(nextState);
     }
@@ -99,9 +91,9 @@ class ReviewDetail extends Component {
     }
 
     clickDeleteButtonHandler() {
-        this.props.onDeleteReview(this.state.thisReview.id)
+        this.props.onDeleteReview({ id: this.state.thisReview.id })
             .then(() => {
-                this.props.history.push(`/paper_id=${this.state.thisReview.paperId}`);
+                this.props.history.push(`/paper_id=${this.state.paperId}`);
             });
     }
 
@@ -109,8 +101,8 @@ class ReviewDetail extends Component {
         const nextState = ({
             thisReview: {
                 ...this.state.thisReview,
-                replyCount: this.state.replyCount + 1,
             },
+            replyCount: this.state.replyCount + 1,
         });
         this.setState(nextState);
     }

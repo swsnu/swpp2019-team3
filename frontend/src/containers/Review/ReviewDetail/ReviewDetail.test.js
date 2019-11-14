@@ -109,7 +109,7 @@ describe("<ReviewDetail />", () => {
         component.update();
 
         expect(instance.state.thisReview.liked).toBe(true);
-        expect(instance.state.likeCount).toEqual(0); // Fix me: it should be 1
+        expect(instance.state.likeCount).toEqual(1);
 
         wrapper.simulate("click");
         component.update();
@@ -161,6 +161,19 @@ describe("<ReviewDetail />", () => {
         const button = component.find(".new-reply .new-reply-button").hostNodes();
         button.simulate("click");
 
-        expect(instance.state.replyCount).toBe(0); // Fix me: it should be 0
+        expect(instance.state.replyCount).toBe(1);
+    });
+
+    it("should handle replies well", () => {
+        const component = mount(reviewDetail);
+        const instance = component.find("ReviewDetail").instance();
+        instance.setState(
+            {
+                replies: [{ id: 1 }, { id: 2 }, { id: 3 }],
+            },
+        );
+        component.update();
+        const replies = component.find(".replies");
+        expect(replies.length).toBe(1);
     });
 });

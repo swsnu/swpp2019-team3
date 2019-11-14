@@ -21,6 +21,19 @@
     font-size: 130%;
 }
 
+.paper .body .authors{
+    text-align: left;
+    font-size: 110%;
+    font-weight: 600;
+}
+
+.paper .body .keywords{
+    text-align: left;
+    font-size: 100%;
+    font-weight: 300;
+    font-style: italic;
+}
+
 .paper .footer {
     display: flex;
     align-items: flex-start;

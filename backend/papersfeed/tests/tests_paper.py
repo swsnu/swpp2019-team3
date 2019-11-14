@@ -6,7 +6,6 @@ from django.test import TestCase, Client
 from papersfeed import constants
 from papersfeed.models.collections.collection import Collection
 from papersfeed.models.papers.paper import Paper
-from papersfeed.utils.papers.utils import get_paper_migration
 
 
 class PaperTestCase(TestCase):
@@ -33,8 +32,17 @@ class PaperTestCase(TestCase):
                    },
                    content_type='application/json')
 
-        # Migrate
-        get_paper_migration()
+        # Creating papers
+        Paper.objects.create(
+            title="paper1",
+            language="English",
+            abstract="abstract1",
+            ISSN="1",
+            eISSN="1",
+            DOI="1",
+            creation_date="2019-11-13",
+            modification_date="2019-11-13"
+        )
 
         # Make Collections
         client.post('/api/collection',
@@ -52,7 +60,7 @@ class PaperTestCase(TestCase):
 
         test_collection_1_id = Collection.objects.filter(title='test_collection_1').first().id
 
-        paper_id = Paper.objects.filter(title='CERTIFIED LATTICE REDUCTION').first().id
+        paper_id = Paper.objects.filter(title='paper1').first().id
 
         # Add paper to test_collection_1
         client.put('/api/paper/collection',
@@ -74,7 +82,7 @@ class PaperTestCase(TestCase):
                    },
                    content_type='application/json')
 
-        paper_id = Paper.objects.filter(title='CERTIFIED LATTICE REDUCTION').first().id
+        paper_id = Paper.objects.filter(title='paper1').first().id
 
         # Get Collection
         response = client.get('/api/paper',
@@ -119,7 +127,7 @@ class PaperTestCase(TestCase):
                    },
                    content_type='application/json')
 
-        paper_id = Paper.objects.filter(title='CERTIFIED LATTICE REDUCTION').first().id
+        paper_id = Paper.objects.filter(title='paper1').first().id
         test_collection_2_id = Collection.objects.filter(title='test_collection_2').first().id
 
         # Remove from test_collection_1 and Add to test_collection_2

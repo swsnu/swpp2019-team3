@@ -219,9 +219,9 @@ describe("reviewActions", () => {
                 resolve(result);
             }));
 
-        mockStore.dispatch(reviewActions.getReview({id:1}))
+        mockStore.dispatch(reviewActions.getReview({ id: 1 }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/review", { params:  {id:1}  });
+                expect(spy).toHaveBeenCalledWith("/api/review", { params: { id: 1 } });
                 done();
             });
     });

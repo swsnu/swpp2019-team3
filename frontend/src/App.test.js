@@ -1,10 +1,8 @@
 import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
-
 import App from "./App";
 import { getMockStore, mockComponent, history } from "./test-utils/mocks";
-
 
 jest.mock("./components/PrivateRoute/PrivateRoute", () => jest.fn(() => (mockComponent("PrivateRoute")())));
 
