@@ -124,11 +124,11 @@ class ReviewDetail extends Component {
                                 <div className="review-extra">
                                     <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
                                     <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="60%" width="60%" /></div>{this.state.replyCount}</Button>
-                                    {this.state.author.id === this.state.user.id
+                                    {this.props.me && this.state.author.id === this.props.me.id
                                         ? <Button className="edit-button" onClick={this.clickEditButtonHandler}>Edit</Button>
 
                                         : null}
-                                    {this.state.author.id === this.state.user.id ? (
+                                    {this.props.me && this.state.author.id === this.props.me.id ? (
                                         <Button className="delete-button" onClick={this.clickDeleteButtonHandler}>Delete</Button>
                                     ) : null}
                                 </div>
@@ -150,6 +150,7 @@ class ReviewDetail extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    me: state.auth.me,
     selectedReview: state.review.selected.review,
     likeReviewStatus: state.review.like.status,
     afterLikeCount: state.review.like.count,
@@ -169,6 +170,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 ReviewDetail.propTypes = {
+    me: PropTypes.objectOf(PropTypes.any),
     history: PropTypes.objectOf(PropTypes.any),
     match: PropTypes.objectOf(PropTypes.any),
     selectedReview: PropTypes.objectOf(PropTypes.any),
@@ -181,6 +183,7 @@ ReviewDetail.propTypes = {
 };
 
 ReviewDetail.defaultProps = {
+    me: null,
     history: null,
     match: null,
     selectedReview: {},
