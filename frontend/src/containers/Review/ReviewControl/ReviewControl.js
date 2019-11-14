@@ -87,7 +87,7 @@ class ReviewControl extends Component {
             };
             this.props.onSetReview(review)
                 .then(() => {
-                    this.props.history(`/review_id=${this.props.editedReview.review.id}`);
+                    this.props.history(`/review_id=${this.state.thisReview.id}`);
                 }).catch(() => {
                     
                 });
