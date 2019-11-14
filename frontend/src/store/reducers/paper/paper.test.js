@@ -1,6 +1,6 @@
 import reducer from "./paper";
 import { paperConstants } from "../../actions/actionTypes";
-import { getPaperStatus } from "../../../constants/constants";
+import { paperStatus } from "../../../constants/constants";
 
 const stubPaper = {
     title: "paper_title",
@@ -18,7 +18,9 @@ describe("Paper reducer", () => {
     it("should return default state", () => {
         const newState = reducer(undefined, {});
         expect(newState).toEqual({
-            getPaperStatus: getPaperStatus.NONE,
+            getPaperStatus: paperStatus.NONE,
+            likePaperStatus: paperStatus.NONE,
+            unlikePaperStatus: paperStatus.NONE,
             selectedPaper: {},
         });
     });
@@ -28,10 +30,7 @@ describe("Paper reducer", () => {
             type: paperConstants.GET_PAPER_SUCCESS,
             target: stubPaper,
         });
-        expect(newState).toEqual({
-            getPaperStatus: getPaperStatus.SUCCESS,
-            selectedPaper: stubPaper,
-        });
+        expect(newState.getPaperStatus).toEqual(paperStatus.SUCCESS);
     });
 
     it("should handle getPaper failure", () => {
@@ -39,9 +38,40 @@ describe("Paper reducer", () => {
             type: paperConstants.GET_PAPER_FAILURE,
             target: stubError,
         });
-        expect(newState).toEqual({
-            getPaperStatus: getPaperStatus.FAILURE,
-            selectedPaper: {},
+        expect(newState.getPaperStatus).toEqual(paperStatus.FAILURE);
+    });
+
+
+    it("should handle likePaper success", () => {
+        const newState = reducer(undefined, {
+            type: paperConstants.LIKE_PAPER_SUCCESS,
+            target: stubPaper,
         });
+        expect(newState.likePaperStatus).toEqual(paperStatus.SUCCESS);
+    });
+
+    it("should handle likePaper failure", () => {
+        const newState = reducer(undefined, {
+            type: paperConstants.LIKE_PAPER_FAILURE,
+            target: stubError,
+        });
+        expect(newState.likePaperStatus).toEqual(paperStatus.FAILURE);
+    });
+
+
+    it("should handle unlikePaper success", () => {
+        const newState = reducer(undefined, {
+            type: paperConstants.UNLIKE_PAPER_SUCCESS,
+            target: stubPaper,
+        });
+        expect(newState.unlikePaperStatus).toEqual(paperStatus.SUCCESS);
+    });
+
+    it("should handle unlikePaper failure", () => {
+        const newState = reducer(undefined, {
+            type: paperConstants.UNLIKE_PAPER_FAILURE,
+            target: stubError,
+        });
+        expect(newState.unlikePaperStatus).toEqual(paperStatus.FAILURE);
     });
 });

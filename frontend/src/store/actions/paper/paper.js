@@ -21,7 +21,36 @@ const getPaperFailure = (error) => {
     };
 };
 
-const getPaper = (paperId) => (dispatch) => axios.get("/api/paper", { params: paperId })
+export const getPaper = (paperId) => (dispatch) => axios.get("/api/paper", { params: paperId })
     .then((res) => dispatch(getPaperSuccess(res.data)))
     .catch((err) => dispatch(getPaperFailure(err)));
-export default getPaper;
+
+
+const likePaperSuccess = () => ({
+    type: paperConstants.LIKE_PAPER_SUCCESS,
+    target: null,
+});
+
+const likePaperFailure = (error) => ({
+    type: paperConstants.LIKE_PAPER_FAILURE,
+    target: error,
+});
+
+export const likePaper = (paperId) => (dispatch) => axios.post("/api/like/paper", paperId)
+    .then((res) => dispatch(likePaperSuccess(res.data)))
+    .catch((err) => dispatch(likePaperFailure(err)));
+
+
+const unlikePaperSuccess = () => ({
+    type: paperConstants.UNLIKE_PAPER_SUCCESS,
+    target: null,
+});
+
+const unlikePaperFailure = (error) => ({
+    type: paperConstants.UNLIKE_PAPER_FAILURE,
+    target: error,
+});
+
+export const unlikePaper = (paperId) => (dispatch) => axios.delete("/api/like/paper", { params: paperId })
+    .then((res) => dispatch(unlikePaperSuccess(res.data)))
+    .catch((err) => dispatch(unlikePaperFailure(err)));

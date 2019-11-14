@@ -1,7 +1,7 @@
 import {
     signup, signin, signout, getMe,
 } from "./auth/auth";
-import getPaper from "./paper/paper";
+import { getPaper, likePaper, unlikePaper } from "./paper/paper";
 
 import {
     makeNewCollection,
@@ -47,4 +47,6 @@ export const authActions = {
 };
 export const paperActions = {
     getPaper,
+    likePaper,
+    unlikePaper,
 };

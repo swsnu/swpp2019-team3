@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import { PaperSpec, ReviewCard } from "../../components";
 import { paperActions } from "../../store/actions";
-import { getPaperStatus } from "../../constants/constants";
+import { paperStatus } from "../../constants/constants";
 import "./PaperDetail.css";
 
 class PaperDetail extends Component {
@@ -26,7 +26,7 @@ class PaperDetail extends Component {
     componentDidMount() {
         this.props.onGetPaper({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
-                if (this.props.getPaperStatus === getPaperStatus.FAILURE) {
+                if (this.props.getPaperStatus === paperStatus.FAILURE) {
                     this.props.history.push("/main");
                     return;
                 }
@@ -125,6 +125,6 @@ PaperDetail.defaultProps = {
     history: null,
     location: null,
     onGetPaper: null,
-    getPaperStatus: getPaperStatus.NONE,
+    getPaperStatus: paperStatus.NONE,
     selectedPaper: {},
 };

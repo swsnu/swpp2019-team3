@@ -31,6 +31,14 @@ const initialState = {
         members: [],
         replies: [],
     },
+    like: {
+        status: collectionStatus.NONE,
+        error: null,
+    },
+    unlike: {
+        status: collectionStatus.NONE,
+        error: null,
+    },
 };
 
 const reducer = (state = initialState, action) => {
@@ -171,10 +179,40 @@ const reducer = (state = initialState, action) => {
                 error: action.target,
             },
         };
-    // case collectionConstants.ADD_COLLECTION_LIKE:
-        // return { ...state };
-    // case collectionConstants.DEL_COLLECTION_LIKE:
-        // return { ...state };
+    case collectionConstants.LIKE_COLLECTION_SUCCESS:
+        return {
+            ...state,
+            like: {
+                ...state.like,
+                status: collectionStatus.SUCCESS,
+            },
+        };
+    case collectionConstants.LIKE_COLLECTION_FAILURE:
+        return {
+            ...state,
+            like: {
+                ...state.like,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
+    case collectionConstants.UNLIKE_COLLECTION_SUCCESS:
+        return {
+            ...state,
+            unlike: {
+                ...state.unlike,
+                status: collectionStatus.SUCCESS,
+            },
+        };
+    case collectionConstants.UNLIKE_COLLECTION_FAILURE:
+        return {
+            ...state,
+            unlike: {
+                ...state.unlike,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
     default:
         return { ...state };
     }

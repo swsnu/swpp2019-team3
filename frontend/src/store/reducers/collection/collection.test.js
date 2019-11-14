@@ -31,6 +31,14 @@ const stubInitialState = {
         members: [],
         replies: [],
     },
+    like: {
+        status: collectionStatus.NONE,
+        error: null,
+    },
+    unlike: {
+        status: collectionStatus.NONE,
+        error: null,
+    },
 };
 
 const stubCollection = {
@@ -151,7 +159,7 @@ describe("Colelction CollectionReducer", () => {
     });
 
 
-    it("should return delete_collectionr", () => {
+    it("should return delete_collection", () => {
         const newState = reducer(stubInitialState, {
             type: collectionConstants.DEL_COLLECTION,
             target: stubCollection,
@@ -177,5 +185,39 @@ describe("Colelction CollectionReducer", () => {
         });
         expect(newState.delete.status).toBe(collectionStatus.COLLECTION_NOT_EXIST);
         expect(newState.delete.error).toBe(stubCollection);
+    });
+
+
+    it("should return like_collection_success state", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.LIKE_COLLECTION_SUCCESS,
+            target: stubCollection,
+        });
+        expect(newState.like.status).toBe(collectionStatus.SUCCESS);
+    });
+
+    it("should return like_collection_failure state", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.LIKE_COLLECTION_FAILURE,
+            target: stubCollection,
+        });
+        expect(newState.like.status).toBe(collectionStatus.FAILURE);
+    });
+
+
+    it("should return unlike_collection_success state", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.UNLIKE_COLLECTION_SUCCESS,
+            target: stubCollection,
+        });
+        expect(newState.unlike.status).toBe(collectionStatus.SUCCESS);
+    });
+
+    it("should return unlike_collection_failure state", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.UNLIKE_COLLECTION_FAILURE,
+            target: stubCollection,
+        });
+        expect(newState.unlike.status).toBe(collectionStatus.FAILURE);
     });
 });

@@ -4,13 +4,13 @@ import { Provider } from "react-redux";
 
 import PaperDetail from "./PaperDetail";
 import { paperActions } from "../../store/actions";
-import { getPaperStatus, collectionStatus, signinStatus } from "../../constants/constants";
+import { paperStatus, collectionStatus, signinStatus } from "../../constants/constants";
 import { getMockStore } from "../../test-utils/mocks";
 
 
 let stubInitialState = {
     paper: {
-        getPaperStatus: getPaperStatus.NONE,
+        getPaperStatus: paperStatus.NONE,
         selectedPaper: {},
     },
     auth: {
@@ -83,7 +83,7 @@ describe("<PaperDetail />", () => {
     it("should handle when count is ready", () => {
         stubInitialState = {
             paper: {
-                getPaperStatus: getPaperStatus.NONE,
+                getPaperStatus: paperStatus.NONE,
                 selectedPaper: { count: { likes: 3, reviews: 5 } },
             },
             auth: {
@@ -132,7 +132,7 @@ describe("<PaperDetail />", () => {
     it("should handle when selectedPaper is ready", () => {
         stubInitialState = {
             paper: {
-                getPaperStatus: getPaperStatus.NONE,
+                getPaperStatus: paperStatus.NONE,
                 selectedPaper: {
                     authors: [
                         { first_name: "A_f", last_name: "A_l" },
@@ -192,7 +192,7 @@ describe("<PaperDetail />", () => {
     it("should handle when getPaper failed", () => {
         stubInitialState = {
             paper: {
-                getPaperStatus: getPaperStatus.FAILURE,
+                getPaperStatus: paperStatus.FAILURE,
                 selectedPaper: {},
             },
             auth: {

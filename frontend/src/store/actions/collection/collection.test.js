@@ -460,4 +460,78 @@ describe("collectionActions", () => {
                 done();
             });
     });
+
+
+    it("'likeCollection' should call axios.post", (done) => {
+        const spy = jest.spyOn(axios, "post")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 201,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.likeCollection({ id: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/like/collection", { id: 1 });
+                done();
+            });
+    });
+
+    it("'likeCollection' should handle failure", (done) => {
+        const spy = jest.spyOn(axios, "post")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(collectionActions.likeCollection({ id: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/like/collection", { id: 1 });
+                done();
+            });
+    });
+
+
+    it("'unlikeCollection' should call axios.delete", (done) => {
+        const spy = jest.spyOn(axios, "delete")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.unlikeCollection({ id: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/like/collection", { params: { id: 1 } });
+                done();
+            });
+    });
+
+    it("'unlikeCollection' should handle failure", (done) => {
+        const spy = jest.spyOn(axios, "delete")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(collectionActions.unlikeCollection({ id: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/like/collection", { params: { id: 1 } });
+                done();
+            });
+    });
 });
