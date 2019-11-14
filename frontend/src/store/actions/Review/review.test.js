@@ -35,6 +35,14 @@ const stubInitialState = {
             error: null,
             replies: [],
         },
+        like: {
+            status: reviewStatus.NONE,
+            error: -1,
+        },
+        unlike: {
+            status: reviewStatus.NONE,
+            error: -1,
+        },
     },
 };
 
@@ -137,6 +145,7 @@ describe("reviewActions", () => {
             });
     });
 
+
     it("getReviewsByUserId should call axios.get", (done) => {
         const spy = jest.spyOn(axios, "get")
             .mockImplementation(() => new Promise((resolve) => {
@@ -209,6 +218,7 @@ describe("reviewActions", () => {
             });
     });
 
+
     it("get review should call axios.get", (done) => {
         const spy = jest.spyOn(axios, "get")
             .mockImplementation(() => new Promise((resolve) => {
@@ -244,6 +254,26 @@ describe("reviewActions", () => {
                 done();
             });
     });
+
+    it("getReview should handle session expired", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 440,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(reviewActions.getReview({ id: stubReview.id }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/review", { params: { id: 1 } });
+                done();
+            });
+    });
+
 
     it("setTitleandDescription should call axios.put", (done) => {
         const spy = jest.spyOn(axios, "put")
@@ -300,6 +330,26 @@ describe("reviewActions", () => {
             });
     });
 
+    it("setTitleandDescription should handle session expired", (done) => {
+        const spy = jest.spyOn(axios, "put")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 440,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(reviewActions.setReviewContent({ id: stubReview.id, title: "dfd", text: "dfder" }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/review", { id: 1, text: "dfder", title: "dfd" });
+                done();
+            });
+    });
+
+
     it("deleteReview should call axios.delete", (done) => {
         const spy = jest.spyOn(axios, "delete")
             .mockImplementation(() => new Promise((resolve) => {
@@ -351,6 +401,99 @@ describe("reviewActions", () => {
         mockStore.dispatch(reviewActions.deleteReview({ id: stubReview.id }))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/review", { params: { id: 1 } });
+                done();
+            });
+    });
+
+    it("deleteReview should handle session expired", (done) => {
+        const spy = jest.spyOn(axios, "delete")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 440,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(reviewActions.deleteReview({ id: stubReview.id }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/review", { params: { id: 1 } });
+                done();
+            });
+    });
+
+
+    it("'likeReview' should call axios.post", (done) => {
+        const spy = jest.spyOn(axios, "post")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 201,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(reviewActions.likeReview({ id: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/like/review", { id: 1 });
+                done();
+            });
+    });
+
+    it("'likeReview' should handle failure", (done) => {
+        const spy = jest.spyOn(axios, "post")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(reviewActions.likeReview({ id: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/like/review", { id: 1 });
+                done();
+            });
+    });
+
+
+    it("'unlikeReview' should call axios.delete", (done) => {
+        const spy = jest.spyOn(axios, "delete")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(reviewActions.unlikeReview({ id: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/like/review", { params: { id: 1 } });
+                done();
+            });
+    });
+
+    it("'unlikeReview' should handle failure", (done) => {
+        const spy = jest.spyOn(axios, "delete")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(reviewActions.unlikeReview({ id: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/like/review", { params: { id: 1 } });
                 done();
             });
     });

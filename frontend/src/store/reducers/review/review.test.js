@@ -29,6 +29,14 @@ const stubInitialState = {
         error: null,
         replies: [],
     },
+    like: {
+        status: reviewStatus.NONE,
+        error: null,
+    },
+    unlike: {
+        status: reviewStatus.NONE,
+        error: null,
+    },
 };
 
 const stubReview = {
@@ -39,7 +47,7 @@ const stubReview = {
     text: "SWPP2019fall",
 };
 
-describe("Colelction ReviewReducer", () => {
+describe("Review reducer", () => {
     it("should return defualt state", () => {
         const newState = ReviewReducer(stubInitialState, {
             type: "Abc",
@@ -165,5 +173,39 @@ describe("Colelction ReviewReducer", () => {
         });
         expect(newState.delete.status).toBe(reviewStatus.REVIEW_NOT_EXIST);
         expect(newState.delete.error).toBe(stubReview);
+    });
+
+
+    it("should return like_review_success state", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.LIKE_REVIEW_SUCCESS,
+            target: stubReview,
+        });
+        expect(newState.like.status).toBe(reviewStatus.SUCCESS);
+    });
+
+    it("should return like_review_failure state", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.LIKE_REVIEW_FAILURE,
+            target: stubReview,
+        });
+        expect(newState.like.status).toBe(reviewStatus.FAILURE);
+    });
+
+
+    it("should return unlike_review_success state", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.UNLIKE_REVIEW_SUCCESS,
+            target: stubReview,
+        });
+        expect(newState.unlike.status).toBe(reviewStatus.SUCCESS);
+    });
+
+    it("should return unlike_review_failure state", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.UNLIKE_REVIEW_FAILURE,
+            target: stubReview,
+        });
+        expect(newState.unlike.status).toBe(reviewStatus.FAILURE);
     });
 });

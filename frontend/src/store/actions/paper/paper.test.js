@@ -7,6 +7,8 @@ import { getMockStore } from "../../../test-utils/mocks";
 const stubInitialState = {
     paper: {
         getPaperStatus: paperStatus.NONE,
+        likePaperStatus: paperStatus.NONE,
+        unlikePaperStatus: paperStatus.NONE,
         selectedPaper: {},
     },
     auth: {},

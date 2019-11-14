@@ -114,9 +114,35 @@ export const setReviewContent = (review) => (dispatch) => axios.put("/api/review
     .then((res) => dispatch(setReviewContentSuccess(res.data)))
     .catch((err) => dispatch(setReviewContentFailure(err)));
 
-// add review like - no matching api
+// add review like
+const likeReviewSuccess = () => ({
+    type: reviewConstants.LIKE_REVIEW_SUCCESS,
+    target: null,
+});
 
-// remove review like - no matching api
+const likeReviewFailure = (error) => ({
+    type: reviewConstants.LIKE_REVIEW_FAILURE,
+    target: error,
+});
+
+export const likeReview = (reviewId) => (dispatch) => axios.post("/api/like/review", reviewId)
+    .then((res) => dispatch(likeReviewSuccess(res.data)))
+    .catch((err) => dispatch(likeReviewFailure(err)));
+
+// remove review like
+const unlikeReviewSuccess = () => ({
+    type: reviewConstants.UNLIKE_REVIEW_SUCCESS,
+    target: null,
+});
+
+const unlikeReviewFailure = (error) => ({
+    type: reviewConstants.UNLIKE_REVIEW_FAILURE,
+    target: error,
+});
+
+export const unlikeReview = (reviewId) => (dispatch) => axios.delete("/api/like/review", { params: reviewId })
+    .then((res) => dispatch(unlikeReviewSuccess(res.data)))
+    .catch((err) => dispatch(unlikeReviewFailure(err)));
 
 // delete review
 const deleteReviewSuccess = (review) => ({

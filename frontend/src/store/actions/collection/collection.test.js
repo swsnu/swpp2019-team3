@@ -2,6 +2,7 @@ import axios from "axios";
 
 import * as collectionActions from "./collection";
 
+import { collectionStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 
 const stubInitialState = {
@@ -9,30 +10,40 @@ const stubInitialState = {
     paper: {},
     collection: {
         make: {
-            status: "NONE",
+            status: collectionStatus.NONE,
             collection: {},
             error: -1,
         },
         list: {
-            status: "NONE",
+            status: collectionStatus.NONE,
             list: [],
             error: -1,
         },
         edit: {
-            status: "NONE",
+            status: collectionStatus.NONE,
             collection: {},
             error: -1,
         },
         delete: {
-            status: "NONE",
+            status: collectionStatus.NONE,
             list: {},
             error: -1,
         },
         selected: {
+            status: collectionStatus.NONE,
             collection: {},
             papers: [],
             members: [],
             replies: [],
+            error: -1,
+        },
+        like: {
+            status: collectionStatus.NONE,
+            error: -1,
+        },
+        unlike: {
+            status: collectionStatus.NONE,
+            error: -1,
         },
     },
     review: {},

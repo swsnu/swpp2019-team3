@@ -192,7 +192,7 @@ describe("<PaperDetail />", () => {
     it("should handle when publication is ready", () => {
         stubInitialState = {
             paper: {
-                getPaperStatus: getPaperStatus.NONE,
+                getPaperStatus: paperStatus.NONE,
                 selectedPaper: {
                     publication: { date: "2019-11-06" },
                 },

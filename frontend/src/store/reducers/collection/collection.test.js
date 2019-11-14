@@ -49,7 +49,7 @@ const stubCollection = {
     text: "SWPP2019fall",
 };
 
-describe("Colelction CollectionReducer", () => {
+describe("Collection reducer", () => {
     it("should return defualt state", () => {
         const newState = reducer(stubInitialState, {
             type: "Abc",
