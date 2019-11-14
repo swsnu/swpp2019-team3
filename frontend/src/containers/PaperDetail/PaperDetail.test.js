@@ -47,6 +47,7 @@ let stubInitialState = {
             replies: [],
         },
     },
+    review: {},
 };
 
 const mockHistory = { push: jest.fn() };
@@ -120,6 +121,7 @@ describe("<PaperDetail />", () => {
                     replies: [],
                 },
             },
+            review: {},
         };
         const component = mount(makeIntroModal(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
@@ -179,11 +181,60 @@ describe("<PaperDetail />", () => {
                     replies: [],
                 },
             },
+            review: {},
         };
         const component = mount(makeIntroModal(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
-        expect(instance.state.authorNames).toBe("");
+        expect(instance.state.authors).toEqual([]);
         // FIXME: actually, it should be 'A_f A_l, B_f B_l'!
+    });
+
+    it("should handle when publication is ready", () => {
+        stubInitialState = {
+            paper: {
+                getPaperStatus: getPaperStatus.NONE,
+                selectedPaper: {
+                    publication: { date: "2019-11-06" },
+                },
+            },
+            auth: {
+                singinStatus: signinStatus.SUCCESS,
+                me: null,
+            },
+            collection: {
+                make: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                list: {
+                    status: collectionStatus.NONE,
+                    list: [],
+                    error: null,
+                },
+                edit: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                delete: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                selected: {
+                    status: collectionStatus.NONE,
+                    error: null,
+                    collection: {},
+                    papers: [],
+                    members: [],
+                    replies: [],
+                },
+            },
+            review: {},
+        };
+        const component = mount(makeIntroModal(stubInitialState));
+        const instance = component.find(PaperDetail.WrappedComponent).instance();
         expect(instance.state.date).toBe("");
         // FIXME: actually, it should be '2019-11-06'!
     });
@@ -229,6 +280,7 @@ describe("<PaperDetail />", () => {
                     replies: [],
                 },
             },
+            review: {},
         };
         expect(mockHistory.push).toHaveBeenCalledTimes(0);
         // FIXME: actually, it should be '1'!
@@ -241,20 +293,32 @@ describe("<PaperDetail />", () => {
             {
                 reviews: [{
                     id: 1,
-                    paperId: 1,
-                    author: "review_author_1",
+                    paper: {
+                        id: 1,
+                    },
+                    user: {
+                        username: "review_author_1",
+                    },
                     title: "review_title_1",
                     date: "2019-11-09",
-                    likeCount: 0,
-                    replyCount: 0,
+                    count: {
+                        likes: 0,
+                        replies: 0,
+                    },
                 }, {
                     id: 2,
-                    paperId: 1,
-                    author: "review_author_2",
+                    paper: {
+                        id: 2,
+                    },
+                    user: {
+                        username: "review_author_2",
+                    },
                     title: "review_title_2",
                     date: "2019-11-08",
-                    likeCount: 0,
-                    replyCount: 0,
+                    count: {
+                        likes: 0,
+                        replies: 0,
+                    },
                 }],
             },
         );

@@ -45,3 +45,13 @@ export const collectionStatus = {
     COLLECTION_NOT_EXIST: "COLLECTION_NOT_EXIST",
     AUTH_ERROR: "AUTH_ERROR",
 };
+
+export const reviewStatus = {
+    NONE: "NONE",
+    WAITING: "WAITING",
+    SUCCESS: "SUCCESS",
+    MISSING_PARAM: "MISSING_PARAM",
+    REVIEW_NOT_EXIST: "REVIEW_NOT_EXIST",
+    PAPER_NOT_EXIST: "PAPER_NOT_EXIST",
+    AUTH_ERROR: "AUTH_ERROR",
+};

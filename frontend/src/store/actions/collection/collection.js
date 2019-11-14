@@ -88,14 +88,14 @@ export const getCollectionPapers = (collectionId) => (dispatch) => axios.get("/a
         type: actionTypes.GET_COLLECTION_MEMBERS, members: res.data,
     })); */
 
-// getCollectionReplies - no matching api
+// getCollectionReplies - no matching /api
 /* export const getCollectionReplies = (collectionID) => (dispatch)
 => axios.get(`/reply/collection/${collectionID}`)
     .then((res) => dispatch({
         type: actionTypes.GET_COLLECTION_REPLIES, replies: res.data,
     })); */
 
-// setOwner - no matching api
+// setOwner - no matching /api
 /* export const setOwner = (collectionID, userID) => (dispatch)
 => axios.put(`/collection/${collectionID}`, { userID })
     .then((res) => dispatch({
@@ -168,7 +168,7 @@ export const removeCollectionPaper = (collectionsAndPaper) => (dispatch) => axio
         type: actionTypes.ADD_COLLECTION_MEMBER, members: res.data,
     })); */
 
-// remove member from CollectionMember - no matching api
+// remove member from CollectionMember - no matching /api
 /* export const removeCollectionMember = (collectionID, userID) => (dispatch)
 => axios.delete(`/user/collection/${collectionID}`, userID)
     .then((res) => dispatch({
