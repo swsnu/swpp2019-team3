@@ -16,7 +16,7 @@ import CollectionManage from "./containers/Collection/CollectionManage/Collectio
 
 function App(props) {
     return (
-        <ConnectedRouter history={props.history}>
+        <ConnectedRouter history={props.history} match={props.match}>
             <div className="App">
                 <PrivateRoute history={props.history} />
                 <Switch>
@@ -31,7 +31,11 @@ function App(props) {
                               exact
                               render={() => (
                                   <div>
-                                      <ReviewControl mode={0} history={props.history} />
+                                      <ReviewControl
+                                        mode={0}
+                                        match={props.match}
+                                        history={props.history}
+                                      />
                                   </div>
                               )}
                             />
@@ -41,7 +45,11 @@ function App(props) {
                               exact
                               render={() => (
                                   <div>
-                                      <ReviewControl mode={1} history={props.history} />
+                                      <ReviewControl
+                                        mode={1}
+                                        match={props.match}
+                                        history={props.history}
+                                      />
                                   </div>
                               )}
                             />
@@ -61,10 +69,12 @@ function App(props) {
 
 App.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
+    match: PropTypes.objectOf(PropTypes.any),
 };
 
 App.defaultProps = {
     history: null,
+    match: null,
 };
 
 export default App;
