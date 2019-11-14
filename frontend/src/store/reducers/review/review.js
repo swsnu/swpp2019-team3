@@ -140,7 +140,7 @@ const ReviewReducer = (state = initialState, action) => {
             like: {
                 ...state.like,
                 status: reviewStatus.SUCCESS,
-                count: action.target,
+                count: action.target.likes,
             },
         };
     case reviewConstants.LIKE_REVIEW_FAILURE:
@@ -158,7 +158,7 @@ const ReviewReducer = (state = initialState, action) => {
             unlike: {
                 ...state.unlike,
                 status: reviewStatus.SUCCESS,
-                count: action.target,
+                count: action.target.likes,
             },
         };
     case reviewConstants.UNLIKE_REVIEW_FAILURE:

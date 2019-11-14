@@ -7,19 +7,32 @@ import "./PaperSpec.css";
 import SVG from "../../svg";
 import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
 import { paperActions } from "../../../store/actions";
-import { paperStatus } from "../../../constants/constants";
 
 class PaperSpec extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLiked: this.props.isLiked,
-            likeCount: this.props.likeCount,
+            isLiked: false,
+            likeCount: 0,
         };
         this.processKeywords = this.processKeywords.bind(this);
         this.clickPaperSpecUnlikeHandler = this.clickPaperSpecUnlikeHandler.bind(this);
         this.clickPaperSpecLikeHandler = this.clickPaperSpecLikeHandler.bind(this);
     }
+
+    /* eslint-disable react/no-did-update-set-state */
+    // It's OK to use setState if it is wrapped in a condition
+    // please refer to https://reactjs.org/docs/react-component.html#componentdidupdate
+    componentDidUpdate(prevProps) {
+        if (this.props.isLiked !== prevProps.isLiked
+            || this.props.likeCount !== prevProps.likeCount) {
+            this.setState({
+                isLiked: this.props.isLiked,
+                likeCount: this.props.likeCount,
+            });
+        }
+    }
+    /* eslint-enable react/no-did-update-set-state */
 
     processKeywords = (type) => {
         const keywords = this.props.keywords.filter(
@@ -34,21 +47,20 @@ class PaperSpec extends Component {
 
     // handle click 'Like' button
     clickPaperSpecLikeHandler() {
-        this.setState({ likeCount: this.props.likeCount });
-        const nextState = {
-            isLiked: true,
-            likeCount: this.state.likeCount + 1,
-        };
-        this.setState(nextState);
+        this.props.onLikePaper({ id: this.props.id })
+            .then(() => {
+                this.setState({ likeCount: this.props.afterLikeCount });
+                this.setState({ isLiked: true });
+            });
     }
 
     // handle click 'Unlike' button
     clickPaperSpecUnlikeHandler() {
-        const nextState = {
-            isLiked: false,
-            likeCount: this.state.likeCount - 1,
-        };
-        this.setState(nextState);
+        this.props.onUnlikePaper({ id: this.props.id })
+            .then(() => {
+                this.setState({ likeCount: this.props.afterUnlikeCount });
+                this.setState({ isLiked: false });
+            });
     }
 
     render() {
@@ -131,9 +143,7 @@ PaperSpec.propTypes = {
     isLiked: PropTypes.bool,
     addButtonExists: PropTypes.bool,
     link: PropTypes.string,
-    likePaperStatus: PropTypes.string,
     afterLikeCount: PropTypes.number,
-    unlikePaperStatus: PropTypes.string,
     afterUnlikeCount: PropTypes.number,
     onLikePaper: PropTypes.func,
     onUnlikePaper: PropTypes.func,
@@ -151,9 +161,7 @@ PaperSpec.defaultProps = {
     isLiked: false,
     addButtonExists: false,
     link: "",
-    likePaperStatus: paperStatus.NONE,
     afterLikeCount: 0,
-    unlikePaperStatus: paperStatus.NONE,
     afterUnlikeCount: 0,
     onLikePaper: () => {},
     onUnlikePaper: () => {},

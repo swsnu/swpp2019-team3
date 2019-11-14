@@ -32,13 +32,15 @@ const mockPromise = new Promise((resolve) => { resolve(); });
 
 describe("<PaperSpec />", () => {
     let paperSpec;
+    let spyLikePaper;
+    let spyUnlikePaper;
 
     beforeEach(() => {
         paperSpec = makePaperSpec(stubInitialState);
-        /* spyGetCollections = jest.spyOn(collectionActions, "getCollectionsByUserId")
+        spyLikePaper = jest.spyOn(paperActions, "likePaper")
             .mockImplementation(() => () => mockPromise);
-        spyAddPaper = jest.spyOn(collectionActions, "addCollectionPaper")
-            .mockImplementation(() => () => mockPromise); */
+        spyUnlikePaper = jest.spyOn(paperActions, "unlikePaper")
+            .mockImplementation(() => () => mockPromise);
     });
 
     afterEach(() => {
@@ -52,20 +54,28 @@ describe("<PaperSpec />", () => {
         expect(wrapper.length).toBe(1);
     });
 
-    it("should handle Like/Unlike Button", () => {
+    it("should call likePaper when Like Button is clicked", () => {
         const component = mount(paperSpec);
         const wrapper = component.find(".like-button").hostNodes();
         expect(wrapper.length).toBe(1);
 
         wrapper.simulate("click");
 
+        expect(spyLikePaper).toHaveBeenCalledTimes(1);
+    });
+
+    it("should call unlikePaper when IsLiked and Like Button is clicked", () => {
+        const component = mount(paperSpec);
         const instance = component.find(PaperSpec.WrappedComponent).instance();
-        expect(instance.state.likeCount).toEqual(1);
-        expect(instance.state.isLiked).toBe(true);
+        instance.setState({ isLiked: true });
+        component.update();
+
+        const wrapper = component.find(".like-button").hostNodes();
+        expect(wrapper.length).toBe(1);
 
         wrapper.simulate("click");
-        expect(instance.state.likeCount).toBe(0);
-        expect(instance.state.isLiked).toBe(false);
+
+        expect(spyUnlikePaper).toHaveBeenCalledTimes(1);
     });
 
     it("should window open is called when url button is clicked", () => {
