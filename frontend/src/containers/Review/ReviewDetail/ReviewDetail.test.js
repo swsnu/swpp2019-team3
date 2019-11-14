@@ -1,11 +1,26 @@
 import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
+import { createBrowserHistory } from "history";
 import ReviewDetail from "./ReviewDetail";
 import { reviewActions } from "../../../store/actions";
 import { reviewStatus, getMeStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
-import { history } from "../../../store/store";
+
+
+const history = createBrowserHistory();
+
+/* eslint-disable react/jsx-props-no-spreading */
+const makeReviewDetail = (initialState, props = {}) => (
+    <Provider store={getMockStore(initialState)}>
+        <ReviewDetail
+          match={{ params: { review_id: 1 } }}
+          history={history}
+          {...props}
+        />
+    </Provider>
+);
+/* eslint-enable react/jsx-props-no-spreading */
 
 const mockPromise = new Promise((resolve) => { resolve(); });
 
@@ -67,15 +82,9 @@ describe("<ReviewDetail />", () => {
             },
         };
 
-        reviewDetail = (
-            <Provider store={getMockStore(stubInitialState)}>
-                <ReviewDetail match={{ params: { review_id: 1 } }} history={history} />
-            </Provider>
-        );
+        reviewDetail = makeReviewDetail(stubInitialState);
         spyOnGetReview = jest.spyOn(reviewActions, "getReview")
-            .mockImplementation(() => () => new Promise(
-                (resolve) => { resolve({ status: 200 }); },
-            ));
+            .mockImplementation(() => () => mockPromise);
         spyLikeReview = jest.spyOn(reviewActions, "likeReview")
             .mockImplementation(() => () => mockPromise);
         spyUnlikeReview = jest.spyOn(reviewActions, "unlikeReview")
@@ -133,8 +142,10 @@ describe("<ReviewDetail />", () => {
 
     it("should handle edit button", () => {
         const spyPush = jest.spyOn(history, "push");
+
+        reviewDetail = makeReviewDetail(stubInitialState, { me: { id: 1 } });
         const component = mount(reviewDetail);
-        component.find("ReviewDetail").instance().setState({ user: { id: 0 }, author: { id: 0 } });
+        component.find("ReviewDetail").instance().setState({ author: { id: 1 } });
         component.update();
         const button = component.find(".review-extra .edit-button").hostNodes();
         button.simulate("click");
@@ -143,8 +154,9 @@ describe("<ReviewDetail />", () => {
     });
 
     it("should not render edit button when user is not author", () => {
+        reviewDetail = makeReviewDetail(stubInitialState, { me: { id: 1 } });
         const component = mount(reviewDetail);
-        component.find("ReviewDetail").instance().setState({ user: { id: 1 }, author: { id: 0 } });
+        component.find("ReviewDetail").instance().setState({ author: { id: 2 } });
         component.update();
         const button = component.find(".review-extra .edit-button").hostNodes();
         expect(button.length).toBe(0);
@@ -153,13 +165,12 @@ describe("<ReviewDetail />", () => {
 
     it("should handle delete button", () => {
         const spyOnDeleteReview = jest.spyOn(reviewActions, "deleteReview")
-            .mockImplementation(() => () => new Promise(
-                (resolve) => {
-                    resolve({ status: 200 });
-                },
-            ));
-        const component = mount(reviewDetail);
+            .mockImplementation(() => () => mockPromise);
 
+        reviewDetail = makeReviewDetail(stubInitialState, { me: { id: 1 } });
+        const component = mount(reviewDetail);
+        component.find("ReviewDetail").instance().setState({ author: { id: 1 } });
+        component.update();
         const button = component.find(".review-extra .delete-button").hostNodes();
         button.simulate("click");
         expect(spyOnDeleteReview).toHaveBeenCalledTimes(1);
