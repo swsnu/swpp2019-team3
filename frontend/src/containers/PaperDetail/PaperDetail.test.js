@@ -10,7 +10,7 @@ import {
 import { getMockStore } from "../../test-utils/mocks";
 
 const mockHistory = { push: jest.fn() };
-const makeIntroModal = (initialState) => (
+const makePaperDetail = (initialState) => (
     <Provider store={getMockStore(initialState)}>
         <PaperDetail history={mockHistory} location={{ pathname: "/paper_id=1" }} />
     </Provider>
@@ -77,7 +77,7 @@ describe("<PaperDetail />", () => {
                 },
             },
         };
-        paperDetail = makeIntroModal(stubInitialState);
+        paperDetail = makePaperDetail(stubInitialState);
         spyGetPaper = jest.spyOn(paperActions, "getPaper")
             .mockImplementation(() => () => mockPromise);
     });
@@ -101,7 +101,7 @@ describe("<PaperDetail />", () => {
                 selectedPaper: { count: { likes: 3, reviews: 5 } },
             },
         };
-        const component = mount(makeIntroModal(stubInitialState));
+        const component = mount(makePaperDetail(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
         expect(instance.state.likeCount).toBe(0);
         // FIXME: actually, it should be '3'!
@@ -127,7 +127,7 @@ describe("<PaperDetail />", () => {
                 },
             },
         };
-        const component = mount(makeIntroModal(stubInitialState));
+        const component = mount(makePaperDetail(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
         expect(instance.state.authors).toEqual([]);
         // FIXME: actually, it should be 'A_f A_l, B_f B_l'!
@@ -143,7 +143,7 @@ describe("<PaperDetail />", () => {
                 },
             },
         };
-        const component = mount(makeIntroModal(stubInitialState));
+        const component = mount(makePaperDetail(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
         expect(instance.state.date).toBe("");
         // FIXME: actually, it should be '2019-11-06'!
@@ -163,7 +163,7 @@ describe("<PaperDetail />", () => {
     });
 
     it("should make reviewCardsLeft and reviewCardsRight well", () => {
-        const component = mount(makeIntroModal(stubInitialState));
+        const component = mount(makePaperDetail(stubInitialState));
         const paperDetailInstance = component.find(PaperDetail.WrappedComponent).instance();
         paperDetailInstance.setState(
             {

@@ -1,32 +1,93 @@
 import React from "react";
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
+import { Provider } from "react-redux";
+
 import CollectionCard from "./CollectionCard";
+import { getMockStore } from "../../../test-utils/mocks";
+import { collectionActions } from "../../../store/actions";
+import { collectionStatus } from "../../../constants/constants";
+
+const mockHistory = { push: jest.fn() };
+
+/* eslint-disable react/jsx-props-no-spreading */
+const makeCollectionCard = (initialState, props = {}) => (
+    <Provider store={getMockStore(initialState)}>
+        <CollectionCard id={1} history={mockHistory} {...props} />
+    </Provider>
+);
+/* eslint-enable react/jsx-props-no-spreading */
+
+const mockPromise = new Promise((resolve) => { resolve(); });
 
 describe("<CollectionCard />", () => {
-    afterEach(() => { jest.clearAllMocks(); });
+    let stubInitialState;
+    let collectionCard;
+    let spyLikeCollection;
+    let spyUnlikeCollection;
+
+    beforeEach(() => {
+        stubInitialState = {
+            paper: {},
+            auth: {},
+            collection: {
+                like: {
+                    status: collectionStatus.NONE,
+                    count: 0,
+                    error: null,
+                },
+                unlike: {
+                    status: collectionStatus.NONE,
+                    count: 0,
+                    error: null,
+                },
+            },
+            review: {},
+        };
+        collectionCard = makeCollectionCard(stubInitialState);
+        spyLikeCollection = jest.spyOn(collectionActions, "likeCollection")
+            .mockImplementation(() => () => mockPromise);
+        spyUnlikeCollection = jest.spyOn(collectionActions, "unlikeCollection")
+            .mockImplementation(() => () => mockPromise);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+
     it("should render without errors", () => {
-        const component = shallow(<CollectionCard />);
+        const component = mount(collectionCard);
         const wrapper = component.find(".wrapper");
         expect(wrapper.length).toBe(1);
     });
 
-    it("should handle Like/Unlike Button", () => {
-        const component = mount(<CollectionCard />);
-        const wrapper = component.find("#like-button").hostNodes();
+    it("should call likeReview when Like Button is clicked", () => {
+        const component = mount(collectionCard);
+        const wrapper = component.find(".like-button").hostNodes();
         expect(wrapper.length).toBe(1);
 
         wrapper.simulate("click");
 
-        expect(component.state().likeCount).toEqual(1);
-        expect(component.state().isLiked).toBe(true);
+        expect(spyLikeCollection).toHaveBeenCalledTimes(1);
+    });
+
+    it("should call unlikeReview when IsLiked and Like Button is clicked", () => {
+        const component = mount(collectionCard);
+        const instance = component.find(CollectionCard.WrappedComponent).instance();
+        instance.setState({ isLiked: true });
+        component.update();
+
+        const wrapper = component.find(".like-button").hostNodes();
+        expect(wrapper.length).toBe(1);
 
         wrapper.simulate("click");
-        expect(component.state().likeCount).toBe(0);
-        expect(component.state().isLiked).toBe(false);
+
+        expect(spyUnlikeCollection).toHaveBeenCalledTimes(1);
     });
 
     it("if headerExists is false, then header should not exist", () => {
-        const component = mount(<CollectionCard headerExists={false} />);
+        collectionCard = makeCollectionCard(stubInitialState, { headerExists: false });
+        const component = mount(collectionCard);
         const wrapper = component.find(".header");
         expect(wrapper.length).toBe(0);
     });
