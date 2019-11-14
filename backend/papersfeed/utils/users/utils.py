@@ -219,6 +219,31 @@ def select_user(args):
     return users[0]
 
 
+def select_user_search(args):
+    """Select User Search"""
+    is_parameter_exists([
+        constants.TEXT
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Search Keyword
+    keyword = args[constants.TEXT]
+
+    # User Ids
+    user_ids = User.objects.filter(Q(username__icontains=keyword)) \
+        .values_list('id', flat=True)
+
+    # Filter Query
+    filter_query = Q(id__in=user_ids)
+
+    # Users
+    users, _, _ = __get_users(filter_query, request_user, None)
+
+    return users
+
+
 def get_users(filter_query, request_user, count):
     """Public Get Users"""
     return __get_users(filter_query, request_user, count)
