@@ -233,6 +233,6 @@ describe("CollectionDetail Test", () => {
         component.update();
 
         const wrapper = component.find("Reply");
-        expect(wrapper.length).toBe(1);
+        expect(wrapper.length).toBe(2);
     });
 });
