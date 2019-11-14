@@ -12,6 +12,7 @@ import {
 import {
     PrivateRoute, Header, SideBar,
 } from "./components";
+import CollectionManage from "./containers/Collection/CollectionManage/CollectionManage";
 
 function App(props) {
     return (
@@ -49,6 +50,7 @@ function App(props) {
                             <Route path="/profile/:id/edit" exact component={ProfileEdit} />
                             <Route path="/collections" exact component={CollectionList} />
                             <Route path="/collection_id=:collection_id" exact component={CollectionDetail} />
+                            <Route path="/collection_id=:collection_id/manage" exact component={CollectionManage} />
                         </Switch>
                     </>
                 </Switch>
