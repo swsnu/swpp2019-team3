@@ -8,6 +8,16 @@ export const collectionStatus = {
     AUTH_ERROR: "AUTH_ERROR",
 };
 
+export const reviewStatus = {
+    NONE: "NONE",
+    WAITING: "WAITING",
+    SUCCESS: "SUCCESS",
+    MISSING_PARAM: "MISSING_PARAM",
+    REVIEW_NOT_EXIST: "REVIEW_NOT_EXIST",
+    PAPER_NOT_EXIST: "PAPER_NOT_EXIST",
+    AUTH_ERROR: "AUTH_ERROR",
+};
+
 export const signupStatus = {
     NONE: "NONE",
     WRONG_EMAIL_FORMAT: "WRONG_EMAIL_FORMAT",
