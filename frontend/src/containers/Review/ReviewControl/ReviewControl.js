@@ -35,6 +35,7 @@ class ReviewControl extends Component {
                         likeCount: this.props.selectedPaper.count.likes,
                         authors: this.props.selectedPaper.authors,
                         date: this.props.selectedPaper.publication.date,
+                        keywords: this.props.selectedPaper.keywords,
                         title: "",
                         content: "",
                     });
