@@ -13,7 +13,7 @@ import { history } from "../../../store/store";
 const stubInitialState = {
     paper: {
         getPaperStatus: getPaperStatus.NONE,
-        selectedPaper: { id: 1 },
+        selectedPaper: { id: 1, author: [{ id: 1 }] },
     },
     auth: {
     },
@@ -43,7 +43,7 @@ const stubInitialState = {
         },
         selected: {
             status: reviewStatus.NONE,
-            review: { id: 1 },
+            review: { id: 1, paper: { id: 1 } },
             error: null,
             replies: [],
         },
@@ -112,6 +112,11 @@ describe("<ReviewControl />", () => {
                 (resolve) => { resolve({ status: 200 }); },
             ));
         const component = mount(reviewControl1);
+        const instance = component.find("ReviewControl").instance();
+        instance.setState(() => ({
+            title: "dfa",
+            content: "fa",
+        }));
         const wrapper = component.find(".review-control");
         expect(wrapper.length).toBe(1);
         expect(spyOnGetReview).toBeCalledTimes(1);
@@ -123,6 +128,11 @@ describe("<ReviewControl />", () => {
             .mockImplementation(() => () => new Promise(
                 (resolve) => { resolve({ status: 200 }); },
             ));
+        const instance = component.find("ReviewControl").instance();
+        instance.setState(() => ({
+            title: "dfa",
+            content: "fa",
+        }));
         const wrapper = component.find(".review-control");
         expect(wrapper.length).toBe(1);
         expect(spyOnGetPaper).toBeCalledTimes(0);
@@ -134,6 +144,11 @@ describe("<ReviewControl />", () => {
                 (resolve) => { resolve({ status: 200 }); },
             ));
         const component = mount(reviewControl1);
+        const instance = component.find("ReviewControl").instance();
+        instance.setState(() => ({
+            title: "dfa",
+            content: "fa",
+        }));
         const wrapper = component.find(".review-control");
         const button = wrapper.find(".edit-button").hostNodes();
         expect(button.length).toBe(1);
@@ -148,6 +163,11 @@ describe("<ReviewControl />", () => {
                 (resolve) => { resolve({ status: 200 }); },
             ));
         const component = mount(reviewControl0);
+        const instance = component.find("ReviewControl").instance();
+        instance.setState(() => ({
+            title: "dfa",
+            content: "fa",
+        }));
         const wrapper = component.find(".review-control");
         const button = wrapper.find(".create-button").hostNodes();
         expect(button.length).toBe(1);
@@ -164,8 +184,12 @@ describe("<ReviewControl />", () => {
         };
         const wrapper = mount(reviewControl0);
         const instance = wrapper.find("ReviewControl").instance();
+        instance.setState(() => ({
+            title: "dfa",
+            content: "fa",
+        }));
         const input = wrapper.find(".title-input");
-        expect(input.at(0).props().placeholder).toEqual(""); // Fix me: it should be Enter title here.
+        expect(input.at(0).props().placeholder).toEqual("Enter title here."); // Fix me: it should be Enter title here.
         input.hostNodes().simulate("change", event);
         wrapper.update();
         expect(instance.state.title).toBe("ABC");
@@ -178,10 +202,13 @@ describe("<ReviewControl />", () => {
                 value: "ABC",
             },
         };
-        const wrapper = mount(reviewControl0);
+        const wrapper = mount(reviewControl1);
         const instance = wrapper.find("ReviewControl").instance();
+        instance.setState(() => ({
+            title: "dfa",
+            content: "fa",
+        }));
         const input = wrapper.find(".title-input");
-        expect(input.at(0).props().placeholder).toEqual(instance.state.title);
         input.hostNodes().simulate("change", event);
         wrapper.update();
         expect(instance.state.title).toBe("ABC");
@@ -196,8 +223,12 @@ describe("<ReviewControl />", () => {
         };
         const wrapper = mount(reviewControl0);
         const instance = wrapper.find("ReviewControl").instance();
+        instance.setState(() => ({
+            title: "dfa",
+            content: "fa",
+        }));
         const input = wrapper.find(".content-input");
-        expect(input.at(0).props().placeholder).toEqual(""); // Fix me: it should be Enter content here.
+        expect(input.at(0).props().placeholder).toEqual("Enter content here."); // Fix me: it should be Enter content here.
         input.hostNodes().simulate("change", event);
         wrapper.update();
         expect(instance.state.content).toBe("ABC");
@@ -212,9 +243,13 @@ describe("<ReviewControl />", () => {
         };
 
         const wrapper = mount(reviewControl1);
-        const instance = wrapper.find("ReviewControl").instance();
+        const instance = wrapper.find(ReviewControl.WrappedComponent).instance();
+        instance.setState(() => ({
+            title: "dfa",
+            content: "fa",
+        }));
+        wrapper.update();
         const input = wrapper.find(".content-input");
-        expect(input.at(0).props().placeholder).toEqual(instance.state.content);
         input.hostNodes().simulate("change", event);
         wrapper.update();
         expect(instance.state.content).toBe("ABC");

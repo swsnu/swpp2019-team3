@@ -61,13 +61,18 @@ class PaperSpec extends Component {
             abstractKeywords = this.processKeywords("abstract");
         }
 
+        let authorNames = "";
+        if (this.props.authors.length > 0) {
+            authorNames = this.props.authors.map((author) => `${author.first_name} ${author.last_name}`).join(", ");
+        }
+
         return (
             <div className="paperspec">
                 <div className="paperInfo">
                     <h2 id="title">{this.props.title}</h2>
                     <h3 id="date">{this.props.date}</h3>
                     <Button className="url-button" onClick={() => window.open(this.props.link)}>URL</Button>
-                    <h3 id="authors">{this.props.authors}</h3>
+                    <h3 id="authors">{authorNames}</h3>
                     <div className="author-keywords">
                         Defined by Authors
                         <h3 id="author-keywords-content">{authorKeywords}</h3>

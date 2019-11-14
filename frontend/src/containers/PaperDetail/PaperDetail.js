@@ -15,7 +15,7 @@ class PaperDetail extends Component {
             /* eslint-disable react/no-unused-state */
             reviewCount: 0,
             /* eslint-enable react/no-unused-state */
-            authorNames: [],
+            authors: [],
             keywords: [],
             date: "",
             reviews: [],
@@ -38,9 +38,7 @@ class PaperDetail extends Component {
                     /* eslint-enable react/no-unused-state */
                 }
                 if (this.props.selectedPaper.authors) {
-                    const { authors } = this.props.selectedPaper;
-                    const authorNames = authors.map((author) => `${author.first_name} ${author.last_name}`);
-                    this.setState({ authorNames });
+                    this.setState({ authors: this.props.selectedPaper.authors });
                 }
                 if (this.props.selectedPaper.publication) {
                     this.setState({ date: this.props.selectedPaper.publication.date });
@@ -48,7 +46,8 @@ class PaperDetail extends Component {
                 if (this.props.selectedPaper.keywords) {
                     this.setState({ keywords: this.props.selectedPaper.keywords });
                 }
-            });
+            })
+            .catch(() => {});
 
         this.props.onGetReviewsByPaper({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
@@ -59,19 +58,19 @@ class PaperDetail extends Component {
                 } else {
                     this.props.history.push("/main");
                 }
-            });
+            })
+            .catch(() => {});
     }
 
     reviewMaker = (review) => (
         <ReviewCard
           key={review.id}
           id={review.id}
-          paperId={review.paperId}
-          author={review.author}
+          paperId={review.paper.id}
+          author={review.user.username}
           title={review.title}
-          date={review.date}
-          likeCount={review.likeCount}
-          replyCount={review.replyCount}
+          likeCount={review.count.likes}
+          replyCount={review.count.replies}
           headerExists={false}
         />
     )
@@ -98,7 +97,7 @@ class PaperDetail extends Component {
                           title={this.props.selectedPaper.title}
                           abstract={this.props.selectedPaper.abstract}
                           date={this.state.date}
-                          authors={this.state.authorNames}
+                          authors={this.state.authors}
                           keywords={this.state.keywords}
                           likeCount={this.state.likeCount}
                           reviewCount={this.state.reviews.length}
@@ -106,8 +105,10 @@ class PaperDetail extends Component {
                           addButtonExists
                           history={this.props.history}
                         />
-                        <h3 id="review-count">{this.state.reviews.length} reviews</h3>
-                        <Button className="review-add" onClick={this.handleClickReviewAddButton}>Add</Button>
+                        <div className="up-review">
+                            <h3 id="review-count">{this.state.reviews.length} reviews</h3>
+                            <Button className="review-add" onClick={this.handleClickReviewAddButton}>Add</Button>
+                        </div>
                         <div className="reviewcards">
                             <div className="reviewcards-left">{reviewCardsLeft}</div>
                             <div className="reviewcards-right">{reviewCardsRight}</div>

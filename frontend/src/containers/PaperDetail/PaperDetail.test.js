@@ -185,7 +185,7 @@ describe("<PaperDetail />", () => {
         };
         const component = mount(makeIntroModal(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
-        expect(instance.state.authorNames).toEqual([]);
+        expect(instance.state.authors).toEqual([]);
         // FIXME: actually, it should be 'A_f A_l, B_f B_l'!
     });
 
@@ -293,20 +293,32 @@ describe("<PaperDetail />", () => {
             {
                 reviews: [{
                     id: 1,
-                    paperId: 1,
-                    author: "review_author_1",
+                    paper: {
+                        id: 1,
+                    },
+                    user: {
+                        username: "review_author_1",
+                    },
                     title: "review_title_1",
                     date: "2019-11-09",
-                    likeCount: 0,
-                    replyCount: 0,
+                    count: {
+                        likes: 0,
+                        replies: 0,
+                    },
                 }, {
                     id: 2,
-                    paperId: 1,
-                    author: "review_author_2",
+                    paper: {
+                        id: 2,
+                    },
+                    user: {
+                        username: "review_author_2",
+                    },
                     title: "review_title_2",
                     date: "2019-11-08",
-                    likeCount: 0,
-                    replyCount: 0,
+                    count: {
+                        likes: 0,
+                        replies: 0,
+                    },
                 }],
             },
         );

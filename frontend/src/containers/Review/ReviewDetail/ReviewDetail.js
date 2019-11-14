@@ -94,6 +94,8 @@ class ReviewDetail extends Component {
         this.props.onDeleteReview({ id: this.state.thisReview.id })
             .then(() => {
                 this.props.history.push(`/paper_id=${this.state.paperId}`);
+            }).catch(() => {
+
             });
     }
 

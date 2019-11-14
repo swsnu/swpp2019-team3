@@ -21,7 +21,6 @@ class ReviewControl extends Component {
             thisReview: { id: 0 },
             paperId: 0,
             keywords: [],
-            titleWarning: "",
         };
         this.handleChange = this.handleChange.bind(this);
         this.clickButtonHandler = this.clickButtonHandler.bind(this);
@@ -44,12 +43,12 @@ class ReviewControl extends Component {
         } else if (this.props.mode === 1) {
             this.props.onGetReview({ id: this.props.match.params.review_id })
                 .then(() => {
-                    this.setState({
+                    this.setState(() => ({
                         thisReview: this.props.selectedReview.review,
                         title: this.props.selectedReview.review.title,
                         content: this.props.selectedReview.review.text,
                         paperId: this.props.selectedReview.review.paper.id,
-                    });
+                    }));
                     this.props.onGetPaper({ id: this.state.paperId })
                         .then(() => {
                             this.setState({
@@ -94,16 +93,7 @@ class ReviewControl extends Component {
 
     handleChange(e) {
         const nextState = {};
-        if (e.target.name === "title" && e.target.name.length > 400) {
-            this.setState({
-                titleWarning: "The maximum length of title is 400.",
-            });
-        } else {
-            this.setState({
-                titleWarning: "",
-            });
-            nextState[e.target.name] = e.target.value;
-        }
+        nextState[e.target.name] = e.target.value;
         this.setState(nextState);
     }
 
@@ -127,7 +117,6 @@ class ReviewControl extends Component {
                         </div>
                         <Form.Group className="form-title" controlId="formReviewTitle">
                             <Form.Label>Title</Form.Label>
-                            <div className="warning">{this.state.titleWarning}</div>
                             <Form.Control name="title" className="title-input" as="textarea" rows="1" type="text" placeholder={this.props.mode === 0 ? "Enter title here." : this.props.selectedReview.review.title} value={this.state.title} onChange={this.handleChange} />
                         </Form.Group>
                         <Form.Group className="form-content" controlId="formReviewContent">
@@ -135,8 +124,8 @@ class ReviewControl extends Component {
                             <Form.Control name="content" className="content-input" as="textarea" value={this.state.content} rows="7" type="text" placeholder={this.props.mode === 0 ? "Enter content here." : this.props.selectedReview.review.text} onChange={this.handleChange} />
                         </Form.Group>
                         { this.props.mode === 0
-                            ? <Button className="create-button" onClick={this.clickButtonHandler}>Create</Button>
-                            : <Button className="edit-button" onClick={this.clickButtonHandler}>Edit</Button> }
+                            ? <Button className="create-button" onClick={this.clickButtonHandler} disabled={(this.state.title != null && this.state.content != null) && (this.state.title.length === 0 || this.state.content.length === 0)}>Create</Button>
+                            : <Button className="edit-button" onClick={this.clickButtonHandler} disabled={(this.state.title != null && this.state.content != null) && (this.state.title.length === 0 || this.state.content.length === 0)}>Edit</Button> }
                     </div>
                 </div>
             </div>
