@@ -21,7 +21,11 @@ const reducer = (state = initialState, action) => {
     case paperConstants.LIKE_PAPER_FAILURE:
         return { ...state, likePaperStatus: paperStatus.FAILURE };
     case paperConstants.UNLIKE_PAPER_SUCCESS:
-        return { ...state, unlikePaperStatus: paperStatus.SUCCESS, unlikeCount: action.target.likes };
+        return {
+            ...state,
+            unlikePaperStatus: paperStatus.SUCCESS,
+            unlikeCount: action.target.likes,
+        };
     case paperConstants.UNLIKE_PAPER_FAILURE:
         return { ...state, unlikePaperStatus: paperStatus.FAILURE };
     default:

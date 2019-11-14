@@ -6,12 +6,6 @@ import PaperSpec from "./PaperSpec";
 import { getMockStore, mockComponent } from "../../../test-utils/mocks";
 import { paperActions } from "../../../store/actions";
 
-const stubInitialState = {
-    paper: {},
-    auth: {},
-    collection: {},
-    review: {},
-};
 
 const mockHistory = { push: jest.fn() };
 
@@ -28,11 +22,18 @@ jest.mock("../../Modal/AddPaperModal/AddPaperModal", () => jest.fn(() => (mockCo
 const mockPromise = new Promise((resolve) => { resolve(); });
 
 describe("<PaperSpec />", () => {
+    let stubInitialState;
     let paperSpec;
     let spyLikePaper;
     let spyUnlikePaper;
 
     beforeEach(() => {
+        stubInitialState = {
+            paper: {},
+            auth: {},
+            collection: {},
+            review: {},
+        };
         paperSpec = makePaperSpec(stubInitialState);
         spyLikePaper = jest.spyOn(paperActions, "likePaper")
             .mockImplementation(() => () => mockPromise);

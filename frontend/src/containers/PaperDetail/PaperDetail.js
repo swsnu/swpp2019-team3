@@ -69,6 +69,7 @@ class PaperDetail extends Component {
           paperId={review.paper.id}
           author={review.user.username}
           title={review.title}
+          isLiked={review.liked}
           likeCount={review.count.likes}
           replyCount={review.count.replies}
           headerExists={false}

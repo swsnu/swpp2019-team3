@@ -17,8 +17,8 @@ import {
     // addCollectionMember,
     // removeCollectionMember,
     deleteCollection,
-    // addCollectionLike,
-    // removeCollectionLike,
+    likeCollection,
+    unlikeCollection,
 } from "./collection/collection";
 
 import {
@@ -27,8 +27,8 @@ import {
     getReviewsByUserId,
     getReview,
     setReviewContent,
-    // addReviewLike,
-    // removeReviewLike,
+    likeReview,
+    unlikeReview,
     deleteReview,
     // consume Review,
 } from "./Review/review";
@@ -47,8 +47,8 @@ export const collectionActions = {
     // addCollectionMember,
     // removeCollectionMember,
     deleteCollection,
-    // addCollectionLike,
-    // removeCollectionLike,
+    likeCollection,
+    unlikeCollection,
 };
 
 export const reviewActions = {
@@ -57,8 +57,8 @@ export const reviewActions = {
     getReviewsByUserId,
     getReview,
     setReviewContent,
-    // addReviewLike,
-    // removeReviewLike,
+    likeReview,
+    unlikeReview,
     deleteReview,
     // consume Review,
 };

@@ -7,13 +7,6 @@ import { getMockStore, mockComponent } from "../../../test-utils/mocks";
 import { paperActions } from "../../../store/actions";
 
 
-const stubInitialState = {
-    paper: {},
-    auth: {},
-    collection: {},
-    review: {},
-};
-
 const mockHistory = { push: jest.fn() };
 
 /* eslint-disable react/jsx-props-no-spreading */
@@ -24,16 +17,23 @@ const makePaperCard = (initialState, props = {}) => (
 );
 /* eslint-enable react/jsx-props-no-spreading */
 
-jest.mock("../../Modal/AddPaperModal/AddPaperModal", () => jest.fn(() => (mockComponent("GoMyCollectionsModal")())));
+jest.mock("../../Modal/AddPaperModal/AddPaperModal", () => jest.fn(() => (mockComponent("AddPaperModal")())));
 
 const mockPromise = new Promise((resolve) => { resolve(); });
 
 describe("<PaperCard />", () => {
+    let stubInitialState;
     let paperCard;
     let spyLikePaper;
     let spyUnlikePaper;
 
     beforeEach(() => {
+        stubInitialState = {
+            paper: {},
+            auth: {},
+            collection: {},
+            review: {},
+        };
         paperCard = makePaperCard(stubInitialState);
         spyLikePaper = jest.spyOn(paperActions, "likePaper")
             .mockImplementation(() => () => mockPromise);
