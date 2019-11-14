@@ -16,11 +16,12 @@ class ReviewControl extends Component {
             content: "",
             paper: { },
             likeCount: 0,
-            authorNames: [],
-            // keywords: [],
+            authors: [],
             date: "",
             thisReview: { id: 0 },
             paperId: 0,
+            keywords: [],
+            titleWarning: "",
         };
         this.handleChange = this.handleChange.bind(this);
         this.clickButtonHandler = this.clickButtonHandler.bind(this);
@@ -33,10 +34,10 @@ class ReviewControl extends Component {
                     this.setState({
                         paper: this.props.selectedPaper,
                         likeCount: this.props.selectedPaper.count.likes,
-                        authorNames: this.props.selectedPaper.authors.map((x) => `${x.first_name} ${x.last_name}`),
+                        authors: this.props.selectedPaper.authors,
                         date: this.props.selectedPaper.publication.date,
-                        title: "Enter title here.",
-                        content: "Enter content here.",
+                        title: "",
+                        content: "",
                     });
                 }).catch(() => {
                 });
@@ -54,8 +55,9 @@ class ReviewControl extends Component {
                             this.setState({
                                 paper: this.props.selectedPaper,
                                 likeCount: this.props.selectedPaper.count.likes,
-                                authorNames: this.props.selectedPaper.authors.map((x) => `${x.first_name} ${x.last_name}`),
+                                authors: this.props.selectedPaper.authors,
                                 date: this.props.selectedPaper.publication.date,
+                                keywords: this.props.selectedPaper.keywords,
                             });
                         }).catch(() => {
                         });
@@ -92,7 +94,16 @@ class ReviewControl extends Component {
 
     handleChange(e) {
         const nextState = {};
-        nextState[e.target.name] = e.target.value;
+        if (e.target.name === "title" && e.target.name.length > 400) {
+            this.setState({
+                titleWarning: "The maximum length of title is 400.",
+            });
+        } else {
+            this.setState({
+                titleWarning: "",
+            });
+            nextState[e.target.name] = e.target.value;
+        }
         this.setState(nextState);
     }
 
@@ -109,17 +120,19 @@ class ReviewControl extends Component {
                               liked={this.state.paper.liked}
                               abstract={this.state.paper.abstract}
                               likeCount={this.state.likeCount}
-                              authors={this.state.authorNames}
+                              authors={this.state.authors}
                               date={this.state.date}
+                              keywords={this.state.keywords}
                             />
                         </div>
                         <Form.Group className="form-title" controlId="formReviewTitle">
                             <Form.Label>Title</Form.Label>
-                            <Form.Control name="title" className="title-input" as="textarea" rows="1" type="text" placeholder={this.state.title} value={this.state.title} onChange={this.handleChange} />
+                            <div className="warning">{this.state.titleWarning}</div>
+                            <Form.Control name="title" className="title-input" as="textarea" rows="1" type="text" placeholder={this.props.mode === 0 ? "Enter title here." : this.props.selectedReview.review.title} value={this.state.title} onChange={this.handleChange} />
                         </Form.Group>
                         <Form.Group className="form-content" controlId="formReviewContent">
                             <Form.Label>Content</Form.Label>
-                            <Form.Control name="content" className="content-input" as="textarea" value={this.state.content} rows="7" type="text" placeholder={this.state.content} onChange={this.handleChange} />
+                            <Form.Control name="content" className="content-input" as="textarea" value={this.state.content} rows="7" type="text" placeholder={this.props.mode === 0 ? "Enter content here." : this.props.selectedReview.review.text} onChange={this.handleChange} />
                         </Form.Group>
                         { this.props.mode === 0
                             ? <Button className="create-button" onClick={this.clickButtonHandler}>Create</Button>
@@ -156,6 +169,7 @@ ReviewControl.propTypes = {
     selectedPaper: PropTypes.objectOf(PropTypes.any),
     onGetPaper: PropTypes.func,
     newReview: PropTypes.objectOf(PropTypes.any),
+    keywords: PropTypes.arrayOf(PropTypes.any),
 };
 
 ReviewControl.defaultProps = {
@@ -169,6 +183,7 @@ ReviewControl.defaultProps = {
     selectedPaper: {},
     onGetPaper: () => {},
     newReview: {},
+    keywords: [],
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ReviewControl));
