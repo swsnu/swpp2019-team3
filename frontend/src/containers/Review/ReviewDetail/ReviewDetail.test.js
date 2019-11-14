@@ -2,7 +2,7 @@ import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
 import ReviewDetail from "./ReviewDetail";
-import { reviewActions, authActions } from "../../../store/actions";
+import { reviewActions } from "../../../store/actions";
 import { reviewStatus, getMeStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 import { history } from "../../../store/store";
