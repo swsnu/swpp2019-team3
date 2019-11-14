@@ -9,7 +9,7 @@ const stubPaper = {
 
 const stubError = {
     response: {
-        status: 404,
+        status: 440,
         data: {},
     },
 };
@@ -20,7 +20,9 @@ describe("Paper reducer", () => {
         expect(newState).toEqual({
             getPaperStatus: paperStatus.NONE,
             likePaperStatus: paperStatus.NONE,
+            likeCount: 0,
             unlikePaperStatus: paperStatus.NONE,
+            unlikeCount: 0,
             selectedPaper: {},
         });
     });
@@ -45,7 +47,7 @@ describe("Paper reducer", () => {
     it("should handle likePaper success", () => {
         const newState = reducer(undefined, {
             type: paperConstants.LIKE_PAPER_SUCCESS,
-            target: stubPaper,
+            target: { likes: 1 },
         });
         expect(newState.likePaperStatus).toEqual(paperStatus.SUCCESS);
     });
@@ -62,7 +64,7 @@ describe("Paper reducer", () => {
     it("should handle unlikePaper success", () => {
         const newState = reducer(undefined, {
             type: paperConstants.UNLIKE_PAPER_SUCCESS,
-            target: stubPaper,
+            target: { likes: 1 },
         });
         expect(newState.unlikePaperStatus).toEqual(paperStatus.SUCCESS);
     });

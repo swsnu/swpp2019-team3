@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 import "./PaperSpec.css";
 import SVG from "../../svg";
 import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
+import { paperActions } from "../../../store/actions";
+import { paperStatus } from "../../../constants/constants";
 
 class PaperSpec extends Component {
     constructor(props) {
@@ -98,6 +101,24 @@ class PaperSpec extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+    likePaperStatus: state.paper.likePaperStatus,
+    afterLikeCount: state.paper.likeCount,
+    unlikePaperStatus: state.paper.unlikePaperStatus,
+    afterUnlikeCount: state.paper.unlikeCount,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onLikePaper: (paperId) => dispatch(
+        paperActions.likePaper(paperId),
+    ),
+    onUnlikePaper: (paperId) => dispatch(
+        paperActions.unlikePaper(paperId),
+    ),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PaperSpec);
+
 PaperSpec.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
     id: PropTypes.number,
@@ -110,6 +131,12 @@ PaperSpec.propTypes = {
     isLiked: PropTypes.bool,
     addButtonExists: PropTypes.bool,
     link: PropTypes.string,
+    likePaperStatus: PropTypes.string,
+    afterLikeCount: PropTypes.number,
+    unlikePaperStatus: PropTypes.string,
+    afterUnlikeCount: PropTypes.number,
+    onLikePaper: PropTypes.func,
+    onUnlikePaper: PropTypes.func,
 };
 
 PaperSpec.defaultProps = {
@@ -124,6 +151,10 @@ PaperSpec.defaultProps = {
     isLiked: false,
     addButtonExists: false,
     link: "",
+    likePaperStatus: paperStatus.NONE,
+    afterLikeCount: 0,
+    unlikePaperStatus: paperStatus.NONE,
+    afterUnlikeCount: 0,
+    onLikePaper: () => {},
+    onUnlikePaper: () => {},
 };
-
-export default PaperSpec;

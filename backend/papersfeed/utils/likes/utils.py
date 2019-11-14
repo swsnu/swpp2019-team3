@@ -5,10 +5,13 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, ApiError
+from papersfeed.utils.papers.utils import __get_paper_like_count
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.papers.paper_like import PaperLike
+from papersfeed.utils.reviews.utils import __get_review_like_count
 from papersfeed.models.reviews.review import Review
 from papersfeed.models.reviews.review_like import ReviewLike
+from papersfeed.utils.collections.utils import __get_collection_like_count
 from papersfeed.models.collections.collection import Collection
 from papersfeed.models.collections.collection_like import CollectionLike
 
@@ -35,6 +38,9 @@ def insert_like_paper(args):
         user_id=request_user.id,
     )
 
+    like_counts = __get_paper_like_count([paper_id], 'paper_id')
+    return {constants.LIKES: like_counts[paper_id] if paper_id in like_counts else 0}
+
 
 def remove_like_paper(args):
     """Remove Like of Paper"""
@@ -54,6 +60,9 @@ def remove_like_paper(args):
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     paper_like.delete()
+
+    like_counts = __get_paper_like_count([paper_id], 'paper_id')
+    return {constants.LIKES: like_counts[paper_id] if paper_id in like_counts else 0}
 
 
 def insert_like_review(args):
@@ -78,6 +87,9 @@ def insert_like_review(args):
         user_id=request_user.id,
     )
 
+    like_counts = __get_review_like_count([review_id], 'review_id')
+    return {constants.LIKES: like_counts[review_id] if review_id in like_counts else 0}
+
 
 def remove_like_review(args):
     """Remove Like of Review"""
@@ -97,6 +109,9 @@ def remove_like_review(args):
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     review_like.delete()
+
+    like_counts = __get_review_like_count([review_id], 'review_id')
+    return {constants.LIKES: like_counts[review_id] if review_id in like_counts else 0}
 
 
 def insert_like_collection(args):
@@ -121,6 +136,9 @@ def insert_like_collection(args):
         user_id=request_user.id,
     )
 
+    like_counts = __get_collection_like_count([collection_id], 'collection_id')
+    return {constants.LIKES: like_counts[collection_id] if collection_id in like_counts else 0}
+
 
 def remove_like_collection(args):
     """Remove Like of Collection"""
@@ -140,3 +158,6 @@ def remove_like_collection(args):
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     collection_like.delete()
+
+    like_counts = __get_collection_like_count([collection_id], 'collection_id')
+    return {constants.LIKES: like_counts[collection_id] if collection_id in like_counts else 0}

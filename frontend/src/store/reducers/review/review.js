@@ -30,10 +30,12 @@ const initialState = {
     },
     like: {
         status: reviewStatus.NONE,
+        count: 0,
         error: null,
     },
     unlike: {
         status: reviewStatus.NONE,
+        count: 0,
         error: null,
     },
 };
@@ -138,6 +140,7 @@ const ReviewReducer = (state = initialState, action) => {
             like: {
                 ...state.like,
                 status: reviewStatus.SUCCESS,
+                count: action.target,
             },
         };
     case reviewConstants.LIKE_REVIEW_FAILURE:
@@ -155,6 +158,7 @@ const ReviewReducer = (state = initialState, action) => {
             unlike: {
                 ...state.unlike,
                 status: reviewStatus.SUCCESS,
+                count: action.target,
             },
         };
     case reviewConstants.UNLIKE_REVIEW_FAILURE:

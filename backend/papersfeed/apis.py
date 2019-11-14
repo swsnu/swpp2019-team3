@@ -143,29 +143,29 @@ def get_user_search(args):
 
 def post_like_paper(args):
     """Post Like Paper"""
-    return likes_utils.insert_like_paper(args)
+    return {constants.COUNT: likes_utils.insert_like_paper(args)}
 
 
 def delete_like_paper(args):
     """Delete Like Paper"""
-    return likes_utils.remove_like_paper(args)
+    return {constants.COUNT: likes_utils.remove_like_paper(args)}
 
 
 def post_like_review(args):
     """Post Like Review"""
-    return likes_utils.insert_like_review(args)
+    return {constants.COUNT: likes_utils.insert_like_review(args)}
 
 
 def delete_like_review(args):
     """Delete Like Review"""
-    return likes_utils.remove_like_review(args)
+    return {constants.COUNT: likes_utils.remove_like_review(args)}
 
 
 def post_like_collection(args):
     """Post Like Collection"""
-    return likes_utils.insert_like_collection(args)
+    return {constants.COUNT: likes_utils.insert_like_collection(args)}
 
 
 def delete_like_collection(args):
     """Delete Like Collection"""
-    return likes_utils.remove_like_collection(args)
+    return {constants.COUNT: likes_utils.remove_like_collection(args)}

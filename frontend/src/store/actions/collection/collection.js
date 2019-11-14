@@ -202,9 +202,9 @@ export const deleteCollection = (collectionId) => (dispatch) => axios.delete("/a
     .catch((err) => { (dispatch(deleteCollectionFailure(err))); });
 
 
-const likeCollectionSuccess = () => ({
+const likeCollectionSuccess = (count) => ({
     type: collectionConstants.LIKE_COLLECTION_SUCCESS,
-    target: null,
+    target: count.count,
 });
 
 const likeCollectionFailure = (error) => ({
@@ -217,9 +217,9 @@ export const likeCollection = (collectionId) => (dispatch) => axios.post("/api/l
     .catch((err) => dispatch(likeCollectionFailure(err)));
 
 
-const unlikeCollectionSuccess = () => ({
+const unlikeCollectionSuccess = (count) => ({
     type: collectionConstants.UNLIKE_COLLECTION_SUCCESS,
-    target: null,
+    target: count.count,
 });
 
 const unlikeCollectionFailure = (error) => ({

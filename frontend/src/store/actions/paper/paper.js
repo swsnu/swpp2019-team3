@@ -26,9 +26,9 @@ export const getPaper = (paperId) => (dispatch) => axios.get("/api/paper", { par
     .catch((err) => dispatch(getPaperFailure(err)));
 
 
-const likePaperSuccess = () => ({
+const likePaperSuccess = (count) => ({
     type: paperConstants.LIKE_PAPER_SUCCESS,
-    target: null,
+    target: count.count,
 });
 
 const likePaperFailure = (error) => ({
@@ -41,9 +41,9 @@ export const likePaper = (paperId) => (dispatch) => axios.post("/api/like/paper"
     .catch((err) => dispatch(likePaperFailure(err)));
 
 
-const unlikePaperSuccess = () => ({
+const unlikePaperSuccess = (count) => ({
     type: paperConstants.UNLIKE_PAPER_SUCCESS,
-    target: null,
+    target: count.count,
 });
 
 const unlikePaperFailure = (error) => ({

@@ -33,10 +33,12 @@ const stubInitialState = {
     },
     like: {
         status: collectionStatus.NONE,
+        count: 0,
         error: null,
     },
     unlike: {
         status: collectionStatus.NONE,
+        count: 0,
         error: null,
     },
 };
@@ -47,6 +49,13 @@ const stubCollection = {
     modification_data: "2019-11-06",
     title: "SWPP",
     text: "SWPP2019fall",
+};
+
+const stubError = {
+    response: {
+        status: 440,
+        data: {},
+    },
 };
 
 describe("Collection reducer", () => {
@@ -191,7 +200,7 @@ describe("Collection reducer", () => {
     it("should return like_collection_success state", () => {
         const newState = reducer(stubInitialState, {
             type: collectionConstants.LIKE_COLLECTION_SUCCESS,
-            target: stubCollection,
+            target: { likes: 1 },
         });
         expect(newState.like.status).toBe(collectionStatus.SUCCESS);
     });
@@ -199,7 +208,7 @@ describe("Collection reducer", () => {
     it("should return like_collection_failure state", () => {
         const newState = reducer(stubInitialState, {
             type: collectionConstants.LIKE_COLLECTION_FAILURE,
-            target: stubCollection,
+            target: stubError,
         });
         expect(newState.like.status).toBe(collectionStatus.FAILURE);
     });
@@ -208,7 +217,7 @@ describe("Collection reducer", () => {
     it("should return unlike_collection_success state", () => {
         const newState = reducer(stubInitialState, {
             type: collectionConstants.UNLIKE_COLLECTION_SUCCESS,
-            target: stubCollection,
+            target: { likes: 1 },
         });
         expect(newState.unlike.status).toBe(collectionStatus.SUCCESS);
     });
@@ -216,7 +225,7 @@ describe("Collection reducer", () => {
     it("should return unlike_collection_failure state", () => {
         const newState = reducer(stubInitialState, {
             type: collectionConstants.UNLIKE_COLLECTION_FAILURE,
-            target: stubCollection,
+            target: stubError,
         });
         expect(newState.unlike.status).toBe(collectionStatus.FAILURE);
     });

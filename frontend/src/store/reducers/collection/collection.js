@@ -33,10 +33,12 @@ const initialState = {
     },
     like: {
         status: collectionStatus.NONE,
+        count: 0,
         error: null,
     },
     unlike: {
         status: collectionStatus.NONE,
+        count: 0,
         error: null,
     },
 };
@@ -185,6 +187,7 @@ const reducer = (state = initialState, action) => {
             like: {
                 ...state.like,
                 status: collectionStatus.SUCCESS,
+                count: action.target,
             },
         };
     case collectionConstants.LIKE_COLLECTION_FAILURE:
@@ -202,6 +205,7 @@ const reducer = (state = initialState, action) => {
             unlike: {
                 ...state.unlike,
                 status: collectionStatus.SUCCESS,
+                count: action.target,
             },
         };
     case collectionConstants.UNLIKE_COLLECTION_FAILURE:

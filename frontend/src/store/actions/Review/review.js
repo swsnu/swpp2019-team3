@@ -115,9 +115,9 @@ export const setReviewContent = (review) => (dispatch) => axios.put("/api/review
     .catch((err) => dispatch(setReviewContentFailure(err)));
 
 // add review like
-const likeReviewSuccess = () => ({
+const likeReviewSuccess = (count) => ({
     type: reviewConstants.LIKE_REVIEW_SUCCESS,
-    target: null,
+    target: count.count,
 });
 
 const likeReviewFailure = (error) => ({
@@ -130,9 +130,9 @@ export const likeReview = (reviewId) => (dispatch) => axios.post("/api/like/revi
     .catch((err) => dispatch(likeReviewFailure(err)));
 
 // remove review like
-const unlikeReviewSuccess = () => ({
+const unlikeReviewSuccess = (count) => ({
     type: reviewConstants.UNLIKE_REVIEW_SUCCESS,
-    target: null,
+    target: count.count,
 });
 
 const unlikeReviewFailure = (error) => ({

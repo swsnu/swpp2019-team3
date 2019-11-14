@@ -31,10 +31,12 @@ const stubInitialState = {
     },
     like: {
         status: reviewStatus.NONE,
+        count: 0,
         error: null,
     },
     unlike: {
         status: reviewStatus.NONE,
+        count: 0,
         error: null,
     },
 };
@@ -45,6 +47,13 @@ const stubReview = {
     modification_data: "2019-11-06",
     title: "SWPP",
     text: "SWPP2019fall",
+};
+
+const stubError = {
+    response: {
+        status: 440,
+        data: {},
+    },
 };
 
 describe("Review reducer", () => {
@@ -179,7 +188,7 @@ describe("Review reducer", () => {
     it("should return like_review_success state", () => {
         const newState = ReviewReducer(stubInitialState, {
             type: reviewConstants.LIKE_REVIEW_SUCCESS,
-            target: stubReview,
+            target: { likes: 1 },
         });
         expect(newState.like.status).toBe(reviewStatus.SUCCESS);
     });
@@ -187,7 +196,7 @@ describe("Review reducer", () => {
     it("should return like_review_failure state", () => {
         const newState = ReviewReducer(stubInitialState, {
             type: reviewConstants.LIKE_REVIEW_FAILURE,
-            target: stubReview,
+            target: stubError,
         });
         expect(newState.like.status).toBe(reviewStatus.FAILURE);
     });
@@ -196,7 +205,7 @@ describe("Review reducer", () => {
     it("should return unlike_review_success state", () => {
         const newState = ReviewReducer(stubInitialState, {
             type: reviewConstants.UNLIKE_REVIEW_SUCCESS,
-            target: stubReview,
+            target: { likes: 1 },
         });
         expect(newState.unlike.status).toBe(reviewStatus.SUCCESS);
     });
@@ -204,7 +213,7 @@ describe("Review reducer", () => {
     it("should return unlike_review_failure state", () => {
         const newState = ReviewReducer(stubInitialState, {
             type: reviewConstants.UNLIKE_REVIEW_FAILURE,
-            target: stubReview,
+            target: stubError,
         });
         expect(newState.unlike.status).toBe(reviewStatus.FAILURE);
     });
