@@ -107,7 +107,7 @@ def insert_user(args):
     hashed, salt = __hash_password(password)
 
     try:
-        user = User.objects.create(
+        user = User.objects.create_user(
             description=None, email=email, username=username, password=hashed, salt=salt
         )
     except IntegrityError:

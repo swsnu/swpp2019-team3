@@ -1,11 +1,21 @@
 """user.py"""
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
-from papersfeed.models.base_models import BaseModel
+class UserManager(BaseUserManager):
+    def create_user(self, email, username, password, salt, description=None):
+        user = self.model(
+            email=email,
+            username=username,
+            password=password,
+            salt=salt,
+            description=description,
+        )
+        user.save(using=self._db)
+        return user
 
 
-class User(User):
+class User(AbstractBaseUser):
     """User"""
     # @태그에 사용되는 Username, 21자 alphanum 소문자
     username = models.CharField(max_length=21, unique=True, default=None)
@@ -21,6 +31,11 @@ class User(User):
 
     # 비밀번호 Salt
     salt = models.TextField(null=True, default=None)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELD = []
 
     class Meta:
         """Table Meta"""

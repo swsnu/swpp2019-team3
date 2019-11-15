@@ -88,8 +88,8 @@ def insert_like_review(args):
         user_id=request_user.id,
     )
 
-    #print(User.objects.get(pk=1))
-    #notify.send(request_user, recipient=User.objects.get(pk=1), verb='liked')
+    print(User.objects.get(pk=1))
+    notify.send(request_user, recipient=[User.objects.get(pk=1)], verb='liked')
 
     like_counts = __get_review_like_count([review_id], 'review_id')
     return {constants.LIKES: like_counts[review_id] if review_id in like_counts else 0}

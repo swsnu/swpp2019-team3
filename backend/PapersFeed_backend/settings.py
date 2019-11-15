@@ -129,3 +129,5 @@ STATIC_URL = '/static/'
 # Session
 SESSION_COOKIE_AGE = 60 * 30
 SESSION_SAVE_EVERY_REQUEST = True
+
+AUTH_USER_MODEL = 'papersfeed.User'
