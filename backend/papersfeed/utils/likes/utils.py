@@ -88,7 +88,11 @@ def insert_like_review(args):
         user_id=request_user.id,
     )
 
-    print(User.objects.get(pk=1))
+    users, _, _ = __get_users(Q(id=user_id), request_user, None)
+
+    if not users:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
     notify.send(request_user, recipient=[User.objects.get(pk=1)], verb='liked')
 
     like_counts = __get_review_like_count([review_id], 'review_id')
