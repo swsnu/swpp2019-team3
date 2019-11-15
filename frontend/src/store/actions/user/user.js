@@ -16,7 +16,7 @@ const getUserByUserIdFailure = (error) => {
     };
 };
 
-export const getUserByUserId = (userId) => (dispatch) => axios.get("api/user", { params: { id: userId } })
+export const getUserByUserId = (userId) => (dispatch) => axios.get("/api/user", { params: { id: userId } })
     .then((res) => { dispatch(getUserByUserIdSuccess(res.data)); })
     .catch((err) => { dispatch(getUserByUserIdFailure(err)); });
 
@@ -35,7 +35,7 @@ const getFollowersByUserIdFailure = (error) => {
     };
 };
 
-export const getFollowersByUserId = (userId) => (dispatch) => axios.get("api/user/followed", { params: { id: userId } })
+export const getFollowersByUserId = (userId) => (dispatch) => axios.get("/api/user/followed", { params: { id: userId } })
     .then((res) => { dispatch(getFollowersByUserIdSuccess(res.data)); })
     .catch((err) => { dispatch(getFollowersByUserIdFailure(err)); });
 
@@ -54,7 +54,7 @@ const getFollowingsByUserIdFailure = (error) => {
     };
 };
 
-export const getFollowingsByUserId = (userId) => (dispatch) => axios.get("api/user/following", { params: { id: userId } })
+export const getFollowingsByUserId = (userId) => (dispatch) => axios.get("/api/user/following", { params: { id: userId } })
     .then((res) => { dispatch(getFollowingsByUserIdSuccess(res.data)); })
     .catch((err) => { dispatch(getFollowingsByUserIdFailure(err)); });
 
@@ -73,7 +73,7 @@ const addUserFollowingFailure = (error) => {
     };
 };
 
-export const addUserFollowing = (targetUserId) => (dispatch) => axios.post("api/follow", { params: targetUserId })
+export const addUserFollowing = (targetUserId) => (dispatch) => axios.post("/api/follow", { params: targetUserId })
     .then((res) => { dispatch(addUserFollowingSuccess(res.data)); })
     .catch((err) => { dispatch(addUserFollowingFailure(err)); });
 
@@ -89,7 +89,7 @@ const removeUserFollowingFailure = (error) => ({
     target: error,
 });
 
-export const removeUserFollowing = (targetuserId) => (dispatch) => axios.delete("api/follow", { params: targetuserId })
+export const removeUserFollowing = (targetuserId) => (dispatch) => axios.delete("/api/follow", { params: targetuserId })
     .then((res) => { dispatch(removeUserFollowingSuccess(res.data)); })
     .catch((err) => { dispatch(removeUserFollowingFailure(err)); });
 
@@ -109,6 +109,6 @@ const editUserInfoFailure = (error) => {
     };
 };
 
-export const editUserInfo = (newUserInfo) => (dispatch) => axios.put("api/user", newUserInfo)
+export const editUserInfo = (newUserInfo) => (dispatch) => axios.put("/api/user", newUserInfo)
     .then((res) => { dispatch(editUserInfoSuccess(res.data)); })
     .catch((err) => { dispatch(editUserInfoFailure(err)); });

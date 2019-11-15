@@ -62,7 +62,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.getUserByUserId(stubUser.id))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/user", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/user", { params: { id: 1 } });
                 done();
             });
     });
@@ -81,7 +81,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.getUserByUserId(stubUser.id))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/user", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/user", { params: { id: 1 } });
                 done();
             });
     });
@@ -100,7 +100,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.getUserByUserId(stubUser.id))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/user", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/user", { params: { id: 1 } });
                 done();
             });
     });
@@ -117,7 +117,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.getFollowersByUserId(stubUser.id))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/user/followed", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/user/followed", { params: { id: 1 } });
                 done();
             });
     });
@@ -136,7 +136,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.getFollowersByUserId(stubUser.id))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/user/followed", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/user/followed", { params: { id: 1 } });
                 done();
             });
     });
@@ -155,7 +155,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.getFollowersByUserId(stubUser.id))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/user/followed", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/user/followed", { params: { id: 1 } });
                 done();
             });
     });
@@ -172,7 +172,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.getFollowingsByUserId(stubUser.id))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/user/following", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/user/following", { params: { id: 1 } });
                 done();
             });
     });
@@ -191,7 +191,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.getFollowingsByUserId(stubUser.id))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/user/following", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/user/following", { params: { id: 1 } });
                 done();
             });
     });
@@ -210,7 +210,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.getFollowingsByUserId(stubUser.id))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/user/following", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/user/following", { params: { id: 1 } });
                 done();
             });
     });
@@ -227,7 +227,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.addUserFollowing({ id: stubUser2.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/follow", { params: { id: 2 } });
+                expect(spy).toHaveBeenCalledWith("/api/follow", { params: { id: 2 } });
                 done();
             });
     });
@@ -246,7 +246,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.addUserFollowing({ id: stubUser.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/follow", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/follow", { params: { id: 1 } });
                 done();
             });
     });
@@ -265,7 +265,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.addUserFollowing({ id: stubUser.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/follow", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/follow", { params: { id: 1 } });
                 done();
             });
     });
@@ -282,7 +282,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.removeUserFollowing({ id: stubUser2.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/follow", { params: { id: 2 } });
+                expect(spy).toHaveBeenCalledWith("/api/follow", { params: { id: 2 } });
                 done();
             });
     });
@@ -301,7 +301,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.removeUserFollowing({ id: stubUser2.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/follow", { params: { id: 2 } });
+                expect(spy).toHaveBeenCalledWith("/api/follow", { params: { id: 2 } });
                 done();
             });
     });
@@ -324,7 +324,7 @@ describe("userActions", () => {
             },
         ))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/user",
+                expect(spy).toHaveBeenCalledWith("/api/user",
                     {
                         description: "Meoooowwwwwww",
                         email: "gggg@snu.ac.kr",
@@ -354,7 +354,7 @@ describe("userActions", () => {
             },
         ))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/user",
+                expect(spy).toHaveBeenCalledWith("/api/user",
                     {
                         description: "Meoooowwwwwww",
                         email: "gggg@snu.ac.kr",
@@ -384,7 +384,7 @@ describe("userActions", () => {
             },
         ))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("api/user",
+                expect(spy).toHaveBeenCalledWith("/api/user",
                     {
                         description: "Meoooowwwwwww",
                         email: "gggg@snu.ac.kr",

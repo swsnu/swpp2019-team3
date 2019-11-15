@@ -43,8 +43,10 @@ class Header extends Component {
 
     render() {
         let username = null;
+        let id = null;
         if (this.props.me) {
             username = this.props.me.username;
+            id = this.props.me.id;
         }
 
         return (
@@ -66,7 +68,7 @@ class Header extends Component {
                             <Dropdown.Toggle title="myaccount" className="myaccount-button">My Account</Dropdown.Toggle>
                             <Dropdown.Menu className="myaccount-menu">
                                 <Dropdown.Header className="username-header">{username}</Dropdown.Header>
-                                <Dropdown.Item className="my-profile-button" href="/profile/user_id">My Profile</Dropdown.Item>
+                                <Dropdown.Item className="my-profile-button" href={`/profile_id=${id}`}>My Profile</Dropdown.Item>
                                 <Dropdown.Item className="account-setting" href="/account_setting">Account Setting</Dropdown.Item>
                                 <Dropdown.Item className="signout-button" onClick={this.clickSignoutButtonHandler}>Logout</Dropdown.Item>
                             </Dropdown.Menu>

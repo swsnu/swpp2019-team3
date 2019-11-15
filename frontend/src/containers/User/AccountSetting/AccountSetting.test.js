@@ -11,17 +11,10 @@ import { getMockStore } from "../../../test-utils/mocks";
 const stubInitialState = {
     paper: {},
     auth: {
-        my: {
-            id: 1,
-        },
+        me: { id: 1, email: "swpp@snu.ac.kr", description: "" },
     },
     collection: {},
-    user: {
-        selectedUser: {
-            description: "test",
-            email: "test@snu.ac.kr",
-        },
-    },
+    user: {},
 };
 
 const mockStore = getMockStore(stubInitialState);

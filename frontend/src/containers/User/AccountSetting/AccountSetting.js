@@ -10,24 +10,46 @@ class AccountSetting extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            description: this.props.myInfo.description,
-            email: this.props.myInfo.email,
+            description: "",
+            email: "",
         };
     }
 
-    componentDidMount() {
-        this.props.onGetMyInfo(this.props.myId);
+    /* eslint-disable react/no-did-update-set-state */
+    // It's OK to use setState if it is wrapped in a condition
+    // please refer to https://reactjs.org/docs/react-component.html#componentdidupdate
+    componentDidUpdate(prevProps) {
+        if (this.props.me !== prevProps.me) {
+            this.setState({
+                description: this.props.me.description,
+                email: this.props.me.email,
+            });
+        }
     }
+    /* eslint-enable react/no-did-update-set-state */
 
     clickApplyHandler = () => {
+        // if email is same with before, don't give it backend
+        // otherwise, 420(EMAIL_ALREADY_EXISTS) will be raised
+        let email = null;
+        if (this.state.email !== this.props.me.email) {
+            email = this.state.email;
+        }
         const newUserInfo = {
             description: this.state.description,
-            email: this.state.email,
+            email,
         };
         this.props.onEditMyInfo(newUserInfo);
     }
 
     render() {
+        let beforeEmail = null;
+        let beforeDescription = null;
+        if (this.props.me) {
+            beforeEmail = this.props.me.email;
+            beforeDescription = this.props.me.description;
+        }
+
         return (
             <div className="AccountSetting">
                 <div className="AccountSettingContent">
@@ -51,7 +73,13 @@ class AccountSetting extends Component {
                         />
                     </div>
                     <div className="ButtonArea">
-                        <Button id="applyButton" onClick={this.clickApplyHandler}>Apply</Button>
+                        <Button
+                          id="applyButton"
+                          onClick={this.clickApplyHandler}
+                          disabled={this.state.email === beforeEmail
+                          && this.state.description === beforeDescription}
+                        >Apply
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -60,29 +88,21 @@ class AccountSetting extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    myId: state.auth.my.id,
-    myInfo: state.user.selectedUser,
+    me: state.auth.me,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onGetMyInfo: (userId) => dispatch(userActions.getUserByUserId(userId)),
     onEditMyInfo: (newUserInfo) => dispatch(userActions.editUserInfo(newUserInfo)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountSetting);
 
 AccountSetting.propTypes = {
-    myId: PropTypes.number,
-    myInfo: PropTypes.objectOf(PropTypes.any),
-    // history: PropTypes.objectOf(PropTypes.any),
-    onGetMyInfo: PropTypes.func,
+    me: PropTypes.objectOf(PropTypes.any),
     onEditMyInfo: PropTypes.func,
 };
 
 AccountSetting.defaultProps = {
-    myId: 1,
-    myInfo: null,
-    // history: null,
-    onGetMyInfo: null,
-    onEditMyInfo: null,
+    me: null,
+    onEditMyInfo: () => {},
 };
