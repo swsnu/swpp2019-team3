@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import {
     Form, Button, Card,
 } from "react-bootstrap";
-import { reviewActions, authActions } from "../../../store/actions";
+import { reviewActions } from "../../../store/actions";
 import { Reply } from "../../../components";
 import "./ReviewDetail.css";
 import SVG from "../../../components/svg";
@@ -13,11 +13,10 @@ class ReviewDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            thisReview: {
-                liked: false,
-            },
+            thisReview: {},
             replies: [],
             replyCount: 0,
+            isLiked: false,
             likeCount: 0,
             author: {
                 id: 0,
@@ -40,20 +39,14 @@ class ReviewDetail extends Component {
     }
 
     componentDidMount() {
-        this.props.onGetMe()
+        this.props.onGetReview({ id: Number(this.props.match.params.review_id) })
             .then(() => {
                 this.setState({
-                    user: this.props.me.me,
-                });
-            }).catch(() => {});
-
-        this.props.onGetReview({ id: this.props.match.params.review_id })
-            .then(() => {
-                this.setState({
-                    thisReview: this.props.selectedReview.review,
-                    likeCount: this.props.selectedReview.review.count.likes,
-                    author: this.props.selectedReview.review.user,
-                    paperId: this.props.selectedReview.review.paper.id,
+                    thisReview: this.props.selectedReview,
+                    isLiked: this.props.selectedReview.liked,
+                    likeCount: this.props.selectedReview.count.likes,
+                    author: this.props.selectedReview.user,
+                    paperId: this.props.selectedReview.paper.id,
                 });
             }).catch(() => {});
     }
@@ -64,26 +57,22 @@ class ReviewDetail extends Component {
         });
     }
 
+    // handle click 'Like' button
     clickLikeButtonHandler() {
-        const nextState = {
-            thisReview: {
-                ...this.state.thisReview,
-                liked: true,
-            },
-            likeCount: this.state.likeCount + 1,
-        };
-        this.setState(nextState);
+        this.props.onLikeReview({ id: Number(this.props.match.params.review_id) })
+            .then(() => {
+                this.setState({ likeCount: this.props.afterLikeCount });
+                this.setState({ isLiked: true });
+            });
     }
 
+    // handle click 'Unlike' button
     clickUnlikeButtonHandler() {
-        const nextState = {
-            thisReview: {
-                ...this.state.thisReview,
-                liked: false,
-            },
-            likeCount: this.state.likeCount - 1,
-        };
-        this.setState(nextState);
+        this.props.onUnlikeReview({ id: Number(this.props.match.params.review_id) })
+            .then(() => {
+                this.setState({ likeCount: this.props.afterUnlikeCount });
+                this.setState({ isLiked: false });
+            });
     }
 
     clickEditButtonHandler() {
@@ -133,13 +122,13 @@ class ReviewDetail extends Component {
                             </div>
                             <div className="reply">
                                 <div className="review-extra">
-                                    <Button className="like-button" variant="light" onClick={this.state.thisReview.liked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
+                                    <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
                                     <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="60%" width="60%" /></div>{this.state.replyCount}</Button>
-                                    {this.state.author.id === this.state.user.id
+                                    {this.props.me && this.state.author.id === this.props.me.id
                                         ? <Button className="edit-button" onClick={this.clickEditButtonHandler}>Edit</Button>
 
                                         : null}
-                                    {this.state.author.id === this.state.user.id ? (
+                                    {this.props.me && this.state.author.id === this.props.me.id ? (
                                         <Button className="delete-button" onClick={this.clickDeleteButtonHandler}>Delete</Button>
                                     ) : null}
                                 </div>
@@ -161,34 +150,49 @@ class ReviewDetail extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    selectedReview: state.review.selected,
-    me: state.auth,
+    me: state.auth.me,
+    selectedReview: state.review.selected.review,
+    likeReviewStatus: state.review.like.status,
+    afterLikeCount: state.review.like.count,
+    unlikeReviewStatus: state.review.unlike.status,
+    afterUnlikeCount: state.review.unlike.count,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onGetReview: (reviewId) => dispatch(reviewActions.getReview(reviewId)),
-    onGetMe: () => dispatch(authActions.getMe()),
     onDeleteReview: (reviewId) => dispatch(reviewActions.deleteReview(reviewId)),
+    onLikeReview: (reviewId) => dispatch(
+        reviewActions.likeReview(reviewId),
+    ),
+    onUnlikeReview: (reviewId) => dispatch(
+        reviewActions.unlikeReview(reviewId),
+    ),
 });
 
 ReviewDetail.propTypes = {
+    me: PropTypes.objectOf(PropTypes.any),
     history: PropTypes.objectOf(PropTypes.any),
     match: PropTypes.objectOf(PropTypes.any),
     selectedReview: PropTypes.objectOf(PropTypes.any),
     onGetReview: PropTypes.func,
-    me: PropTypes.objectOf(PropTypes.any),
-    onGetMe: PropTypes.func,
     onDeleteReview: PropTypes.func,
+    afterLikeCount: PropTypes.number,
+    afterUnlikeCount: PropTypes.number,
+    onLikeReview: PropTypes.func,
+    onUnlikeReview: PropTypes.func,
 };
 
 ReviewDetail.defaultProps = {
+    me: null,
     history: null,
     match: null,
     selectedReview: {},
     onGetReview: () => {},
-    me: {},
-    onGetMe: () => {},
     onDeleteReview: () => {},
+    afterLikeCount: 0,
+    afterUnlikeCount: 0,
+    onLikeReview: () => {},
+    onUnlikeReview: () => {},
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReviewDetail);

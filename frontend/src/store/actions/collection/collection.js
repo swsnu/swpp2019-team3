@@ -202,22 +202,31 @@ export const deleteCollection = (collectionId) => (dispatch) => axios.delete("/a
     .catch((err) => { (dispatch(deleteCollectionFailure(err))); });
 
 
-// add collection like - no matching api
-// export const addCollectionLike = (collectionID) => {
-//     return dispatch => {
-//         return axios.get()
-//             .then(res => dispatch({
-//                 type: GET_COLLECION_MEMBERS, members: res.data
-//         }));
-//     };
-// };
+const likeCollectionSuccess = (count) => ({
+    type: collectionConstants.LIKE_COLLECTION_SUCCESS,
+    target: count.count,
+});
 
-// removeCollectionLike - no matching /api
-// export const removeCollectionLike = (collectionID) => {
-//     return dispatch => {
-//         return axios.get()
-//             .then(res => dispatch({
-//                 type: GET_COLLECION_MEMBERS, members: res.data
-//         }));
-//     };
-// };
+const likeCollectionFailure = (error) => ({
+    type: collectionConstants.LIKE_COLLECTION_FAILURE,
+    target: error,
+});
+
+export const likeCollection = (collectionId) => (dispatch) => axios.post("/api/like/collection", collectionId)
+    .then((res) => dispatch(likeCollectionSuccess(res.data)))
+    .catch((err) => dispatch(likeCollectionFailure(err)));
+
+
+const unlikeCollectionSuccess = (count) => ({
+    type: collectionConstants.UNLIKE_COLLECTION_SUCCESS,
+    target: count.count,
+});
+
+const unlikeCollectionFailure = (error) => ({
+    type: collectionConstants.UNLIKE_COLLECTION_FAILURE,
+    target: error,
+});
+
+export const unlikeCollection = (collectionId) => (dispatch) => axios.delete("/api/like/collection", { params: collectionId })
+    .then((res) => dispatch(unlikeCollectionSuccess(res.data)))
+    .catch((err) => dispatch(unlikeCollectionFailure(err)));

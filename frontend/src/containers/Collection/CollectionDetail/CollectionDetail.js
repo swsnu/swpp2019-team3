@@ -12,6 +12,7 @@ import {
 
 import { collectionActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
+import SVG from "../../../components/svg";
 
 import "./CollectionDetail.css";
 
@@ -31,20 +32,26 @@ class CollectionDetail extends Component {
             papers: [],
             thisCollection: {},
         };
+        this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
+        this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
     }
 
     componentDidMount() {
-        this.props.onGetCollection({ id: this.props.location.pathname.split("=")[1] })
+        this.props.onGetCollection({ id: Number(this.props.location.pathname.split("=")[1]) })
             .then(() => {
                 if (this.props.getCollectionStatus === collectionStatus.COLLECTION_NOT_EXIST) {
                     this.props.history.push("/main");
                     return;
                 }
                 if (this.props.getCollectionStatus === collectionStatus.SUCCESS) {
-                    this.setState({ thisCollection: this.props.selectedCollection });
+                    this.setState({
+                        thisCollection: this.props.selectedCollection,
+                        isLiked: this.props.selectedCollection.liked,
+                        likeCount: this.props.selectedCollection.count.likes,
+                    });
                 }
             });
-        this.props.onGetCollectionPapers({ id: this.props.location.pathname.split("=")[1] })
+        this.props.onGetCollectionPapers({ id: Number(this.props.location.pathname.split("=")[1]) })
             .then(() => {
                 this.setState({ papers: this.props.storedPapers });
             });
@@ -54,20 +61,6 @@ class CollectionDetail extends Component {
 
     // clickRemovePaperButtonHandler(collection_id: number, paper_id: number)
     // : Call onRemoveCollectionPaper of CollectionDetail to remove the paper from the collection.
-
-    // clickLikeButtonHandler(collection_id: number, user_id: number)
-    // : Call onAddCollectionLike of CollectionDetail to change the like status
-    // between the user and the collection.
-    clickLikeButtonHandler = () => {
-        this.setState({ isLiked: true });
-    }
-
-    // clickUnlikeButtonHandler(collection_id: number, user_id: number)
-    // : Call onRemoveCollectionLike of CollectionDetail to change the like status
-    // between the user and the collection.
-    clickUnlikeButtonHandler = () => {
-        this.setState({ isLiked: false });
-    }
 
     addNewReplyHandler = () => {
         // should be fixed
@@ -91,17 +84,32 @@ class CollectionDetail extends Component {
           date={paper.date}
           authors={paper.authors}
           keywords={paper.keywords}
-          likeCount={paper.likeCount}
+          likeCount={paper.count.likes}
           reviewCount={paper.reviewCount}
-          isLiked={paper.isLiked}
+          isLiked={paper.liked}
           headerExists={false}
         />
     )
 
+    // handle click 'Like' button
+    clickLikeButtonHandler() {
+        this.props.onLikeCollection({ id: Number(this.props.location.pathname.split("=")[1]) })
+            .then(() => {
+                this.setState({ likeCount: this.props.afterLikeCount });
+                this.setState({ isLiked: true });
+            });
+    }
+
+    // handle click 'Unlike' button
+    clickUnlikeButtonHandler() {
+        this.props.onUnlikeCollection({ id: Number(this.props.location.pathname.split("=")[1]) })
+            .then(() => {
+                this.setState({ likeCount: this.props.afterUnlikeCount });
+                this.setState({ isLiked: false });
+            });
+    }
+
     render() {
-        const likeButton = <Button id="likeButton" onClick={() => this.clickLikeButtonHandler()}>Like</Button>;
-        const unlikeButton = <Button id="unlikeButton" onClick={() => this.clickUnlikeButtonHandler()}>Unlike</Button>;
-        const likeOrUnlike = this.state.isLiked ? unlikeButton : likeButton;
         const inviteButton = <Button id="inviteButton">Invite</Button>;
         const editButton = (
             <Link id="editButtonLink" to={`/collection_id=${this.state.id}/edit/`}>
@@ -146,7 +154,10 @@ class CollectionDetail extends Component {
                                 <h5 id="memberText">Members</h5>
                             </div>
                             <div id="collectionButtons">
-                                {likeOrUnlike}
+                                <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}>
+                                    <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>
+                                    {this.state.likeCount}
+                                </Button>
                                 {inviteButton}
                                 {this.state.thisCollection.amIMember ? editButton : <div />}
                             </div>
@@ -197,12 +208,22 @@ const mapStateToProps = (state) => ({
     getCollectionStatus: state.collection.selected.status,
     selectedCollection: state.collection.selected.collection,
     storedPapers: state.collection.selected.papers,
+    likeCollectionStatus: state.collection.like.status,
+    afterLikeCount: state.collection.like.count,
+    unlikeCollectionStatus: state.collection.unlike.status,
+    afterUnlikeCount: state.collection.unlike.count,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onGetCollection: (collectionId) => dispatch(collectionActions.getCollection(collectionId)),
     onGetCollectionPapers: (collectionId) => dispatch(
         collectionActions.getCollectionPapers(collectionId),
+    ),
+    onLikeCollection: (collectionId) => dispatch(
+        collectionActions.likeCollection(collectionId),
+    ),
+    onUnlikeCollection: (collectionId) => dispatch(
+        collectionActions.unlikeCollection(collectionId),
     ),
 });
 
@@ -218,6 +239,10 @@ CollectionDetail.propTypes = {
     getCollectionStatus: PropTypes.string,
     selectedCollection: PropTypes.objectOf(PropTypes.any),
     storedPapers: PropTypes.arrayOf(PropTypes.any),
+    afterLikeCount: PropTypes.number,
+    afterUnlikeCount: PropTypes.number,
+    onLikeCollection: PropTypes.func,
+    onUnlikeCollection: PropTypes.func,
 };
 
 CollectionDetail.defaultProps = {
@@ -230,4 +255,8 @@ CollectionDetail.defaultProps = {
     getCollectionStatus: collectionStatus.NONE,
     selectedCollection: {},
     storedPapers: [],
+    afterLikeCount: 0,
+    afterUnlikeCount: 0,
+    onLikeCollection: () => {},
+    onUnlikeCollection: () => {},
 };

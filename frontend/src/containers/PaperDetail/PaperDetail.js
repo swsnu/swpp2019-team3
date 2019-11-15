@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import { PaperSpec, ReviewCard } from "../../components";
 import { paperActions, reviewActions } from "../../store/actions";
-import { getPaperStatus, reviewStatus } from "../../constants/constants";
+import { paperStatus, reviewStatus } from "../../constants/constants";
 import "./PaperDetail.css";
 
 class PaperDetail extends Component {
@@ -27,7 +27,7 @@ class PaperDetail extends Component {
     componentDidMount() {
         this.props.onGetPaper({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
-                if (this.props.getPaperStatus === getPaperStatus.FAILURE) {
+                if (this.props.getPaperStatus === paperStatus.FAILURE) {
                     this.props.history.push("/main");
                     return;
                 }
@@ -69,6 +69,7 @@ class PaperDetail extends Component {
           paperId={review.paper.id}
           author={review.user.username}
           title={review.title}
+          isLiked={review.liked}
           likeCount={review.count.likes}
           replyCount={review.count.replies}
           headerExists={false}
@@ -146,7 +147,7 @@ PaperDetail.defaultProps = {
     history: null,
     location: null,
     onGetPaper: null,
-    getPaperStatus: getPaperStatus.NONE,
+    getPaperStatus: paperStatus.NONE,
     selectedPaper: {},
     reviewList: null,
     onGetReviewsByPaper: () => {},

@@ -28,6 +28,16 @@ const initialState = {
         error: null,
         replies: [],
     },
+    like: {
+        status: reviewStatus.NONE,
+        count: 0,
+        error: null,
+    },
+    unlike: {
+        status: reviewStatus.NONE,
+        count: 0,
+        error: null,
+    },
 };
 
 const ReviewReducer = (state = initialState, action) => {
@@ -124,8 +134,42 @@ const ReviewReducer = (state = initialState, action) => {
                 error: action.target,
             },
         };
-    // case reviewConstants.ADD_REVIEW_LIKE:
-    // case reviewConstants.DEL_REVIEW_LIKE:
+    case reviewConstants.LIKE_REVIEW_SUCCESS:
+        return {
+            ...state,
+            like: {
+                ...state.like,
+                status: reviewStatus.SUCCESS,
+                count: action.target.likes,
+            },
+        };
+    case reviewConstants.LIKE_REVIEW_FAILURE:
+        return {
+            ...state,
+            like: {
+                ...state.like,
+                status: reviewStatus.FAILURE,
+                error: action.target,
+            },
+        };
+    case reviewConstants.UNLIKE_REVIEW_SUCCESS:
+        return {
+            ...state,
+            unlike: {
+                ...state.unlike,
+                status: reviewStatus.SUCCESS,
+                count: action.target.likes,
+            },
+        };
+    case reviewConstants.UNLIKE_REVIEW_FAILURE:
+        return {
+            ...state,
+            unlike: {
+                ...state.unlike,
+                status: reviewStatus.FAILURE,
+                error: action.target,
+            },
+        };
     case reviewConstants.DEL_REVIEW:
         return {
             ...state,

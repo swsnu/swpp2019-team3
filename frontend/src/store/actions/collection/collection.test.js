@@ -2,6 +2,7 @@ import axios from "axios";
 
 import * as collectionActions from "./collection";
 
+import { collectionStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 
 const stubInitialState = {
@@ -9,30 +10,40 @@ const stubInitialState = {
     paper: {},
     collection: {
         make: {
-            status: "NONE",
+            status: collectionStatus.NONE,
             collection: {},
             error: -1,
         },
         list: {
-            status: "NONE",
+            status: collectionStatus.NONE,
             list: [],
             error: -1,
         },
         edit: {
-            status: "NONE",
+            status: collectionStatus.NONE,
             collection: {},
             error: -1,
         },
         delete: {
-            status: "NONE",
+            status: collectionStatus.NONE,
             list: {},
             error: -1,
         },
         selected: {
+            status: collectionStatus.NONE,
             collection: {},
             papers: [],
             members: [],
             replies: [],
+            error: -1,
+        },
+        like: {
+            status: collectionStatus.NONE,
+            error: -1,
+        },
+        unlike: {
+            status: collectionStatus.NONE,
+            error: -1,
         },
     },
     review: {},
@@ -457,6 +468,80 @@ describe("collectionActions", () => {
         mockStore.dispatch(collectionActions.deleteCollection({ id: stubCollection.id }))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/collection", { params: { id: 1 } });
+                done();
+            });
+    });
+
+
+    it("'likeCollection' should call axios.post", (done) => {
+        const spy = jest.spyOn(axios, "post")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 201,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.likeCollection({ id: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/like/collection", { id: 1 });
+                done();
+            });
+    });
+
+    it("'likeCollection' should handle failure", (done) => {
+        const spy = jest.spyOn(axios, "post")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(collectionActions.likeCollection({ id: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/like/collection", { id: 1 });
+                done();
+            });
+    });
+
+
+    it("'unlikeCollection' should call axios.delete", (done) => {
+        const spy = jest.spyOn(axios, "delete")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.unlikeCollection({ id: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/like/collection", { params: { id: 1 } });
+                done();
+            });
+    });
+
+    it("'unlikeCollection' should handle failure", (done) => {
+        const spy = jest.spyOn(axios, "delete")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(collectionActions.unlikeCollection({ id: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/like/collection", { params: { id: 1 } });
                 done();
             });
     });

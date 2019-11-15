@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
 import ProfileDetail from "./ProfileDetail";
 // import { collectionActions } from "../../../store/actions";
-import { collectionStatus } from "../../../constants/constants";
+import { collectionStatus, reviewStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 import { history } from "../../../store/store";
 
@@ -43,8 +43,29 @@ const stubInitialState = {
             members: [],
             replies: [],
         },
+        like: {
+            status: collectionStatus.NONE,
+            count: 0,
+            error: null,
+        },
+        unlike: {
+            status: collectionStatus.NONE,
+            count: 0,
+            error: null,
+        },
     },
-    review: {},
+    review: {
+        like: {
+            status: reviewStatus.NONE,
+            count: 0,
+            error: null,
+        },
+        unlike: {
+            status: reviewStatus.NONE,
+            count: 0,
+            error: null,
+        },
+    },
 };
 
 const mockStore = getMockStore(stubInitialState);

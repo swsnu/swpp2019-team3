@@ -1,31 +1,93 @@
 import React from "react";
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
+import { Provider } from "react-redux";
+
 import ReviewCard from "./ReviewCard";
+import { getMockStore } from "../../../test-utils/mocks";
+import { reviewActions } from "../../../store/actions";
+import { reviewStatus } from "../../../constants/constants";
+
+const mockHistory = { push: jest.fn() };
+
+/* eslint-disable react/jsx-props-no-spreading */
+const makeReviewCard = (initialState, props = {}) => (
+    <Provider store={getMockStore(initialState)}>
+        <ReviewCard id={1} history={mockHistory} {...props} />
+    </Provider>
+);
+/* eslint-enable react/jsx-props-no-spreading */
+
+const mockPromise = new Promise((resolve) => { resolve(); });
 
 describe("<ReviewCard />", () => {
+    let stubInitialState;
+    let reviewCard;
+    let spyLikeReview;
+    let spyUnlikeReview;
+
+    beforeEach(() => {
+        stubInitialState = {
+            paper: {},
+            auth: {},
+            collection: {},
+            review: {
+                like: {
+                    status: reviewStatus.NONE,
+                    count: 0,
+                    error: null,
+                },
+                unlike: {
+                    status: reviewStatus.NONE,
+                    count: 0,
+                    error: null,
+                },
+            },
+        };
+        reviewCard = makeReviewCard(stubInitialState);
+        spyLikeReview = jest.spyOn(reviewActions, "likeReview")
+            .mockImplementation(() => () => mockPromise);
+        spyUnlikeReview = jest.spyOn(reviewActions, "unlikeReview")
+            .mockImplementation(() => () => mockPromise);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+
     it("should render without errors", () => {
-        const component = shallow(<ReviewCard />);
+        const component = mount(reviewCard);
         const wrapper = component.find(".wrapper");
         expect(wrapper.length).toBe(1);
     });
 
-    it("should handle Like/Unlike Button", () => {
-        const component = mount(<ReviewCard />);
+    it("should call likeReview when Like Button is clicked", () => {
+        const component = mount(reviewCard);
         const wrapper = component.find(".like-button").hostNodes();
         expect(wrapper.length).toBe(1);
 
         wrapper.simulate("click");
 
-        expect(component.state().likeCount).toEqual(1);
-        expect(component.state().isLiked).toBe(true);
+        expect(spyLikeReview).toHaveBeenCalledTimes(1);
+    });
+
+    it("should call unlikeReview when IsLiked and Like Button is clicked", () => {
+        const component = mount(reviewCard);
+        const instance = component.find(ReviewCard.WrappedComponent).instance();
+        instance.setState({ isLiked: true });
+        component.update();
+
+        const wrapper = component.find(".like-button").hostNodes();
+        expect(wrapper.length).toBe(1);
 
         wrapper.simulate("click");
-        expect(component.state().likeCount).toBe(0);
-        expect(component.state().isLiked).toBe(false);
+
+        expect(spyUnlikeReview).toHaveBeenCalledTimes(1);
     });
 
     it("if headerExists is false, then header should not exist", () => {
-        const component = mount(<ReviewCard headerExists={false} />);
+        reviewCard = makeReviewCard(stubInitialState, { headerExists: false });
+        const component = mount(reviewCard);
         const wrapper = component.find(".header");
         expect(wrapper.length).toBe(0);
     });
