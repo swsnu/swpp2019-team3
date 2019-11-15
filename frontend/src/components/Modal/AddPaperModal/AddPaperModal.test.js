@@ -11,7 +11,7 @@ const stubInitialState = {
     paper: {
     },
     auth: {
-        singinStatus: signinStatus.SUCCESS,
+        signinStatus: signinStatus.SUCCESS,
         me: { id: 1 },
     },
     collection: {
@@ -44,8 +44,8 @@ const stubInitialState = {
             replies: [],
         },
     },
-    user: {
-    },
+    user: {},
+    review: {},
 };
 
 const mockHistory = { push: jest.fn() };

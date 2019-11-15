@@ -6,26 +6,64 @@ import { ConnectedRouter } from "connected-react-router";
 
 import ProfileDetail from "./ProfileDetail";
 import { userActions } from "../../../store/actions/index";
-import { collectionStatus } from "../../../constants/constants";
+import { collectionStatus, reviewStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 import { history } from "../../../store/store";
 
 const makeStubState = (myId, targetId, follow) => (
     {
-        paper: {},
-        auth: {
-            signupStatus: null,
-            signinStatus: null,
-            signoutStatus: null,
-            getMeStatus: null,
-            me: {
-                id: myId,
-            },
+        paper: {
         },
+        auth: {},
         collection: {
+            make: {
+                status: collectionStatus.NONE,
+                collection: {},
+                error: null,
+            },
             list: {
                 status: collectionStatus.NONE,
                 list: [],
+                error: null,
+            },
+            edit: {
+                status: collectionStatus.NONE,
+                collection: {},
+                error: null,
+            },
+            delete: {
+                status: collectionStatus.NONE,
+                collection: {},
+                error: null,
+            },
+            selected: {
+                status: collectionStatus.NONE,
+                error: null,
+                collection: {},
+                papers: [],
+                members: [],
+                replies: [],
+            },
+            like: {
+                status: collectionStatus.NONE,
+                count: 0,
+                error: null,
+            },
+            unlike: {
+                status: collectionStatus.NONE,
+                count: 0,
+                error: null,
+            },
+        },
+        review: {
+            like: {
+                status: reviewStatus.NONE,
+                count: 0,
+                error: null,
+            },
+            unlike: {
+                status: reviewStatus.NONE,
+                count: 0,
                 error: null,
             },
         },

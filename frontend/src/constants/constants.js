@@ -1,13 +1,3 @@
-export const collectionStatus = {
-    NONE: "NONE",
-    WAITING: "WAITING",
-    SUCCESS: "SUCCESS",
-    FAILURE: "FAILURE",
-    MISSING_PARAM: "MISSING_PARAM",
-    COLLECTION_NOT_EXIST: "COLLECTION_NOT_EXIST",
-    AUTH_ERROR: "AUTH_ERROR",
-};
-
 export const signupStatus = {
     NONE: "NONE",
     WRONG_EMAIL_FORMAT: "WRONG_EMAIL_FORMAT",
@@ -39,7 +29,7 @@ export const getMeStatus = {
     FAILURE: "FAILURE",
 };
 
-export const getPaperStatus = {
+export const paperStatus = {
     NONE: "NONE",
     WAITING: "WAITING",
     SUCCESS: "SUCCESS",
@@ -52,4 +42,24 @@ export const userStatus = {
     SUCCESS: "SUCCESS",
     USER_NOT_EXIST: "USER_NOT_EXIST",
     SELF_FOLLOWING: "SELF_FOLLOWING",
+};
+
+export const collectionStatus = {
+    NONE: "NONE",
+    WAITING: "WAITING",
+    SUCCESS: "SUCCESS",
+    FAILURE: "FAILURE",
+    MISSING_PARAM: "MISSING_PARAM",
+    COLLECTION_NOT_EXIST: "COLLECTION_NOT_EXIST",
+    AUTH_ERROR: "AUTH_ERROR",
+};
+
+export const reviewStatus = {
+    NONE: "NONE",
+    WAITING: "WAITING",
+    SUCCESS: "SUCCESS",
+    MISSING_PARAM: "MISSING_PARAM",
+    REVIEW_NOT_EXIST: "REVIEW_NOT_EXIST",
+    PAPER_NOT_EXIST: "PAPER_NOT_EXIST",
+    AUTH_ERROR: "AUTH_ERROR",
 };

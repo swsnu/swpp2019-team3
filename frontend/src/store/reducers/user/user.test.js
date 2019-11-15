@@ -1,4 +1,4 @@
-import UserReducer from "./UserReducer";
+import UserReducer from "./user";
 import { userStatus } from "../../../constants/constants";
 import { userConstants } from "../../actions/actionTypes";
 

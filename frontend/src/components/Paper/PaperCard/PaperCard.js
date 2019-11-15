@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Card, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
+import { paperActions } from "../../../store/actions";
 import "./PaperCard.css";
 import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
 import SVG from "../../svg";
@@ -37,20 +40,20 @@ class PaperCard extends Component {
 
     // handle click 'Like' button
     clickPaperCardLikeHandler() {
-        const nextState = {
-            isLiked: true,
-            likeCount: this.state.likeCount + 1,
-        };
-        this.setState(nextState);
+        this.props.onLikePaper({ id: this.props.id })
+            .then(() => {
+                this.setState({ likeCount: this.props.afterLikeCount });
+                this.setState({ isLiked: true });
+            });
     }
 
     // handle click 'Unlike' button
     clickPaperCardUnlikeHandler() {
-        const nextState = {
-            isLiked: false,
-            likeCount: this.state.likeCount - 1,
-        };
-        this.setState(nextState);
+        this.props.onUnlikePaper({ id: this.props.id })
+            .then(() => {
+                this.setState({ likeCount: this.props.afterUnlikeCount });
+                this.setState({ isLiked: false });
+            });
     }
 
     render() {
@@ -90,6 +93,24 @@ class PaperCard extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+    likePaperStatus: state.paper.likePaperStatus,
+    afterLikeCount: state.paper.likeCount,
+    unlikePaperStatus: state.paper.unlikePaperStatus,
+    afterUnlikeCount: state.paper.unlikeCount,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onLikePaper: (paperId) => dispatch(
+        paperActions.likePaper(paperId),
+    ),
+    onUnlikePaper: (paperId) => dispatch(
+        paperActions.unlikePaper(paperId),
+    ),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PaperCard);
+
 PaperCard.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
     source: PropTypes.string,
@@ -104,6 +125,10 @@ PaperCard.propTypes = {
     isLiked: PropTypes.bool,
     headerExists: PropTypes.bool,
     addButtonExists: PropTypes.bool,
+    afterLikeCount: PropTypes.number,
+    afterUnlikeCount: PropTypes.number,
+    onLikePaper: PropTypes.func,
+    onUnlikePaper: PropTypes.func,
 };
 
 PaperCard.defaultProps = {
@@ -120,6 +145,8 @@ PaperCard.defaultProps = {
     isLiked: false,
     headerExists: true,
     addButtonExists: false,
+    afterLikeCount: 0,
+    afterUnlikeCount: 0,
+    onLikePaper: () => {},
+    onUnlikePaper: () => {},
 };
-
-export default PaperCard;

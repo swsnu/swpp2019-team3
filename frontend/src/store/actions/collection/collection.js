@@ -88,14 +88,14 @@ export const getCollectionPapers = (collectionId) => (dispatch) => axios.get("/a
         type: actionTypes.GET_COLLECTION_MEMBERS, members: res.data,
     })); */
 
-// getCollectionReplies - no matching api
+// getCollectionReplies - no matching /api
 /* export const getCollectionReplies = (collectionID) => (dispatch)
 => axios.get(`/reply/collection/${collectionID}`)
     .then((res) => dispatch({
         type: actionTypes.GET_COLLECTION_REPLIES, replies: res.data,
     })); */
 
-// setOwner - no matching api
+// setOwner - no matching /api
 /* export const setOwner = (collectionID, userID) => (dispatch)
 => axios.put(`/collection/${collectionID}`, { userID })
     .then((res) => dispatch({
@@ -168,7 +168,7 @@ export const removeCollectionPaper = (collectionsAndPaper) => (dispatch) => axio
         type: actionTypes.ADD_COLLECTION_MEMBER, members: res.data,
     })); */
 
-// remove member from CollectionMember - no matching api
+// remove member from CollectionMember - no matching /api
 /* export const removeCollectionMember = (collectionID, userID) => (dispatch)
 => axios.delete(`/user/collection/${collectionID}`, userID)
     .then((res) => dispatch({
@@ -202,22 +202,31 @@ export const deleteCollection = (collectionId) => (dispatch) => axios.delete("/a
     .catch((err) => { (dispatch(deleteCollectionFailure(err))); });
 
 
-// add collection like - no matching api
-// export const addCollectionLike = (collectionID) => {
-//     return dispatch => {
-//         return axios.get()
-//             .then(res => dispatch({
-//                 type: GET_COLLECION_MEMBERS, members: res.data
-//         }));
-//     };
-// };
+const likeCollectionSuccess = (count) => ({
+    type: collectionConstants.LIKE_COLLECTION_SUCCESS,
+    target: count.count,
+});
 
-// removeCollectionLike - no matching api
-// export const removeCollectionLike = (collectionID) => {
-//     return dispatch => {
-//         return axios.get()
-//             .then(res => dispatch({
-//                 type: GET_COLLECION_MEMBERS, members: res.data
-//         }));
-//     };
-// };
+const likeCollectionFailure = (error) => ({
+    type: collectionConstants.LIKE_COLLECTION_FAILURE,
+    target: error,
+});
+
+export const likeCollection = (collectionId) => (dispatch) => axios.post("/api/like/collection", collectionId)
+    .then((res) => dispatch(likeCollectionSuccess(res.data)))
+    .catch((err) => dispatch(likeCollectionFailure(err)));
+
+
+const unlikeCollectionSuccess = (count) => ({
+    type: collectionConstants.UNLIKE_COLLECTION_SUCCESS,
+    target: count.count,
+});
+
+const unlikeCollectionFailure = (error) => ({
+    type: collectionConstants.UNLIKE_COLLECTION_FAILURE,
+    target: error,
+});
+
+export const unlikeCollection = (collectionId) => (dispatch) => axios.delete("/api/like/collection", { params: collectionId })
+    .then((res) => dispatch(unlikeCollectionSuccess(res.data)))
+    .catch((err) => dispatch(unlikeCollectionFailure(err)));
