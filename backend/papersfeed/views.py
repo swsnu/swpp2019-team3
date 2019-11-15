@@ -31,7 +31,7 @@ def token(request):
     return HttpResponseNotAllowed(['GET'])
 
 
-@ensure_csrf_cookie
+# @ensure_csrf_cookie
 def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
     """api_entry"""
     # API 요청에 Return 할 Response Initialize
