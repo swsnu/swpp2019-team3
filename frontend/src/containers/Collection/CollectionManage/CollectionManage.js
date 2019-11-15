@@ -15,29 +15,55 @@ import "./CollectionManage.css";
 class CollectionManage extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            collectionName: "",
+            collectionDescription: "",
+        };
+    }
+
+    componentDidMount() {
         const collectionId = this.props.location.pathname.split("=")[1].split("/")[0];
         this.props.onGetCollection({ id: collectionId })
             .then(() => {
                 if (this.props.collectionStatus !== collectionStatus.SUCCESS) {
                     this.props.history.push("/main");
+                } else {
+                    this.setState({
+                        collectionName: JSON.parse(JSON.stringify(
+                            this.props.selectedCollection.title,
+                        )),
+                        collectionDescription: JSON.parse(JSON.stringify(
+                            this.props.selectedCollection.text,
+                        )),
+                    });
                 }
                 return null;
             });
-        this.state = {
-            collectionName: this.props.selectedCollection.title,
-            collectionDescription: this.props.selectedCollection.text,
-        };
     }
 
-    // static getDerivedStateFromProps(nextProps, prevState) {
-    //     if (prevState.selectedCollection !== nextProps.selectedCollection) {
-    //         return {
-    //             collectionName: nextProps.selectedCollection.title,
-    //             collectionDescription: nextProps.selectedCollection.text,
-    //         };
-    //     }
-    //     return null;
-    // }
+    updateCollectionHandler = () => {
+        // this.props.onUpdateCollectionInfo({
+        //     title: this.state.collectionName,
+        //     text: this.state.collectionDescription,
+        // });
+        console.log("edit button clicked");
+        // eslint-disable-next-line no-alert
+        // alert("Changes on the collection saved.");
+        // The way to show a message can be changed
+        // or it will be replaced by redirection to the collection detail page.
+    }
+
+    clickManageMemberHandler = () => {
+
+    }
+
+    clickTransferHandler = () => {
+
+    }
+
+    clickDeleteHandler = () => {
+
+    }
 
     render() {
         return (
@@ -63,25 +89,58 @@ class CollectionManage extends Component {
                           type="text"
                           value={this.state.collectionDescription}
                           onChange={(event) => this.setState({
-                              collectionDescrption: event.target.value,
+                              collectionDescription: event.target.value,
                           })}
                         />
                     </div>
                     <div className="EditButtons">
                         <Button
                           id="UpdateCollectionButton"
-                          onClick={() => this.onUpdateCollectionInfo({
-                              title: this.state.newCollectionName,
-                              text: this.state.newCollectionDescrption,
-                          })}
+                          onClick={this.updateCollectionHandler()}
+                          disabled={this.state.collectionName === ""}
                         >Update Collection
                         </Button>
                         <Link to={`/collection_id=${this.props.selectedCollection.id}`}>
                             <Button id="cancelButton">Cancel</Button>
                         </Link>
+                        {this.state.collectionName === ""
+                            ? <h5 id="updateButtonDisableMessage">The name of collection should not be null</h5>
+                            : <div />}
                     </div>
                 </div>
-                <div className="CollectionManageButtons" />
+                <div className="CollectionManageButtons">
+                    <div className="ManageMember">
+                        <h5 id="manageMemberText">Looks for current members of this collections,
+                            invite new members, or kick off some.
+                        </h5>
+                        <Button
+                          id="manageMemberButton"
+                          onClick={this.clickManageMemberHandler()}
+                        >Manage Members
+                        </Button>
+                    </div>
+                    <div className="TransferOwnership">
+                        <h5 id="transferOwnershipText">Transfer the ownership of this collection
+                            to the other member of this collection.
+                            WARNING: This action cannot be undone.
+                        </h5>
+                        <Button
+                          id="transferOwnershipButton"
+                          onClick={this.clickTransferHandler()}
+                        >Transfer Ownership
+                        </Button>
+                    </div>
+                    <div className="DeleteCollection">
+                        <h5 id="deleteCollectionText">Delete this collection.
+                            WARNING: This action cannot be undone.
+                        </h5>
+                        <Button
+                          id="deleteCollectionButton"
+                          onClick={this.clickDeleteHandler()}
+                        >Delete this collection
+                        </Button>
+                    </div>
+                </div>
             </div>
         );
     }
@@ -105,6 +164,7 @@ CollectionManage.propTypes = {
     selectedCollection: PropTypes.objectOf(PropTypes.any),
     collectionStatus: PropTypes.string,
     onGetCollection: PropTypes.func,
+    // onUpdateCollectionInfo: PropTypes.func,
     history: PropTypes.objectOf(PropTypes.any),
     location: PropTypes.objectOf(PropTypes.any),
 };
@@ -113,6 +173,7 @@ CollectionManage.defaultProps = {
     selectedCollection: {},
     collectionStatus: collectionStatus.NONE,
     onGetCollection: null,
+    // onUpdateCollectionInfo: null,
     history: null,
     location: null,
 };
