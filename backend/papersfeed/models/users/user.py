@@ -1,10 +1,11 @@
 """user.py"""
 from django.db import models
+from django.contrib.auth.models import User
 
 from papersfeed.models.base_models import BaseModel
 
 
-class User(BaseModel):
+class User(User):
     """User"""
     # @태그에 사용되는 Username, 21자 alphanum 소문자
     username = models.CharField(max_length=21, unique=True, default=None)

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from django.core.exceptions import ObjectDoesNotExist
+from notifications.signals import notify
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, ApiError
@@ -14,7 +15,7 @@ from papersfeed.models.reviews.review_like import ReviewLike
 from papersfeed.utils.collections.utils import __get_collection_like_count
 from papersfeed.models.collections.collection import Collection
 from papersfeed.models.collections.collection_like import CollectionLike
-
+from papersfeed.models.users.user import User
 
 def insert_like_paper(args):
     """Insert Like of Paper"""
@@ -86,6 +87,9 @@ def insert_like_review(args):
         review_id=review_id,
         user_id=request_user.id,
     )
+
+    #print(User.objects.get(pk=1))
+    #notify.send(request_user, recipient=User.objects.get(pk=1), verb='liked')
 
     like_counts = __get_review_like_count([review_id], 'review_id')
     return {constants.LIKES: like_counts[review_id] if review_id in like_counts else 0}
