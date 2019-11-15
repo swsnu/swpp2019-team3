@@ -12,7 +12,7 @@ from papersfeed.models.papers.paper_like import PaperLike
 from papersfeed.utils.reviews.utils import __get_review_like_count
 from papersfeed.models.reviews.review import Review
 from papersfeed.models.reviews.review_like import ReviewLike
-from papersfeed.utils.collections.utils import __get_collection_like_count
+from papersfeed.utils.collections.utils import __get_collection_like_count, __get_members_collection
 from papersfeed.models.collections.collection import Collection
 from papersfeed.models.collections.collection_like import CollectionLike
 from papersfeed.models.users.user import User
@@ -83,17 +83,22 @@ def insert_like_review(args):
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     # Create
-    ReviewLike.objects.create(
+    review_like = ReviewLike(
         review_id=review_id,
         user_id=request_user.id,
     )
+    review_like.save()
 
-    users, _, _ = __get_users(Q(id=user_id), request_user, None)
+    review = Review.objects.get(id=review_id)
+    review_author = User.objects.get(id=review.user_id)
 
-    if not users:
-        raise ApiError(constants.NOT_EXIST_OBJECT)
-
-    notify.send(request_user, recipient=[User.objects.get(pk=1)], verb='liked')
+    notify.send(
+        request_user,
+        recipient=[review_author],
+        verb='liked',
+        action_object=review,
+        target=review_like
+    )
 
     like_counts = __get_review_like_count([review_id], 'review_id')
     return {constants.LIKES: like_counts[review_id] if review_id in like_counts else 0}
@@ -139,9 +144,21 @@ def insert_like_collection(args):
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     # Create
-    CollectionLike.objects.create(
+    collection_like = CollectionLike(
         collection_id=collection_id,
         user_id=request_user.id,
+    )
+    collection_like.save()
+
+    collection = Collection.objects.get(id=collection_id)
+    collection_members = __get_members_collection(Q(collection_id__in=collection_ids))
+
+    notify.send(
+        request_user,
+        recipient=[review_author],
+        verb='liked',
+        action_object=review,
+        target=review_like
     )
 
     like_counts = __get_collection_like_count([collection_id], 'collection_id')
