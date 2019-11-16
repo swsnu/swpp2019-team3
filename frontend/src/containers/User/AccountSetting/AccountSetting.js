@@ -55,6 +55,7 @@ class AccountSetting extends Component {
                 if (this.props.editUserStatus === userStatus.DUPLICATE_EMAIL) {
                     this.setState({ editUserStatus: userStatus.DUPLICATE_EMAIL });
                 } else if (this.props.editUserStatus === userStatus.SUCCESS) {
+                    this.setState({ editUserStatus: userStatus.SUCCESS });
                     this.props.onGetMe();
                 }
             });
