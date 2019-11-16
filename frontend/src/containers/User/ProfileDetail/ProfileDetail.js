@@ -25,7 +25,6 @@ class ProfileDetail extends Component {
     }
 
     componentDidMount() {
-        // this.props.onGetReviews(this.state.thisUserId);
         this.props.onGetUser({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
                 this.setState({ doIFollow: this.props.thisUser.is_following });
