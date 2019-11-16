@@ -89,7 +89,7 @@ export const getMe = () => (dispatch) => axios.get("/api/user/me")
 
 const getNotiSuccess = (notifications) => ({
     type: authConstants.GET_NOTI_SUCCESS,
-    target: notifications,
+    target: notifications.notifications,
 });
 
 const getNotiFailure = (error) => ({

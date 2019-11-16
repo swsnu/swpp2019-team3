@@ -4,11 +4,12 @@ import Form from "react-bootstrap/Form";
 import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
+import { Link } from "react-router-dom";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { authActions } from "../../store/actions";
-import { signoutStatus } from "../../constants/constants";
+import { signoutStatus, getNotiStatus } from "../../constants/constants";
 import "./Header.css";
 
 class Header extends Component {
@@ -54,6 +55,15 @@ class Header extends Component {
             username = this.props.me.username;
         }
 
+        let notifications = null;
+        if (this.props.notifications) {
+            notifications = this.props.notifications.map(
+                (notification) => (
+                    <Dropdown.Item key={notification.id}><Link to="/a">a</Link><Link to="b">b</Link></Dropdown.Item>
+                ),
+            );
+        }
+
         return (
             <div>
                 <Navbar className="header">
@@ -66,7 +76,7 @@ class Header extends Component {
                         <Dropdown>
                             <Dropdown.Toggle title="notification" className="notification-button">notification</Dropdown.Toggle>
                             <Dropdown.Menu>
-                                {this.state.notifications}
+                                {notifications}
                             </Dropdown.Menu>
                         </Dropdown>
                         <Dropdown>
@@ -87,6 +97,8 @@ class Header extends Component {
 const mapStateToProps = (state) => ({
     me: state.auth.me,
     signoutStatus: state.auth.signoutStatus,
+    getNotiStatus: state.auth.getNotiStatus,
+    notifications: state.auth.notifications,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -102,6 +114,8 @@ Header.propTypes = {
     onSignout: PropTypes.func,
     onGetNoti: PropTypes.func,
     signoutStatus: PropTypes.string,
+    getNotiStatus: PropTypes.string,
+    notifications: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
 };
 
 Header.defaultProps = {
@@ -110,4 +124,6 @@ Header.defaultProps = {
     onSignout: null,
     onGetNoti: null,
     signoutStatus: signoutStatus.NONE,
+    getNotiStatus: getNotiStatus.NONE,
+    notifications: [],
 };

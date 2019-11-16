@@ -40,7 +40,6 @@ const reducer = (state = initialState, action) => {
         return { ...state, getMeStatus: getMeStatus.FAILURE };
 
     case authConstants.GET_NOTI_SUCCESS:
-        console.log(action.target);
         return { ...state, getNotiStatus: getNotiStatus.SUCCESS, notifications: action.target };
     case authConstants.GET_NOTI_FAILURE:
         return { ...state, getNotiStatus: getNotiStatus.FAILURE };

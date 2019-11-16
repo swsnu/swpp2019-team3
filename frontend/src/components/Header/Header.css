@@ -22,7 +22,7 @@
 
 .header .search .search-input {
     /* margin-left:18%; */
-    width: 500px;
+    width: 400px;
     background:rgb(242,243,247);
 }
 
@@ -32,6 +32,10 @@
     flex-direction: row;
 }
 
+.header .buttons .notification-button {
+    margin-right: 20px;
+ }
+
 .header .buttons .myaccount-button {
    margin-right: 20px;
 }
@@ -39,5 +43,4 @@
 .header .buttons .myaccount-button .myaccount-menu {
     display: flex;
     justify-content: flex-end;
-    
 }
