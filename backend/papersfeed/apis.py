@@ -13,7 +13,6 @@ from . import constants
 
 def post_follow(args):
     """Post Follow"""
-    print(args["id"])
     return {constants.COUNT: users_utils.insert_follow(args)}
 
 
