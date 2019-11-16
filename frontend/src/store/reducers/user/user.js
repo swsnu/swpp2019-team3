@@ -3,7 +3,7 @@ import { userStatus } from "../../../constants/constants";
 
 const initialState = {
     userSearchResult: [],
-    selectedUser: null,
+    selectedUser: {},
     selectedFollowers: [],
     selectedFollowings: [],
     status: userStatus.NONE,
@@ -76,6 +76,12 @@ const UserReducer = (state = initialState, action) => {
         return {
             ...state,
             status: userStatus.USER_NOT_EXIST,
+            error: action.target,
+        };
+    case userConstants.EDIT_USER_FAILURE_DUPLICATE_EMAIL:
+        return {
+            ...state,
+            status: userStatus.DUPLICATE_EMAIL,
             error: action.target,
         };
     default:

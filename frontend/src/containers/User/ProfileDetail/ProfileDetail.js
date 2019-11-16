@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import { CollectionCard, ReviewCard } from "../../../components";
-import { collectionActions, userActions } from "../../../store/actions";
+import { collectionActions, reviewActions, userActions } from "../../../store/actions";
 
 import "./ProfileDetail.css";
 import SamplePhoto from "./sample.jpg";
@@ -17,16 +17,30 @@ class ProfileDetail extends Component {
         super(props);
         this.state = {
             // getCollectionsStatus: collectionStatus.NONE,
-            doIFollow: this.props.thisUser.doIFollow,
-            // collections: [],
-            thisUserId: this.props.location.pathname.split("=")[1],
+            collections: [],
+            reviews: [],
+            followerCount: 0,
+            followingCount: 0,
         };
     }
 
     componentDidMount() {
-        this.props.onGetCollections(this.state.thisUserId);
         // this.props.onGetReviews(this.state.thisUserId);
-        this.props.onGetUser(this.state.thisUserId);
+        this.props.onGetUser({ id: this.props.location.pathname.split("=")[1] })
+            .then(() => {
+                if (this.props.thisUser.count) {
+                    this.setState({ followerCount: this.props.thisUser.count.follower });
+                    this.setState({ followingCount: this.props.thisUser.count.following });
+                }
+            });
+        this.props.onGetCollections({ id: this.props.location.pathname.split("=")[1] })
+            .then(() => {
+                this.setState({ collections: this.props.collections });
+            });
+        this.props.onGetReviews({ id: this.props.location.pathname.split("=")[1] })
+            .then(() => {
+                this.setState({ reviews: this.props.reviews });
+            });
     }
 
     clickFollowHandler = () => {
@@ -97,7 +111,7 @@ class ProfileDetail extends Component {
         );
         // only one button will be displayed among "edit", "follow", and "unfollow" buttons
         let buttonDisplayed;
-        if (this.props.me.id === this.props.thisUser.id) {
+        if (this.props.me && this.props.me.id === this.props.thisUser.id) {
             buttonDisplayed = settingButton;
         } else if (this.state.doIFollow) {
             buttonDisplayed = unfollowButton;
@@ -105,20 +119,20 @@ class ProfileDetail extends Component {
             buttonDisplayed = followButton;
         }
 
-        const collectionCardsLeft = this.props.thisUserCollections
-            .filter((x) => this.props.thisUserCollections.indexOf(x) % 2 === 0)
+        const collectionCardsLeft = this.state.collections
+            .filter((x) => this.state.collections.indexOf(x) % 2 === 0)
             .map((collection) => this.cardMaker(collection));
 
-        const collectionCardsRight = this.props.thisUserCollections
-            .filter((x) => this.props.thisUserCollections.indexOf(x) % 2 === 1)
+        const collectionCardsRight = this.state.collections
+            .filter((x) => this.state.collections.indexOf(x) % 2 === 1)
             .map((collection) => this.cardMaker(collection));
 
-        const reviewCardsLeft = this.props.thisUserReviews
-            .filter((x) => this.props.thisUserReviews.indexOf(x) % 2 === 0)
+        const reviewCardsLeft = this.state.reviews
+            .filter((x) => this.state.reviews.indexOf(x) % 2 === 0)
             .map((review) => this.cardMaker(review));
 
-        const reviewCardsRight = this.props.thisUserReviews
-            .filter((x) => this.props.thisUserReviews.indexOf(x) % 2 === 1)
+        const reviewCardsRight = this.state.reviews
+            .filter((x) => this.state.reviews.indexOf(x) % 2 === 1)
             .map((review) => this.cardMaker(review));
 
         return (
@@ -128,22 +142,22 @@ class ProfileDetail extends Component {
                         <div className="userStatistic">
                             <div className="userPhotoName">
                                 <Image id="userPhoto" src={SamplePhoto} width={150} height={150} roundedCircle />
-                                <h2 id="userName">{this.props.thisUser.name}</h2>
+                                <h2 id="userName">{this.props.thisUser.username}</h2>
                             </div>
                             <div id="collectionStat">
-                                <h5 id="collectionCount">{this.props.thisUserCollections.length}</h5>
+                                <h5 id="collectionCount">{this.state.collections.length}</h5>
                                 <h5 id="collectionText">Collections</h5>
                             </div>
                             <div id="reviewStat">
-                                <h5 id="reviewCount">{this.props.thisUserReviews.length}</h5>
+                                <h5 id="reviewCount">{this.state.reviews.length}</h5>
                                 <h5 id="reviewText">Reviews</h5>
                             </div>
                             <Link id="followerStat" to={`/profile_id=${this.props.thisUser.id}/followers`}>
-                                <h5 id="followerCount">{this.props.thisUser.followersCount}</h5>
+                                <h5 id="followerCount">{this.state.followerCount}</h5>
                                 <h5 id="followerText">Follower</h5>
                             </Link>
                             <Link id="followingStat" to={`/profile_id=${this.props.thisUser.id}/followings`}>
-                                <h5 id="followingCount">{this.props.thisUser.followingsCount}</h5>
+                                <h5 id="followingCount">{this.state.followingCount}</h5>
                                 <h5 id="followingText">Following</h5>
                             </Link>
                         </div>
@@ -176,16 +190,15 @@ class ProfileDetail extends Component {
 
 const mapStateToProps = (state) => ({
     me: state.auth.me,
-    getCollectionsStatus: state.collection.list.status,
-    thisUserCollections: state.collection.list.list,
-    // thisUserReviews: state.review.asdf
+    collections: state.collection.list.list,
+    reviews: state.review.list.list,
     thisUser: state.user.selectedUser,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onGetCollections: (userId) => dispatch(collectionActions.getCollectionsByUserId(userId)),
-    // onGetReviews: (userId) => dispatch(reviewActions.getReviewsByUserId(userId)),
     onGetUser: (userId) => dispatch(userActions.getUserByUserId(userId)),
+    onGetCollections: (userId) => dispatch(collectionActions.getCollectionsByUserId(userId)),
+    onGetReviews: (userId) => dispatch(reviewActions.getReviewsByUserId(userId)),
     onFollow: (targetId) => dispatch(userActions.addUserFollowing(targetId)),
     onUnFollow: (targetId) => dispatch(userActions.removeUserFollowing(targetId)),
 });
@@ -193,120 +206,27 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileDetail);
 
 ProfileDetail.propTypes = {
-    me: PropTypes.objectOf(PropTypes.any),
-    thisUserCollections: PropTypes.arrayOf(PropTypes.any),
-    thisUserReviews: PropTypes.arrayOf(PropTypes.any),
-    thisUser: PropTypes.objectOf(PropTypes.any),
     location: PropTypes.objectOf(PropTypes.any),
-
+    me: PropTypes.objectOf(PropTypes.any),
+    thisUser: PropTypes.objectOf(PropTypes.any),
+    collections: PropTypes.arrayOf(PropTypes.any),
+    reviews: PropTypes.arrayOf(PropTypes.any),
     onGetCollections: PropTypes.func,
-    // onGetReviews: PropTypes.func,
+    onGetReviews: PropTypes.func,
     onGetUser: PropTypes.func,
     onFollow: PropTypes.func,
     onUnFollow: PropTypes.func,
 };
 
 ProfileDetail.defaultProps = {
-    me: { id: 1 },
-    thisUser: {
-        id: 1,
-        name: "Girin",
-        description: "Kneel before me human, as I am the mighty and cute cat!",
-        followersCount: 12,
-        followingsCount: 47,
-        doIFollow: false,
-    },
-    thisUserCollections: [
-        {
-            source: "is recently added",
-            id: 1,
-            type: "Collection",
-            user: "Girin",
-            title: "SWPP",
-            memberCount: 1,
-            likeCount: 0,
-            paperCount: 1,
-            replyCount: 0,
-        },
-        {
-            source: "tasted",
-            id: 2,
-            type: "Collection",
-            user: "Girin",
-            title: "Papers for tasty cat cans",
-            memberCount: 1,
-            likeCount: 0,
-            paperCount: 4,
-            replyCount: 1,
-        },
-        {
-            source: "tested",
-            id: 3,
-            type: "Collection",
-            user: "Girin",
-            title: "Girin's Paper Collection",
-            memberCount: 1,
-            likeCount: 0,
-            paperCount: 32,
-            replyCount: 13,
-        },
-        {
-            source: "hated",
-            id: 1,
-            type: "Collection",
-            user: "Girin",
-            title: "Butler's Bad joke collection",
-            memberCount: 1,
-            likeCount: 0,
-            paperCount: 62,
-            replyCount: 23,
-        },
-    ],
-    thisUserReviews: [
-        {
-            author: "Girin",
-            paperId: 1,
-            type: "Review",
-            source: "loved",
-            id: 1,
-            user: "Girin",
-            title: "Ciao Churu is my favorite snack!",
-            date: "Jan 24th, 2019",
-            replyCount: 6,
-            likeCount: 56,
-            headerExists: false,
-        },
-        {
-            author: "Girin",
-            paperId: 12,
-            source: "liked",
-            type: "Review",
-            id: 2,
-            user: "Kamui",
-            title: "Kamui is my brother!",
-            date: "Feb 14, 2018",
-            replyCount: 7,
-            likeCount: 84,
-            headerExists: false,
-        },
-        {
-            author: "Girin",
-            paperId: 100,
-            type: "Review",
-            source: "reluctantly accepted",
-            id: 3,
-            user: "Butler",
-            title: "Bring me tasty food Ningen!",
-            date: "March 7, 2018",
-            replyCount: 8,
-            likeCount: 35,
-            headerExists: false,
-        },
-    ],
-    onGetCollections: null,
-    // onGetReviews: null,
-    onGetUser: null,
-    onFollow: null,
-    onUnFollow: null,
     location: null,
+    me: null,
+    thisUser: {},
+    collections: [],
+    reviews: [],
+    onGetCollections: () => {},
+    onGetReviews: () => {},
+    onGetUser: () => {},
+    onFollow: () => {},
+    onUnFollow: () => {},
 };

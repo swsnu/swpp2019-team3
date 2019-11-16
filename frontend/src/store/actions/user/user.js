@@ -4,7 +4,7 @@ import { userConstants } from "../actionTypes";
 // get a single user
 const getUserByUserIdSuccess = (user) => ({
     type: userConstants.GET_USER,
-    target: user,
+    target: user.user,
 });
 
 const getUserByUserIdFailure = (error) => {
@@ -16,7 +16,7 @@ const getUserByUserIdFailure = (error) => {
     };
 };
 
-export const getUserByUserId = (userId) => (dispatch) => axios.get("/api/user", { params: { id: userId } })
+export const getUserByUserId = (userId) => (dispatch) => axios.get("/api/user", { params: userId })
     .then((res) => { dispatch(getUserByUserIdSuccess(res.data)); })
     .catch((err) => { dispatch(getUserByUserIdFailure(err)); });
 
@@ -101,8 +101,12 @@ const editUserInfoSuccess = (user) => ({
 });
 
 const editUserInfoFailure = (error) => {
-    const actionType = error.response.status === 404
-        ? userConstants.EDIT_USER_FAILURE_USER_NOT_EXIST : null;
+    let actionType = null;
+    if (error.response.status === 404) {
+        actionType = userConstants.EDIT_USER_FAILURE_USER_NOT_EXIST;
+    } else if (error.response.status === 420) {
+        actionType = userConstants.EDIT_USER_FAILURE_DUPLICATE_EMAIL;
+    }
     return {
         type: actionType,
         target: error,

@@ -3,13 +3,15 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Button from "react-bootstrap/Button";
 
-import { userActions } from "../../../store/actions";
+import { userActions, authActions } from "../../../store/actions";
 import "./AccountSetting.css";
+import { userStatus } from "../../../constants/constants";
 
 class AccountSetting extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            editUserStatus: userStatus.NONE,
             description: "",
             email: "",
         };
@@ -39,7 +41,14 @@ class AccountSetting extends Component {
             description: this.state.description,
             email,
         };
-        this.props.onEditMyInfo(newUserInfo);
+        this.props.onEditMyInfo(newUserInfo)
+            .then(() => {
+                if (this.props.editUserStatus === userStatus.DUPLICATE_EMAIL) {
+                    this.setState({ editUserStatus: userStatus.DUPLICATE_EMAIL });
+                } else if (this.props.editUserStatus === userStatus.SUCCESS) {
+                    this.props.onGetMe();
+                }
+            });
     }
 
     render() {
@@ -48,6 +57,11 @@ class AccountSetting extends Component {
         if (this.props.me) {
             beforeEmail = this.props.me.email;
             beforeDescription = this.props.me.description;
+        }
+
+        let editUserMessage = "";
+        if (this.state.editUserStatus === userStatus.DUPLICATE_EMAIL) {
+            editUserMessage = "This email already exists";
         }
 
         return (
@@ -71,6 +85,7 @@ class AccountSetting extends Component {
                           value={this.state.email}
                           onChange={(event) => this.setState({ email: event.target.value })}
                         />
+                        <h3 id="edituser-message">{editUserMessage}</h3>
                     </div>
                     <div className="ButtonArea">
                         <Button
@@ -88,21 +103,27 @@ class AccountSetting extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    editUserStatus: state.user.status,
     me: state.auth.me,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onEditMyInfo: (newUserInfo) => dispatch(userActions.editUserInfo(newUserInfo)),
+    onGetMe: () => dispatch(authActions.getMe()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountSetting);
 
 AccountSetting.propTypes = {
+    editUserStatus: PropTypes.string,
     me: PropTypes.objectOf(PropTypes.any),
     onEditMyInfo: PropTypes.func,
+    onGetMe: PropTypes.func,
 };
 
 AccountSetting.defaultProps = {
+    editUserStatus: userStatus.NONE,
     me: null,
     onEditMyInfo: () => {},
+    onGetMe: () => {},
 };

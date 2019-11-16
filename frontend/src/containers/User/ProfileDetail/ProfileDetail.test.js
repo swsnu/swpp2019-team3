@@ -14,7 +14,15 @@ const makeStubState = (myId, targetId, follow) => (
     {
         paper: {
         },
-        auth: {},
+        auth: {
+            signupStatus: null,
+            signinStatus: null,
+            signoutStatus: null,
+            getMeStatus: null,
+            me: {
+                id: myId,
+            },
+        },
         collection: {
             make: {
                 status: collectionStatus.NONE,

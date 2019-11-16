@@ -42,6 +42,7 @@ export const userStatus = {
     SUCCESS: "SUCCESS",
     USER_NOT_EXIST: "USER_NOT_EXIST",
     SELF_FOLLOWING: "SELF_FOLLOWING",
+    DUPLICATE_EMAIL: "DUPLICATE_EMAIL",
 };
 
 export const collectionStatus = {

@@ -6,45 +6,45 @@ import { Provider } from "react-redux";
 
 import AccountSetting from "./AccountSetting";
 import { userActions } from "../../../store/actions/index";
+import { userStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 
-const stubInitialState = {
-    paper: {},
-    auth: {
-        me: { id: 1, email: "swpp@snu.ac.kr", description: "" },
-    },
-    collection: {},
-    user: {},
-    review: {},
-};
 
-const mockStore = getMockStore(stubInitialState);
 const mockHistory = { push: jest.fn() };
 
+/* eslint-disable react/jsx-props-no-spreading */
+const makeAccountSetting = (initialState, props = {}) => (
+    <Provider store={getMockStore(initialState)}>
+        <AccountSetting history={mockHistory} {...props} />
+    </Provider>
+);
+/* eslint-enable react/jsx-props-no-spreading */
+
 describe("AccountSetting Test", () => {
+    let stubInitialState;
     let accountSetting = null;
 
     beforeEach(() => {
-        accountSetting = (
-            <Provider store={mockStore}>
-                <AccountSetting history={mockHistory} />
-            </Provider>
-        );
+        stubInitialState = {
+            paper: {},
+            auth: {
+                me: { id: 1, email: "test@snu.ac.kr", description: "test" },
+            },
+            collection: {},
+            user: {},
+            review: {},
+        };
+        accountSetting = makeAccountSetting(stubInitialState);
     });
 
-    afterEach(() => { jest.clearAllMocks(); });
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
 
     it("should render without errors", () => {
         const component = mount(accountSetting);
         const wrapper = component.find(".AccountSettingContent");
         expect(wrapper.length).toBe(1);
-    });
-
-    it("should have original information", () => {
-        const component = mount(accountSetting);
-        const instance = component.find(AccountSetting.WrappedComponent).instance();
-        expect(instance.state.description).toBe("test");
-        expect(instance.state.email).toBe("test@snu.ac.kr");
     });
 
     it("should set state properly on title and content input", () => {
@@ -69,5 +69,14 @@ describe("AccountSetting Test", () => {
         const wrapper = component.find("#applyButton").at(0);
         wrapper.simulate("click");
         expect(spyEditMyInfo).toHaveBeenCalled();
+    });
+
+    it("when status is DUPLICATE_EMAIL, show the corresponding message", () => {
+        const component = mount(accountSetting);
+        const instance = component.find(AccountSetting.WrappedComponent).instance();
+        instance.setState({ editUserStatus: userStatus.DUPLICATE_EMAIL });
+        component.update();
+        const wrapper = component.find("#edituser-message");
+        expect(wrapper.text()).toEqual("This email already exists");
     });
 });

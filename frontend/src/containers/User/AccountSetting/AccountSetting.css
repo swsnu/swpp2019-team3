@@ -31,6 +31,12 @@
     align-self: flex-start;
 }
 
+#edituser-message {
+    font-size: 100%;
+    color: #DC143C;
+    margin-top: 2%;
+}
+
 .ButtonArea {
     margin: 20px;
 }
