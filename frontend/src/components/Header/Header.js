@@ -18,7 +18,6 @@ class Header extends Component {
 
         this.state = {
             searchKeyword: "",
-            notifications: [],
         };
 
         this.clickSignoutButtonHandler = this.clickSignoutButtonHandler.bind(this);
@@ -59,7 +58,10 @@ class Header extends Component {
         if (this.props.notifications) {
             notifications = this.props.notifications.map(
                 (notification) => (
-                    <Dropdown.Item key={notification.id}><Link to="/a">a</Link><Link to="b">b</Link></Dropdown.Item>
+                    <Dropdown.Item key={notification.id}>
+                        <Link to="/a">a</Link>
+                        <Link to="b">b</Link>
+                    </Dropdown.Item>
                 ),
             );
         }
