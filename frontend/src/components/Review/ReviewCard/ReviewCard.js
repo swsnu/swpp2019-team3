@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { Card, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
-import "./ReviewCard.css";
+import { connect } from "react-redux";
 
+import { reviewActions } from "../../../store/actions";
+import "./ReviewCard.css";
 import SVG from "../../svg";
 
 class ReviewCard extends Component {
@@ -18,20 +20,20 @@ class ReviewCard extends Component {
 
     // handle click 'Like' button
     clickReviewCardLikeHandler() {
-        const nextState = {
-            isLiked: true,
-            likeCount: this.state.likeCount + 1,
-        };
-        this.setState(nextState);
+        this.props.onLikeReview({ id: this.props.id })
+            .then(() => {
+                this.setState({ likeCount: this.props.afterLikeCount });
+                this.setState({ isLiked: true });
+            });
     }
 
     // handle click 'Unlike' button
     clickReviewCardUnlikeHandler() {
-        const nextState = {
-            isLiked: false,
-            likeCount: this.state.likeCount - 1,
-        };
-        this.setState(nextState);
+        this.props.onUnlikeReview({ id: this.props.id })
+            .then(() => {
+                this.setState({ likeCount: this.props.afterUnlikeCount });
+                this.setState({ isLiked: false });
+            });
     }
 
     render() {
@@ -61,6 +63,24 @@ class ReviewCard extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+    likeReviewStatus: state.review.like.status,
+    afterLikeCount: state.review.like.count,
+    unlikeReviewStatus: state.review.unlike.status,
+    afterUnlikeCount: state.review.unlike.count,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onLikeReview: (reviewId) => dispatch(
+        reviewActions.likeReview(reviewId),
+    ),
+    onUnlikeReview: (reviewId) => dispatch(
+        reviewActions.unlikeReview(reviewId),
+    ),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ReviewCard);
+
 ReviewCard.propTypes = {
     author: PropTypes.string,
     source: PropTypes.string,
@@ -72,6 +92,10 @@ ReviewCard.propTypes = {
     replyCount: PropTypes.number,
     isLiked: PropTypes.bool,
     headerExists: PropTypes.bool,
+    afterLikeCount: PropTypes.number,
+    afterUnlikeCount: PropTypes.number,
+    onLikeReview: PropTypes.func,
+    onUnlikeReview: PropTypes.func,
 };
 
 ReviewCard.defaultProps = {
@@ -85,6 +109,8 @@ ReviewCard.defaultProps = {
     isLiked: false,
     replyCount: 0,
     headerExists: true,
+    afterLikeCount: 0,
+    afterUnlikeCount: 0,
+    onLikeReview: () => {},
+    onUnlikeReview: () => {},
 };
-
-export default ReviewCard;

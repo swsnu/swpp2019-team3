@@ -79,7 +79,10 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
             response_data[constants.DEBUG] = {constants.ERROR: str(error),
                                               constants.DESCRIPTION: traceback.format_exc()}
         else:
-            status_code = 200
+            if api_function.startswith('post'):
+                status_code = 201
+            else:
+                status_code = 200
     else:
         status_code = 404
 

@@ -325,6 +325,9 @@ def insert_follow(args):
     if not UserFollow.objects.filter(following_user_id=following_user_id, followed_user_id=followed_user_id).exists():
         UserFollow.objects.create(following_user_id=following_user_id, followed_user_id=followed_user_id)
 
+    follow_counts = __get_follower_count([followed_user_id], 'followed_user_id')
+    return {constants.FOLLOWER: follow_counts[followed_user_id] if followed_user_id in follow_counts else 0}
+
 
 def remove_follow(args):
     """Remove Follow"""
@@ -340,6 +343,9 @@ def remove_follow(args):
 
     # Delete Existing Follow
     UserFollow.objects.filter(following_user_id=following_user_id, followed_user_id=followed_user_id).delete()
+
+    follow_counts = __get_follower_count([followed_user_id], 'followed_user_id')
+    return {constants.FOLLOWER: follow_counts[followed_user_id] if followed_user_id in follow_counts else 0}
 
 
 def __is_following(outer_ref, request_user):

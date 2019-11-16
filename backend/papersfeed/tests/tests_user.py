@@ -80,7 +80,7 @@ class UserTestCase(TestCase):
                                    constants.USERNAME: 'swpptest',
                                    constants.PASSWORD: 'iluvswpptest'}),
                                content_type='application/json')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
     def test_sign_in(self):
         """ SIGN IN """
@@ -165,7 +165,7 @@ class UserTestCase(TestCase):
                                }),
                                content_type='application/json')
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
     def test_unfollow(self):
         """ UNFOLLOW """

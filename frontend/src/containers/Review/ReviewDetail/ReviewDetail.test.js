@@ -1,12 +1,107 @@
 import React from "react";
-import { mount, shallow } from "enzyme";
+import { mount } from "enzyme";
+import { Provider } from "react-redux";
+import { createBrowserHistory } from "history";
 import ReviewDetail from "./ReviewDetail";
+import { reviewActions } from "../../../store/actions";
+import { reviewStatus, getMeStatus } from "../../../constants/constants";
+import { getMockStore } from "../../../test-utils/mocks";
+
+
+const history = createBrowserHistory();
+
+/* eslint-disable react/jsx-props-no-spreading */
+const makeReviewDetail = (initialState, props = {}) => (
+    <Provider store={getMockStore(initialState)}>
+        <ReviewDetail
+          match={{ params: { review_id: 1 } }}
+          history={history}
+          {...props}
+        />
+    </Provider>
+);
+/* eslint-enable react/jsx-props-no-spreading */
+
+const mockPromise = new Promise((resolve) => { resolve(); });
 
 describe("<ReviewDetail />", () => {
+    let stubInitialState;
+    let reviewDetail;
+    let spyOnGetReview;
+    let spyLikeReview;
+    let spyUnlikeReview;
+
+    beforeEach(() => {
+        stubInitialState = {
+            paper: {
+            },
+            auth: {
+                getMeStatus: getMeStatus.NONE,
+                me: { id: 1 },
+            },
+            collection: {
+
+            },
+            review: {
+                make: {
+                    status: reviewStatus.NONE,
+                    review: {},
+                    error: null,
+                },
+                list: {
+                    status: reviewStatus.NONE,
+                    list: [],
+                    error: null,
+                },
+                edit: {
+                    status: reviewStatus.NONE,
+                    review: {},
+                    error: null,
+                },
+                delete: {
+                    status: reviewStatus.NONE,
+                    review: {},
+                    error: null,
+                },
+                selected: {
+                    status: reviewStatus.NONE,
+                    review: { id: 1 },
+                    error: null,
+                    replies: [],
+                },
+                like: {
+                    status: reviewStatus.NONE,
+                    count: 0,
+                    error: null,
+                },
+                unlike: {
+                    status: reviewStatus.NONE,
+                    count: 0,
+                    error: null,
+                },
+            },
+            user: {},
+        };
+
+        reviewDetail = makeReviewDetail(stubInitialState);
+        spyOnGetReview = jest.spyOn(reviewActions, "getReview")
+            .mockImplementation(() => () => mockPromise);
+        spyLikeReview = jest.spyOn(reviewActions, "likeReview")
+            .mockImplementation(() => () => mockPromise);
+        spyUnlikeReview = jest.spyOn(reviewActions, "unlikeReview")
+            .mockImplementation(() => () => mockPromise);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+
     it("should render without errors", () => {
-        const component = mount(<ReviewDetail />);
-        const wrapper = component.find(".review-detail");
+        const component = mount(reviewDetail);
+        const wrapper = component.find("ReviewDetail");
         expect(wrapper.length).toBe(1);
+        expect(spyOnGetReview).toHaveBeenCalledTimes(1);
     });
 
     it("should handle change on new reply", () => {
@@ -15,56 +110,96 @@ describe("<ReviewDetail />", () => {
                 value: "ABC",
             },
         };
-        const wrapper = shallow(<ReviewDetail />);
-        wrapper.find(".reply-input").simulate("change", event);
-        expect(wrapper.state().newReply).toBe("ABC");
+        const wrapper = mount(reviewDetail);
+        const instance = wrapper.find("ReviewDetail").instance();
+        wrapper.find(".reply-input").hostNodes().simulate("change", event);
+        wrapper.update();
+        expect(instance.state.newReply).toBe("ABC");
     });
 
-    it("should handle Like/Unlike Button", () => {
-        const component = mount(<ReviewDetail />);
-        const wrapper = component.find(".review-extra .like-button").hostNodes();
+    it("should call likeReview when Like Button is clicked", () => {
+        const component = mount(reviewDetail);
+        const wrapper = component.find(".like-button").hostNodes();
         expect(wrapper.length).toBe(1);
 
         wrapper.simulate("click");
 
-        expect(component.state().likeCount).toEqual(15);
-        expect(component.state().isLiked).toBe(true);
+        expect(spyLikeReview).toHaveBeenCalledTimes(1);
+    });
+
+    it("should call unlikeReview when IsLiked and Like Button is clicked", () => {
+        const component = mount(reviewDetail);
+        const instance = component.find(ReviewDetail.WrappedComponent).instance();
+        instance.setState({ isLiked: true });
+        component.update();
+
+        const wrapper = component.find(".like-button").hostNodes();
+        expect(wrapper.length).toBe(1);
 
         wrapper.simulate("click");
-        expect(component.state().likeCount).toBe(14);
-        expect(component.state().isLiked).toBe(false);
+
+        expect(spyUnlikeReview).toHaveBeenCalledTimes(1);
     });
 
     it("should handle edit button", () => {
-        const historyMock = { push: jest.fn() };
-        const component = mount(<ReviewDetail history={historyMock} />);
-        component.setState({ authorId: 0 });
+        const spyPush = jest.spyOn(history, "push");
+
+        reviewDetail = makeReviewDetail(stubInitialState, { me: { id: 1 } });
+        const component = mount(reviewDetail);
+        component.find("ReviewDetail").instance().setState({ author: { id: 1 } });
+        component.update();
         const button = component.find(".review-extra .edit-button").hostNodes();
         button.simulate("click");
-        expect(historyMock.push).toHaveBeenCalledTimes(1);
+        component.update();
+        expect(spyPush).toHaveBeenCalledTimes(1);
     });
 
     it("should not render edit button when user is not author", () => {
-        const component = mount(<ReviewDetail />);
-        component.setState({ authorId: 1 });
+        reviewDetail = makeReviewDetail(stubInitialState, { me: { id: 1 } });
+        const component = mount(reviewDetail);
+        component.find("ReviewDetail").instance().setState({ author: { id: 2 } });
+        component.update();
         const button = component.find(".review-extra .edit-button").hostNodes();
         expect(button.length).toBe(0);
     });
 
 
     it("should handle delete button", () => {
-        const historyMock = { push: jest.fn() };
-        const component = mount(<ReviewDetail history={historyMock} />);
-        component.setState({ authorId: 0 });
+        const spyOnDeleteReview = jest.spyOn(reviewActions, "deleteReview")
+            .mockImplementation(() => () => mockPromise);
+
+        reviewDetail = makeReviewDetail(stubInitialState, { me: { id: 1 } });
+        const component = mount(reviewDetail);
+        component.find("ReviewDetail").instance().setState({ author: { id: 1 } });
+        component.update();
         const button = component.find(".review-extra .delete-button").hostNodes();
         button.simulate("click");
-        expect(historyMock.push).toHaveBeenCalledTimes(1);
+        expect(spyOnDeleteReview).toHaveBeenCalledTimes(1);
     });
 
     it("should handle add button", () => {
-        const component = mount(<ReviewDetail />);
+        const component = mount(reviewDetail);
+        const instance = component.find("ReviewDetail").instance();
+        instance.setState({
+            replyCount: 0,
+        });
+        component.update();
         const button = component.find(".new-reply .new-reply-button").hostNodes();
         button.simulate("click");
-        expect(component.state().replyCount).toBe(3);
+
+        expect(instance.state.replyCount).toBe(1);
+    });
+
+    it("should handle replies well", () => {
+        const component = mount(reviewDetail);
+        const instance = component.find("ReviewDetail").instance();
+        instance.setState(
+            {
+                replies: [{ id: 1 }, { id: 2 }, { id: 3 }],
+            },
+        );
+        component.update();
+        const replies = component.find(".replies");
+        expect(replies.length).toBe(1);
     });
 });

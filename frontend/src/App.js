@@ -7,7 +7,7 @@ import { ConnectedRouter } from "connected-react-router";
 
 import {
     Intro, Main, ReviewDetail, PaperDetail, ReviewControl,
-    ProfileDetail, ProfileEdit, CollectionDetail, CollectionList,
+    ProfileDetail, AccountSetting, CollectionDetail, CollectionList,
 } from "./containers";
 import {
     PrivateRoute, Header, SideBar,
@@ -15,7 +15,7 @@ import {
 
 function App(props) {
     return (
-        <ConnectedRouter history={props.history}>
+        <ConnectedRouter history={props.history} match={props.match}>
             <div className="App">
                 <PrivateRoute history={props.history} />
                 <Switch>
@@ -30,7 +30,11 @@ function App(props) {
                               exact
                               render={() => (
                                   <div>
-                                      <ReviewControl mode={0} history={props.history} />
+                                      <ReviewControl
+                                        mode={0}
+                                        match={props.match}
+                                        history={props.history}
+                                      />
                                   </div>
                               )}
                             />
@@ -40,13 +44,17 @@ function App(props) {
                               exact
                               render={() => (
                                   <div>
-                                      <ReviewControl mode={1} history={props.history} />
+                                      <ReviewControl
+                                        mode={1}
+                                        match={props.match}
+                                        history={props.history}
+                                      />
                                   </div>
                               )}
                             />
                             <Route path="/paper_id=:paper_id" exact component={PaperDetail} />
-                            <Route path="/profile/:id" exact component={ProfileDetail} />
-                            <Route path="/profile/:id/edit" exact component={ProfileEdit} />
+                            <Route path="/profile_id=:profile_id" exact component={ProfileDetail} />
+                            <Route path="/account_setting" exact component={AccountSetting} />
                             <Route path="/collections" exact component={CollectionList} />
                             <Route path="/collection_id=:collection_id" exact component={CollectionDetail} />
                         </Switch>
@@ -59,10 +67,12 @@ function App(props) {
 
 App.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
+    match: PropTypes.objectOf(PropTypes.any),
 };
 
 App.defaultProps = {
     history: null,
+    match: null,
 };
 
 export default App;

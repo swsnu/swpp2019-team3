@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Button, Card } from "react-bootstrap";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
+import { collectionActions } from "../../../store/actions";
 import "./CollectionCard.css";
 import SVG from "../../svg";
 
@@ -17,20 +20,20 @@ class CollectionCard extends Component {
 
     // handle click 'Like' button
     clickCollectionCardLikeHandler() {
-        const nextState = {
-            isLiked: true,
-            likeCount: this.state.likeCount + 1,
-        };
-        this.setState(nextState);
+        this.props.onLikeCollection({ id: this.props.id })
+            .then(() => {
+                this.setState({ likeCount: this.props.afterLikeCount });
+                this.setState({ isLiked: true });
+            });
     }
 
     // handle click 'Unlike' button
     clickCollectionCardUnlikeHandler() {
-        const nextState = {
-            isLiked: false,
-            likeCount: this.state.likeCount - 1,
-        };
-        this.setState(nextState);
+        this.props.onUnlikeCollection({ id: this.props.id })
+            .then(() => {
+                this.setState({ likeCount: this.props.afterUnlikeCount });
+                this.setState({ isLiked: false });
+            });
     }
 
     render() {
@@ -64,6 +67,24 @@ class CollectionCard extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+    likeCollectionStatus: state.collection.like.status,
+    afterLikeCount: state.collection.like.count,
+    unlikeCollectionStatus: state.collection.unlike.status,
+    afterUnlikeCount: state.collection.unlike.count,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onLikeCollection: (collectionId) => dispatch(
+        collectionActions.likeCollection(collectionId),
+    ),
+    onUnlikeCollection: (collectionId) => dispatch(
+        collectionActions.unlikeCollection(collectionId),
+    ),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CollectionCard);
+
 CollectionCard.propTypes = {
     source: PropTypes.string,
     id: PropTypes.number,
@@ -75,6 +96,10 @@ CollectionCard.propTypes = {
     likeCount: PropTypes.number,
     isLiked: PropTypes.bool,
     headerExists: PropTypes.bool,
+    afterLikeCount: PropTypes.number,
+    afterUnlikeCount: PropTypes.number,
+    onLikeCollection: PropTypes.func,
+    onUnlikeCollection: PropTypes.func,
 };
 
 CollectionCard.defaultProps = {
@@ -88,6 +113,8 @@ CollectionCard.defaultProps = {
     likeCount: 0,
     isLiked: false,
     headerExists: true,
+    afterLikeCount: 0,
+    afterUnlikeCount: 0,
+    onLikeCollection: () => {},
+    onUnlikeCollection: () => {},
 };
-
-export default CollectionCard;

@@ -60,7 +60,7 @@ class CollectionTestCase(TestCase):
                                }),
                                content_type='application/json')
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
     def test_get_collection(self):
         """ GET COLLECTION"""

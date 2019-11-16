@@ -1,12 +1,11 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import {
     Form, Button, Card,
 } from "react-bootstrap";
-
-import {
-    Reply,
-} from "../../../components";
+import { reviewActions } from "../../../store/actions";
+import { Reply } from "../../../components";
 import "./ReviewDetail.css";
 import SVG from "../../../components/svg";
 
@@ -14,35 +13,23 @@ class ReviewDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            authorId: 1,
-            paperId: 4,
-            id: 2,
-            title: "What computer-lovers should read",
-            content: "I think everyone should read this paper. I could learn so many things from this.",
-            author: "Alpha",
-            likeCount: 14,
-            newReply: "",
+            thisReview: {},
+            replies: [],
+            replyCount: 0,
             isLiked: false,
-            replies: [{
-                id: 1,
-                authorId: 0,
-                author: "Girin",
-                review: 2,
-                likeCount: 7,
-                isLiked: false,
-                content: "You are right!",
+            likeCount: 0,
+            author: {
+                id: 0,
+                username: "",
             },
-            {
-                id: 2,
-                authorId: 4,
-                author: "Goyangineun Yaong",
-                review: 2,
-                likeCount: 4,
-                isLiked: true,
-                content: "Interesting! I want to follow you",
-            }],
-            replyCount: 2,
+            user: {
+                id: 0,
+                username: "",
+            },
+            newReply: "",
+            paperId: 0,
         };
+
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
         this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
         this.clickEditButtonHandler = this.clickEditButtonHandler.bind(this);
@@ -51,38 +38,61 @@ class ReviewDetail extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    componentDidMount() {
+        this.props.onGetReview({ id: Number(this.props.match.params.review_id) })
+            .then(() => {
+                this.setState({
+                    thisReview: this.props.selectedReview,
+                    isLiked: this.props.selectedReview.liked,
+                    likeCount: this.props.selectedReview.count.likes,
+                    author: this.props.selectedReview.user,
+                    paperId: this.props.selectedReview.paper.id,
+                });
+            }).catch(() => {});
+    }
+
     handleChange(e) {
         this.setState({
             newReply: e.target.value,
         });
     }
 
+    // handle click 'Like' button
     clickLikeButtonHandler() {
-        const nextState = {
-            isLiked: true,
-            likeCount: this.state.likeCount + 1,
-        };
-        this.setState(nextState);
+        this.props.onLikeReview({ id: Number(this.props.match.params.review_id) })
+            .then(() => {
+                this.setState({ likeCount: this.props.afterLikeCount });
+                this.setState({ isLiked: true });
+            });
     }
 
+    // handle click 'Unlike' button
     clickUnlikeButtonHandler() {
-        const nextState = {
-            isLiked: false,
-            likeCount: this.state.likeCount - 1,
-        };
-        this.setState(nextState);
+        this.props.onUnlikeReview({ id: Number(this.props.match.params.review_id) })
+            .then(() => {
+                this.setState({ likeCount: this.props.afterUnlikeCount });
+                this.setState({ isLiked: false });
+            });
     }
 
     clickEditButtonHandler() {
-        this.props.history.push(`/review_id=${this.state.id}/edit`);
+        this.props.history.push(`/review_id=${this.state.thisReview.id}/edit`);
     }
 
     clickDeleteButtonHandler() {
-        this.props.history.push(`/paper_id=${this.state.paperId}`);
+        this.props.onDeleteReview({ id: this.state.thisReview.id })
+            .then(() => {
+                this.props.history.push(`/paper_id=${this.state.paperId}`);
+            }).catch(() => {
+
+            });
     }
 
     clickReplyAddButtonHandler() {
         const nextState = ({
+            thisReview: {
+                ...this.state.thisReview,
+            },
             replyCount: this.state.replyCount + 1,
         });
         this.setState(nextState);
@@ -106,24 +116,24 @@ class ReviewDetail extends Component {
                         <div className="head">REVIEW</div>
                         <Card.Body>
                             <div className="review">
-                                <Card.Text className="author">{this.state.author}</Card.Text>
-                                <Card.Title className="title">{this.state.title}</Card.Title>
-                                <Card.Text className="content">{this.state.content}</Card.Text>
+                                <Card.Text className="author">{this.state.author.username}</Card.Text>
+                                <Card.Title className="title">{this.state.thisReview.title}</Card.Title>
+                                <Card.Text className="content">{this.state.thisReview.text}</Card.Text>
                             </div>
                             <div className="reply">
                                 <div className="review-extra">
                                     <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
                                     <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="60%" width="60%" /></div>{this.state.replyCount}</Button>
-                                    {this.state.authorId === 0
+                                    {this.props.me && this.state.author.id === this.props.me.id
                                         ? <Button className="edit-button" onClick={this.clickEditButtonHandler}>Edit</Button>
 
                                         : null}
-                                    {this.state.authorId === 0 ? (
+                                    {this.props.me && this.state.author.id === this.props.me.id ? (
                                         <Button className="delete-button" onClick={this.clickDeleteButtonHandler}>Delete</Button>
                                     ) : null}
                                 </div>
                                 <Form className="new-reply">
-                                    <Form.Label className="username">Girin </Form.Label>
+                                    <Form.Label className="username">{this.state.user.username}</Form.Label>
                                     <Form.Control className="reply-input" type="text" bsPrefix="reply-input" value={this.state.newReply} onChange={this.handleChange} />
                                     <Button className="new-reply-button" onClick={this.clickReplyAddButtonHandler}>Add</Button>
                                 </Form>
@@ -139,13 +149,50 @@ class ReviewDetail extends Component {
     }
 }
 
-ReviewDetail.propTypes = {
-    history: PropTypes.objectOf(PropTypes.any),
+const mapStateToProps = (state) => ({
+    me: state.auth.me,
+    selectedReview: state.review.selected.review,
+    likeReviewStatus: state.review.like.status,
+    afterLikeCount: state.review.like.count,
+    unlikeReviewStatus: state.review.unlike.status,
+    afterUnlikeCount: state.review.unlike.count,
+});
 
+const mapDispatchToProps = (dispatch) => ({
+    onGetReview: (reviewId) => dispatch(reviewActions.getReview(reviewId)),
+    onDeleteReview: (reviewId) => dispatch(reviewActions.deleteReview(reviewId)),
+    onLikeReview: (reviewId) => dispatch(
+        reviewActions.likeReview(reviewId),
+    ),
+    onUnlikeReview: (reviewId) => dispatch(
+        reviewActions.unlikeReview(reviewId),
+    ),
+});
+
+ReviewDetail.propTypes = {
+    me: PropTypes.objectOf(PropTypes.any),
+    history: PropTypes.objectOf(PropTypes.any),
+    match: PropTypes.objectOf(PropTypes.any),
+    selectedReview: PropTypes.objectOf(PropTypes.any),
+    onGetReview: PropTypes.func,
+    onDeleteReview: PropTypes.func,
+    afterLikeCount: PropTypes.number,
+    afterUnlikeCount: PropTypes.number,
+    onLikeReview: PropTypes.func,
+    onUnlikeReview: PropTypes.func,
 };
 
 ReviewDetail.defaultProps = {
+    me: null,
     history: null,
+    match: null,
+    selectedReview: {},
+    onGetReview: () => {},
+    onDeleteReview: () => {},
+    afterLikeCount: 0,
+    afterUnlikeCount: 0,
+    onLikeReview: () => {},
+    onUnlikeReview: () => {},
 };
 
-export default ReviewDetail;
+export default connect(mapStateToProps, mapDispatchToProps)(ReviewDetail);

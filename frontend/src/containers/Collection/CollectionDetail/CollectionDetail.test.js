@@ -3,79 +3,102 @@ import { mount } from "enzyme";
 import { Provider } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
 import { Route, Switch } from "react-router-dom";
+import { createBrowserHistory } from "history";
 import { collectionActions } from "../../../store/actions";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
-import { history } from "../../../store/store";
 import CollectionDetail from "./CollectionDetail";
 
-const stubInitialState = {
-    paper: {
-    },
-    auth: {
-        singinStatus: signinStatus.SUCCESS,
-        me: null,
-    },
-    collection: {
-        make: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        list: {
-            status: collectionStatus.NONE,
-            list: [],
-            error: null,
-        },
-        edit: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        delete: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        selected: {
-            status: collectionStatus.NONE,
-            error: null,
-            collection: {},
-            papers: [],
-            members: [],
-            replies: [],
-        },
-    },
-};
 
-const mockStore = getMockStore(stubInitialState);
+/* eslint-disable react/jsx-props-no-spreading */
+const makeCollectionDetail = (initialState, props = {}) => (
+    <Provider store={getMockStore(initialState)}>
+        <ConnectedRouter history={createBrowserHistory()}>
+            <Switch>
+                <Route
+                  path="/"
+                  exact
+                  render={() => (
+                      <div>
+                          <CollectionDetail location={{ pathname: "/paper_id=1" }} {...props} />
+                      </div>
+                  )}
+                />
+            </Switch>
+        </ConnectedRouter>
+    </Provider>
+);
+/* eslint-enable react/jsx-props-no-spreading */
+
 const mockPromise = new Promise((resolve) => { resolve(); });
 
 describe("CollectionDetail Test", () => {
-    let collectionDetail; let spyGetCollection; let
-        spyGetCollectionPapers;
+    let stubInitialState;
+    let collectionDetail;
+    let spyGetCollection;
+    let spyGetCollectionPapers;
+    let spyLikeCollection;
+    let spyUnlikeCollection;
 
     beforeEach(() => {
-        collectionDetail = (
-            <Provider store={mockStore}>
-                <ConnectedRouter history={history}>
-                    <Switch>
-                        <Route
-                          path="/"
-                          exact
-                          render={() => (
-                              <div>
-                                  <CollectionDetail location={{ pathname: "/paper_id=1" }} />
-                              </div>
-                          )}
-                        />
-                    </Switch>
-                </ConnectedRouter>
-            </Provider>
-        );
+        stubInitialState = {
+            paper: {
+            },
+            auth: {
+                singinStatus: signinStatus.SUCCESS,
+                me: null,
+            },
+            collection: {
+                make: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                list: {
+                    status: collectionStatus.NONE,
+                    list: [],
+                    error: null,
+                },
+                edit: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                delete: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                selected: {
+                    status: collectionStatus.NONE,
+                    error: null,
+                    collection: {},
+                    papers: [],
+                    members: [],
+                    replies: [],
+                },
+                like: {
+                    status: collectionStatus.NONE,
+                    count: 0,
+                    error: null,
+                },
+                unlike: {
+                    status: collectionStatus.NONE,
+                    count: 0,
+                    error: null,
+                },
+            },
+            review: {},
+            user: {},
+        };
+        collectionDetail = makeCollectionDetail(stubInitialState);
         spyGetCollection = jest.spyOn(collectionActions, "getCollection")
             .mockImplementation(() => () => mockPromise);
         spyGetCollectionPapers = jest.spyOn(collectionActions, "getCollectionPapers")
+            .mockImplementation(() => () => mockPromise);
+        spyLikeCollection = jest.spyOn(collectionActions, "likeCollection")
+            .mockImplementation(() => () => mockPromise);
+        spyUnlikeCollection = jest.spyOn(collectionActions, "unlikeCollection")
             .mockImplementation(() => () => mockPromise);
     });
 
@@ -90,18 +113,28 @@ describe("CollectionDetail Test", () => {
         expect(spyGetCollectionPapers).toHaveBeenCalledTimes(1);
     });
 
-    it("Button should be changed", () => {
+    it("should call likeReview when Like Button is clicked", () => {
         const component = mount(collectionDetail);
-        let wrapper = component.find("#likeButton").hostNodes();
+        const wrapper = component.find(".like-button").hostNodes();
         expect(wrapper.length).toBe(1);
+
         wrapper.simulate("click");
 
-        wrapper = component.find("#unlikeButton").hostNodes();
+        expect(spyLikeCollection).toHaveBeenCalledTimes(1);
+    });
+
+    it("should call unlikeReview when IsLiked and Like Button is clicked", () => {
+        const component = mount(collectionDetail);
+        const instance = component.find(CollectionDetail.WrappedComponent).instance();
+        instance.setState({ isLiked: true });
+        component.update();
+
+        const wrapper = component.find(".like-button").hostNodes();
         expect(wrapper.length).toBe(1);
+
         wrapper.simulate("click");
 
-        wrapper = component.find("#likeButton").hostNodes();
-        expect(wrapper.length).toBe(1);
+        expect(spyUnlikeCollection).toHaveBeenCalledTimes(1);
     });
 
     it("reply textbox test", () => {
@@ -146,16 +179,16 @@ describe("CollectionDetail Test", () => {
                         id: 1,
                         title: "dfad",
                         user: "Dfafdaf",
-                        numPapers: 14,
-                        numReplies: 15,
+                        liked: true,
+                        count: { likes: 1 },
                     }, {
                         type: "Paper",
                         source: "liked",
                         id: 2,
                         title: "dfad",
                         user: "Dfafdaf",
-                        numPapers: 14,
-                        numReplies: 15,
+                        liked: true,
+                        count: { likes: 1 },
                     },
                     {
                         type: "Paper",
@@ -163,16 +196,16 @@ describe("CollectionDetail Test", () => {
                         id: 3,
                         title: "dfad",
                         user: "Dfafdaf",
-                        numPapers: 14,
-                        numReplies: 15,
+                        liked: true,
+                        count: { likes: 1 },
                     }, {
                         type: "Paper",
                         source: "liked",
                         id: 4,
                         title: "dfad",
                         user: "Dfafdaf",
-                        numPapers: 14,
-                        numReplies: 15,
+                        liked: true,
+                        count: { likes: 1 },
                     }],
             },
         );
@@ -181,5 +214,26 @@ describe("CollectionDetail Test", () => {
         const wrapperRight = component.find("#paperCardsRight");
         expect(wrapperLeft.length).toBe(1);
         expect(wrapperRight.length).toBe(1);
+    });
+
+    it("should show replies well", () => {
+        const component = mount(collectionDetail);
+        const instance = component.find("CollectionDetail").instance();
+        instance.setState(
+            {
+                replies: [
+                    {
+                        content: "reply1",
+                    },
+                    {
+                        content: "reply2",
+                    },
+                ],
+            },
+        );
+        component.update();
+
+        const wrapper = component.find("Reply");
+        expect(wrapper.length).toBe(2);
     });
 });

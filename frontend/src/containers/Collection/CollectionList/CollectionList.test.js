@@ -44,7 +44,19 @@ const stubInitialState = {
             members: [],
             replies: [],
         },
+        like: {
+            status: collectionStatus.NONE,
+            count: 0,
+            error: null,
+        },
+        unlike: {
+            status: collectionStatus.NONE,
+            count: 0,
+            error: null,
+        },
     },
+    user: {},
+    review: {},
 };
 
 const mockStore = getMockStore(stubInitialState);
