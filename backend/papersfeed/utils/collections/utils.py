@@ -434,7 +434,7 @@ def __get_members_collection(filter_query):
         if member_id in members:
             member = members[member_id]
 
-            # Inesrt Type & Rank
+            # Inesrt Type
             member[constants.TYPE] = collection_member.type
 
             result[collection_id].append(member)
@@ -468,11 +468,8 @@ def __pack_members(members):
         packed.append(
             {
                 constants.ID: member_id,
-                constants.FIRST_NAME: member.first_name,
-                constants.LAST_NAME: member.last_name,
+                constants.USERNAME: member.username,
                 constants.EMAIL: member.email,
-                constants.ADDRESS: member.address,
-                constants.RESEARCHER_ID: member.researcher_id
             }
         )
 

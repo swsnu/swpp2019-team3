@@ -1,6 +1,7 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
 
+from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from notifications.signals import notify
 
@@ -12,10 +13,12 @@ from papersfeed.models.papers.paper_like import PaperLike
 from papersfeed.utils.reviews.utils import __get_review_like_count
 from papersfeed.models.reviews.review import Review
 from papersfeed.models.reviews.review_like import ReviewLike
-from papersfeed.utils.collections.utils import __get_collection_like_count, __get_members_collection
+from papersfeed.utils.collections.utils import __get_collection_like_count
 from papersfeed.models.collections.collection import Collection
 from papersfeed.models.collections.collection_like import CollectionLike
 from papersfeed.models.users.user import User
+from papersfeed.models.collections.collection_user import CollectionUser
+
 
 def insert_like_paper(args):
     """Insert Like of Paper"""
@@ -151,14 +154,19 @@ def insert_like_collection(args):
     collection_like.save()
 
     collection = Collection.objects.get(id=collection_id)
-    collection_members = __get_members_collection(Q(collection_id__in=collection_ids))
+
+    collection_members = CollectionUser.objects.filter(Q(collection_id=collection_id))
+    member_ids = [collection_member.user_id for collection_member in collection_members]
+    member_ids = list(set(member_ids))
+
+    members = User.objects.filter(Q(id__in=member_ids))
 
     notify.send(
         request_user,
-        recipient=[review_author],
+        recipient=members,
         verb='liked',
-        action_object=review,
-        target=review_like
+        action_object=collection,
+        target=collection_like
     )
 
     like_counts = __get_collection_like_count([collection_id], 'collection_id')
