@@ -9,6 +9,7 @@ import {
 } from "../../constants/constants";
 import { getMockStore } from "../../test-utils/mocks";
 
+
 const mockHistory = { push: jest.fn() };
 const makePaperDetail = (initialState) => (
     <Provider store={getMockStore(initialState)}>
@@ -64,6 +65,7 @@ describe("<PaperDetail />", () => {
                     replies: [],
                 },
             },
+            user: {},
             review: {
                 like: {
                     status: reviewStatus.NONE,
@@ -142,6 +144,7 @@ describe("<PaperDetail />", () => {
                     publication: { date: "2019-11-06" },
                 },
             },
+            user: {},
         };
         const component = mount(makePaperDetail(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
@@ -157,6 +160,41 @@ describe("<PaperDetail />", () => {
                 getPaperStatus: paperStatus.FAILURE,
                 selectedPaper: {},
             },
+            auth: {
+                singinStatus: signinStatus.SUCCESS,
+                me: null,
+            },
+            collection: {
+                make: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                list: {
+                    status: collectionStatus.NONE,
+                    list: [],
+                    error: null,
+                },
+                edit: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                delete: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                selected: {
+                    status: collectionStatus.NONE,
+                    error: null,
+                    collection: {},
+                    papers: [],
+                    members: [],
+                    replies: [],
+                },
+            },
+            user: {},
         };
         expect(mockHistory.push).toHaveBeenCalledTimes(0);
         // FIXME: actually, it should be '1'!

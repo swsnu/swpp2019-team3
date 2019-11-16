@@ -62,3 +62,12 @@ export const reviewStatus = {
     PAPER_NOT_EXIST: "PAPER_NOT_EXIST",
     AUTH_ERROR: "AUTH_ERROR",
 };
+
+export const userStatus = {
+    NONE: "NONE",
+    WAITING: "WAITING",
+    SUCCESS: "SUCCESS",
+    USER_NOT_EXIST: "USER_NOT_EXIST",
+    SELF_FOLLOWING: "SELF_FOLLOWING",
+    DUPLICATE_EMAIL: "DUPLICATE_EMAIL",
+};

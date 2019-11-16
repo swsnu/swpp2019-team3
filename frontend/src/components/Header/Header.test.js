@@ -14,6 +14,7 @@ let stubInitialState = {
         me: null,
     },
     paper: {},
+    user: {},
     review: {},
 };
 const mockHistory = { push: jest.fn() };
@@ -65,6 +66,7 @@ describe("<Header />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
             review: {},
         };
         const component = mount(makeHeader(stubInitialState));
@@ -83,6 +85,7 @@ describe("<Header />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
             review: {},
         };
         const component = mount(makeHeader(stubInitialState));
@@ -101,6 +104,7 @@ describe("<Header />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
             review: {},
         };
         const component = mount(makeHeader(stubInitialState));

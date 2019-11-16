@@ -89,6 +89,7 @@ describe("CollectionDetail Test", () => {
                 },
             },
             review: {},
+            user: {},
         };
         collectionDetail = makeCollectionDetail(stubInitialState);
         spyGetCollection = jest.spyOn(collectionActions, "getCollection")

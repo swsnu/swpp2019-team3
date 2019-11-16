@@ -14,12 +14,12 @@ from . import constants
 
 def post_follow(args):
     """Post Follow"""
-    return users_utils.insert_follow(args)
+    return {constants.COUNT: users_utils.insert_follow(args)}
 
 
 def delete_follow(args):
     """Delete Follow"""
-    return users_utils.remove_follow(args)
+    return {constants.COUNT: users_utils.remove_follow(args)}
 
 
 def get_session(args):
@@ -170,7 +170,6 @@ def post_like_collection(args):
 def delete_like_collection(args):
     """Delete Like Collection"""
     return {constants.COUNT: likes_utils.remove_like_collection(args)}
-
 
 def get_notification(args):
     """Get Notification"""

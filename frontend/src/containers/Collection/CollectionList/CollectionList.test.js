@@ -55,6 +55,7 @@ const stubInitialState = {
             error: null,
         },
     },
+    user: {},
     review: {},
 };
 

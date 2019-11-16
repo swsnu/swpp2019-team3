@@ -1,4 +1,4 @@
-"""tests_review.py"""
+"""tests_like.py"""
 # -*- coding: utf-8 -*-
 import json
 

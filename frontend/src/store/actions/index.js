@@ -1,3 +1,6 @@
+/*
+    import actions from here
+*/
 import {
     signup,
     signin,
@@ -31,6 +34,15 @@ import {
 } from "./collection/collection";
 
 import {
+    getUserByUserId,
+    getFollowersByUserId,
+    getFollowingsByUserId,
+    addUserFollowing,
+    removeUserFollowing,
+    editUserInfo,
+} from "./user/user";
+
+import {
     makeNewReview,
     getReviewsByPaperId,
     getReviewsByUserId,
@@ -39,9 +51,13 @@ import {
     likeReview,
     unlikeReview,
     deleteReview,
-    // consume Review,
-} from "./Review/review";
+// consume Review,
+} from "./review/review";
 
+
+/*
+    export actions from here
+*/
 export const collectionActions = {
     makeNewCollection,
     getCollectionsByUserId,
@@ -83,4 +99,13 @@ export const paperActions = {
     getPaper,
     likePaper,
     unlikePaper,
+};
+
+export const userActions = {
+    getUserByUserId,
+    getFollowersByUserId,
+    getFollowingsByUserId,
+    addUserFollowing,
+    removeUserFollowing,
+    editUserInfo,
 };

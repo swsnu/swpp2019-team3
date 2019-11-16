@@ -7,7 +7,7 @@ import { ConnectedRouter } from "connected-react-router";
 
 import {
     Intro, Main, ReviewDetail, PaperDetail, ReviewControl,
-    ProfileDetail, ProfileEdit, CollectionDetail, CollectionList,
+    ProfileDetail, AccountSetting, CollectionDetail, CollectionList,
 } from "./containers";
 import {
     PrivateRoute, Header, SideBar,
@@ -53,8 +53,8 @@ function App(props) {
                               )}
                             />
                             <Route path="/paper_id=:paper_id" exact component={PaperDetail} />
-                            <Route path="/profile/:id" exact component={ProfileDetail} />
-                            <Route path="/profile/:id/edit" exact component={ProfileEdit} />
+                            <Route path="/profile_id=:profile_id" exact component={ProfileDetail} />
+                            <Route path="/account_setting" exact component={AccountSetting} />
                             <Route path="/collections" exact component={CollectionList} />
                             <Route path="/collection_id=:collection_id" exact component={CollectionDetail} />
                         </Switch>
