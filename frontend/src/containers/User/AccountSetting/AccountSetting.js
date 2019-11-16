@@ -17,6 +17,15 @@ class AccountSetting extends Component {
         };
     }
 
+    componentDidMount() {
+        if (this.props.me) {
+            this.setState({
+                description: this.props.me.description,
+                email: this.props.me.email,
+            });
+        }
+    }
+
     /* eslint-disable react/no-did-update-set-state */
     // It's OK to use setState if it is wrapped in a condition
     // please refer to https://reactjs.org/docs/react-component.html#componentdidupdate

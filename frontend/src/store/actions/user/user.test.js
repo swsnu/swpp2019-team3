@@ -13,6 +13,8 @@ const stubInitialState = {
         selectedUser: null,
         selectedFollowers: [],
         selectedFollowings: [],
+        followCount: 0,
+        unfollowCount: 0,
         status: "NONE",
         error: -1,
     },

@@ -6,6 +6,8 @@ const initialState = {
     selectedUser: {},
     selectedFollowers: [],
     selectedFollowings: [],
+    followCount: 0,
+    unfollowCount: 0,
     status: userStatus.NONE,
     error: null,
 };
@@ -51,8 +53,8 @@ const UserReducer = (state = initialState, action) => {
     case userConstants.ADD_FOLLOWING:
         return {
             ...state,
+            followCount: action.target.follower,
             status: userStatus.SUCCESS,
-            // should be modified
         };
     case userConstants.ADD_FOLLOWING_FAILURE_SELF_FOLLOWING:
         return {
@@ -63,8 +65,8 @@ const UserReducer = (state = initialState, action) => {
     case userConstants.DEL_FOLLOWING:
         return {
             ...state,
+            unfollowCount: action.target.follower,
             status: userStatus.SUCCESS,
-            // should be modified
         };
     case userConstants.EDIT_USER:
         return {

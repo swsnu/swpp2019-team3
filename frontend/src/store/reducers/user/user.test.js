@@ -4,9 +4,11 @@ import { userConstants } from "../../actions/actionTypes";
 
 const stubInitialState = {
     userSearchResult: [],
-    selectedUser: null,
+    selectedUser: {},
     selectedFollowers: [],
     selectedFollowings: [],
+    followCount: 0,
+    unfollowCount: 0,
     status: userStatus.NONE,
     error: null,
 };

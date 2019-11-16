@@ -16,11 +16,11 @@ class ProfileDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // getCollectionsStatus: collectionStatus.NONE,
             collections: [],
             reviews: [],
             followerCount: 0,
             followingCount: 0,
+            doIFollow: false,
         };
     }
 
@@ -29,8 +29,11 @@ class ProfileDetail extends Component {
         this.props.onGetUser({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
                 if (this.props.thisUser.count) {
-                    this.setState({ followerCount: this.props.thisUser.count.follower });
-                    this.setState({ followingCount: this.props.thisUser.count.following });
+                    this.setState({
+                        doIFollow: this.props.thisUser.is_following,
+                        followerCount: this.props.thisUser.count.follower,
+                        followingCount: this.props.thisUser.count.following,
+                    });
                 }
             });
         this.props.onGetCollections({ id: this.props.location.pathname.split("=")[1] })
@@ -44,50 +47,54 @@ class ProfileDetail extends Component {
     }
 
     clickFollowHandler = () => {
-        this.setState({ doIFollow: true });
-        this.props.onFollow(this.state.thisUserId);
+        this.props.onFollow({ id: this.props.thisUser.id })
+            .then(() => {
+                this.setState({
+                    followerCount: this.props.afterFollowCount,
+                    doIFollow: true,
+                });
+            });
     }
 
     clickUnfollowHandler = () => {
-        this.setState({ doIFollow: false });
-        this.props.onUnFollow(this.state.thisUserId);
+        this.props.onUnFollow({ id: this.props.thisUser.id })
+            .then(() => {
+                this.setState({
+                    followerCount: this.props.afterUnfollowCount,
+                    doIFollow: false,
+                });
+            });
     }
 
-    cardMaker = (card) => {
-        if (card.type === "Collection") {
-            return (
-                <CollectionCard
-                  key={card.id}
-                  source={card.source}
-                  id={card.id}
-                  user={card.user}
-                  title={card.title}
-                  memberCount={card.memberCount}
-                  paperCount={card.paperCount}
-                  likeCount={card.likeCount}
-                  replyCount={card.replyCount}
-                  headerExists={false}
-                />
-            );
-        } if (card.type === "Review") {
-            return (
-                <ReviewCard
-                  key={card.id}
-                  author={card.author}
-                  paperId={card.paperId}
-                  source={card.source}
-                  id={card.id}
-                  user={card.user}
-                  title={card.title}
-                  date={card.date}
-                  likeCount={card.likeCount}
-                  replyCount={card.replyCount}
-                  headerExists={card.headerExists}
-                />
-            );
-        }
-        return null;
-    }
+    collectionCardMaker = (collection) => (
+        <CollectionCard
+          key={collection.id}
+          source={collection.source}
+          id={collection.id}
+          user={collection.user}
+          title={collection.title}
+          memberCount={collection.count.users}
+          paperCount={collection.count.papers}
+          replyCount={collection.replyCount}
+          likeCount={collection.count.likes}
+          isLiked={collection.liked}
+          headerExists={false}
+        />
+    );
+
+    reviewCardMaker = (review) => (
+        <ReviewCard
+          key={review.id}
+          id={review.id}
+          paperId={review.paper.id}
+          author={review.user.username}
+          title={review.title}
+          isLiked={review.liked}
+          likeCount={review.count.likes}
+          replyCount={review.count.replies}
+          headerExists={false}
+        />
+    );
 
     render() {
         const settingButton = (
@@ -109,7 +116,7 @@ class ProfileDetail extends Component {
             >Unfollow
             </Button>
         );
-        // only one button will be displayed among "edit", "follow", and "unfollow" buttons
+            // only one button will be displayed among "edit", "follow", and "unfollow" buttons
         let buttonDisplayed;
         if (this.props.me && this.props.me.id === this.props.thisUser.id) {
             buttonDisplayed = settingButton;
@@ -121,19 +128,19 @@ class ProfileDetail extends Component {
 
         const collectionCardsLeft = this.state.collections
             .filter((x) => this.state.collections.indexOf(x) % 2 === 0)
-            .map((collection) => this.cardMaker(collection));
+            .map((collection) => this.collectionCardMaker(collection));
 
         const collectionCardsRight = this.state.collections
             .filter((x) => this.state.collections.indexOf(x) % 2 === 1)
-            .map((collection) => this.cardMaker(collection));
+            .map((collection) => this.collectionCardMaker(collection));
 
         const reviewCardsLeft = this.state.reviews
             .filter((x) => this.state.reviews.indexOf(x) % 2 === 0)
-            .map((review) => this.cardMaker(review));
+            .map((review) => this.reviewCardMaker(review));
 
         const reviewCardsRight = this.state.reviews
             .filter((x) => this.state.reviews.indexOf(x) % 2 === 1)
-            .map((review) => this.cardMaker(review));
+            .map((review) => this.reviewCardMaker(review));
 
         return (
             <div className="ProfileDetail">
@@ -193,6 +200,8 @@ const mapStateToProps = (state) => ({
     collections: state.collection.list.list,
     reviews: state.review.list.list,
     thisUser: state.user.selectedUser,
+    afterFollowCount: state.user.followCount,
+    afterUnfollowCount: state.user.unfollowCount,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -216,6 +225,8 @@ ProfileDetail.propTypes = {
     onGetUser: PropTypes.func,
     onFollow: PropTypes.func,
     onUnFollow: PropTypes.func,
+    afterFollowCount: PropTypes.number,
+    afterUnfollowCount: PropTypes.number,
 };
 
 ProfileDetail.defaultProps = {
@@ -229,4 +240,6 @@ ProfileDetail.defaultProps = {
     onGetUser: () => {},
     onFollow: () => {},
     onUnFollow: () => {},
+    afterFollowCount: 0,
+    afterUnfollowCount: 0,
 };

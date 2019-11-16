@@ -59,9 +59,9 @@ export const getFollowingsByUserId = (userId) => (dispatch) => axios.get("/api/u
     .catch((err) => { dispatch(getFollowingsByUserIdFailure(err)); });
 
 // follow a user
-const addUserFollowingSuccess = (user) => ({
+const addUserFollowingSuccess = (count) => ({
     type: userConstants.ADD_FOLLOWING,
-    target: user,
+    target: count.count,
 });
 
 const addUserFollowingFailure = (error) => {
@@ -73,19 +73,19 @@ const addUserFollowingFailure = (error) => {
     };
 };
 
-export const addUserFollowing = (targetUserId) => (dispatch) => axios.post("/api/follow", { params: targetUserId })
+export const addUserFollowing = (targetUserId) => (dispatch) => axios.post("/api/follow", targetUserId)
     .then((res) => { dispatch(addUserFollowingSuccess(res.data)); })
     .catch((err) => { dispatch(addUserFollowingFailure(err)); });
 
 
 // unfollow a user
-const removeUserFollowingSuccess = (user) => ({
+const removeUserFollowingSuccess = (count) => ({
     type: userConstants.DEL_FOLLOWING,
-    target: user,
+    target: count.count,
 });
 
 const removeUserFollowingFailure = (error) => ({
-    type: null,
+    type: userConstants.DEL_FOLLOWING_FAILURE,
     target: error,
 });
 
