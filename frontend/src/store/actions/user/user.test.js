@@ -63,7 +63,7 @@ describe("userActions", () => {
                 resolve(result);
             }));
 
-        mockStore.dispatch(userActions.getUserByUserId(stubUser.id))
+        mockStore.dispatch(userActions.getUserByUserId({ id: stubUser.id }))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/user", { params: { id: 1 } });
                 done();
@@ -82,7 +82,7 @@ describe("userActions", () => {
                 reject(result);
             }));
 
-        mockStore.dispatch(userActions.getUserByUserId(stubUser.id))
+        mockStore.dispatch(userActions.getUserByUserId({ id: stubUser.id }))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/user", { params: { id: 1 } });
                 done();
@@ -101,7 +101,7 @@ describe("userActions", () => {
                 reject(result);
             }));
 
-        mockStore.dispatch(userActions.getUserByUserId(stubUser.id))
+        mockStore.dispatch(userActions.getUserByUserId({ id: stubUser.id }))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/user", { params: { id: 1 } });
                 done();
@@ -118,7 +118,7 @@ describe("userActions", () => {
                 resolve(result);
             }));
 
-        mockStore.dispatch(userActions.getFollowersByUserId(stubUser.id))
+        mockStore.dispatch(userActions.getFollowersByUserId({ id: stubUser.id }))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/user/followed", { params: { id: 1 } });
                 done();
@@ -137,7 +137,7 @@ describe("userActions", () => {
                 reject(result);
             }));
 
-        mockStore.dispatch(userActions.getFollowersByUserId(stubUser.id))
+        mockStore.dispatch(userActions.getFollowersByUserId({ id: stubUser.id }))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/user/followed", { params: { id: 1 } });
                 done();
@@ -156,7 +156,7 @@ describe("userActions", () => {
                 reject(result);
             }));
 
-        mockStore.dispatch(userActions.getFollowersByUserId(stubUser.id))
+        mockStore.dispatch(userActions.getFollowersByUserId({ id: stubUser.id }))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/user/followed", { params: { id: 1 } });
                 done();
@@ -173,7 +173,7 @@ describe("userActions", () => {
                 resolve(result);
             }));
 
-        mockStore.dispatch(userActions.getFollowingsByUserId(stubUser.id))
+        mockStore.dispatch(userActions.getFollowingsByUserId({ id: stubUser.id }))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/user/following", { params: { id: 1 } });
                 done();
@@ -192,7 +192,7 @@ describe("userActions", () => {
                 reject(result);
             }));
 
-        mockStore.dispatch(userActions.getFollowingsByUserId(stubUser.id))
+        mockStore.dispatch(userActions.getFollowingsByUserId({ id: stubUser.id }))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/user/following", { params: { id: 1 } });
                 done();
@@ -211,7 +211,7 @@ describe("userActions", () => {
                 reject(result);
             }));
 
-        mockStore.dispatch(userActions.getFollowingsByUserId(stubUser.id))
+        mockStore.dispatch(userActions.getFollowingsByUserId({ id: stubUser.id }))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/user/following", { params: { id: 1 } });
                 done();
@@ -230,7 +230,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.addUserFollowing({ id: stubUser2.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/follow", { params: { id: 2 } });
+                expect(spy).toHaveBeenCalledWith("/api/follow", { id: 2 });
                 done();
             });
     });
@@ -249,7 +249,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.addUserFollowing({ id: stubUser.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/follow", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/follow", { id: 1 });
                 done();
             });
     });
@@ -268,7 +268,7 @@ describe("userActions", () => {
 
         mockStore.dispatch(userActions.addUserFollowing({ id: stubUser.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/follow", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/follow", { id: 1 });
                 done();
             });
     });
@@ -343,6 +343,37 @@ describe("userActions", () => {
                 const result = {
                     response: {
                         status: 404,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(userActions.editUserInfo(
+            {
+                description: stubUserEdited.description,
+                email: stubUserEdited.email,
+                id: stubUserEdited.id,
+            },
+        ))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user",
+                    {
+                        description: "Meoooowwwwwww",
+                        email: "gggg@snu.ac.kr",
+                        id: 1,
+                    });
+                done();
+            });
+    });
+
+
+    it("'editUserInfo' should handle duplicate-email error", (done) => {
+        const spy = jest.spyOn(axios, "put")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 420,
                         data: {},
                     },
                 };

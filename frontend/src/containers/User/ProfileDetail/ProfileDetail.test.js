@@ -4,11 +4,11 @@ import { Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
 
+import { createBrowserHistory } from "history";
 import ProfileDetail from "./ProfileDetail";
 import { userActions } from "../../../store/actions/index";
 import { collectionStatus, reviewStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
-import { history } from "../../../store/store";
 
 const makeStubState = (myId, targetId, follow) => (
     {
@@ -24,33 +24,10 @@ const makeStubState = (myId, targetId, follow) => (
             },
         },
         collection: {
-            make: {
-                status: collectionStatus.NONE,
-                collection: {},
-                error: null,
-            },
             list: {
                 status: collectionStatus.NONE,
                 list: [],
                 error: null,
-            },
-            edit: {
-                status: collectionStatus.NONE,
-                collection: {},
-                error: null,
-            },
-            delete: {
-                status: collectionStatus.NONE,
-                collection: {},
-                error: null,
-            },
-            selected: {
-                status: collectionStatus.NONE,
-                error: null,
-                collection: {},
-                papers: [],
-                members: [],
-                replies: [],
             },
             like: {
                 status: collectionStatus.NONE,
@@ -64,6 +41,11 @@ const makeStubState = (myId, targetId, follow) => (
             },
         },
         review: {
+            list: {
+                status: reviewStatus.NONE,
+                list: [],
+                error: null,
+            },
             like: {
                 status: reviewStatus.NONE,
                 count: 0,
@@ -90,18 +72,18 @@ const makeStubState = (myId, targetId, follow) => (
 );
 
 const setMockStore = (stubState) => getMockStore(stubState);
-// const mockHistory = { push: jest.fn() };
 
-const setProfileDetail = (stubInit) => (
+/* eslint-disable react/jsx-props-no-spreading */
+const setProfileDetail = (stubInit, props) => (
     <Provider store={setMockStore(stubInit)}>
-        <ConnectedRouter history={history}>
+        <ConnectedRouter history={createBrowserHistory()}>
             <Switch>
                 <Route
                   path="/"
                   exact
                   render={() => (
                       <div>
-                          <ProfileDetail location={{ pathname: "/profile_id=1" }} />
+                          <ProfileDetail location={{ pathname: "/profile_id=1" }} {...props} />
                       </div>
                   )}
                 />
@@ -109,6 +91,7 @@ const setProfileDetail = (stubInit) => (
         </ConnectedRouter>
     </Provider>
 );
+/* eslint-enable react/jsx-props-no-spreading */
 
 describe("<ProfileDetail />", () => {
     it("should render without errors", () => {
@@ -155,7 +138,11 @@ describe("<ProfileDetail />", () => {
         const profileDetail = setProfileDetail(stubInitState);
         const component = mount(profileDetail);
 
-        const wrapper = component.find("#unfollowButton").at(0);
+        const instance = component.find(ProfileDetail.WrappedComponent).instance();
+        instance.setState({ doIFollow: true });
+        component.update();
+
+        const wrapper = component.find("#unfollowButton").hostNodes();
         expect(wrapper.length).toBe(1);
         wrapper.simulate("click");
         expect(spyUnFollow).toHaveBeenCalled();
@@ -175,59 +162,85 @@ describe("<ProfileDetail />", () => {
         expect(component.find("Link").at(1).prop("to")).toBe("/profile_id=1/followings");
     });
 
-    it("should make card", () => {
+    it("should make collection cards", () => {
         const stubInitState = makeStubState(1, 1, false);
         const profileDetail = setProfileDetail(stubInitState);
         const component = mount(profileDetail);
-
-        component.setProps({
-            thisUserCollections: [{
-                type: "Collection",
-                source: "liked",
-                id: 1,
-                title: "dfad",
-                user: "Dfafdaf",
-                numPapers: 14,
-                numReplies: 15,
-            }, {
-                type: "Collection",
-                source: "liked",
-                id: 1,
-                title: "dfad",
-                user: "Dfafdaf",
-                numPapers: 14,
-                numReplies: 15,
-            }],
-            thisUserReviews: [{
-                type: "Review",
-                source: "liked",
-                id: 3,
-                title: "dfad",
-                user: "Dfafdaf",
-                numPapers: 14,
-                numReplies: 15,
-            }, {
-                type: "Review",
-                source: "liked",
-                id: 3,
-                title: "dfad",
-                user: "Dfafdaf",
-                numPapers: 14,
-                numReplies: 15,
-            }],
+        const instance = component.find(ProfileDetail.WrappedComponent).instance();
+        instance.setState({
+            collections: [
+                {
+                    id: 1,
+                    title: "dfad",
+                    user: "Dfafdaf",
+                    count: {
+                        users: 0,
+                        papers: 0,
+                    },
+                },
+                {
+                    id: 2,
+                    title: "dfad",
+                    user: "Dfafdaf",
+                    count: {
+                        users: 0,
+                        papers: 0,
+                    },
+                },
+            ],
         });
-        // const instance = component.find("ProfileDetail").instance();
-        // expect()
-
-        // const spyCardMaker =
+        component.update();
 
         const wrapperCollectionLeft = component.find("#collectionCardsLeft");
         const wrapperCollectionRight = component.find("#collectionCardsRight");
+        expect(wrapperCollectionLeft.children().length).toBe(1);
+        expect(wrapperCollectionRight.children().length).toBe(1);
+    });
+
+    it("should make review cards", () => {
+        const stubInitState = makeStubState(1, 1, false);
+        const profileDetail = setProfileDetail(stubInitState);
+        const component = mount(profileDetail);
+        const instance = component.find(ProfileDetail.WrappedComponent).instance();
+        instance.setState({
+            reviews: [
+                {
+                    id: 1,
+                    paper: {
+                        id: 1,
+                    },
+                    user: {
+                        username: "review_author_1",
+                    },
+                    title: "review_title_1",
+                    date: "2019-11-09",
+                    count: {
+                        likes: 0,
+                        replies: 0,
+                    },
+                },
+                {
+                    id: 2,
+                    paper: {
+                        id: 2,
+                    },
+                    user: {
+                        username: "review_author_2",
+                    },
+                    title: "review_title_2",
+                    date: "2019-11-08",
+                    count: {
+                        likes: 0,
+                        replies: 0,
+                    },
+                },
+            ],
+        });
+        component.update();
+
         const wrapperReviewLeft = component.find("#reviewCardsLeft");
         const wrapperReviewRight = component.find("#reviewCardsRight");
-        expect(wrapperCollectionLeft.length).toBe(1);
-        expect(wrapperCollectionRight.length).toBe(1);
-        expect(wrapperReviewLeft.length).toBe(1);
-        expect(wrapperReviewRight.length).toBe(1);
+        expect(wrapperReviewLeft.children().length).toBe(1);
+        expect(wrapperReviewRight.children().length).toBe(1);
     });
 });

@@ -20,9 +20,14 @@ const makeAccountSetting = (initialState, props = {}) => (
 );
 /* eslint-enable react/jsx-props-no-spreading */
 
+/* eslint-disable no-unused-vars */
+const mockPromise = new Promise((resolve, reject) => { resolve(); });
+/* eslint-enable no-unused-vars */
+
 describe("AccountSetting Test", () => {
     let stubInitialState;
     let accountSetting = null;
+    let spyEditMyInfo = null;
 
     beforeEach(() => {
         stubInitialState = {
@@ -35,6 +40,9 @@ describe("AccountSetting Test", () => {
             review: {},
         };
         accountSetting = makeAccountSetting(stubInitialState);
+
+        spyEditMyInfo = jest.spyOn(userActions, "editUserInfo")
+            .mockImplementation(() => () => mockPromise);
     });
 
     afterEach(() => {
@@ -59,16 +67,15 @@ describe("AccountSetting Test", () => {
     });
 
     it("if edit button is clicked, should handle editing feature", () => {
-        /* eslint-disable no-unused-vars */
-        const mockPromise = new Promise((resolve, reject) => { resolve(); });
-        /* eslint-enable no-unused-vars */
-        const spyEditMyInfo = jest.spyOn(userActions, "editUserInfo")
-            .mockImplementation(() => () => mockPromise);
-
         const component = mount(accountSetting);
-        const wrapper = component.find("#applyButton").at(0);
+        let wrapper = component.find("#editDescription");
+        wrapper.simulate("change", { target: { value: "change description" } });
+        wrapper = component.find("#editEmail");
+        wrapper.simulate("change", { target: { value: "changed@snu.ac.kr" } });
+
+        wrapper = component.find("#applyButton").hostNodes();
         wrapper.simulate("click");
-        expect(spyEditMyInfo).toHaveBeenCalled();
+        expect(spyEditMyInfo).toHaveBeenCalledTimes(1);
     });
 
     it("when status is DUPLICATE_EMAIL, show the corresponding message", () => {

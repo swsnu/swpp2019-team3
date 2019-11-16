@@ -28,22 +28,25 @@ class ProfileDetail extends Component {
         // this.props.onGetReviews(this.state.thisUserId);
         this.props.onGetUser({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
+                this.setState({ doIFollow: this.props.thisUser.is_following });
                 if (this.props.thisUser.count) {
                     this.setState({
-                        doIFollow: this.props.thisUser.is_following,
                         followerCount: this.props.thisUser.count.follower,
                         followingCount: this.props.thisUser.count.following,
                     });
                 }
-            });
+            })
+            .catch(() => {});
         this.props.onGetCollections({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
                 this.setState({ collections: this.props.collections });
-            });
+            })
+            .catch(() => {});
         this.props.onGetReviews({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
                 this.setState({ reviews: this.props.reviews });
-            });
+            })
+            .catch(() => {});
     }
 
     clickFollowHandler = () => {

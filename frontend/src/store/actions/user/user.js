@@ -23,7 +23,7 @@ export const getUserByUserId = (userId) => (dispatch) => axios.get("/api/user", 
 // get a list of followers
 const getFollowersByUserIdSuccess = (followers) => ({
     type: userConstants.GET_FOLLOWERS,
-    target: followers,
+    target: followers.followers,
 });
 
 const getFollowersByUserIdFailure = (error) => {
@@ -35,14 +35,14 @@ const getFollowersByUserIdFailure = (error) => {
     };
 };
 
-export const getFollowersByUserId = (userId) => (dispatch) => axios.get("/api/user/followed", { params: { id: userId } })
+export const getFollowersByUserId = (userId) => (dispatch) => axios.get("/api/user/followed", { params: userId })
     .then((res) => { dispatch(getFollowersByUserIdSuccess(res.data)); })
     .catch((err) => { dispatch(getFollowersByUserIdFailure(err)); });
 
 // get a list of followings
-const getFollowingsByUserIdSuccess = (followers) => ({
+const getFollowingsByUserIdSuccess = (followings) => ({
     type: userConstants.GET_FOLLOWERS,
-    target: followers,
+    target: followings.followings,
 });
 
 const getFollowingsByUserIdFailure = (error) => {
@@ -54,7 +54,7 @@ const getFollowingsByUserIdFailure = (error) => {
     };
 };
 
-export const getFollowingsByUserId = (userId) => (dispatch) => axios.get("/api/user/following", { params: { id: userId } })
+export const getFollowingsByUserId = (userId) => (dispatch) => axios.get("/api/user/following", { params: userId })
     .then((res) => { dispatch(getFollowingsByUserIdSuccess(res.data)); })
     .catch((err) => { dispatch(getFollowingsByUserIdFailure(err)); });
 

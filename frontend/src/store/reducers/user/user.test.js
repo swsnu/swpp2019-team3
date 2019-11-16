@@ -93,11 +93,10 @@ describe("UserReducer Test", () => {
         expect(newState.error).toBe(stubError);
     });
 
-    // NOTE : This test may need to be modified
     it("should handle 'ADD_FOLLOWING'", () => {
         const newState = UserReducer(stubInitialState, {
             type: userConstants.ADD_FOLLOWING,
-            // target: ,
+            target: { follower: 1 },
         });
         expect(newState.status).toBe(userStatus.SUCCESS);
     });
@@ -111,11 +110,10 @@ describe("UserReducer Test", () => {
         expect(newState.error).toBe(stubError);
     });
 
-    // NOTE : This test may need to be modified
     it("should handle 'DEL_FOLLOWING'", () => {
         const newState = UserReducer(stubInitialState, {
             type: userConstants.DEL_FOLLOWING,
-            // target: ,
+            target: { follower: 1 },
         });
         expect(newState.status).toBe(userStatus.SUCCESS);
     });
@@ -135,6 +133,15 @@ describe("UserReducer Test", () => {
             target: stubError,
         });
         expect(newState.status).toBe(userStatus.USER_NOT_EXIST);
+        expect(newState.error).toBe(stubError);
+    });
+
+    it("should handle 'EDIT_USER_FAILURE_DUPLICATE_EMAIL'", () => {
+        const newState = UserReducer(stubInitialState, {
+            type: userConstants.EDIT_USER_FAILURE_DUPLICATE_EMAIL,
+            target: stubError,
+        });
+        expect(newState.status).toBe(userStatus.DUPLICATE_EMAIL);
         expect(newState.error).toBe(stubError);
     });
 });
