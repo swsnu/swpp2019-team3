@@ -36,6 +36,15 @@ export const paperStatus = {
     FAILURE: "FAILURE",
 };
 
+export const userStatus = {
+    NONE: "NONE",
+    WAITING: "WAITING",
+    SUCCESS: "SUCCESS",
+    USER_NOT_EXIST: "USER_NOT_EXIST",
+    SELF_FOLLOWING: "SELF_FOLLOWING",
+    DUPLICATE_EMAIL: "DUPLICATE_EMAIL",
+};
+
 export const collectionStatus = {
     NONE: "NONE",
     WAITING: "WAITING",

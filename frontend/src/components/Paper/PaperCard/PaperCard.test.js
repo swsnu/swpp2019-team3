@@ -33,6 +33,7 @@ describe("<PaperCard />", () => {
             auth: {},
             collection: {},
             review: {},
+            user: {},
         };
         paperCard = makePaperCard(stubInitialState);
         spyLikePaper = jest.spyOn(paperActions, "likePaper")

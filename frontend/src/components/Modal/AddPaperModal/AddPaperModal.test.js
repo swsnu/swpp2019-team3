@@ -44,6 +44,7 @@ const stubInitialState = {
             replies: [],
         },
     },
+    user: {},
     review: {},
 };
 

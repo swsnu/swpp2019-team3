@@ -14,6 +14,7 @@ let stubInitialState = {
         signinStatus: signinStatus.NONE,
     },
     paper: {},
+    user: {},
     review: {},
 };
 const mockHistory = { push: jest.fn() };
@@ -290,6 +291,7 @@ describe("<IntroModal />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
             review: {},
         };
         let component = mount(makeIntroModal(stubInitialState));
@@ -317,6 +319,7 @@ describe("<IntroModal />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
             review: {},
         };
         component = mount(makeIntroModal(stubInitialState));
@@ -344,6 +347,7 @@ describe("<IntroModal />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
             review: {},
         };
         component = mount(makeIntroModal(stubInitialState));
@@ -372,6 +376,7 @@ describe("<IntroModal />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
             review: {},
         };
         component = mount(makeIntroModal(stubInitialState));
@@ -402,6 +407,7 @@ describe("<IntroModal />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
             review: {},
         };
         let component = mount(makeIntroModal(stubInitialState));
@@ -427,6 +433,7 @@ describe("<IntroModal />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
             review: {},
         };
         component = mount(makeIntroModal(stubInitialState));
@@ -452,6 +459,7 @@ describe("<IntroModal />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
             review: {},
         };
         component = mount(makeIntroModal(stubInitialState));
@@ -479,6 +487,7 @@ describe("<IntroModal />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
             review: {},
         };
         component = mount(makeIntroModal(stubInitialState));

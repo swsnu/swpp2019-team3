@@ -13,12 +13,13 @@ from . import constants
 
 def post_follow(args):
     """Post Follow"""
-    return users_utils.insert_follow(args)
+    print(args["id"])
+    return {constants.COUNT: users_utils.insert_follow(args)}
 
 
 def delete_follow(args):
     """Delete Follow"""
-    return users_utils.remove_follow(args)
+    return {constants.COUNT: users_utils.remove_follow(args)}
 
 
 def get_session(args):
