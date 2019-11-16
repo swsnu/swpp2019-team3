@@ -13,6 +13,9 @@ class Collection(BaseModel):
     # Text
     text = models.TextField(null=False)
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         """Table Meta"""
         db_table = 'swpp_collection'  # Table 이름

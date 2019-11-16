@@ -1,7 +1,16 @@
 import {
-    signup, signin, signout, getMe,
+    signup,
+    signin,
+    signout,
+    getMe,
+    getNoti,
 } from "./auth/auth";
-import { getPaper, likePaper, unlikePaper } from "./paper/paper";
+
+import {
+    getPaper,
+    likePaper,
+    unlikePaper,
+} from "./paper/paper";
 
 import {
     makeNewCollection,
@@ -68,6 +77,7 @@ export const authActions = {
     signin,
     signout,
     getMe,
+    getNoti,
 };
 export const paperActions = {
     getPaper,

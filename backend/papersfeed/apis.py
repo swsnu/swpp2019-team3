@@ -7,6 +7,7 @@ from papersfeed.utils.users import utils as users_utils
 from papersfeed.utils.collections import utils as collections_utils
 from papersfeed.utils.reviews import utils as reviews_utils
 from papersfeed.utils.likes import utils as likes_utils
+from papersfeed.utils.notifications import utils as notification_utils
 
 from . import constants
 
@@ -169,3 +170,8 @@ def post_like_collection(args):
 def delete_like_collection(args):
     """Delete Like Collection"""
     return {constants.COUNT: likes_utils.remove_like_collection(args)}
+
+
+def get_notification(args):
+    """Get Notification"""
+    return {constants.NOTIFICATIONS: notification_utils.select_notifications(args)}

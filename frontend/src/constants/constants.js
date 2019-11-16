@@ -29,6 +29,13 @@ export const getMeStatus = {
     FAILURE: "FAILURE",
 };
 
+export const getNotiStatus = {
+    NONE: "NONE",
+    WAITING: "WAITING",
+    SUCCESS: "SUCCESS",
+    FAILURE: "FAILURE",
+};
+
 export const paperStatus = {
     NONE: "NONE",
     WAITING: "WAITING",

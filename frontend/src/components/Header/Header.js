@@ -24,6 +24,13 @@ class Header extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    componentDidMount() {
+        this.props.onGetNoti()
+            .then(() => {
+
+            });
+    }
+
     // for search input change
     handleChange(e) {
         this.setState({
@@ -84,6 +91,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     onSignout: () => dispatch(authActions.signout()),
+    onGetNoti: () => dispatch(authActions.getNoti()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
@@ -92,6 +100,7 @@ Header.propTypes = {
     me: PropTypes.objectOf(PropTypes.any),
     history: PropTypes.objectOf(PropTypes.any),
     onSignout: PropTypes.func,
+    onGetNoti: PropTypes.func,
     signoutStatus: PropTypes.string,
 };
 
@@ -99,5 +108,6 @@ Header.defaultProps = {
     me: null,
     history: null,
     onSignout: null,
+    onGetNoti: null,
     signoutStatus: signoutStatus.NONE,
 };

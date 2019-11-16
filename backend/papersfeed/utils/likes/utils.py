@@ -100,7 +100,6 @@ def insert_like_review(args):
         recipient=[review_author],
         verb='liked',
         action_object=review,
-        target=review_like
     )
 
     like_counts = __get_review_like_count([review_id], 'review_id')
@@ -166,7 +165,6 @@ def insert_like_collection(args):
         recipient=members,
         verb='liked',
         action_object=collection,
-        target=collection_like
     )
 
     like_counts = __get_collection_like_count([collection_id], 'collection_id')
