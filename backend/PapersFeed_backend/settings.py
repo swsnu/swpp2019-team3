@@ -128,6 +128,3 @@ STATIC_URL = '/static/'
 # Session
 SESSION_COOKIE_AGE = 60 * 30
 SESSION_SAVE_EVERY_REQUEST = True
-
-# CSRF
-CSRF_COOKIE_NAME = 'csrftoken'
