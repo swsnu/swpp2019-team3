@@ -67,7 +67,7 @@ class UserTestCase(TestCase):
                                content_type='application/json',
                                HTTP_X_CSRFTOKEN=csrf_token)
 
-        self.assertEqual(response.status_code, 200)  # Pass csrf protection
+        self.assertEqual(response.status_code, 201)  # Pass csrf protection
 
     def test_sign_up(self):
         """ SIGN UP """
