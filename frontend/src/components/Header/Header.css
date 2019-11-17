@@ -47,6 +47,15 @@
     margin-right: 5%;
 }
 
+.read-button {
+    width: 11px;
+    height: 11px;
+    border: 0 none transparent;
+    padding: 0;
+    margin: 0;
+    color: gray;
+}
+
 #no-notifications-message {
     font-size: 100%;
     color: #2f87ef;

@@ -89,7 +89,8 @@ class Header extends Component {
                             >
                                 {notification.action_object.string}
                             </Link>
-                            &nbsp;{notification.timesince} ago
+                            &nbsp;{notification.timesince} ago&nbsp;
+                            <button type="button" className="read-button" onClick={() => this.readNotiHandler(notification.id)}>x</button>
                         </div>
                     );
                 },
