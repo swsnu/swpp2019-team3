@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { authActions } from "../../store/actions";
-import { signoutStatus, getNotiStatus } from "../../constants/constants";
+import { signoutStatus, notiStatus } from "../../constants/constants";
 import "./Header.css";
 
 class Header extends Component {
@@ -21,6 +21,7 @@ class Header extends Component {
         };
 
         this.clickSignoutButtonHandler = this.clickSignoutButtonHandler.bind(this);
+        this.readNotiHandler = this.readNotiHandler.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
 
@@ -48,6 +49,13 @@ class Header extends Component {
             });
     }
 
+    readNotiHandler(notificationId) {
+        this.props.onReadNoti({ id: notificationId })
+            .then(() => {
+                this.props.onGetNoti();
+            });
+    }
+
     render() {
         let username = null;
         let id = null;
@@ -57,7 +65,7 @@ class Header extends Component {
         }
 
         let notifications = null;
-        if (this.props.notifications) {
+        if (this.props.notifications.length > 0) {
             notifications = this.props.notifications.map(
                 (notification) => {
                     let actionObjectLink = "";
@@ -68,14 +76,26 @@ class Header extends Component {
                     }
                     return (
                         <div key={notification.id} className="notification-entry">
-                            <Link to={`/profile_id=${notification.actor.id}`}>{notification.actor.username}</Link>
+                            <Link
+                              to={`/profile_id=${notification.actor.id}`}
+                              onClick={() => this.readNotiHandler(notification.id)}
+                            >
+                                {notification.actor.username}
+                            </Link>
                             &nbsp;liked&nbsp;
-                            <Link to={actionObjectLink + notification.action_object.id}>{notification.action_object.string}</Link>
+                            <Link
+                              to={actionObjectLink + notification.action_object.id}
+                              onClick={() => this.readNotiHandler(notification.id)}
+                            >
+                                {notification.action_object.string}
+                            </Link>
                             &nbsp;{notification.timesince} ago
                         </div>
                     );
                 },
             );
+        } else {
+            notifications = <h3 id="no-notifications-message">no notifications</h3>;
         }
 
         return (
@@ -113,12 +133,14 @@ const mapStateToProps = (state) => ({
     me: state.auth.me,
     signoutStatus: state.auth.signoutStatus,
     getNotiStatus: state.auth.getNotiStatus,
+    readNotiStatus: state.auth.readNotiStatus,
     notifications: state.auth.notifications,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onSignout: () => dispatch(authActions.signout()),
     onGetNoti: () => dispatch(authActions.getNoti()),
+    onReadNoti: (notificationId) => dispatch(authActions.readNoti(notificationId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
@@ -128,17 +150,21 @@ Header.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
     onSignout: PropTypes.func,
     onGetNoti: PropTypes.func,
+    onReadNoti: PropTypes.func,
     signoutStatus: PropTypes.string,
     getNotiStatus: PropTypes.string,
+    readNotiStatus: PropTypes.string,
     notifications: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
 };
 
 Header.defaultProps = {
     me: null,
     history: null,
-    onSignout: null,
-    onGetNoti: null,
+    onSignout: () => {},
+    onGetNoti: () => {},
+    onReadNoti: () => {},
     signoutStatus: signoutStatus.NONE,
-    getNotiStatus: getNotiStatus.NONE,
+    getNotiStatus: notiStatus.NONE,
+    readNotiStatus: notiStatus.NONE,
     notifications: [],
 };

@@ -102,6 +102,10 @@ export const authConstants = {
     // GetNoti
     GET_NOTI_SUCCESS: "GET_NOTI_SUCCESS",
     GET_NOTI_FAILURE: "GET_NOTI_FAILURE",
+
+    // ReadNoti
+    READ_NOTI_SUCCESS: "READ_NOTI_SUCCESS",
+    READ_NOTI_FAILURE: "READ_NOTI_FAILURE",
 };
 
 export const paperConstants = {

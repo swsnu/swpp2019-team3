@@ -1,8 +1,11 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
 
+from django.core.exceptions import ObjectDoesNotExist
+from notifications.models import Notification
+
 from papersfeed import constants
-from papersfeed.utils.base_utils import get_results_from_queryset
+from papersfeed.utils.base_utils import get_results_from_queryset, is_parameter_exists, ApiError
 from papersfeed.models.users.user import User
 from papersfeed.models.reviews.review import Review
 from papersfeed.models.collections.collection import Collection
@@ -21,6 +24,32 @@ def select_notifications(args):
     notifications = get_results_from_queryset(notifications, count=None)
     notifications = __pack_notifications(notifications)
     return notifications
+
+
+def read_notification(args):
+    """Mark the given Notification as Read"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Notification Id
+    notification_id = args[constants.ID]
+
+    # Get Notification
+    try:
+        notification = Notification.objects.get(id=notification_id)
+    except ObjectDoesNotExist:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    # Check Collection User Id
+    if not request_user or notification.recipient.id != request_user.id:
+        raise ApiError(constants.AUTH_ERROR)
+
+    # Mark as Read
+    notification.mark_as_read()
 
 
 def __pack_notifications(notifications):

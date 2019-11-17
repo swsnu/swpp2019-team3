@@ -174,3 +174,7 @@ def delete_like_collection(args):
 def get_notification(args):
     """Get Notification"""
     return {constants.NOTIFICATIONS: notification_utils.select_notifications(args)}
+
+def put_notification(args):
+    """Put Notification"""
+    return notification_utils.read_notification(args)

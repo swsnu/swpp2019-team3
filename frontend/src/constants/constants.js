@@ -29,7 +29,7 @@ export const getMeStatus = {
     FAILURE: "FAILURE",
 };
 
-export const getNotiStatus = {
+export const notiStatus = {
     NONE: "NONE",
     WAITING: "WAITING",
     SUCCESS: "SUCCESS",

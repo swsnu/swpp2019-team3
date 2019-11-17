@@ -7,6 +7,7 @@ import {
     signout,
     getMe,
     getNoti,
+    readNoti,
 } from "./auth/auth";
 
 import {
@@ -94,6 +95,7 @@ export const authActions = {
     signout,
     getMe,
     getNoti,
+    readNoti,
 };
 export const paperActions = {
     getPaper,

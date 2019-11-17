@@ -47,6 +47,12 @@
     margin-right: 5%;
 }
 
+#no-notifications-message {
+    font-size: 100%;
+    color: #2f87ef;
+    text-align: center;
+}
+
 .header .buttons .myaccount-button {
    margin-right: 20px;
 }

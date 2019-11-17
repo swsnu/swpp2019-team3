@@ -1,6 +1,6 @@
 import { authConstants } from "../../actions/actionTypes";
 import {
-    signupStatus, signinStatus, signoutStatus, getMeStatus, getNotiStatus,
+    signupStatus, signinStatus, signoutStatus, getMeStatus, notiStatus,
 } from "../../../constants/constants";
 
 const initialState = {
@@ -8,7 +8,8 @@ const initialState = {
     signinStatus: signinStatus.NONE,
     signoutStatus: signoutStatus.NONE,
     getMeStatus: getMeStatus.NONE,
-    getNotiStatus: getNotiStatus.NONE,
+    getNotiStatus: notiStatus.NONE,
+    readNotiStatus: notiStatus.NONE,
     me: null,
     notifications: [],
 };
@@ -40,9 +41,14 @@ const reducer = (state = initialState, action) => {
         return { ...state, getMeStatus: getMeStatus.FAILURE };
 
     case authConstants.GET_NOTI_SUCCESS:
-        return { ...state, getNotiStatus: getNotiStatus.SUCCESS, notifications: action.target };
+        return { ...state, getNotiStatus: notiStatus.SUCCESS, notifications: action.target };
     case authConstants.GET_NOTI_FAILURE:
-        return { ...state, getNotiStatus: getNotiStatus.FAILURE };
+        return { ...state, getNotiStatus: notiStatus.FAILURE };
+
+    case authConstants.READ_NOTI_SUCCESS:
+        return { ...state, readNotiStatus: notiStatus.SUCCESS };
+    case authConstants.READ_NOTI_FAILURE:
+        return { ...state, readNotiStatus: notiStatus.FAILURE };
 
     default:
         return { ...state };
