@@ -59,12 +59,22 @@ class Header extends Component {
         let notifications = null;
         if (this.props.notifications) {
             notifications = this.props.notifications.map(
-                (notification) => (
-                    <Dropdown.Item key={notification.id}>
-                        <Link to="/a">a</Link>
-                        <Link to="b">b</Link>
-                    </Dropdown.Item>
-                ),
+                (notification) => {
+                    let actionObjectLink = "";
+                    if (notification.action_object.type === "collection") {
+                        actionObjectLink = "/collection_id=";
+                    } else if (notification.action_object.type === "review") {
+                        actionObjectLink = "/review_id=";
+                    }
+                    return (
+                        <div key={notification.id} className="notification-entry">
+                            <Link to={`/profile_id=${notification.actor.id}`}>{notification.actor.username}</Link>
+                            &nbsp;liked&nbsp;
+                            <Link to={actionObjectLink + notification.action_object.id}>{notification.action_object.string}</Link>
+                            &nbsp;{notification.timesince} ago
+                        </div>
+                    );
+                },
             );
         }
 
@@ -79,7 +89,7 @@ class Header extends Component {
                     <div className="buttons">
                         <Dropdown>
                             <Dropdown.Toggle title="notification" className="notification-button">notification</Dropdown.Toggle>
-                            <Dropdown.Menu>
+                            <Dropdown.Menu className="notification-menu">
                                 {notifications}
                             </Dropdown.Menu>
                         </Dropdown>

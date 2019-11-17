@@ -36,11 +36,21 @@
     margin-right: 20px;
  }
 
+ .header .buttons .notification-menu {
+    height: 200px;
+    width: 200%;
+    overflow-y: scroll;
+}
+
+.header .buttons .notification-entry {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
 .header .buttons .myaccount-button {
    margin-right: 20px;
 }
 
-.header .buttons .myaccount-button .myaccount-menu {
-    display: flex;
+.header .buttons .myaccount-menu {
     justify-content: flex-end;
 }

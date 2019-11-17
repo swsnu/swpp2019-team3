@@ -4,6 +4,8 @@
 from papersfeed import constants
 from papersfeed.utils.base_utils import get_results_from_queryset
 from papersfeed.models.users.user import User
+from papersfeed.models.reviews.review import Review
+from papersfeed.models.collections.collection import Collection
 
 
 def select_notifications(args):
@@ -28,11 +30,17 @@ def __pack_notifications(notifications):
     for notification in notifications:
         packed_notification = {
             constants.ID: notification.id,
-            constants.ACTOR: notification.actor.id,
+            constants.ACTOR: {
+                constants.ID: notification.actor.id,
+                constants.USERNAME: notification.actor.username
+            },
             constants.VERB: notification.verb,
-            constants.ACTION_OBJECT: notification.action_object.id,
+            constants.ACTION_OBJECT: {
+                constants.TYPE: str(notification.action_object_content_type),
+                constants.ID: notification.action_object.id,
+                constants.STRING: str(notification.action_object)
+            },
             constants.TIMESINCE: notification.timesince(),
-            constants.STRING: str(notification),
         }
 
         packed.append(packed_notification)
