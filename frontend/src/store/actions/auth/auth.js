@@ -113,5 +113,5 @@ const readNotiFailure = (error) => ({
 });
 
 export const readNoti = (notificationId) => (dispatch) => axios.put("/api/notification", notificationId)
-    .then((res) => dispatch(readNotiSuccess(res.data)))
+    .then(() => dispatch(readNotiSuccess()))
     .catch((err) => dispatch(readNotiFailure(err)));

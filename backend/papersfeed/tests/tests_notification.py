@@ -135,6 +135,7 @@ class LikeTestCase(TestCase):
         collection_noti = notifications[1]
         review_noti = notifications[2]
 
+        # Check follow_noti
         self.assertEqual(follow_noti['actor'], {
             constants.ID: user2_id,
             constants.USERNAME: 'user2'
@@ -146,6 +147,7 @@ class LikeTestCase(TestCase):
             constants.STRING: 'user1'
         })
 
+        # Check collection_noti
         self.assertEqual(collection_noti['actor'], {
             constants.ID: user2_id,
             constants.USERNAME: 'user2'
@@ -157,6 +159,7 @@ class LikeTestCase(TestCase):
             constants.STRING: 'collection1'
         })
 
+        # Check review_noti
         self.assertEqual(review_noti['actor'], {
             constants.ID: user2_id,
             constants.USERNAME: 'user2'
@@ -204,6 +207,7 @@ class LikeTestCase(TestCase):
         notification = Notification.objects.get(actor_object_id=user2_id)
         self.assertEqual(notification.unread, True)
 
+        # Mark the Notification as Read
         client.put('/api/notification', data=json.dumps({
             constants.ID: notification.id,
         }))
