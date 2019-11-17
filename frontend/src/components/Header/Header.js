@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { authActions } from "../../store/actions";
-import { signoutStatus, notiStatus } from "../../constants/constants";
+import { signoutStatus } from "../../constants/constants";
 import "./Header.css";
 
 class Header extends Component {
@@ -27,9 +27,8 @@ class Header extends Component {
 
     componentDidMount() {
         this.props.onGetNoti()
-            .then(() => {
-
-            });
+            .then(() => {})
+            .catch(() => {});
     }
 
     // for search input change
@@ -46,14 +45,16 @@ class Header extends Component {
                     this.props.history.push("/");
                 }
                 // TODO: we should handle timeout
-            });
+            })
+            .catch(() => {});
     }
 
     readNotiHandler(notificationId) {
         this.props.onReadNoti({ id: notificationId })
             .then(() => {
                 this.props.onGetNoti();
-            });
+            })
+            .catch(() => {});
     }
 
     render() {
@@ -68,28 +69,37 @@ class Header extends Component {
         if (this.props.notifications.length > 0) {
             notifications = this.props.notifications.map(
                 (notification) => {
+                    let actionObject = null;
                     let actionObjectLink = "";
                     if (notification.action_object.type === "collection") {
                         actionObjectLink = "/collection_id=";
                     } else if (notification.action_object.type === "review") {
                         actionObjectLink = "/review_id=";
                     }
+
+                    if (notification.action_object.type !== "user") {
+                        actionObject = (
+                            <Link
+                              id="action-object-link"
+                              to={actionObjectLink + notification.action_object.id}
+                              onClick={() => this.readNotiHandler(notification.id)}
+                            >
+                                {notification.action_object.string}&nbsp;
+                            </Link>
+                        );
+                    }
                     return (
                         <div key={notification.id} className="notification-entry">
                             <Link
+                              id="actor-link"
                               to={`/profile_id=${notification.actor.id}`}
                               onClick={() => this.readNotiHandler(notification.id)}
                             >
                                 {notification.actor.username}
                             </Link>
-                            &nbsp;liked&nbsp;
-                            <Link
-                              to={actionObjectLink + notification.action_object.id}
-                              onClick={() => this.readNotiHandler(notification.id)}
-                            >
-                                {notification.action_object.string}
-                            </Link>
-                            &nbsp;{notification.timesince} ago&nbsp;
+                                &nbsp;{notification.verb}&nbsp;
+                            {actionObject}
+                            {notification.timesince} ago&nbsp;
                             <button type="button" className="read-button" onClick={() => this.readNotiHandler(notification.id)}>x</button>
                         </div>
                     );
@@ -133,8 +143,6 @@ class Header extends Component {
 const mapStateToProps = (state) => ({
     me: state.auth.me,
     signoutStatus: state.auth.signoutStatus,
-    getNotiStatus: state.auth.getNotiStatus,
-    readNotiStatus: state.auth.readNotiStatus,
     notifications: state.auth.notifications,
 });
 
@@ -153,8 +161,6 @@ Header.propTypes = {
     onGetNoti: PropTypes.func,
     onReadNoti: PropTypes.func,
     signoutStatus: PropTypes.string,
-    getNotiStatus: PropTypes.string,
-    readNotiStatus: PropTypes.string,
     notifications: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
 };
 
@@ -165,7 +171,5 @@ Header.defaultProps = {
     onGetNoti: () => {},
     onReadNoti: () => {},
     signoutStatus: signoutStatus.NONE,
-    getNotiStatus: notiStatus.NONE,
-    readNotiStatus: notiStatus.NONE,
     notifications: [],
 };

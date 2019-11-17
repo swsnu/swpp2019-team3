@@ -3,7 +3,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, username, password, salt, description=None):
+    """UserManager"""
+    def create_user(self, email, username, password, salt, description=None): # pylint: disable=too-many-arguments
+        """inherit BaseUserManager's create_user"""
         user = self.model(
             email=email,
             username=username,

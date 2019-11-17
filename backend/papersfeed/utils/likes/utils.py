@@ -27,7 +27,7 @@ def insert_like_paper(args):
     ], args)
 
     # Paper Id
-    paper_id = args[constants.ID]
+    paper_id = int(args[constants.ID])
 
     # Request User
     request_user = args[constants.USER]
@@ -53,7 +53,7 @@ def remove_like_paper(args):
     ], args)
 
     # Paper ID
-    paper_id = args[constants.ID]
+    paper_id = int(args[constants.ID])
 
     # Request User
     request_user = args[constants.USER]
@@ -76,7 +76,7 @@ def insert_like_review(args):
     ], args)
 
     # Review Id
-    review_id = args[constants.ID]
+    review_id = int(args[constants.ID])
 
     # Request User
     request_user = args[constants.USER]
@@ -113,7 +113,7 @@ def remove_like_review(args):
     ], args)
 
     # Review ID
-    review_id = args[constants.ID]
+    review_id = int(args[constants.ID])
 
     # Request User
     request_user = args[constants.USER]
@@ -136,7 +136,7 @@ def insert_like_collection(args):
     ], args)
 
     # Collection Id
-    collection_id = args[constants.ID]
+    collection_id = int(args[constants.ID])
 
     # Request User
     request_user = args[constants.USER]
@@ -178,7 +178,7 @@ def remove_like_collection(args):
     ], args)
 
     # Collection ID
-    collection_id = args[constants.ID]
+    collection_id = int(args[constants.ID])
 
     # Request User
     request_user = args[constants.USER]

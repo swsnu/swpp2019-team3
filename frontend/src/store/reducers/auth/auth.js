@@ -10,8 +10,8 @@ const initialState = {
     getMeStatus: getMeStatus.NONE,
     getNotiStatus: notiStatus.NONE,
     readNotiStatus: notiStatus.NONE,
-    me: null,
     notifications: [],
+    me: null,
 };
 
 const reducer = (state = initialState, action) => {
