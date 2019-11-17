@@ -11,7 +11,7 @@ from papersfeed.models.collections.collection_like import CollectionLike
 from papersfeed.models.collections.collection_user import CollectionUser, COLLECTION_USER_TYPE
 from papersfeed.models.collections.collection_paper import CollectionPaper
 from papersfeed.models.replies.reply_collection import ReplyCollection
-from papersfeed.models.users.user import User
+# from papersfeed.models.users.user import User
 
 
 def insert_collection(args):
@@ -401,8 +401,11 @@ def __contains_paper(outer_ref, paper_id):
     )
 
 
+# pylint: disable=pointless-string-statement
+"""
 def __get_members_collection(filter_query):
-    """Get Members Of Collection"""
+    # Get Members Of Collection
+
     # Members Of Collections
     collection_members = CollectionUser.objects.filter(
         filter_query
@@ -443,7 +446,8 @@ def __get_members_collection(filter_query):
 
 
 def __get_members(filter_query):
-    """Get Members By Query"""
+    # Get Members By Query
+
     queryset = User.objects.filter(
         filter_query
     )
@@ -456,7 +460,8 @@ def __get_members(filter_query):
 
 
 def __pack_members(members):
-    """Pack Members"""
+    # Pack Members
+
     # Packed
     packed = []
 
@@ -474,3 +479,5 @@ def __pack_members(members):
         )
 
     return packed
+"""
+# pylint: enable=pointless-string-statement
