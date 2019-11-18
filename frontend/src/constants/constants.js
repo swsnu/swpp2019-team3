@@ -29,20 +29,18 @@ export const getMeStatus = {
     FAILURE: "FAILURE",
 };
 
-export const paperStatus = {
+export const notiStatus = {
     NONE: "NONE",
     WAITING: "WAITING",
     SUCCESS: "SUCCESS",
     FAILURE: "FAILURE",
 };
 
-export const userStatus = {
+export const paperStatus = {
     NONE: "NONE",
     WAITING: "WAITING",
     SUCCESS: "SUCCESS",
-    USER_NOT_EXIST: "USER_NOT_EXIST",
-    SELF_FOLLOWING: "SELF_FOLLOWING",
-    DUPLICATE_EMAIL: "DUPLICATE_EMAIL",
+    FAILURE: "FAILURE",
 };
 
 export const collectionStatus = {
@@ -63,4 +61,13 @@ export const reviewStatus = {
     REVIEW_NOT_EXIST: "REVIEW_NOT_EXIST",
     PAPER_NOT_EXIST: "PAPER_NOT_EXIST",
     AUTH_ERROR: "AUTH_ERROR",
+};
+
+export const userStatus = {
+    NONE: "NONE",
+    WAITING: "WAITING",
+    SUCCESS: "SUCCESS",
+    USER_NOT_EXIST: "USER_NOT_EXIST",
+    SELF_FOLLOWING: "SELF_FOLLOWING",
+    DUPLICATE_EMAIL: "DUPLICATE_EMAIL",
 };

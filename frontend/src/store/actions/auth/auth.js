@@ -85,3 +85,33 @@ const getMeFailure = (error) => ({
 export const getMe = () => (dispatch) => axios.get("/api/user/me")
     .then((res) => dispatch(getMeSuccess(res.data)))
     .catch((err) => dispatch(getMeFailure(err)));
+
+
+const getNotiSuccess = (notifications) => ({
+    type: authConstants.GET_NOTI_SUCCESS,
+    target: notifications.notifications,
+});
+
+const getNotiFailure = (error) => ({
+    type: authConstants.GET_NOTI_FAILURE,
+    target: error,
+});
+
+export const getNoti = () => (dispatch) => axios.get("/api/notification")
+    .then((res) => dispatch(getNotiSuccess(res.data)))
+    .catch((err) => dispatch(getNotiFailure(err)));
+
+
+const readNotiSuccess = () => ({
+    type: authConstants.READ_NOTI_SUCCESS,
+    target: null,
+});
+
+const readNotiFailure = (error) => ({
+    type: authConstants.READ_NOTI_FAILURE,
+    target: error,
+});
+
+export const readNoti = (notificationId) => (dispatch) => axios.put("/api/notification", notificationId)
+    .then(() => dispatch(readNotiSuccess()))
+    .catch((err) => dispatch(readNotiFailure(err)));
