@@ -171,10 +171,22 @@ def delete_like_collection(args):
     """Delete Like Collection"""
     return {constants.COUNT: likes_utils.remove_like_collection(args)}
 
+
 def get_notification(args):
     """Get Notification"""
     return {constants.NOTIFICATIONS: notification_utils.select_notifications(args)}
 
+
 def put_notification(args):
     """Put Notification"""
     return notification_utils.read_notification(args)
+
+
+def get_user_following(args):
+    """Get Users User is Following"""
+    return {constants.USERS: users_utils.select_user_following(args)}
+
+
+def get_user_followed(args):
+    """Get User’s Followers"""
+    return {constants.USERS: users_utils.select_user_followed(args)}

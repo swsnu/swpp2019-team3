@@ -245,6 +245,54 @@ def select_user_search(args):
     return users
 
 
+def select_user_following(args):
+    """Select Users User is Following"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Requested User ID
+    requested_user_id = args[constants.ID]
+
+    # User Ids
+    user_ids = UserFollow.objects.filter(following_user=requested_user_id).values_list('followed_user', flat=True)
+
+    # Filter Query
+    filter_query = Q(id__in=user_ids)
+
+    # Users
+    users, _, _ = __get_users(filter_query, request_user, None)
+
+    return users
+
+
+def select_user_followed(args):
+    """Select User’s Followers"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Requested User ID
+    requested_user_id = args[constants.ID]
+
+    # User Ids
+    user_ids = UserFollow.objects.filter(followed_user=requested_user_id).values_list('following_user', flat=True)
+
+    # Filter Query
+    filter_query = Q(id__in=user_ids)
+
+    # Users
+    users, _, _ = __get_users(filter_query, request_user, None)
+
+    return users
+
+
 def get_users(filter_query, request_user, count):
     """Public Get Users"""
     return __get_users(filter_query, request_user, count)
