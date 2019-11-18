@@ -313,7 +313,7 @@ def insert_follow(args):
     ], args)
 
     # Followed User Id
-    followed_user_id = args[constants.ID]
+    followed_user_id = int(args[constants.ID])
 
     # Following User
     request_user = args[constants.USER]
@@ -347,7 +347,7 @@ def remove_follow(args):
     ], args)
 
     # Followed User Id
-    followed_user_id = args[constants.ID]
+    followed_user_id = int(args[constants.ID])
 
     # Following User
     following_user_id = args[constants.USER].id

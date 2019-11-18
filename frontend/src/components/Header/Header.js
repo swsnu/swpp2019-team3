@@ -66,7 +66,9 @@ class Header extends Component {
         }
 
         let notifications = null;
+        let notificationLabel = "notifcation";
         if (this.props.notifications.length > 0) {
+            notificationLabel = "notification (new)";
             notifications = this.props.notifications.map(
                 (notification) => {
                     let actionObject = null;
@@ -119,7 +121,7 @@ class Header extends Component {
                     </Form>
                     <div className="buttons">
                         <Dropdown>
-                            <Dropdown.Toggle title="notification" className="notification-button">notification</Dropdown.Toggle>
+                            <Dropdown.Toggle title="notification" className="notification-button">{notificationLabel}</Dropdown.Toggle>
                             <Dropdown.Menu className="notification-menu">
                                 {notifications}
                             </Dropdown.Menu>
