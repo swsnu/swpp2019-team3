@@ -8,6 +8,7 @@ import IntroModal from "./Modal/IntroModal/IntroModal";
 import AddPaperModal from "./Modal/AddPaperModal/AddPaperModal";
 import Reply from "./Reply/Reply";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
+import UserCard from "./User/UserCard/UserCard";
 
 export {
     SideBar,
@@ -20,4 +21,5 @@ export {
     AddPaperModal,
     Reply,
     PrivateRoute,
+    UserCard,
 };

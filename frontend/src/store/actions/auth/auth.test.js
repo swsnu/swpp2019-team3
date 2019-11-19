@@ -15,6 +15,7 @@ const stubInitialState = {
     },
     collection: {},
     paper: {},
+    user: {},
     review: {},
 };
 const mockStore = getMockStore(stubInitialState);
@@ -254,6 +255,84 @@ describe("authActions", () => {
         mockStore.dispatch(authActions.getMe())
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/user/me");
+                done();
+            });
+    });
+
+
+    it("'getNoti' should call axios.get", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: {
+                        notifications: [{
+                            id: 1, actor: { id: 1 }, action_object: { id: 1 }, verb: "liked",
+                        }],
+                    },
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(authActions.getNoti())
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/notification");
+                done();
+            });
+    });
+
+    it("'getNoti' should handle session expired", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 440,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(authActions.getNoti())
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/notification");
+                done();
+            });
+    });
+
+
+    it("'readNoti' should call axios.put", (done) => {
+        const spy = jest.spyOn(axios, "put")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(authActions.readNoti({ id: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/notification", { id: 1 });
+                done();
+            });
+    });
+
+    it("'readNoti' should handle session expired", (done) => {
+        const spy = jest.spyOn(axios, "put")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 440,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(authActions.readNoti({ id: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/notification", { id: 1 });
                 done();
             });
     });

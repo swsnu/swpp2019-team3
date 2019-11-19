@@ -20,6 +20,8 @@ describe("Paper reducer", () => {
         expect(newState).toEqual({
             getPaperStatus: paperStatus.NONE,
             likePaperStatus: paperStatus.NONE,
+            searchPaperStatus: paperStatus.NONE,
+            searchedPapers: [],
             likeCount: 0,
             unlikePaperStatus: paperStatus.NONE,
             unlikeCount: 0,
@@ -75,5 +77,22 @@ describe("Paper reducer", () => {
             target: stubError,
         });
         expect(newState.unlikePaperStatus).toEqual(paperStatus.FAILURE);
+    });
+
+
+    it("should handle searchPaper success", () => {
+        const newState = reducer(undefined, {
+            type: paperConstants.SEARCH_PAPER_SUCCESS,
+            target: [],
+        });
+        expect(newState.searchPaperStatus).toEqual(paperStatus.SUCCESS);
+    });
+
+    it("should handle searchPaper failure", () => {
+        const newState = reducer(undefined, {
+            type: paperConstants.SEARCH_PAPER_FAILURE,
+            target: stubError,
+        });
+        expect(newState.searchPaperStatus).toEqual(paperStatus.FAILURE);
     });
 });

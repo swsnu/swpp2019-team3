@@ -1,0 +1,41 @@
+.wrapper {
+    padding-bottom: 10%;
+}
+
+.user {
+    width: 90%;
+    text-align: left;
+}
+
+.user .body {
+    padding-bottom: 10%;
+}
+
+.user .body .title {
+    padding-bottom: 10%;
+}
+
+.user .body .title .text{
+    color: black;
+    font-weight: bold;
+    font-size: 130%;
+}
+
+.user .footer {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.user .follow-button{
+    width: 30%;
+    display: flex;
+    font-weight: bold;
+}
+
+.user .following-count{
+    margin-top: 2%;
+    margin-left: 10%;
+    width: 30%;
+    display: flex;
+    font-weight: bold;
+}

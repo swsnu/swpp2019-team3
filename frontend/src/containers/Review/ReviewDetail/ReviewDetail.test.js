@@ -80,6 +80,7 @@ describe("<ReviewDetail />", () => {
                     error: null,
                 },
             },
+            user: {},
         };
 
         reviewDetail = makeReviewDetail(stubInitialState);

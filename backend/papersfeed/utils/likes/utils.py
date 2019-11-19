@@ -1,7 +1,9 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
 
+from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
+from notifications.signals import notify
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, ApiError
@@ -17,6 +19,9 @@ from papersfeed.models.collections.collection_like import CollectionLike
 from papersfeed.models.replies.reply import Reply
 from papersfeed.models.replies.reply_like import ReplyLike
 from papersfeed.utils.replies.utils import __get_reply_like_count
+from papersfeed.models.users.user import User
+from papersfeed.models.collections.collection_user import CollectionUser
+
 
 def insert_like_paper(args):
     """Insert Like of Paper"""
@@ -25,7 +30,7 @@ def insert_like_paper(args):
     ], args)
 
     # Paper Id
-    paper_id = args[constants.ID]
+    paper_id = int(args[constants.ID])
 
     # Request User
     request_user = args[constants.USER]
@@ -51,7 +56,7 @@ def remove_like_paper(args):
     ], args)
 
     # Paper ID
-    paper_id = args[constants.ID]
+    paper_id = int(args[constants.ID])
 
     # Request User
     request_user = args[constants.USER]
@@ -74,7 +79,7 @@ def insert_like_review(args):
     ], args)
 
     # Review Id
-    review_id = args[constants.ID]
+    review_id = int(args[constants.ID])
 
     # Request User
     request_user = args[constants.USER]
@@ -84,9 +89,20 @@ def insert_like_review(args):
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     # Create
-    ReviewLike.objects.create(
+    review_like = ReviewLike(
         review_id=review_id,
         user_id=request_user.id,
+    )
+    review_like.save()
+
+    review = Review.objects.get(id=review_id)
+    review_author = User.objects.get(id=review.user_id)
+
+    notify.send(
+        request_user,
+        recipient=[review_author],
+        verb='liked',
+        action_object=review,
     )
 
     like_counts = __get_review_like_count([review_id], 'review_id')
@@ -100,7 +116,7 @@ def remove_like_review(args):
     ], args)
 
     # Review ID
-    review_id = args[constants.ID]
+    review_id = int(args[constants.ID])
 
     # Request User
     request_user = args[constants.USER]
@@ -123,7 +139,7 @@ def insert_like_collection(args):
     ], args)
 
     # Collection Id
-    collection_id = args[constants.ID]
+    collection_id = int(args[constants.ID])
 
     # Request User
     request_user = args[constants.USER]
@@ -133,9 +149,25 @@ def insert_like_collection(args):
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     # Create
-    CollectionLike.objects.create(
+    collection_like = CollectionLike(
         collection_id=collection_id,
         user_id=request_user.id,
+    )
+    collection_like.save()
+
+    collection = Collection.objects.get(id=collection_id)
+
+    collection_members = CollectionUser.objects.filter(Q(collection_id=collection_id))
+    member_ids = [collection_member.user_id for collection_member in collection_members]
+    member_ids = list(set(member_ids))
+
+    members = User.objects.filter(Q(id__in=member_ids))
+
+    notify.send(
+        request_user,
+        recipient=members,
+        verb='liked',
+        action_object=collection,
     )
 
     like_counts = __get_collection_like_count([collection_id], 'collection_id')
@@ -149,7 +181,7 @@ def remove_like_collection(args):
     ], args)
 
     # Collection ID
-    collection_id = args[constants.ID]
+    collection_id = int(args[constants.ID])
 
     # Request User
     request_user = args[constants.USER]

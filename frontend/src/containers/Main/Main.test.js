@@ -68,6 +68,7 @@ const stubInitialState = {
             error: null,
         },
     },
+    user: {},
 };
 
 const mockStore = getMockStore(stubInitialState);

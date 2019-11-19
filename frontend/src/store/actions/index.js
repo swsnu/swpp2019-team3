@@ -1,7 +1,21 @@
+/*
+    import actions from here
+*/
 import {
-    signup, signin, signout, getMe,
+    signup,
+    signin,
+    signout,
+    getMe,
+    getNoti,
+    readNoti,
 } from "./auth/auth";
-import { getPaper, likePaper, unlikePaper } from "./paper/paper";
+
+import {
+    getPaper,
+    likePaper,
+    unlikePaper,
+    searchPaper,
+} from "./paper/paper";
 
 import {
     makeNewCollection,
@@ -19,7 +33,18 @@ import {
     deleteCollection,
     likeCollection,
     unlikeCollection,
+    searchCollection,
 } from "./collection/collection";
+
+import {
+    getUserByUserId,
+    getFollowersByUserId,
+    getFollowingsByUserId,
+    addUserFollowing,
+    removeUserFollowing,
+    editUserInfo,
+    searchUser,
+} from "./user/user";
 
 import {
     makeNewReview,
@@ -30,9 +55,13 @@ import {
     likeReview,
     unlikeReview,
     deleteReview,
-    // consume Review,
-} from "./Review/review";
+// consume Review,
+} from "./review/review";
 
+
+/*
+    export actions from here
+*/
 export const collectionActions = {
     makeNewCollection,
     getCollectionsByUserId,
@@ -49,6 +78,7 @@ export const collectionActions = {
     deleteCollection,
     likeCollection,
     unlikeCollection,
+    searchCollection,
 };
 
 export const reviewActions = {
@@ -68,9 +98,22 @@ export const authActions = {
     signin,
     signout,
     getMe,
+    getNoti,
+    readNoti,
 };
 export const paperActions = {
     getPaper,
     likePaper,
     unlikePaper,
+    searchPaper,
+};
+
+export const userActions = {
+    getUserByUserId,
+    getFollowersByUserId,
+    getFollowingsByUserId,
+    addUserFollowing,
+    removeUserFollowing,
+    editUserInfo,
+    searchUser,
 };

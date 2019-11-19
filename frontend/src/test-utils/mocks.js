@@ -21,12 +21,14 @@ export const getMockStore = (initialState) => {
     const mockAuthReducer = getMockReducer(initialState.auth);
     const mockPaperReducer = getMockReducer(initialState.paper);
     const mockCollectionReducer = getMockReducer(initialState.collection);
+    const mockUserReducer = getMockReducer(initialState.user);
     const mockReviewReducer = getMockReducer(initialState.review);
     const rootReducer = (his) => combineReducers({
         router: connectRouter(his),
         auth: mockAuthReducer,
         paper: mockPaperReducer,
         collection: mockCollectionReducer,
+        user: mockUserReducer,
         review: mockReviewReducer,
     });
 

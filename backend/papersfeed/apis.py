@@ -7,18 +7,23 @@ from papersfeed.utils.users import utils as users_utils
 from papersfeed.utils.collections import utils as collections_utils
 from papersfeed.utils.reviews import utils as reviews_utils
 from papersfeed.utils.likes import utils as likes_utils
+<<<<<<< HEAD
 from papersfeed.utils.replies import utils as replies_utils
+=======
+from papersfeed.utils.notifications import utils as notification_utils
+
+>>>>>>> ffc449bb855ee03323067ac1b2e7dc56aaa7e29a
 from . import constants
 
 
 def post_follow(args):
     """Post Follow"""
-    return users_utils.insert_follow(args)
+    return {constants.COUNT: users_utils.insert_follow(args)}
 
 
 def delete_follow(args):
     """Delete Follow"""
-    return users_utils.remove_follow(args)
+    return {constants.COUNT: users_utils.remove_follow(args)}
 
 
 def get_session(args):
@@ -209,3 +214,10 @@ def put_reply_review(args):
 def delete_reply_review(args):
     """Delete reply review"""
     return {constants.REPLY: replies_utils.remove_reply(args)}
+def get_notification(args):
+    """Get Notification"""
+    return {constants.NOTIFICATIONS: notification_utils.select_notifications(args)}
+
+def put_notification(args):
+    """Put Notification"""
+    return notification_utils.read_notification(args)

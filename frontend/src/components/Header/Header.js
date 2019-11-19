@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
+import { Link } from "react-router-dom";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -16,18 +17,24 @@ class Header extends Component {
         super(props);
 
         this.state = {
-            searchKeyword: "",
-            notifications: [],
+            searchWord: "",
         };
 
         this.clickSignoutButtonHandler = this.clickSignoutButtonHandler.bind(this);
+        this.readNotiHandler = this.readNotiHandler.bind(this);
         this.handleChange = this.handleChange.bind(this);
+    }
+
+    componentDidMount() {
+        this.props.onGetNoti()
+            .then(() => {})
+            .catch(() => {});
     }
 
     // for search input change
     handleChange(e) {
         this.setState({
-            searchKeyword: e.target.value,
+            searchWord: e.target.value,
         });
     }
 
@@ -38,35 +45,112 @@ class Header extends Component {
                     this.props.history.push("/");
                 }
                 // TODO: we should handle timeout
-            });
+            })
+            .catch(() => {});
+    }
+
+    readNotiHandler(notificationId) {
+        this.props.onReadNoti({ id: notificationId })
+            .then(() => {
+                this.props.onGetNoti();
+            })
+            .catch(() => {});
     }
 
     render() {
         let username = null;
+        let id = null;
         if (this.props.me) {
             username = this.props.me.username;
+            id = this.props.me.id;
         }
+
+        let notifications = null;
+        let notificationLabel = "notifcation";
+        if (this.props.notifications.length > 0) {
+            notificationLabel = "notification (new)";
+            notifications = this.props.notifications.map(
+                (notification) => {
+                    let actionObject = null;
+                    let actionObjectLink = "";
+                    if (notification.action_object.type === "collection") {
+                        actionObjectLink = "/collection_id=";
+                    } else if (notification.action_object.type === "review") {
+                        actionObjectLink = "/review_id=";
+                    }
+
+                    if (notification.action_object.type !== "user") {
+                        actionObject = (
+                            <Link
+                              id="action-object-link"
+                              to={actionObjectLink + notification.action_object.id}
+                              onClick={() => this.readNotiHandler(notification.id)}
+                            >
+                                {notification.action_object.string}&nbsp;
+                            </Link>
+                        );
+                    }
+                    return (
+                        <div key={notification.id} className="notification-entry">
+                            <Link
+                              id="actor-link"
+                              to={`/profile_id=${notification.actor.id}`}
+                              onClick={() => this.readNotiHandler(notification.id)}
+                            >
+                                {notification.actor.username}
+                            </Link>
+                                &nbsp;{notification.verb}&nbsp;
+                            {actionObject}
+                            {notification.timesince} ago&nbsp;
+                            <button type="button" className="read-button" onClick={() => this.readNotiHandler(notification.id)}>x</button>
+                        </div>
+                    );
+                },
+            );
+        } else {
+            notifications = <h3 id="no-notifications-message">no notifications</h3>;
+        }
+
+        const keyPressHandler = (e) => {
+            if (this.state.searchWord && e.charCode === 13) {
+                this.props.history.push(`/search=${this.state.searchWord}`);
+            }
+        };
 
         return (
             <div>
                 <Navbar className="header">
                     <Nav.Link className="logo" href="/main">Papersfeed</Nav.Link>
                     <Form inline className="search">
-                        <Form.Control className="search-input" type="text" placeholder="Search" bsPrefix="search-input" value={this.state.searchKeyword} onChange={this.handleChange} />
-                        <Button className="search-button" href="/search">Search</Button>
+                        <Form.Control
+                          className="search-input"
+                          type="text"
+                          placeholder="Search"
+                          bsPrefix="search-input"
+                          value={this.state.searchWord}
+                          onChange={this.handleChange}
+                          onKeyPress={keyPressHandler}
+                        />
+                        <Button
+                          className="search-button"
+                          href={`/search=${this.state.searchWord}`}
+                          disabled={!this.state.searchWord}
+                        >Search
+                        </Button>
                     </Form>
                     <div className="buttons">
                         <Dropdown>
-                            <Dropdown.Toggle title="notification" className="notification-button">notification</Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                {this.state.notifications}
+                            <Dropdown.Toggle title="notification" className="notification-button">{notificationLabel}</Dropdown.Toggle>
+                            <Dropdown.Menu className="notification-menu">
+                                {notifications}
                             </Dropdown.Menu>
                         </Dropdown>
                         <Dropdown>
                             <Dropdown.Toggle title="myaccount" className="myaccount-button">My Account</Dropdown.Toggle>
                             <Dropdown.Menu className="myaccount-menu">
                                 <Dropdown.Header className="username-header">{username}</Dropdown.Header>
-                                <Dropdown.Item className="my-profile-button" href="/profile/user_id">My Profile</Dropdown.Item>
+                                <Dropdown.Item className="my-profile-button" href={`/profile_id=${id}`}>My Profile</Dropdown.Item>
+                                <Dropdown.Item className="account-setting" href="/account_setting">Account Setting</Dropdown.Item>
                                 <Dropdown.Item className="signout-button" onClick={this.clickSignoutButtonHandler}>Logout</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
@@ -80,10 +164,13 @@ class Header extends Component {
 const mapStateToProps = (state) => ({
     me: state.auth.me,
     signoutStatus: state.auth.signoutStatus,
+    notifications: state.auth.notifications,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onSignout: () => dispatch(authActions.signout()),
+    onGetNoti: () => dispatch(authActions.getNoti()),
+    onReadNoti: (notificationId) => dispatch(authActions.readNoti(notificationId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
@@ -92,12 +179,18 @@ Header.propTypes = {
     me: PropTypes.objectOf(PropTypes.any),
     history: PropTypes.objectOf(PropTypes.any),
     onSignout: PropTypes.func,
+    onGetNoti: PropTypes.func,
+    onReadNoti: PropTypes.func,
     signoutStatus: PropTypes.string,
+    notifications: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
 };
 
 Header.defaultProps = {
     me: null,
     history: null,
-    onSignout: null,
+    onSignout: () => {},
+    onGetNoti: () => {},
+    onReadNoti: () => {},
     signoutStatus: signoutStatus.NONE,
+    notifications: [],
 };

@@ -11,6 +11,7 @@ from papersfeed.models.collections.collection_like import CollectionLike
 from papersfeed.models.collections.collection_user import CollectionUser, COLLECTION_USER_TYPE
 from papersfeed.models.collections.collection_paper import CollectionPaper
 from papersfeed.models.replies.reply_collection import ReplyCollection
+# from papersfeed.models.users.user import User
 
 
 def insert_collection(args):
@@ -401,3 +402,85 @@ def __contains_paper(outer_ref, paper_id):
     return Exists(
         CollectionPaper.objects.filter(collection_id=OuterRef(outer_ref), paper_id=paper_id if paper_id else None)
     )
+
+
+# pylint: disable=pointless-string-statement
+"""
+def __get_members_collection(filter_query):
+    # Get Members Of Collection
+
+    # Members Of Collections
+    collection_members = CollectionUser.objects.filter(
+        filter_query
+    )
+
+    # Result
+    # {collection_id: [member]}
+    result = {}
+
+    # Member Ids
+    member_ids = [collection_member.user_id for collection_member in collection_members]
+    member_ids = list(set(member_ids))
+
+    # Get Members
+    members = __get_members(Q(id__in=member_ids))
+
+    # {member_id: member}
+    members = {member[constants.ID]: member for member in members}
+
+    for collection_member in collection_members:
+        # Ids
+        collection_id = collection_member.collection_id
+        member_id = collection_member.user_id
+
+        # Initialize
+        if collection_id not in result:
+            result[collection_id] = []
+
+        if member_id in members:
+            member = members[member_id]
+
+            # Inesrt Type
+            member[constants.TYPE] = collection_member.type
+
+            result[collection_id].append(member)
+
+    return result
+
+
+def __get_members(filter_query):
+    # Get Members By Query
+
+    queryset = User.objects.filter(
+        filter_query
+    )
+
+    members = get_results_from_queryset(queryset, None)
+
+    members = __pack_members(members)
+
+    return members
+
+
+def __pack_members(members):
+    # Pack Members
+
+    # Packed
+    packed = []
+
+    for member in members:
+
+        # Member Id
+        member_id = member.id
+
+        packed.append(
+            {
+                constants.ID: member_id,
+                constants.USERNAME: member.username,
+                constants.EMAIL: member.email,
+            }
+        )
+
+    return packed
+"""
+# pylint: enable=pointless-string-statement

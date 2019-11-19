@@ -6,9 +6,9 @@ import json
 import traceback
 
 # Django Modules
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseNotAllowed
 from django.core.exceptions import ObjectDoesNotExist
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 # Internal Modules
 from papersfeed.utils.base_utils import ApiError
@@ -22,7 +22,16 @@ def api_not_found():
     raise ApiError(404)
 
 
-@csrf_exempt
+@ensure_csrf_cookie
+def token(request):
+    """token"""
+    if request.method == 'GET':
+        return HttpResponse(status=204)
+
+    return HttpResponseNotAllowed(['GET'])
+
+
+# @ensure_csrf_cookie
 def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
     """api_entry"""
     # API 요청에 Return 할 Response Initialize

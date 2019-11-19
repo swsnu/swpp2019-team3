@@ -46,6 +46,7 @@ const stubInitialState = {
             error: -1,
         },
     },
+    user: {},
     review: {},
 };
 
@@ -542,6 +543,43 @@ describe("collectionActions", () => {
         mockStore.dispatch(collectionActions.unlikeCollection({ id: 1 }))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/like/collection", { params: { id: 1 } });
+                done();
+            });
+    });
+
+
+    it("'searchCollection' should call axios.get", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.searchCollection({ text: "a" }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/collection/search", { params: { text: "a" } });
+                done();
+            });
+    });
+
+    it("'searchCollection' should handle failure", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(collectionActions.searchCollection({ text: "a" }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/collection/search", { params: { text: "a" } });
                 done();
             });
     });

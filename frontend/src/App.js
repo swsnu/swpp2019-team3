@@ -6,8 +6,8 @@ import { Route, Switch } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
 
 import {
-    Intro, Main, ReviewDetail, PaperDetail, ReviewControl,
-    ProfileDetail, ProfileEdit, CollectionDetail, CollectionList,
+    Intro, Main, SearchResult, ReviewDetail, PaperDetail, ReviewControl,
+    ProfileDetail, AccountSetting, CollectionDetail, CollectionList,
 } from "./containers";
 import {
     PrivateRoute, Header, SideBar,
@@ -25,6 +25,7 @@ function App(props) {
                         <SideBar />
                         <Switch>
                             <Route path="/main" exact component={Main} />
+                            <Route path="/search=:search_word" exact component={SearchResult} />
                             <Route
                               path="/paper_id=:paper_id/create"
                               exact
@@ -53,8 +54,8 @@ function App(props) {
                               )}
                             />
                             <Route path="/paper_id=:paper_id" exact component={PaperDetail} />
-                            <Route path="/profile/:id" exact component={ProfileDetail} />
-                            <Route path="/profile/:id/edit" exact component={ProfileEdit} />
+                            <Route path="/profile_id=:profile_id" exact component={ProfileDetail} />
+                            <Route path="/account_setting" exact component={AccountSetting} />
                             <Route path="/collections" exact component={CollectionList} />
                             <Route path="/collection_id=:collection_id" exact component={CollectionDetail} />
                         </Switch>
