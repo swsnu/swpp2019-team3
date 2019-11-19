@@ -111,13 +111,32 @@ class Header extends Component {
             notifications = <h3 id="no-notifications-message">no notifications</h3>;
         }
 
+        const keyPressHandler = (e) => {
+            if (this.state.searchWord && e.charCode === 13) {
+                this.props.history.push(`/search=${this.state.searchWord}`);
+            }
+        };
+
         return (
             <div>
                 <Navbar className="header">
                     <Nav.Link className="logo" href="/main">Papersfeed</Nav.Link>
                     <Form inline className="search">
-                        <Form.Control className="search-input" type="text" placeholder="Search" bsPrefix="search-input" value={this.state.searchWord} onChange={this.handleChange} />
-                        <Button className="search-button" href={`/search=${this.state.searchWord}`}>Search</Button>
+                        <Form.Control
+                          className="search-input"
+                          type="text"
+                          placeholder="Search"
+                          bsPrefix="search-input"
+                          value={this.state.searchWord}
+                          onChange={this.handleChange}
+                          onKeyPress={keyPressHandler}
+                        />
+                        <Button
+                          className="search-button"
+                          href={`/search=${this.state.searchWord}`}
+                          disabled={!this.state.searchWord}
+                        >Search
+                        </Button>
                     </Form>
                     <div className="buttons">
                         <Dropdown>

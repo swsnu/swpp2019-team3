@@ -22,6 +22,11 @@ class ProfileDetail extends Component {
             followingCount: 0,
             doIFollow: false,
         };
+
+        this.collectionCardMaker = this.collectionCardMaker.bind(this);
+        this.reviewCardMaker = this.reviewCardMaker.bind(this);
+        this.clickFollowHandler = this.clickFollowHandler.bind(this);
+        this.clickUnfollowHandler = this.clickUnfollowHandler.bind(this);
     }
 
     componentDidMount() {

@@ -1,13 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import {
-    Tabs, Tab,
-} from "react-bootstrap";
+import { Tabs, Tab } from "react-bootstrap";
 
-import {
-    PaperCard, CollectionCard,
-} from "../../components";
+import { PaperCard, CollectionCard, UserCard } from "../../components";
 import { paperActions, collectionActions, userActions } from "../../store/actions";
 import { paperStatus, collectionStatus, userStatus } from "../../constants/constants";
 import "./SearchResult.css";
@@ -61,7 +57,6 @@ class SearchResult extends Component {
     collectionCardsMaker = (collection) => (
         <CollectionCard
           key={collection.id}
-          source={collection.source}
           id={collection.id}
           user={collection.user}
           title={collection.title}
@@ -74,6 +69,19 @@ class SearchResult extends Component {
         />
     );
 
+    userCardsMaker = (user) => (
+        <UserCard
+          key={user.id}
+          id={user.id}
+          username={user.username}
+          email={user.email}
+          description={user.description}
+          doIFollow={user.is_following}
+          followerCount={user.count.follower}
+          followingCount={user.count.following}
+        />
+    )
+
     render() {
         const paperCardsLeft = this.state.papers.filter((x) => this.state.papers.indexOf(x) % 2 === 0)
             .map((paper) => this.paperCardsMaker(paper));
@@ -84,6 +92,11 @@ class SearchResult extends Component {
             .map((collection) => this.collectionCardsMaker(collection));
         const collectionCardsRight = this.state.collections.filter((x) => this.state.collections.indexOf(x) % 2 === 1)
             .map((collection) => this.collectionCardsMaker(collection));
+
+        const userCardsLeft = this.state.users.filter((x) => this.state.users.indexOf(x) % 2 === 0)
+            .map((user) => this.userCardsMaker(user));
+        const userCardsRight = this.state.users.filter((x) => this.state.users.indexOf(x) % 2 === 1)
+            .map((user) => this.userCardsMaker(user));
 
         return (
             <div className="search-result">
@@ -103,8 +116,8 @@ class SearchResult extends Component {
                         </Tab>
                         <Tab className="user-tab" eventKey="user-tab" title="People">
                             <div id="user-cards">
-                                <div id="user-cards-left">{paperCardsLeft}</div>
-                                <div id="user-cards-right">{paperCardsRight}</div>
+                                <div id="user-cards-left">{userCardsLeft}</div>
+                                <div id="user-cards-right">{userCardsRight}</div>
                             </div>
                         </Tab>
                     </Tabs>
