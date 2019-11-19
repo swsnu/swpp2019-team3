@@ -6,7 +6,7 @@ import { Route, Switch } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
 
 import {
-    Intro, Main, ReviewDetail, PaperDetail, ReviewControl,
+    Intro, Main, SearchResult, ReviewDetail, PaperDetail, ReviewControl,
     ProfileDetail, AccountSetting, CollectionDetail, CollectionList,
 } from "./containers";
 import {
@@ -25,6 +25,7 @@ function App(props) {
                         <SideBar />
                         <Switch>
                             <Route path="/main" exact component={Main} />
+                            <Route path="/search=:search_word" exact component={SearchResult} />
                             <Route
                               path="/paper_id=:paper_id/create"
                               exact

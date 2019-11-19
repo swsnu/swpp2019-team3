@@ -17,7 +17,7 @@ class Header extends Component {
         super(props);
 
         this.state = {
-            searchKeyword: "",
+            searchWord: "",
         };
 
         this.clickSignoutButtonHandler = this.clickSignoutButtonHandler.bind(this);
@@ -34,7 +34,7 @@ class Header extends Component {
     // for search input change
     handleChange(e) {
         this.setState({
-            searchKeyword: e.target.value,
+            searchWord: e.target.value,
         });
     }
 
@@ -116,8 +116,8 @@ class Header extends Component {
                 <Navbar className="header">
                     <Nav.Link className="logo" href="/main">Papersfeed</Nav.Link>
                     <Form inline className="search">
-                        <Form.Control className="search-input" type="text" placeholder="Search" bsPrefix="search-input" value={this.state.searchKeyword} onChange={this.handleChange} />
-                        <Button className="search-button" href="/search">Search</Button>
+                        <Form.Control className="search-input" type="text" placeholder="Search" bsPrefix="search-input" value={this.state.searchWord} onChange={this.handleChange} />
+                        <Button className="search-button" href={`/search=${this.state.searchWord}`}>Search</Button>
                     </Form>
                     <div className="buttons">
                         <Dropdown>
