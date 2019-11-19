@@ -178,7 +178,7 @@ describe("<Header />", () => {
         const wrapper = component.find(".search-input").hostNodes();
         wrapper.simulate("change", event);
         const headerInstance = component.find(Header.WrappedComponent).instance();
-        expect(headerInstance.state.searchKeyword).toEqual("ABC");
+        expect(headerInstance.state.searchWord).toEqual("ABC");
     });
 
     it("should call signout when signout succeeds", () => {
@@ -231,5 +231,21 @@ describe("<Header />", () => {
         const component = mount(makeHeader(stubInitialState));
         const wrapper = component.find(".username-header").hostNodes();
         expect(wrapper.text()).toEqual("swpp");
+    });
+
+    it("should redirect if enter is pressed and search-input exists", () => {
+        const mockHistory = { push: jest.fn() };
+        const component = mount(makeHeader(stubInitialState,
+            { history: mockHistory }));
+
+        const wrapper = component.find(".search-input").hostNodes();
+        wrapper.simulate("change", { target: { value: "abc" } });
+
+        // if press other key, nothing should happen
+        wrapper.simulate("keypress", { charCode: 17 });
+        expect(mockHistory.push).toHaveBeenCalledTimes(0);
+
+        wrapper.simulate("keypress", { charCode: 13 });
+        expect(mockHistory.push).toHaveBeenCalledTimes(1);
     });
 });

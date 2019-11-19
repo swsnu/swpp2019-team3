@@ -8,6 +8,8 @@ const initialState = {
     unlikePaperStatus: paperStatus.NONE,
     unlikeCount: 0,
     selectedPaper: {},
+    searchPaperStatus: paperStatus.NONE,
+    searchedPapers: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -28,6 +30,10 @@ const reducer = (state = initialState, action) => {
         };
     case paperConstants.UNLIKE_PAPER_FAILURE:
         return { ...state, unlikePaperStatus: paperStatus.FAILURE };
+    case paperConstants.SEARCH_PAPER_SUCCESS:
+        return { ...state, searchPaperStatus: paperStatus.SUCCESS, searchedPapers: action.target };
+    case paperConstants.SEARCH_PAPER_FAILURE:
+        return { ...state, searchPaperStatus: paperStatus.FAILURE };
     default:
         return { ...state };
     }

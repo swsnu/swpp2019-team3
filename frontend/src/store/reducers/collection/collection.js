@@ -217,6 +217,24 @@ const reducer = (state = initialState, action) => {
                 error: action.target,
             },
         };
+    case collectionConstants.SEARCH_COLLECTION_SUCCESS:
+        return {
+            ...state,
+            list: {
+                ...state.list,
+                status: collectionStatus.SUCCESS,
+                list: action.target,
+            },
+        };
+    case collectionConstants.SEARCH_COLLECTION_FAILURE:
+        return {
+            ...state,
+            list: {
+                ...state.list,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
     default:
         return { ...state };
     }

@@ -54,3 +54,18 @@ const unlikePaperFailure = (error) => ({
 export const unlikePaper = (paperId) => (dispatch) => axios.delete("/api/like/paper", { params: paperId })
     .then((res) => dispatch(unlikePaperSuccess(res.data)))
     .catch((err) => dispatch(unlikePaperFailure(err)));
+
+
+const searchPaperSuccess = (papers) => ({
+    type: paperConstants.SEARCH_PAPER_SUCCESS,
+    target: papers.papers,
+});
+
+const searchPaperFailure = (error) => ({
+    type: paperConstants.SEARCH_PAPER_FAILURE,
+    target: error,
+});
+
+export const searchPaper = (searchWord) => (dispatch) => axios.get("/api/paper/search", { params: searchWord })
+    .then((res) => dispatch(searchPaperSuccess(res.data)))
+    .catch((err) => dispatch(searchPaperFailure(err)));

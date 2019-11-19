@@ -546,4 +546,41 @@ describe("collectionActions", () => {
                 done();
             });
     });
+
+
+    it("'searchCollection' should call axios.get", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.searchCollection({ text: "a" }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/collection/search", { params: { text: "a" } });
+                done();
+            });
+    });
+
+    it("'searchCollection' should handle failure", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(collectionActions.searchCollection({ text: "a" }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/collection/search", { params: { text: "a" } });
+                done();
+            });
+    });
 });
