@@ -7,12 +7,9 @@ from papersfeed.utils.users import utils as users_utils
 from papersfeed.utils.collections import utils as collections_utils
 from papersfeed.utils.reviews import utils as reviews_utils
 from papersfeed.utils.likes import utils as likes_utils
-<<<<<<< HEAD
 from papersfeed.utils.replies import utils as replies_utils
-=======
 from papersfeed.utils.notifications import utils as notification_utils
 
->>>>>>> ffc449bb855ee03323067ac1b2e7dc56aaa7e29a
 from . import constants
 
 
