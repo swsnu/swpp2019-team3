@@ -144,4 +144,21 @@ describe("UserReducer Test", () => {
         expect(newState.status).toBe(userStatus.DUPLICATE_EMAIL);
         expect(newState.error).toBe(stubError);
     });
+
+
+    it("should handle searchUser success", () => {
+        const newState = UserReducer(undefined, {
+            type: userConstants.SEARCH_USER_SUCCESS,
+            target: [],
+        });
+        expect(newState.status).toEqual(userStatus.SUCCESS);
+    });
+
+    it("should handle searchUser failure", () => {
+        const newState = UserReducer(undefined, {
+            type: userConstants.SEARCH_USER_FAILURE,
+            target: stubError,
+        });
+        expect(newState.status).toEqual(userStatus.FAILURE);
+    });
 });

@@ -5,16 +5,12 @@ import { Tabs, Tab } from "react-bootstrap";
 
 import { PaperCard, CollectionCard, UserCard } from "../../components";
 import { paperActions, collectionActions, userActions } from "../../store/actions";
-import { paperStatus, collectionStatus, userStatus } from "../../constants/constants";
 import "./SearchResult.css";
 
 class SearchResult extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchPaperStatus: paperStatus.NONE,
-            searchCollectionStatus: collectionStatus.NONE,
-            searchUserStatus: userStatus.NONE,
             papers: [],
             collections: [],
             users: [],
@@ -83,19 +79,25 @@ class SearchResult extends Component {
     )
 
     render() {
-        const paperCardsLeft = this.state.papers.filter((x) => this.state.papers.indexOf(x) % 2 === 0)
+        const paperCardsLeft = this.state.papers
+            .filter((x) => this.state.papers.indexOf(x) % 2 === 0)
             .map((paper) => this.paperCardsMaker(paper));
-        const paperCardsRight = this.state.papers.filter((x) => this.state.papers.indexOf(x) % 2 === 1)
+        const paperCardsRight = this.state.papers
+            .filter((x) => this.state.papers.indexOf(x) % 2 === 1)
             .map((paper) => this.paperCardsMaker(paper));
 
-        const collectionCardsLeft = this.state.collections.filter((x) => this.state.collections.indexOf(x) % 2 === 0)
+        const collectionCardsLeft = this.state.collections
+            .filter((x) => this.state.collections.indexOf(x) % 2 === 0)
             .map((collection) => this.collectionCardsMaker(collection));
-        const collectionCardsRight = this.state.collections.filter((x) => this.state.collections.indexOf(x) % 2 === 1)
+        const collectionCardsRight = this.state.collections
+            .filter((x) => this.state.collections.indexOf(x) % 2 === 1)
             .map((collection) => this.collectionCardsMaker(collection));
 
-        const userCardsLeft = this.state.users.filter((x) => this.state.users.indexOf(x) % 2 === 0)
+        const userCardsLeft = this.state.users
+            .filter((x) => this.state.users.indexOf(x) % 2 === 0)
             .map((user) => this.userCardsMaker(user));
-        const userCardsRight = this.state.users.filter((x) => this.state.users.indexOf(x) % 2 === 1)
+        const userCardsRight = this.state.users
+            .filter((x) => this.state.users.indexOf(x) % 2 === 1)
             .map((user) => this.userCardsMaker(user));
 
         return (
@@ -145,7 +147,6 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(SearchResult);
 
 SearchResult.propTypes = {
-    history: PropTypes.objectOf(PropTypes.any),
     location: PropTypes.objectOf(PropTypes.any),
     onSearchPaper: PropTypes.func,
     onSearchCollection: PropTypes.func,
@@ -156,7 +157,6 @@ SearchResult.propTypes = {
 };
 
 SearchResult.defaultProps = {
-    history: null,
     location: null,
     onSearchPaper: () => {},
     onSearchCollection: () => {},

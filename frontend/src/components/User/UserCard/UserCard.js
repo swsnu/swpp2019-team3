@@ -11,7 +11,6 @@ class UserCard extends Component {
         super(props);
         this.state = {
             followerCount: this.props.followerCount,
-            followingCount: this.props.followingCount,
             doIFollow: this.props.doIFollow,
         };
 
