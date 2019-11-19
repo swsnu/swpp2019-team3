@@ -95,3 +95,18 @@
     justify-content: flex-start;
     flex-direction: column;
 }
+
+#paper-message {
+    font-size: 150%;
+    color: #DC143C;
+}
+
+#collection-message {
+    font-size: 150%;
+    color: #DC143C;
+}
+
+#user-message {
+    font-size: 150%;
+    color: #DC143C;
+}

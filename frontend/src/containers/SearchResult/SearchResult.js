@@ -79,26 +79,45 @@ class SearchResult extends Component {
     )
 
     render() {
-        const paperCardsLeft = this.state.papers
-            .filter((x) => this.state.papers.indexOf(x) % 2 === 0)
-            .map((paper) => this.paperCardsMaker(paper));
-        const paperCardsRight = this.state.papers
-            .filter((x) => this.state.papers.indexOf(x) % 2 === 1)
-            .map((paper) => this.paperCardsMaker(paper));
+        let paperCardsLeft = null;
+        let paperCardsRight = null;
+        let collectionCardsLeft = null;
+        let collectionCardsRight = null;
+        let userCardsLeft = null;
+        let userCardsRight = null;
+        let paperMessage = "no papers";
+        let collectionMessage = "no collections";
+        let userMessage = "no users";
 
-        const collectionCardsLeft = this.state.collections
-            .filter((x) => this.state.collections.indexOf(x) % 2 === 0)
-            .map((collection) => this.collectionCardsMaker(collection));
-        const collectionCardsRight = this.state.collections
-            .filter((x) => this.state.collections.indexOf(x) % 2 === 1)
-            .map((collection) => this.collectionCardsMaker(collection));
+        if (this.state.papers.length > 0) {
+            paperCardsLeft = this.state.papers
+                .filter((x) => this.state.papers.indexOf(x) % 2 === 0)
+                .map((paper) => this.paperCardsMaker(paper));
+            paperCardsRight = this.state.papers
+                .filter((x) => this.state.papers.indexOf(x) % 2 === 1)
+                .map((paper) => this.paperCardsMaker(paper));
+            paperMessage = null;
+        }
 
-        const userCardsLeft = this.state.users
-            .filter((x) => this.state.users.indexOf(x) % 2 === 0)
-            .map((user) => this.userCardsMaker(user));
-        const userCardsRight = this.state.users
-            .filter((x) => this.state.users.indexOf(x) % 2 === 1)
-            .map((user) => this.userCardsMaker(user));
+        if (this.state.collections.length > 0) {
+            collectionCardsLeft = this.state.collections
+                .filter((x) => this.state.collections.indexOf(x) % 2 === 0)
+                .map((collection) => this.collectionCardsMaker(collection));
+            collectionCardsRight = this.state.collections
+                .filter((x) => this.state.collections.indexOf(x) % 2 === 1)
+                .map((collection) => this.collectionCardsMaker(collection));
+            collectionMessage = null;
+        }
+
+        if (this.state.users.length > 0) {
+            userCardsLeft = this.state.users
+                .filter((x) => this.state.users.indexOf(x) % 2 === 0)
+                .map((user) => this.userCardsMaker(user));
+            userCardsRight = this.state.users
+                .filter((x) => this.state.users.indexOf(x) % 2 === 1)
+                .map((user) => this.userCardsMaker(user));
+            userMessage = null;
+        }
 
         return (
             <div className="search-result">
@@ -106,18 +125,21 @@ class SearchResult extends Component {
                     <Tabs defaultActiveKey="paper-tab" className="item-tabs">
                         <Tab className="paper-tab" eventKey="paper-tab" title="Paper">
                             <div id="paper-cards">
+                                <h3 id="paper-message">{paperMessage}</h3>
                                 <div id="paper-cards-left">{paperCardsLeft}</div>
                                 <div id="paper-cards-right">{paperCardsRight}</div>
                             </div>
                         </Tab>
                         <Tab className="collection-tab" eventKey="collection-tab" title="Collection">
                             <div id="collection-cards">
+                                <h3 id="collection-message">{collectionMessage}</h3>
                                 <div id="collection-cards-left">{collectionCardsLeft}</div>
                                 <div id="collection-cards-right">{collectionCardsRight}</div>
                             </div>
                         </Tab>
                         <Tab className="user-tab" eventKey="user-tab" title="People">
                             <div id="user-cards">
+                                <h3 id="user-message">{userMessage}</h3>
                                 <div id="user-cards-left">{userCardsLeft}</div>
                                 <div id="user-cards-right">{userCardsRight}</div>
                             </div>
