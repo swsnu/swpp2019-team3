@@ -231,6 +231,9 @@ def update_paper_collection(args):
     # Remove From Collections
     __remove_paper_from_collections(paper_id, list(set(containing_collection_ids) - set(collection_ids)))
 
+def get_collections(filter_query, request_user, count, paper_id=None):
+    """Get Collections"""
+    return __get_collections(filter_query, request_user, count, paper_id=None)
 
 def __get_collections_contains_paper(paper_id, request_user):
     """Get Collections Containing paper"""
