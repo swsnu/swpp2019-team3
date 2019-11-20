@@ -17,6 +17,8 @@ class SearchResult extends Component {
         };
 
         this.paperCardsMaker = this.paperCardsMaker.bind(this);
+        this.collectionCardsMaker = this.collectionCardsMaker.bind(this);
+        this.userCardsMaker = this.userCardsMaker.bind(this);
     }
 
     componentDidMount() {
@@ -47,6 +49,7 @@ class SearchResult extends Component {
           isLiked={paper.liked}
           addButtonExists
           headerExists={false}
+          history={this.props.history}
         />
     );
 
@@ -169,6 +172,7 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(SearchResult);
 
 SearchResult.propTypes = {
+    history: PropTypes.objectOf(PropTypes.any),
     location: PropTypes.objectOf(PropTypes.any),
     onSearchPaper: PropTypes.func,
     onSearchCollection: PropTypes.func,
@@ -179,6 +183,7 @@ SearchResult.propTypes = {
 };
 
 SearchResult.defaultProps = {
+    history: null,
     location: null,
     onSearchPaper: () => {},
     onSearchCollection: () => {},
