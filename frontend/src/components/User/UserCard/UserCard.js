@@ -53,7 +53,8 @@ class UserCard extends Component {
                         <Button
                           className="follow-button"
                           variant="light"
-                          onClick={this.state.doIFollow ? this.clickUnfollowHandler : this.clickFollowHandler}
+                          onClick={this.state.doIFollow
+                              ? this.clickUnfollowHandler : this.clickFollowHandler}
                           disabled={this.props.me.id === this.props.id}
                         >
                             follower: {this.state.followerCount}
