@@ -50,7 +50,12 @@ class UserCard extends Component {
                         <Card.Text>{this.props.description}</Card.Text>
                     </Card.Body>
                     <Card.Footer className="footer">
-                        <Button className="follow-button" variant="light" onClick={this.state.doIFollow ? this.clickUnfollowHandler : this.clickFollowHandler}>
+                        <Button
+                          className="follow-button"
+                          variant="light"
+                          onClick={this.state.doIFollow ? this.clickUnfollowHandler : this.clickFollowHandler}
+                          disabled={this.props.me.id === this.props.id}
+                        >
                             follower: {this.state.followerCount}
                         </Button>
                         <div className="following-count" variant="light">
@@ -64,6 +69,7 @@ class UserCard extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    me: state.auth.me,
     afterFollowCount: state.user.followCount,
     afterUnfollowCount: state.user.unfollowCount,
 });
@@ -76,6 +82,7 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(UserCard);
 
 UserCard.propTypes = {
+    me: PropTypes.objectOf(PropTypes.any),
     id: PropTypes.number,
     username: PropTypes.string,
     email: PropTypes.string,
@@ -90,6 +97,7 @@ UserCard.propTypes = {
 };
 
 UserCard.defaultProps = {
+    me: {},
     id: 0,
     username: "",
     email: "",
