@@ -35,6 +35,15 @@ IS_FOLLOWED = 'is_followed'
 FOLLOWER = 'follower'
 FOLLOWING = 'following'
 
+# Notification
+NOTIFICATION = 'notification'
+NOTIFICATIONS = 'notifications'
+ACTOR = 'actor'
+VERB = 'verb'
+ACTION_OBJECT = 'action_object'
+TIMESINCE = 'timesince'
+STRING = 'string'
+
 # Collection
 COLLECTION = 'collection'
 COLLECTIONS = 'collections'

@@ -31,6 +31,16 @@ const initialState = {
         members: [],
         replies: [],
     },
+    like: {
+        status: collectionStatus.NONE,
+        count: 0,
+        error: null,
+    },
+    unlike: {
+        status: collectionStatus.NONE,
+        count: 0,
+        error: null,
+    },
 };
 
 const reducer = (state = initialState, action) => {
@@ -171,10 +181,60 @@ const reducer = (state = initialState, action) => {
                 error: action.target,
             },
         };
-    // case collectionConstants.ADD_COLLECTION_LIKE:
-        // return { ...state };
-    // case collectionConstants.DEL_COLLECTION_LIKE:
-        // return { ...state };
+    case collectionConstants.LIKE_COLLECTION_SUCCESS:
+        return {
+            ...state,
+            like: {
+                ...state.like,
+                status: collectionStatus.SUCCESS,
+                count: action.target.likes,
+            },
+        };
+    case collectionConstants.LIKE_COLLECTION_FAILURE:
+        return {
+            ...state,
+            like: {
+                ...state.like,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
+    case collectionConstants.UNLIKE_COLLECTION_SUCCESS:
+        return {
+            ...state,
+            unlike: {
+                ...state.unlike,
+                status: collectionStatus.SUCCESS,
+                count: action.target.likes,
+            },
+        };
+    case collectionConstants.UNLIKE_COLLECTION_FAILURE:
+        return {
+            ...state,
+            unlike: {
+                ...state.unlike,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
+    case collectionConstants.SEARCH_COLLECTION_SUCCESS:
+        return {
+            ...state,
+            list: {
+                ...state.list,
+                status: collectionStatus.SUCCESS,
+                list: action.target,
+            },
+        };
+    case collectionConstants.SEARCH_COLLECTION_FAILURE:
+        return {
+            ...state,
+            list: {
+                ...state.list,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
     default:
         return { ...state };
     }

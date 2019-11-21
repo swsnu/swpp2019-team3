@@ -31,6 +31,16 @@ const stubInitialState = {
         members: [],
         replies: [],
     },
+    like: {
+        status: collectionStatus.NONE,
+        count: 0,
+        error: null,
+    },
+    unlike: {
+        status: collectionStatus.NONE,
+        count: 0,
+        error: null,
+    },
 };
 
 const stubCollection = {
@@ -41,7 +51,14 @@ const stubCollection = {
     text: "SWPP2019fall",
 };
 
-describe("Colelction CollectionReducer", () => {
+const stubError = {
+    response: {
+        status: 440,
+        data: {},
+    },
+};
+
+describe("Collection reducer", () => {
     it("should return defualt state", () => {
         const newState = reducer(stubInitialState, {
             type: "Abc",
@@ -151,7 +168,7 @@ describe("Colelction CollectionReducer", () => {
     });
 
 
-    it("should return delete_collectionr", () => {
+    it("should return delete_collection", () => {
         const newState = reducer(stubInitialState, {
             type: collectionConstants.DEL_COLLECTION,
             target: stubCollection,
@@ -177,5 +194,56 @@ describe("Colelction CollectionReducer", () => {
         });
         expect(newState.delete.status).toBe(collectionStatus.COLLECTION_NOT_EXIST);
         expect(newState.delete.error).toBe(stubCollection);
+    });
+
+
+    it("should return like_collection_success state", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.LIKE_COLLECTION_SUCCESS,
+            target: { likes: 1 },
+        });
+        expect(newState.like.status).toBe(collectionStatus.SUCCESS);
+    });
+
+    it("should return like_collection_failure state", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.LIKE_COLLECTION_FAILURE,
+            target: stubError,
+        });
+        expect(newState.like.status).toBe(collectionStatus.FAILURE);
+    });
+
+
+    it("should return unlike_collection_success state", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.UNLIKE_COLLECTION_SUCCESS,
+            target: { likes: 1 },
+        });
+        expect(newState.unlike.status).toBe(collectionStatus.SUCCESS);
+    });
+
+    it("should return unlike_collection_failure state", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.UNLIKE_COLLECTION_FAILURE,
+            target: stubError,
+        });
+        expect(newState.unlike.status).toBe(collectionStatus.FAILURE);
+    });
+
+
+    it("should handle searchCollection success", () => {
+        const newState = reducer(undefined, {
+            type: collectionConstants.SEARCH_COLLECTION_SUCCESS,
+            target: [],
+        });
+        expect(newState.list.status).toEqual(collectionStatus.SUCCESS);
+    });
+
+    it("should handle searchCollection failure", () => {
+        const newState = reducer(undefined, {
+            type: collectionConstants.SEARCH_COLLECTION_FAILURE,
+            target: stubError,
+        });
+        expect(newState.list.status).toEqual(collectionStatus.FAILURE);
     });
 });

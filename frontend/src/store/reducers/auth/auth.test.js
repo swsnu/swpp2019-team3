@@ -1,7 +1,7 @@
 import reducer from "./auth";
 import { authConstants } from "../../actions/actionTypes";
 import {
-    signupStatus, signinStatus, signoutStatus, getMeStatus,
+    signupStatus, signinStatus, signoutStatus, getMeStatus, notiStatus,
 } from "../../../constants/constants";
 
 const stubSigningUpUser = {
@@ -15,6 +15,13 @@ const stubSigningInUser = {
     password: "swpp",
 };
 
+const stubError = {
+    response: {
+        status: 440,
+        data: {},
+    },
+};
+
 describe("Auth reducer", () => {
     it("should return default state", () => {
         const newState = reducer(undefined, {});
@@ -23,6 +30,9 @@ describe("Auth reducer", () => {
             signinStatus: signinStatus.NONE,
             signoutStatus: signoutStatus.NONE,
             getMeStatus: getMeStatus.NONE,
+            getNotiStatus: notiStatus.NONE,
+            readNotiStatus: notiStatus.NONE,
+            notifications: [],
             me: null,
         });
     });
@@ -37,6 +47,9 @@ describe("Auth reducer", () => {
             signinStatus: signinStatus.NONE,
             signoutStatus: signoutStatus.NONE,
             getMeStatus: getMeStatus.NONE,
+            getNotiStatus: notiStatus.NONE,
+            readNotiStatus: notiStatus.NONE,
+            notifications: [],
             me: null,
         });
     });
@@ -51,6 +64,9 @@ describe("Auth reducer", () => {
             signinStatus: signinStatus.NONE,
             signoutStatus: signoutStatus.NONE,
             getMeStatus: getMeStatus.NONE,
+            getNotiStatus: notiStatus.NONE,
+            readNotiStatus: notiStatus.NONE,
+            notifications: [],
             me: null,
         });
     });
@@ -65,6 +81,9 @@ describe("Auth reducer", () => {
             signinStatus: signinStatus.NONE,
             signoutStatus: signoutStatus.NONE,
             getMeStatus: getMeStatus.NONE,
+            getNotiStatus: notiStatus.NONE,
+            readNotiStatus: notiStatus.NONE,
+            notifications: [],
             me: null,
         });
     });
@@ -80,6 +99,9 @@ describe("Auth reducer", () => {
             signinStatus: signinStatus.SUCCESS,
             signoutStatus: signoutStatus.NONE,
             getMeStatus: getMeStatus.NONE,
+            getNotiStatus: notiStatus.NONE,
+            readNotiStatus: notiStatus.NONE,
+            notifications: [],
             me: {
                 email: "my_email@papersfeed.com",
                 password: "swpp",
@@ -97,6 +119,9 @@ describe("Auth reducer", () => {
             signinStatus: signinStatus.USER_NOT_EXIST,
             signoutStatus: signoutStatus.NONE,
             getMeStatus: getMeStatus.NONE,
+            getNotiStatus: notiStatus.NONE,
+            readNotiStatus: notiStatus.NONE,
+            notifications: [],
             me: null,
         });
     });
@@ -111,6 +136,9 @@ describe("Auth reducer", () => {
             signinStatus: signinStatus.WRONG_PW,
             signoutStatus: signoutStatus.NONE,
             getMeStatus: getMeStatus.NONE,
+            getNotiStatus: notiStatus.NONE,
+            readNotiStatus: notiStatus.NONE,
+            notifications: [],
             me: null,
         });
     });
@@ -126,6 +154,9 @@ describe("Auth reducer", () => {
             signinStatus: signinStatus.NONE,
             signoutStatus: signoutStatus.SUCCESS,
             getMeStatus: getMeStatus.NONE,
+            getNotiStatus: notiStatus.NONE,
+            readNotiStatus: notiStatus.NONE,
+            notifications: [],
             me: null,
         });
     });
@@ -140,6 +171,9 @@ describe("Auth reducer", () => {
             signinStatus: signinStatus.NONE,
             signoutStatus: signoutStatus.FAILURE,
             getMeStatus: getMeStatus.NONE,
+            getNotiStatus: notiStatus.NONE,
+            readNotiStatus: notiStatus.NONE,
+            notifications: [],
             me: null,
         });
     });
@@ -155,6 +189,9 @@ describe("Auth reducer", () => {
             signinStatus: signinStatus.NONE,
             signoutStatus: signoutStatus.NONE,
             getMeStatus: getMeStatus.SUCCESS,
+            getNotiStatus: notiStatus.NONE,
+            readNotiStatus: notiStatus.NONE,
+            notifications: [],
             me: stubSigningInUser,
         });
     });
@@ -169,7 +206,49 @@ describe("Auth reducer", () => {
             signinStatus: signinStatus.NONE,
             signoutStatus: signoutStatus.NONE,
             getMeStatus: getMeStatus.FAILURE,
+            getNotiStatus: notiStatus.NONE,
+            readNotiStatus: notiStatus.NONE,
+            notifications: [],
             me: null,
         });
+    });
+
+
+    it("should process getNotifications", () => {
+        const newState = reducer(undefined, {
+            type: authConstants.GET_NOTI_SUCCESS,
+            target: [{
+                id: 1, actor: { id: 1 }, action_object: { id: 1 }, verb: "liked",
+            }],
+        });
+        expect(newState.getNotiStatus).toEqual(notiStatus.SUCCESS);
+        expect(newState.notifications).toEqual([{
+            id: 1, actor: { id: 1 }, action_object: { id: 1 }, verb: "liked",
+        }]);
+    });
+
+    it("should handle getMe failure", () => {
+        const newState = reducer(undefined, {
+            type: authConstants.GET_NOTI_FAILURE,
+            target: stubError,
+        });
+        expect(newState.getNotiStatus).toEqual(notiStatus.FAILURE);
+    });
+
+
+    it("should process readNotification", () => {
+        const newState = reducer(undefined, {
+            type: authConstants.READ_NOTI_SUCCESS,
+            target: null,
+        });
+        expect(newState.readNotiStatus).toEqual(notiStatus.SUCCESS);
+    });
+
+    it("should handle readNotification failure", () => {
+        const newState = reducer(undefined, {
+            type: authConstants.READ_NOTI_FAILURE,
+            target: stubError,
+        });
+        expect(newState.readNotiStatus).toEqual(notiStatus.FAILURE);
     });
 });

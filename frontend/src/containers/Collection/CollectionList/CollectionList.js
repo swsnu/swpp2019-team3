@@ -41,8 +41,8 @@ class CollectionList extends Component {
           memberCount={collection.count.users}
           paperCount={collection.count.papers}
           replyCount={collection.replyCount}
-          likeCount={collection.likeCount}
-          isLiked={collection.isLiked}
+          likeCount={collection.count.likes}
+          isLiked={collection.liked}
           headerExists={false}
         />
     )

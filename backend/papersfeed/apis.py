@@ -6,18 +6,20 @@ from papersfeed.utils.papers import utils as papers_utils
 from papersfeed.utils.users import utils as users_utils
 from papersfeed.utils.collections import utils as collections_utils
 from papersfeed.utils.reviews import utils as reviews_utils
+from papersfeed.utils.likes import utils as likes_utils
+from papersfeed.utils.notifications import utils as notification_utils
 
 from . import constants
 
 
 def post_follow(args):
     """Post Follow"""
-    return users_utils.insert_follow(args)
+    return {constants.COUNT: users_utils.insert_follow(args)}
 
 
 def delete_follow(args):
     """Delete Follow"""
-    return users_utils.remove_follow(args)
+    return {constants.COUNT: users_utils.remove_follow(args)}
 
 
 def get_session(args):
@@ -138,3 +140,41 @@ def get_collection_search(args):
 def get_user_search(args):
     """Get User Search"""
     return {constants.USERS: users_utils.select_user_search(args)}
+
+
+def post_like_paper(args):
+    """Post Like Paper"""
+    return {constants.COUNT: likes_utils.insert_like_paper(args)}
+
+
+def delete_like_paper(args):
+    """Delete Like Paper"""
+    return {constants.COUNT: likes_utils.remove_like_paper(args)}
+
+
+def post_like_review(args):
+    """Post Like Review"""
+    return {constants.COUNT: likes_utils.insert_like_review(args)}
+
+
+def delete_like_review(args):
+    """Delete Like Review"""
+    return {constants.COUNT: likes_utils.remove_like_review(args)}
+
+
+def post_like_collection(args):
+    """Post Like Collection"""
+    return {constants.COUNT: likes_utils.insert_like_collection(args)}
+
+
+def delete_like_collection(args):
+    """Delete Like Collection"""
+    return {constants.COUNT: likes_utils.remove_like_collection(args)}
+
+def get_notification(args):
+    """Get Notification"""
+    return {constants.NOTIFICATIONS: notification_utils.select_notifications(args)}
+
+def put_notification(args):
+    """Put Notification"""
+    return notification_utils.read_notification(args)

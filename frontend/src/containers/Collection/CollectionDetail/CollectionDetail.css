@@ -39,6 +39,15 @@
     align-items: center;
 }
 
+.like-button {
+    width: 80px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    border: 2px solid  rgb(255, 120, 120);
+}
+
 .CollectionInfo #collectionDescription #date {
     margin-left: 1%;
     margin-right: 5%;

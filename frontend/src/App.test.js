@@ -10,6 +10,7 @@ const mockStore = getMockStore({
     auth: {},
     paper: {},
     collection: {},
+    user: {},
     review: {},
 });
 

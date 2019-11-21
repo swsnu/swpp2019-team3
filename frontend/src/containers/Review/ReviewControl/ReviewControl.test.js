@@ -5,14 +5,14 @@ import { ConnectedRouter } from "connected-react-router";
 import { Route, Switch } from "react-router-dom";
 import ReviewControl from "./ReviewControl";
 import { reviewActions, paperActions } from "../../../store/actions";
-import { reviewStatus, getPaperStatus } from "../../../constants/constants";
+import { reviewStatus, paperStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 import { history } from "../../../store/store";
 
 
 const stubInitialState = {
     paper: {
-        getPaperStatus: getPaperStatus.NONE,
+        getPaperStatus: paperStatus.NONE,
         selectedPaper: { id: 1, author: [{ id: 1 }] },
     },
     auth: {
@@ -48,6 +48,7 @@ const stubInitialState = {
             replies: [],
         },
     },
+    user: {},
 };
 
 describe("<ReviewControl />", () => {

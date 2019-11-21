@@ -14,6 +14,7 @@ let stubInitialState = {
         me: null,
     },
     paper: {},
+    user: {},
     review: {},
 };
 let mockHistory;
@@ -54,6 +55,7 @@ describe("<PrivateRoute />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
             review: {},
         };
         const component = mount(makePrivateRoute(stubInitialState, mockHistory));
@@ -70,6 +72,7 @@ describe("<PrivateRoute />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
             review: {},
         };
         mockHistory = { push: jest.fn(), goBack: jest.fn(), location: { pathname: "/" } };
@@ -87,6 +90,7 @@ describe("<PrivateRoute />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
             review: {},
         };
         mockHistory = { push: jest.fn(), goBack: jest.fn(), location: { pathname: "/" } };
@@ -104,6 +108,7 @@ describe("<PrivateRoute />", () => {
             },
             collection: {},
             paper: {},
+            user: {},
             review: {},
         };
         const component = mount(makePrivateRoute(stubInitialState, mockHistory));
