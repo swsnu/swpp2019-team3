@@ -82,34 +82,42 @@ describe("<Reply />", () => {
     });
 
     it("should render without errors", () => {
+        reply = makeReply(stubInitialState, { isLiked: true, likeCount: 1 });
         const component = mount(reply);
+        const instance = component.find("Reply").instance();
         const wrapper = component.find(".reply-component");
         expect(wrapper.length).toBe(1);
+        expect(instance.state.isLiked).toBe(true);
+        expect(instance.state.likeCount).toBe(1);
     });
 
     it("should handle Like/Unlike Button", () => {
         const component = mount(reply);
         const wrapper = component.find(".like-button").hostNodes();
+        const instance = component.find("Reply").instance();
         expect(wrapper.length).toBe(1);
 
         wrapper.simulate("click");
 
         expect(spyLikeReply).toHaveBeenCalledTimes(1);
 
+        instance.setState(() => ({
+            isLiked: true,
+        }));
+        wrapper.update();
         wrapper.simulate("click");
 
         expect(spyUnlikeReply).toHaveBeenCalledTimes(1);
     });
 
     it("should handle edit button", () => {
-        const wrapper = mount(reply);
-        const instance = wrapper.find("Reply").instance();
-        wrapper.setProps(() => ({
+        reply = makeReply(stubInitialState, {
             authorId: 1,
             userId: 1,
             type: "review",
-        }));
-        wrapper.update();
+        });
+        const wrapper = mount(reply);
+        const instance = wrapper.find("Reply").instance();
         const component = wrapper.find(".buttons .edit-button").hostNodes();
         component.simulate("click");
         wrapper.update();
@@ -119,11 +127,11 @@ describe("<Reply />", () => {
     });
 
     it("should not handle edit, delete button if user is not author", () => {
-        const wrapper = mount(reply);
-        wrapper.setProps(() => ({
+        reply = makeReply(stubInitialState, {
             authorId: 1,
             userId: 7,
-        }));
+        });
+        const wrapper = mount(reply);
         wrapper.update();
         const editButton = wrapper.find(".buttons .edit-button").hostNodes();
         expect(editButton.length).toBe(0);
@@ -132,27 +140,26 @@ describe("<Reply />", () => {
     });
 
     it("should handle delete button", () => {
-        const spyDeleteReplyReview = jest.spyOn(replyActions, "deleteReplyReview")
-            .mockImplementation(() => () => mockPromise);
-        const spyDeleteReplyCollection = jest.spyON(replyActions, "deleteReplyCollection")
-            .mockImplementation(() => () => mockPromise);
-        const wrapper = mount(reply);
-        wrapper.setProps(() => ({
+        reply = makeReply(stubInitialState, {
             authorId: 1,
             userId: 1,
             type: "review",
-        }));
-        wrapper.update();
+        });
+        const spyDeleteReplyReview = jest.spyOn(replyActions, "deleteReplyReview")
+            .mockImplementation(() => () => mockPromise);
+        const spyDeleteReplyCollection = jest.spyOn(replyActions, "deleteReplyCollection")
+            .mockImplementation(() => () => mockPromise);
+        let wrapper = mount(reply);
         let component = wrapper.find(".buttons .delete-button").hostNodes();
         component.simulate("click");
         expect(spyDeleteReplyReview).toHaveBeenCalledTimes(1);
 
-        wrapper.setProps(() => ({
+        reply = makeReply(stubInitialState, {
             authorId: 1,
             userId: 1,
             type: "collection",
-        }));
-        wrapper.update();
+        });
+        wrapper = mount(reply);
         component = wrapper.find(".buttons .delete-button").hostNodes();
         component.simulate("click");
         expect(spyDeleteReplyCollection).toHaveBeenCalledTimes(1);
@@ -171,10 +178,21 @@ describe("<Reply />", () => {
     });
 
     it("should handle click confirm button", () => {
-        const wrapper = mount(reply);
-        const instance = wrapper.find("Reply").instance();
+        reply = makeReply(stubInitialState, { type: "review" });
+        const spyEditReplyReview = jest.spyOn(replyActions, "editReplyReview")
+            .mockImplementation(() => () => mockPromise);
+        const spyEditReplyCollection = jest.spyOn(replyActions, "editReplyCollection")
+            .mockImplementation(() => () => mockPromise);
+        let wrapper = mount(reply);
+        let instance = wrapper.find("Reply").instance();
         instance.clickConfirmButtonHandler();
-        expect(instance.state.tempContent).toBe("");
+        expect(spyEditReplyReview).toHaveBeenCalledTimes(1);
+
+        reply = makeReply(stubInitialState, { type: "collection" });
+        wrapper = mount(reply);
+        instance = wrapper.find("Reply").instance();
+        instance.clickConfirmButtonHandler();
+        expect(spyEditReplyCollection).toHaveBeenCalledTimes(1);
     });
 
     it("should handle click cancel button", () => {

@@ -70,7 +70,7 @@ class CollectionDetail extends Component {
     // : Call onRemoveCollectionPaper of CollectionDetail to remove the paper from the collection.
 
     addNewReplyHandler = () => {
-        this.props.onMakeNewReply({ id: Number(this.props.location.pathname.split("=")[1]), content: this.state.newReplyContent })
+        this.props.onMakeNewReply({ id: Number(this.props.location.pathname.split("=")[1]), text: this.state.newReplyContent })
             .then(() => {
                 this.setState({
                     newReplyContent: "",
@@ -207,7 +207,12 @@ class CollectionDetail extends Component {
                                               newReplyContent: event.target.value,
                                           })}
                                         />
-                                        <Button onClick={this.addNewReplyHandler()}>Add</Button>
+                                        <Button
+                                          onClick={this.addNewReplyHandler}
+                                          disabled={this.state.newReplyContent.length === 0}
+                                        >
+                                            Add
+                                        </Button>
                                     </div>
                                     <div id="replyList">
                                         {replies}
@@ -223,6 +228,7 @@ class CollectionDetail extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    me: state.auth.me,
     getCollectionStatus: state.collection.selected.status,
     selectedCollection: state.collection.selected.collection,
     storedPapers: state.collection.selected.papers,

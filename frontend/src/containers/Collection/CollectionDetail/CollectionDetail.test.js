@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
 import { Route, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import { collectionActions } from "../../../store/actions";
+import { collectionActions, replyActions } from "../../../store/actions";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 import CollectionDetail from "./CollectionDetail";
@@ -46,7 +46,7 @@ describe("CollectionDetail Test", () => {
             },
             auth: {
                 singinStatus: signinStatus.SUCCESS,
-                me: null,
+                me: { id: 1 },
             },
             collection: {
                 make: {
@@ -91,8 +91,14 @@ describe("CollectionDetail Test", () => {
             review: {},
             user: {},
             reply: {
-                user: {
-                    username: "dfa",
+                list: {
+                    list: [],
+                },
+                like: {
+                    count: 0,
+                },
+                unlike: {
+                    count: 0,
                 },
             },
         };
@@ -228,15 +234,23 @@ describe("CollectionDetail Test", () => {
             {
                 replies: [
                     {
+                        id: 1,
                         content: "reply1",
                         user: {
                             username: "affd",
                         },
+                        count: {
+                            likes: 0,
+                        },
                     },
                     {
+                        id: 2,
                         content: "reply2",
                         user: {
                             username: "affd",
+                        },
+                        count: {
+                            likes: 0,
                         },
                     },
                 ],
@@ -246,5 +260,14 @@ describe("CollectionDetail Test", () => {
 
         const wrapper = component.find("Reply");
         expect(wrapper.length).toBe(2);
+    });
+
+    it("should handle replies", () => {
+        const spy = jest.spyOn(replyActions, "getRepliesByCollection")
+            .mockImplementation(() => () => mockPromise);
+        const wrapper = mount(collectionDetail);
+        const instance = wrapper.find("CollectionDetail").instance();
+        instance.handleReplies();
+        expect(spy).toHaveBeenCalledTimes(2);
     });
 });

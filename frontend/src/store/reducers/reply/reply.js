@@ -59,7 +59,7 @@ const replyReducer = (state = initialState, action) => {
                 error: action.target,
             },
         };
-    case replyConstants.ADD_REPLY_FAILURE_COLLECTION_EXIST:
+    case replyConstants.ADD_REPLY_FAILURE_COLLECTION_NOT_EXIST:
         return {
             ...state,
             make: {
@@ -172,7 +172,7 @@ const replyReducer = (state = initialState, action) => {
             ...state,
             delete: {
                 ...state.delete,
-                status: replyStatus.reply_NOT_EXIST,
+                status: replyStatus.REPLY_NOT_EXIST,
                 error: action.target,
             },
         };

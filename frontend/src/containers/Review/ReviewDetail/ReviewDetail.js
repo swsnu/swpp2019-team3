@@ -57,7 +57,6 @@ class ReviewDetail extends Component {
                 this.setState({
                     replies: this.props.replyList.list,
                 });
-                console(this.state.replies);
             }).catch(() => {});
     }
 
