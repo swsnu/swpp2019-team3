@@ -17,7 +17,7 @@ class FollowerList extends Component {
     }
 
     componentDidMount() {
-        this.props.onFollowerUser({ id: this.props.location.pathname.split("=") })
+        this.props.onFollowerUser({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
                 this.setState({ users: this.props.followerUsers });
             });

@@ -59,8 +59,8 @@ function App(props) {
                             <Route path="/account_setting" exact component={AccountSetting} />
                             <Route path="/collections" exact component={CollectionList} />
                             <Route path="/collection_id=:collection_id" exact component={CollectionDetail} />
-                            <Route path="/profile_id=:profile_id/followers" exact component={FollowerList} />
-                            <Route path="/profile_id=:profile_id/followings" exact component={FollowingList} />
+                            <Route path="/followers=:profile_id" exact component={FollowerList} />
+                            <Route path="/followings=:profile_id" exact component={FollowingList} />
                         </Switch>
                     </>
                 </Switch>
