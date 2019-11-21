@@ -214,7 +214,7 @@ class ReplyTestCase(TestCase):
                    content_type='application/json')
 
         collection_id = Collection.objects.filter(title='test_collection_1').first().id
-        review_id = Review.objects.filter(title="test_review_1").first().id   
+        review_id = Review.objects.filter(title="test_review_1").first().id
         collection_reply_id = ReplyCollection.objects.filter(collection_id=collection_id).first().reply_id
         review_reply_id = ReplyReview.objects.filter(review_id=review_id).first().reply_id
 
