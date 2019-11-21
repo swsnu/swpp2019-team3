@@ -116,28 +116,28 @@ class LikeTestCase(TestCase):
                     }),
                     content_type='application/json')
 
-        # Creating replies 
+
         client.post('/api/reply/collection',
-                               json.dumps({
-                                   constants.ID: collection_id,
-                                   constants.TEXT: 'test_reply_1'
-                               }),
-                               content_type='application/json')
+                    json.dumps({
+                        constants.ID: collection_id,
+                        constants.TEXT: 'test_reply_1'
+                    }),
+                    content_type='application/json')
 
         client.post('/api/reply/review',
-                               json.dumps({
-                                   constants.ID: review_id,
-                                   constants.TEXT: 'test_reply_2'
-                               }),
-                               content_type='application/json')
-        
+                    json.dumps({
+                        constants.ID: review_id,
+                        constants.TEXT: 'test_reply_2'
+                    }),
+                    content_type='application/json')
+
         # liek reply2
         reply_id = Reply.objects.filter(text='test_reply_2').first().id
         client.post('/api/like/reply',
-                data=json.dumps({
-                    constants.ID: reply_id,
-                }),
-                content_type='application/json')
+                    data=json.dumps({
+                        constants.ID: reply_id,
+                    }),
+                    content_type='application/json')
 
 
     def test_like_paper(self):

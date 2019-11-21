@@ -250,7 +250,7 @@ def __pack_replies(replies, request_user):
     collection_replies = ReplyCollection.objects.filter(
         reply_id__in=reply_ids
     )
-    collection_ids = list(set([reply.collection_id for reply in collection_replies]))
+    collection_ids = [reply.collection_id for reply in collection_replies]
     collections, _, _ = collections_utils.get_collections(Q(id__in=collection_ids), request_user, None)
 
     # {collection_id: collection}
@@ -260,7 +260,7 @@ def __pack_replies(replies, request_user):
     review_replies = ReplyReview.objects.filter(
         reply_id__in=reply_ids
     )
-    review_ids = list(set([reply.review_id for reply in review_replies])) 
+    review_ids = [reply.review_id for reply in review_replies]
     reviews, _, _ = reviews_utils.get_reviews(Q(id__in=review_ids), request_user, None)
     # {review_id: review}
     reviews = {review[constants.ID]: review for review in reviews}
@@ -276,10 +276,14 @@ def __pack_replies(replies, request_user):
         user_id = reply.user_id
 
         # Review Id
-        review_id = ReplyReview.objects.filter(reply_id=reply_id).first().review_id if ReplyReview.objects.filter(reply_id=reply_id).count() > 0 else -1
+        review_id = ReplyReview.objects.filter(
+            reply_id=reply_id
+            ).first().review_id if ReplyReview.objects.filter(reply_id=reply_id).count() > 0 else -1
 
         # Collection Id
-        collection_id = ReplyCollection.objects.filter(reply_id=reply_id).first().collection_id if ReplyCollection.objects.filter(reply_id=reply_id).count() > 0 else -1
+        collection_id = ReplyCollection.objects.filter(
+            reply_id=reply_id
+            ).first().collection_id if ReplyCollection.objects.filter(reply_id=reply_id).count() > 0 else -1
 
         packed_reply = {
             constants.ID: reply_id,

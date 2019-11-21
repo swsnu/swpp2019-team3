@@ -58,7 +58,18 @@ import {
 // consume Review,
 } from "./review/review";
 
-
+import {
+    getRepliesByCollection,
+    getRepliesByReview,
+    makeNewReplyCollection,
+    makeNewReplyReview,
+    editReplyCollection,
+    editReplyReview,
+    deleteReplyCollection,
+    deleteReplyReview,
+    likeReply,
+    unlikeReply,
+} from "./reply/reply";
 /*
     export actions from here
 */
@@ -116,4 +127,17 @@ export const userActions = {
     removeUserFollowing,
     editUserInfo,
     searchUser,
+};
+
+export const replyActions = {
+    getRepliesByCollection,
+    getRepliesByReview,
+    makeNewReplyCollection,
+    makeNewReplyReview,
+    editReplyCollection,
+    editReplyReview,
+    deleteReplyCollection,
+    deleteReplyReview,
+    likeReply,
+    unlikeReply,
 };

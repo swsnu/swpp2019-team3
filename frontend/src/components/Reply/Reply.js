@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import {
     Modal, FormControl, Button,
 } from "react-bootstrap";
@@ -7,16 +8,16 @@ import {
 import "./Reply.css";
 import SVG from "../svg";
 
+import { replyActions } from "../../store/actions";
+
 class Reply extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            content: this.props.content,
             tempContent: "",
-            isLiked: this.props.isLiked,
-            likeCount: this.props.likeCount,
+            isLiked: false,
+            likeCount: 0,
             isModalOpen: false,
-            isExisting: true, // for delete reply, it will be removed after redux work
         };
         this.clickReplyEditButtonHandler = this.clickReplyEditButtonHandler.bind(this);
         this.clickReplyDeleteButtonHandler = this.clickReplyDeleteButtonHandler.bind(this);
@@ -28,6 +29,13 @@ class Reply extends Component {
         this.handleClose = this.handleClose.bind(this);
     }
 
+    componentDidMount() {
+        this.setState({
+            isLiked: this.props.isLiked,
+            likeCount: this.props.likeCount,
+        });
+    }
+
     clickReplyEditButtonHandler() {
         this.setState({
             isModalOpen: true,
@@ -35,25 +43,37 @@ class Reply extends Component {
     }
 
     clickReplyDeleteButtonHandler() {
-        this.setState({
-            isExisting: false,
-        });
+        if (this.props.type === "review") {
+            this.props.onDeleteReplyReview({ id: this.props.id })
+                .then(() => {
+                    this.props.onChange();
+                });
+        } else if (this.props.type === "collection") {
+            this.props.onDeleteReplyCollection({ id: this.props.id })
+                .then(() => {
+                    this.props.onChange();
+                });
+        }
     }
 
     clickReplyLikeButtonHandler() {
-        const nextState = {
-            isLiked: true,
-            likeCount: this.state.likeCount + 1,
-        };
-        this.setState(nextState);
+        this.props.onLikeReply({ id: this.props.id })
+            .then(() => {
+                this.setState({
+                    likeCount: this.props.afterLikeCount,
+                    isLiked: true,
+                });
+            });
     }
 
     clickReplyUnlikeButtonHandler() {
-        const nextState = {
-            isLiked: false,
-            likeCount: this.state.likeCount - 1,
-        };
-        this.setState(nextState);
+        this.props.onUnlikeReply({ id: this.props.id })
+            .then(() => {
+                this.setState({
+                    likeCount: this.props.afterUnlikeCount,
+                    isLiked: false,
+                });
+            });
     }
 
     // for Modal input change
@@ -65,11 +85,24 @@ class Reply extends Component {
 
     // for Modal
     clickConfirmButtonHandler() {
-        const nextState = {
-            content: this.state.tempContent,
-            tempContent: "",
-        };
-        this.setState(nextState);
+        if (this.props.type === "review") {
+            this.props.onEditReplyReview({ id: this.props.id, text: this.state.tempContent })
+                .then(() => {
+                    this.setState({
+                        tempContent: "",
+                    });
+                    this.props.onChange();
+                }).catch(() => {});
+        } else if (this.props.type === "collection") {
+            this.props.onEditReplyCollection({ id: this.props.id, text: this.state.tempContent })
+                .then(() => {
+                    this.setState({
+                        tempContent: "",
+                    });
+                    this.props.onChange();
+                }).catch(() => {});
+        }
+
         this.handleClose();
     }
 
@@ -92,66 +125,112 @@ class Reply extends Component {
     render() {
         return (
             <div className="reply-component">
-                { this.state.isExisting
-                    ? (
-                        <div className="reply">
-                            <div className="author">{this.props.author}</div>
-                            <div className="content">{this.props.content}</div>
-                            <div className="buttons">
-                                <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickReplyUnlikeButtonHandler : this.clickReplyLikeButtonHandler}>
-                                    <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}
-                                </Button>
-                                {this.props.authorId === 0
-                                    ? <Button className="edit-button" onClick={this.clickReplyEditButtonHandler}>Edit</Button> : null }
-                                {this.props.authorId === 0
-                                    ? <Button className="delete-button" onClick={this.clickReplyDeleteButtonHandler}>Delete</Button> : null }
-                            </div>
-                        </div>
-                    ) : null }
-                { this.state.isExisting
-                    ? (
-                        <div className="edit-modal">
-                            <Modal show={this.state.isModalOpen} onHide={() => this.handleClose} className="edit-modals" centered>
-                                <Modal.Header>Edit Reply</Modal.Header>
-                                <Modal.Body>
-                                    <FormControl
-                                      className="edit-input"
-                                      type="text"
-                                      placeholder={this.state.content}
-                                      bsPrefix="edit-input"
-                                      value={this.state.tempContent}
-                                      onChange={this.handleChange}
-                                    />
-                                </Modal.Body>
-                                <Modal.Footer className="modal-footer">
-                                    <Button onClick={this.clickConfirmButtonHandler}>
+                <div className="reply">
+                    <div className="author">{this.props.author}</div>
+                    <div className="content">{this.props.content}</div>
+                    <div className="buttons">
+                        <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickReplyUnlikeButtonHandler : this.clickReplyLikeButtonHandler}>
+                            <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}
+                        </Button>
+                        {this.props.authorId === this.props.userId
+                            ? <Button className="edit-button" onClick={this.clickReplyEditButtonHandler}>Edit</Button> : null }
+                        {this.props.authorId === this.props.userId
+                            ? <Button className="delete-button" onClick={this.clickReplyDeleteButtonHandler}>Delete</Button> : null }
+                    </div>
+                </div>
+                <div className="edit-modal">
+                    <Modal show={this.state.isModalOpen} onHide={() => this.handleClose} className="edit-modals" centered>
+                        <Modal.Header>Edit Reply</Modal.Header>
+                        <Modal.Body>
+                            <FormControl
+                              className="edit-input"
+                              type="text"
+                              placeholder={this.state.content}
+                              bsPrefix="edit-input"
+                              value={this.state.tempContent}
+                              onChange={this.handleChange}
+                            />
+                        </Modal.Body>
+                        <Modal.Footer className="modal-footer">
+                            <Button
+                              onClick={this.clickConfirmButtonHandler}
+                              disabled={this.state.tempContent.length === 0}
+                            >
                                         Confirm
-                                    </Button>
-                                    <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
-                                </Modal.Footer>
-                            </Modal>
-                        </div>
-                    )
-                    : null }
+                            </Button>
+                            <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
+                        </Modal.Footer>
+                    </Modal>
+                </div>
             </div>
         );
     }
 }
 
+const mapStateToProps = (state) => ({
+    afterLikeCount: state.reply.like.count,
+    afterUnlikeCount: state.reply.unlike.count,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onLikeReply: (replyId) => dispatch(
+        replyActions.likeReply(replyId),
+    ),
+    onUnlikeReply: (replyId) => dispatch(
+        replyActions.unlikeReply(replyId),
+    ),
+    onEditReplyReview: (reply) => dispatch(
+        replyActions.editReplyReview(reply),
+    ),
+    onDeleteReplyReview: (replyId) => dispatch(
+        replyActions.deleteReplyReview(replyId),
+    ),
+    onEditReplyCollection: (reply) => dispatch(
+        replyActions.editReplyCollection(reply),
+    ),
+    onDeleteReplyCollection: (replyId) => dispatch(
+        replyActions.deleteReplyCollection(replyId),
+    ),
+});
+
 Reply.propTypes = {
+    id: PropTypes.number,
     content: PropTypes.string,
     author: PropTypes.string,
     authorId: PropTypes.number,
+    userId: PropTypes.number,
     isLiked: PropTypes.bool,
     likeCount: PropTypes.number,
+    onChange: PropTypes.func,
+    afterLikeCount: PropTypes.number,
+    afterUnlikeCount: PropTypes.number,
+    type: PropTypes.string,
+    onLikeReply: PropTypes.func,
+    onUnlikeReply: PropTypes.func,
+    onEditReplyCollection: PropTypes.func,
+    onEditReplyReview: PropTypes.func,
+    onDeleteReplyCollection: PropTypes.func,
+    onDeleteReplyReview: PropTypes.func,
 };
 
 Reply.defaultProps = {
+    id: 0,
     content: "",
     author: "",
     authorId: 0,
+    userId: 0,
     isLiked: false,
     likeCount: 0,
+    afterLikeCount: 0,
+    afterUnlikeCount: 0,
+    type: "",
+    onChange: () => {},
+    onLikeReply: () => {},
+    onUnlikeReply: () => {},
+    onEditReplyCollection: () => {},
+    onEditReplyReview: () => {},
+    onDeleteReplyCollection: () => {},
+    onDeleteReplyReview: () => {},
 };
 
-export default Reply;
+export default connect(mapStateToProps, mapDispatchToProps)(Reply);

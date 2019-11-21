@@ -10,7 +10,6 @@ from papersfeed.models.reviews.review import Review
 from papersfeed.models.collections.collection import Collection
 from papersfeed.models.replies.reply_collection import ReplyCollection
 from papersfeed.models.replies.reply_review import ReplyReview
-from papersfeed.models.replies.reply_like import ReplyLike
 
 
 class ReplyTestCase(TestCase):
@@ -58,34 +57,33 @@ class ReplyTestCase(TestCase):
                         constants.TITLE: 'test_review_1',
                         constants.TEXT: 'test_review_1'
                     }),
-                    content_type='application/json'
-        )
+                    content_type='application/json')
 
         # Creating collections
         client.post('/api/collection',
-            json.dumps({
-                constants.TITLE: 'test_collection_1',
-                constants.TEXT: 'test_collection_1'
-            }),
-            content_type='application/json')
+                    json.dumps({
+                        constants.TITLE: 'test_collection_1',
+                        constants.TEXT: 'test_collection_1'
+                    }),
+                    content_type='application/json')
 
         collection_id = Collection.objects.filter(title='test_collection_1').first().id
         review_id = Review.objects.filter(title="test_review_1").first().id
 
         # Creating replies
         client.post('/api/reply/collection',
-                               json.dumps({
-                                   constants.ID: collection_id,
-                                   constants.TEXT: 'test_reply_1'
-                               }),
-                               content_type='application/json')
+                    json.dumps({
+                        constants.ID: collection_id,
+                        constants.TEXT: 'test_reply_1'
+                    }),
+                    content_type='application/json')
 
         client.post('/api/reply/review',
-                               json.dumps({
-                                   constants.ID: review_id,
-                                   constants.TEXT: 'test_reply_1'
-                               }),
-                               content_type='application/json')
+                    json.dumps({
+                        constants.ID: review_id,
+                        constants.TEXT: 'test_reply_1'
+                    }),
+                    content_type='application/json')
 
     def test_make_reply(self):
         """MAKE Reply"""
@@ -135,9 +133,7 @@ class ReplyTestCase(TestCase):
         user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
         collection_id = Collection.objects.filter(title='test_collection_1').first().id
         review_id = Review.objects.filter(title="test_review_1").first().id
-        
         collection_reply_id = ReplyCollection.objects.filter(collection_id=collection_id).first().reply_id
-        review_reply_id = ReplyReview.objects.filter(review_id=review_id).first().reply_id
 
         # Get Replies Collection
         response = client.get('/api/reply/collection',
@@ -148,12 +144,12 @@ class ReplyTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn(
-            '{"replies": [{"id": ' + str(collection_reply_id) 
+            '{"replies": [{"id": ' + str(collection_reply_id)
             + ', "text": "test_reply_1", "liked": false, "review": {}, "collection": {"id": ' 
             + str(collection_id) 
             + ', "title": "test_collection_1", "text": "test_collection_1", "liked": false, '
             + '"contains_paper": false, "count": {"users": 1, "papers": 0, "likes": 0, "replies": 1}},'
-            + ' "user": {"id": ' + str(user_id) 
+            + ' "user": {"id": ' + str(user_id)
             + ', "username": "swpp", "email": "swpp@snu.ac.kr", "description": "", '
             + '"count": {"follower": 0, "following": 0}}, "count": {"likes": 0}}]}',
             response.content.decode())
@@ -181,7 +177,7 @@ class ReplyTestCase(TestCase):
 
         collection_id = Collection.objects.filter(title='test_collection_1').first().id
         review_id = Review.objects.filter(title="test_review_1").first().id
-        
+       
         collection_reply_id = ReplyCollection.objects.filter(collection_id=collection_id).first().reply_id
         review_reply_id = ReplyReview.objects.filter(review_id=review_id).first().reply_id
 
@@ -219,7 +215,7 @@ class ReplyTestCase(TestCase):
 
         collection_id = Collection.objects.filter(title='test_collection_1').first().id
         review_id = Review.objects.filter(title="test_review_1").first().id
-        
+      
         collection_reply_id = ReplyCollection.objects.filter(collection_id=collection_id).first().reply_id
         review_reply_id = ReplyReview.objects.filter(review_id=review_id).first().reply_id
 
@@ -239,4 +235,3 @@ class ReplyTestCase(TestCase):
                                  content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
-
