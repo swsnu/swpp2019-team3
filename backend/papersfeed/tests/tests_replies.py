@@ -145,8 +145,8 @@ class ReplyTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(
             '{"replies": [{"id": ' + str(collection_reply_id)
-            + ', "text": "test_reply_1", "liked": false, "review": {}, "collection": {"id": ' 
-            + str(collection_id) 
+            + ', "text": "test_reply_1", "liked": false, "review": {}, "collection": {"id":'
+            + ' ' + str(collection_id)
             + ', "title": "test_collection_1", "text": "test_collection_1", "liked": false, '
             + '"contains_paper": false, "count": {"users": 1, "papers": 0, "likes": 0, "replies": 1}},'
             + ' "user": {"id": ' + str(user_id)
@@ -177,7 +177,7 @@ class ReplyTestCase(TestCase):
 
         collection_id = Collection.objects.filter(title='test_collection_1').first().id
         review_id = Review.objects.filter(title="test_review_1").first().id
-       
+
         collection_reply_id = ReplyCollection.objects.filter(collection_id=collection_id).first().reply_id
         review_reply_id = ReplyReview.objects.filter(review_id=review_id).first().reply_id
 
@@ -214,8 +214,7 @@ class ReplyTestCase(TestCase):
                    content_type='application/json')
 
         collection_id = Collection.objects.filter(title='test_collection_1').first().id
-        review_id = Review.objects.filter(title="test_review_1").first().id
-      
+        review_id = Review.objects.filter(title="test_review_1").first().id   
         collection_reply_id = ReplyCollection.objects.filter(collection_id=collection_id).first().reply_id
         review_reply_id = ReplyReview.objects.filter(review_id=review_id).first().reply_id
 

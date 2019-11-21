@@ -234,7 +234,7 @@ def update_paper_collection(args):
 
 def get_collections(filter_query, request_user, count, paper_id=None):
     """Get Collections"""
-    return __get_collections(filter_query, request_user, count, paper_id=None)
+    return __get_collections(filter_query, request_user, count, paper_id)
 
 def __get_collections_contains_paper(paper_id, request_user):
     """Get Collections Containing paper"""
