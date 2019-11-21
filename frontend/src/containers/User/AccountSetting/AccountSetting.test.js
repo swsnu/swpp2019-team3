@@ -38,6 +38,7 @@ describe("AccountSetting Test", () => {
             collection: {},
             user: {},
             review: {},
+            reply: {},
         };
         accountSetting = makeAccountSetting(stubInitialState);
 

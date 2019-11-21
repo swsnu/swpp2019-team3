@@ -90,6 +90,11 @@ describe("CollectionDetail Test", () => {
             },
             review: {},
             user: {},
+            reply: {
+                user: {
+                    username: "dfa",
+                },
+            },
         };
         collectionDetail = makeCollectionDetail(stubInitialState);
         spyGetCollection = jest.spyOn(collectionActions, "getCollection")
@@ -224,9 +229,15 @@ describe("CollectionDetail Test", () => {
                 replies: [
                     {
                         content: "reply1",
+                        user: {
+                            username: "affd",
+                        },
                     },
                     {
                         content: "reply2",
+                        user: {
+                            username: "affd",
+                        },
                     },
                 ],
             },

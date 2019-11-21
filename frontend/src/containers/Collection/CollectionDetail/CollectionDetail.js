@@ -10,7 +10,7 @@ import {
     PaperCard, Reply,
 } from "../../../components";
 
-import { collectionActions } from "../../../store/actions";
+import { collectionActions, replyActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
 import SVG from "../../../components/svg";
 
@@ -34,6 +34,7 @@ class CollectionDetail extends Component {
         };
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
         this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
+        this.handleReplies = this.handleReplies.bind(this);
     }
 
     componentDidMount() {
@@ -55,6 +56,12 @@ class CollectionDetail extends Component {
             .then(() => {
                 this.setState({ papers: this.props.storedPapers });
             });
+        this.props.onGetReplies({ id: Number(this.props.location.pathname.split("=")[1]) })
+            .then(() => {
+                this.setState({
+                    replies: this.props.replyList.list,
+                });
+            });
     }
 
     // clickInviteButtonHandler(): Open ‘Invite to the collection’ popup.
@@ -63,15 +70,13 @@ class CollectionDetail extends Component {
     // : Call onRemoveCollectionPaper of CollectionDetail to remove the paper from the collection.
 
     addNewReplyHandler = () => {
-        // should be fixed
-        const newReply = {
-            content: this.state.newReplyContent,
-            author: this.props.currentUserName,
-            authorId: this.props.currentUserID,
-            isLiked: false,
-            likeCount: 0,
-        };
-        this.state.replies.concat(newReply);
+        this.props.onMakeNewReply({ id: Number(this.props.location.pathname.split("=")[1]), content: this.state.newReplyContent })
+            .then(() => {
+                this.setState({
+                    newReplyContent: "",
+                });
+                this.handleReplies();
+            });
     }
 
     paperCardMaker = (paper) => (
@@ -90,6 +95,15 @@ class CollectionDetail extends Component {
           headerExists={false}
         />
     )
+
+    handleReplies() {
+        this.props.onGetReplies({ id: Number(this.props.location.pathname.split("=")[1]) })
+            .then(() => {
+                this.setState({
+                    replies: this.props.replyList.list,
+                });
+            });
+    }
 
     // handle click 'Like' button
     clickLikeButtonHandler() {
@@ -127,12 +141,16 @@ class CollectionDetail extends Component {
 
         const replies = this.state.replies.map((reply) => (
             <Reply
-              key={reply.content} // shoud be fixed
-              content={reply.content}
-              author={reply.author}
-              authorId={reply.authorId}
-              isLiked={reply.isLiked}
-              likeCount={reply.likeCount}
+              key={reply.id}
+              id={reply.id}
+              author={reply.user.username}
+              content={reply.text}
+              authorId={reply.user.id}
+              likeCount={reply.count.likes}
+              isLiked={reply.liked}
+              onChange={this.handleReplies}
+              userId={this.props.me.id}
+              type="collection"
             />
         ));
 
@@ -212,6 +230,7 @@ const mapStateToProps = (state) => ({
     afterLikeCount: state.collection.like.count,
     unlikeCollectionStatus: state.collection.unlike.status,
     afterUnlikeCount: state.collection.unlike.count,
+    replyList: state.reply.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -225,13 +244,18 @@ const mapDispatchToProps = (dispatch) => ({
     onUnlikeCollection: (collectionId) => dispatch(
         collectionActions.unlikeCollection(collectionId),
     ),
+    onGetReplies: (collectionId) => dispatch(
+        replyActions.getRepliesByCollection(collectionId),
+    ),
+    onMakeNewReply: (reply) => dispatch(
+        replyActions.makeNewReplyCollection(reply),
+    ),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionDetail);
 
 CollectionDetail.propTypes = {
-    currentUserID: PropTypes.number,
-    currentUserName: PropTypes.string,
+    me: PropTypes.objectOf(PropTypes.any),
     history: PropTypes.objectOf(PropTypes.any),
     location: PropTypes.objectOf(PropTypes.any),
     onGetCollection: PropTypes.func,
@@ -243,11 +267,13 @@ CollectionDetail.propTypes = {
     afterUnlikeCount: PropTypes.number,
     onLikeCollection: PropTypes.func,
     onUnlikeCollection: PropTypes.func,
+    onGetReplies: PropTypes.func,
+    onMakeNewReply: PropTypes.func,
+    replyList: PropTypes.objectOf(PropTypes.any),
 };
 
 CollectionDetail.defaultProps = {
-    currentUserID: 1,
-    currentUserName: "Girin",
+    me: null,
     history: null,
     location: null,
     onGetCollection: null,
@@ -259,4 +285,7 @@ CollectionDetail.defaultProps = {
     afterUnlikeCount: 0,
     onLikeCollection: () => {},
     onUnlikeCollection: () => {},
+    onGetReplies: () => {},
+    onMakeNewReply: () => {},
+    replyList: {},
 };

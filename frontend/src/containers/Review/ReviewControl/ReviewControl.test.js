@@ -49,6 +49,7 @@ const stubInitialState = {
         },
     },
     user: {},
+    reply: {},
 };
 
 describe("<ReviewControl />", () => {

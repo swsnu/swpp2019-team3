@@ -81,6 +81,11 @@ describe("<ReviewDetail />", () => {
                 },
             },
             user: {},
+            reply: {
+                user: {
+                    username: "fdfss",
+                },
+            },
         };
 
         reviewDetail = makeReviewDetail(stubInitialState);
@@ -180,6 +185,8 @@ describe("<ReviewDetail />", () => {
     it("should handle add button", () => {
         const component = mount(reviewDetail);
         const instance = component.find("ReviewDetail").instance();
+        const spyClickAdd = jest.spyOn(instance, "clickReplyAddButtonHandler")
+            .mockImplementation(() => {});
         instance.setState({
             replyCount: 0,
         });
@@ -187,7 +194,7 @@ describe("<ReviewDetail />", () => {
         const button = component.find(".new-reply .new-reply-button").hostNodes();
         button.simulate("click");
 
-        expect(instance.state.replyCount).toBe(1);
+        expect(spyClickAdd).toHaveBeenCalledTimes(1);
     });
 
     it("should handle replies well", () => {

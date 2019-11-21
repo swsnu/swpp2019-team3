@@ -78,6 +78,7 @@ describe("<PaperDetail />", () => {
                     error: null,
                 },
             },
+            reply: {},
         };
         paperDetail = makePaperDetail(stubInitialState);
         spyGetPaper = jest.spyOn(paperActions, "getPaper")

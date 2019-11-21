@@ -43,6 +43,7 @@ describe("<ReviewCard />", () => {
                 },
             },
             user: {},
+            reply: {},
         };
         reviewCard = makeReviewCard(stubInitialState);
         spyLikeReview = jest.spyOn(reviewActions, "likeReview")
