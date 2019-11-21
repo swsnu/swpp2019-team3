@@ -8,6 +8,8 @@ import AccountSetting from "./User/AccountSetting/AccountSetting";
 import CollectionDetail from "./Collection/CollectionDetail/CollectionDetail";
 import CollectionList from "./Collection/CollectionList/CollectionList";
 import SearchResult from "./SearchResult/SearchResult";
+import FollowerList from "./User/FollowerList/FollowerList";
+import FollowingList from "./User/FollowingList/FollowingList";
 
 export {
     Intro,
@@ -20,4 +22,6 @@ export {
     CollectionDetail,
     CollectionList,
     SearchResult,
+    FollowerList,
+    FollowingList,
 };
