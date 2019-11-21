@@ -61,7 +61,7 @@ class CollectionDetail extends Component {
                 this.setState({
                     replies: this.props.replyList.list,
                 });
-            });
+            }).catch(() => {});
     }
 
     // clickInviteButtonHandler(): Open ‘Invite to the collection’ popup.
@@ -76,7 +76,7 @@ class CollectionDetail extends Component {
                     newReplyContent: "",
                 });
                 this.handleReplies();
-            });
+            }).catch(() => {});
     }
 
     paperCardMaker = (paper) => (
@@ -102,7 +102,7 @@ class CollectionDetail extends Component {
                 this.setState({
                     replies: this.props.replyList.list,
                 });
-            });
+            }).catch(() => {});
     }
 
     // handle click 'Like' button
