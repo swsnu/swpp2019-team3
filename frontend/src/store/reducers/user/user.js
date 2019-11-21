@@ -2,13 +2,13 @@ import { userConstants } from "../../actions/actionTypes";
 import { userStatus } from "../../../constants/constants";
 
 const initialState = {
-    userSearchResult: [],
     selectedUser: {},
     selectedFollowers: [],
     selectedFollowings: [],
     followCount: 0,
     unfollowCount: 0,
     status: userStatus.NONE,
+    searchedUsers: [],
     error: null,
 };
 
@@ -86,6 +86,10 @@ const UserReducer = (state = initialState, action) => {
             status: userStatus.DUPLICATE_EMAIL,
             error: action.target,
         };
+    case userConstants.SEARCH_USER_SUCCESS:
+        return { ...state, status: userStatus.SUCCESS, searchedUsers: action.target };
+    case userConstants.SEARCH_USER_FAILURE:
+        return { ...state, status: userStatus.FAILURE };
     default:
         return { ...state };
     }

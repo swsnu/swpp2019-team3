@@ -116,3 +116,18 @@ const editUserInfoFailure = (error) => {
 export const editUserInfo = (newUserInfo) => (dispatch) => axios.put("/api/user", newUserInfo)
     .then((res) => { dispatch(editUserInfoSuccess(res.data)); })
     .catch((err) => { dispatch(editUserInfoFailure(err)); });
+
+
+const searchUserSuccess = (users) => ({
+    type: userConstants.SEARCH_USER_SUCCESS,
+    target: users.users,
+});
+
+const searchUserFailure = (error) => ({
+    type: userConstants.SEARCH_USER_FAILURE,
+    target: error,
+});
+
+export const searchUser = (searchWord) => (dispatch) => axios.get("/api/user/search", { params: searchWord })
+    .then((res) => dispatch(searchUserSuccess(res.data)))
+    .catch((err) => dispatch(searchUserFailure(err)));

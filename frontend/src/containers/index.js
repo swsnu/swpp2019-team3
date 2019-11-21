@@ -7,6 +7,7 @@ import ProfileDetail from "./User/ProfileDetail/ProfileDetail";
 import AccountSetting from "./User/AccountSetting/AccountSetting";
 import CollectionDetail from "./Collection/CollectionDetail/CollectionDetail";
 import CollectionList from "./Collection/CollectionList/CollectionList";
+import SearchResult from "./SearchResult/SearchResult";
 
 export {
     Intro,
@@ -18,4 +19,5 @@ export {
     AccountSetting,
     CollectionDetail,
     CollectionList,
+    SearchResult,
 };

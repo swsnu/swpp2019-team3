@@ -229,4 +229,21 @@ describe("Collection reducer", () => {
         });
         expect(newState.unlike.status).toBe(collectionStatus.FAILURE);
     });
+
+
+    it("should handle searchCollection success", () => {
+        const newState = reducer(undefined, {
+            type: collectionConstants.SEARCH_COLLECTION_SUCCESS,
+            target: [],
+        });
+        expect(newState.list.status).toEqual(collectionStatus.SUCCESS);
+    });
+
+    it("should handle searchCollection failure", () => {
+        const newState = reducer(undefined, {
+            type: collectionConstants.SEARCH_COLLECTION_FAILURE,
+            target: stubError,
+        });
+        expect(newState.list.status).toEqual(collectionStatus.FAILURE);
+    });
 });

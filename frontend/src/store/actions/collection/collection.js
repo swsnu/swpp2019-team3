@@ -230,3 +230,18 @@ const unlikeCollectionFailure = (error) => ({
 export const unlikeCollection = (collectionId) => (dispatch) => axios.delete("/api/like/collection", { params: collectionId })
     .then((res) => dispatch(unlikeCollectionSuccess(res.data)))
     .catch((err) => dispatch(unlikeCollectionFailure(err)));
+
+
+const searchCollectionSuccess = (collections) => ({
+    type: collectionConstants.SEARCH_COLLECTION_SUCCESS,
+    target: collections.collections,
+});
+
+const searchCollectionFailure = (error) => ({
+    type: collectionConstants.SEARCH_COLLECTION_FAILURE,
+    target: error,
+});
+
+export const searchCollection = (searchWord) => (dispatch) => axios.get("/api/collection/search", { params: searchWord })
+    .then((res) => dispatch(searchCollectionSuccess(res.data)))
+    .catch((err) => dispatch(searchCollectionFailure(err)));
