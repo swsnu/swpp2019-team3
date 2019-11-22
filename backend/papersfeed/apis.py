@@ -194,7 +194,7 @@ def put_reply_collection(args):
 
 def delete_reply_collection(args):
     """Delete reply collection"""
-    return {constants.REPLY: replies_utils.remove_reply(args)}
+    return replies_utils.remove_reply(args);
 
 def get_reply_review(args):
     """Get reply review"""
@@ -210,7 +210,8 @@ def put_reply_review(args):
 
 def delete_reply_review(args):
     """Delete reply review"""
-    return {constants.REPLY: replies_utils.remove_reply(args)}
+    return replies_utils.remove_reply(args);
+
 def get_notification(args):
     """Get Notification"""
     return {constants.NOTIFICATIONS: notification_utils.select_notifications(args)}
