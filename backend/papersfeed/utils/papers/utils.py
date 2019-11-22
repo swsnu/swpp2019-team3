@@ -111,6 +111,8 @@ def select_paper_search(args):
                         paper_ids = __parse_and_save_arxiv_info(response_dict)
                     else: # if 'entry' doesn't exist or it's the end of results
                         break
+                else:
+                    break
                 start += ARXIV_COUNT # continue pagination
         except requests.exceptions.RequestException as exception:
             print(exception)
@@ -521,7 +523,8 @@ def __parse_and_save_arxiv_info(feed):
 
     abstracts = {} # key: primary key of paper, value: abstract of the paper
 
-    for entry in feed['entry']:
+    entries = feed['entry'] if isinstance(feed['entry'], list) else [feed['entry']]
+    for entry in entries:
         # find papers with the title in DB
         dup_ids = Paper.objects.filter(title=entry['title']).values_list('id', flat=True)
         if dup_ids.count() > 0: # if duplicate papers exist
@@ -551,14 +554,37 @@ def __parse_and_save_arxiv_info(feed):
 
         # save information of the authors
         author_rank = 1
-        if isinstance(entry['author'], list):
-            for author in entry['author']:
-                __process_author(author, author_rank, new_paper.id)
-                author_rank += 1
-        else:
-            __process_author(entry['author'], author_rank, new_paper.id)
+        authors = entry['author'] if isinstance(entry['author'], list) else [entry['author']]
+        for author in authors:
+            __process_author(author, author_rank, new_paper.id)
+            author_rank += 1
 
-    # for every abstract, extract keywords by calling 'get_key_phrases'
+        __extract_keywords_from_abstract(abstracts)
+
+    return paper_ids
+
+
+def __process_author(author, author_rank, new_paper_id):
+    """Create Author and PaperAuthor records"""
+    author_rank += 1
+    first_last = author['name'].split(' ')
+    first_name = first_last[0].strip()
+    last_name = first_last[1].strip() if len(first_last) > 1 else ''
+    new_author = Author(
+        first_name=first_name,
+        last_name=last_name,
+    )
+    new_author.save()
+
+    PaperAuthor.objects.create(
+        paper_id=new_paper_id,
+        author_id=new_author.id,
+        type="general",
+        rank=author_rank
+    )
+
+def __extract_keywords_from_abstract(abstracts):
+    """for every abstract, extract keywords by calling 'get_key_phrases'"""
     doc_list = []
     request_len = 0
     request_cnt = 0
@@ -586,27 +612,6 @@ def __parse_and_save_arxiv_info(feed):
 
     print("--- Sent {} requests for extracting keywords".format(request_cnt))
 
-    return paper_ids
-
-
-def __process_author(author, author_rank, new_paper_id):
-    """Create Author and PaperAuthor records"""
-    author_rank += 1
-    first_last = author['name'].split(' ')
-    first_name = first_last[0].strip()
-    last_name = first_last[1].strip() if len(first_last) > 1 else ''
-    new_author = Author(
-        first_name=first_name,
-        last_name=last_name,
-    )
-    new_author.save()
-
-    PaperAuthor.objects.create(
-        paper_id=new_paper_id,
-        author_id=new_author.id,
-        type="general",
-        rank=author_rank
-    )
 
 def __process_key_phrases(key_phrases, request_cnt):
     """ process result of response and save them in DB

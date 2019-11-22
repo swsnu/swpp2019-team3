@@ -5,7 +5,7 @@ import { ConnectedRouter } from "connected-react-router";
 import { Route, Switch } from "react-router-dom";
 import ReviewControl from "./ReviewControl";
 import { reviewActions, paperActions } from "../../../store/actions";
-import { reviewStatus, paperStatus } from "../../../constants/constants";
+import { reviewStatus, paperStatus, collectionStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 import { history } from "../../../store/store";
 
@@ -18,7 +18,21 @@ const stubInitialState = {
     auth: {
     },
     collection: {
-
+        make: {
+            status: collectionStatus.NONE,
+            collection: {},
+            error: null,
+        },
+        list: {
+            status: collectionStatus.NONE,
+            list: [],
+            error: null,
+        },
+        edit: {
+            status: collectionStatus.NONE,
+            collection: {},
+            error: null,
+        },
     },
     review: {
         make: {

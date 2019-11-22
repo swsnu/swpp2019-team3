@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 import json
 
+from unittest.mock import Mock, patch
 from django.test import TestCase, Client
+
 from papersfeed import constants
 from papersfeed.models.collections.collection import Collection
 from papersfeed.models.papers.paper import Paper
@@ -213,12 +215,43 @@ class PaperTestCase(TestCase):
 
         self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
 
-        # Search with Keyword 'blahblah'
+    @patch('requests.get')
+    def test_paper_search_arxiv(self, mock_get):
+        """Search Paper (arXiv)"""
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # mock two responses from arXiv API (one has a entry, and next one has no entry)
+        mock_responses = []
+
+        stub_xml = open("papersfeed/tests/stub_xml.txt", 'r')
+        mock_responses.append(Mock(
+            text=stub_xml.read(),
+            status_code=200
+        ))
+
+        stub_xml = open("papersfeed/tests/no_entry_xml.txt", 'r')
+        mock_responses.append(Mock(
+            text=stub_xml.read(),
+            status_code=200
+        ))
+
+        mock_get.side_effect = mock_responses
+
+        # Search with Keyword 'blahblah' which doesn't exist in DB (send requests to arXiv)
         response = client.get('/api/paper/search',
                               data={
                                   constants.TEXT: 'blahblah'
                               },
                               content_type='application/json')
-        self.assertEqual(response.status_code, 200)
 
-        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 0)
+        self.assertEqual(response.status_code, 200)
+        # there was one result from arXiv, so our search API's response should have one paper result, too
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
