@@ -4,117 +4,106 @@ import { Provider } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
 import { Route, Switch } from "react-router-dom";
 import ReviewControl from "./ReviewControl";
+import { PaperSpec } from "../../../components";
 import { reviewActions, paperActions } from "../../../store/actions";
 import { reviewStatus, paperStatus, collectionStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 import { history } from "../../../store/store";
 
 
-const stubInitialState = {
-    paper: {
-        getPaperStatus: paperStatus.NONE,
-        selectedPaper: { id: 1, author: [{ id: 1 }] },
-    },
-    auth: {
-    },
-    collection: {
-        make: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        list: {
-            status: collectionStatus.NONE,
-            list: [],
-            error: null,
-        },
-        edit: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-    },
-    review: {
-        make: {
-            status: reviewStatus.NONE,
-            review: {},
-            error: null,
-        },
-        list: {
-            status: reviewStatus.NONE,
-            list: [],
-            error: null,
-        },
-        edit: {
-            status: reviewStatus.NONE,
-            review: {},
-            error: null,
-        },
-        delete: {
-            status: reviewStatus.NONE,
-            review: {},
-            error: null,
-        },
-        selected: {
-            status: reviewStatus.NONE,
-            review: { id: 1, paper: { id: 1 } },
-            error: null,
-            replies: [],
-        },
-    },
-    user: {},
-};
+/* eslint-disable react/jsx-props-no-spreading */
+const makeReviewControl = (initialState, mode, props = {}) => (
+    <Provider store={getMockStore(initialState)}>
+        <ConnectedRouter history={history}>
+            <Switch>
+                <Route
+                  path="/"
+                  exact
+                  render={() => (
+                      <div>
+                          <ReviewControl
+                            mode={mode}
+                            getPaperStatus="SUCCESS"
+                            match={
+                                { params: { review_id: 1, paper_id: 1 } }
+                            }
+                            {...props}
+                          />
+                      </div>
+                  )}
+                />
+            </Switch>
+        </ConnectedRouter>
+    </Provider>
+);
+/* eslint-enable react/jsx-props-no-spreading */
 
 describe("<ReviewControl />", () => {
+    let stubInitialState;
     let reviewControl0;
     let reviewControl1;
 
     beforeEach(() => {
-        reviewControl0 = (
-            <Provider store={getMockStore(stubInitialState)}>
-                <ConnectedRouter history={history}>
-                    <Switch>
-                        <Route
-                          path="/"
-                          exact
-                          render={() => (
-                              <div>
-                                  <ReviewControl
-                                    mode={0}
-                                    getPaperStatus="SUCCESS"
-                                    match={
-                                        { params: { review_id: 1, paper_id: 1 } }
-                                    }
-                                  />
-                              </div>
-                          )}
-                        />
-                    </Switch>
-                </ConnectedRouter>
-            </Provider>
-        );
-        reviewControl1 = (
-            <Provider store={getMockStore(stubInitialState)}>
-                <ConnectedRouter history={history}>
-                    <Switch>
-                        <Route
-                          path="/"
-                          exact
-                          render={() => (
-                              <div>
-                                  <ReviewControl
-                                    mode={1}
-                                    match={
-                                        { params: { review_id: 1, paper_id: 1 } }
-                                    }
-                                  />
-                              </div>
-                          )}
-                        />
-                    </Switch>
-                </ConnectedRouter>
-            </Provider>
-        );
+        stubInitialState = {
+            paper: {
+                getPaperStatus: paperStatus.NONE,
+                selectedPaper: {
+                    id: 1,
+                    author: [{ id: 1 }],
+                },
+            },
+            auth: {
+            },
+            collection: {
+                make: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                list: {
+                    status: collectionStatus.NONE,
+                    list: [],
+                    error: null,
+                },
+                edit: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+            },
+            review: {
+                make: {
+                    status: reviewStatus.NONE,
+                    review: {},
+                    error: null,
+                },
+                list: {
+                    status: reviewStatus.NONE,
+                    list: [],
+                    error: null,
+                },
+                edit: {
+                    status: reviewStatus.NONE,
+                    review: {},
+                    error: null,
+                },
+                delete: {
+                    status: reviewStatus.NONE,
+                    review: {},
+                    error: null,
+                },
+                selected: {
+                    status: reviewStatus.NONE,
+                    review: { id: 1, paper: { id: 1 } },
+                    error: null,
+                    replies: [],
+                },
+            },
+            user: {},
+        };
+
+        reviewControl0 = makeReviewControl(stubInitialState, 0);
+        reviewControl1 = makeReviewControl(stubInitialState, 1);
     });
 
     afterEach(() => {
@@ -268,5 +257,45 @@ describe("<ReviewControl />", () => {
         input.hostNodes().simulate("change", event);
         wrapper.update();
         expect(instance.state.content).toBe("ABC");
+    });
+
+    it("should give proper link to PaperSpec", () => {
+        // if both urls exist, reflect download_url
+        stubInitialState = {
+            ...stubInitialState,
+            paper: {
+                getPaperStatus: paperStatus.NONE,
+                selectedPaper: {
+                    id: 1,
+                    author: [{ id: 1 }],
+                    file_url: "http://file_url",
+                    download_url: "http://download_url",
+                },
+            },
+        };
+        reviewControl0 = makeReviewControl(stubInitialState, 0);
+        let component = mount(reviewControl0);
+
+        let instance = component.find(PaperSpec.WrappedComponent).instance();
+        expect(instance.props.link).toEqual("http://download_url");
+
+        // if only file_url exist, reflect it
+        stubInitialState = {
+            ...stubInitialState,
+            paper: {
+                getPaperStatus: paperStatus.NONE,
+                selectedPaper: {
+                    id: 1,
+                    author: [{ id: 1 }],
+                    file_url: "http://file_url",
+                    download_url: "",
+                },
+            },
+        };
+        reviewControl0 = makeReviewControl(stubInitialState, 0);
+        component = mount(reviewControl0);
+
+        instance = component.find(PaperSpec.WrappedComponent).instance();
+        expect(instance.props.link).toEqual("http://file_url");
     });
 });

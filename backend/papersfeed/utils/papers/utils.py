@@ -98,7 +98,7 @@ def select_paper_search(args):
         try:
             start = 0
             while True:
-                print("--- Sent a request for searching in arXiv({}~{})".format(start, start+ARXIV_COUNT-1))
+                print("--- Sent a request for searching in arXiv ({}~{})".format(start, start+ARXIV_COUNT-1))
                 arxiv_url = "http://export.arxiv.org/api/query"
                 query = "?search_query=" + urllib.parse.quote(keyword) \
                     + "&start=" + str(start) + "&max_results=" + str(ARXIV_COUNT)
@@ -559,7 +559,7 @@ def __parse_and_save_arxiv_info(feed):
             __process_author(author, author_rank, new_paper.id)
             author_rank += 1
 
-        __extract_keywords_from_abstract(abstracts)
+    __extract_keywords_from_abstract(abstracts)
 
     return paper_ids
 
