@@ -3,6 +3,7 @@
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Exists, OuterRef, Count
+from notifications.signals import notify
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
@@ -15,6 +16,9 @@ from papersfeed.models.replies.reply import Reply
 from papersfeed.models.replies.reply_collection import ReplyCollection
 from papersfeed.models.replies.reply_review import ReplyReview
 from papersfeed.models.replies.reply_like import ReplyLike
+from papersfeed.models.users.user import User
+from papersfeed.models.collections.collection_user import CollectionUser
+
 
 def select_reply_collection(args):
     """Select reply collection"""
@@ -97,6 +101,23 @@ def insert_reply_collection(args):
         reply_id=reply.id
     )
 
+    # send notifications to members of the collection
+    collection = Collection.objects.get(id=collection_id)
+
+    collection_members = CollectionUser.objects.filter(Q(collection_id=collection_id))
+    member_ids = [collection_member.user_id for collection_member in collection_members]
+    member_ids = list(set(member_ids))
+
+    members = User.objects.filter(Q(id__in=member_ids))
+
+    notify.send(
+        request_user,
+        recipient=members,
+        verb='replied to',
+        action_object=reply,
+        target=collection
+    )
+
     replies, _, _ = __get_replies(Q(id=reply.id), request_user, None)
 
     if not replies:
@@ -138,6 +159,18 @@ def insert_reply_review(args):
     ReplyReview.objects.create(
         review_id=review_id,
         reply_id=reply.id
+    )
+
+    # send notifications to the author of the review
+    review = Review.objects.get(id=review_id)
+    review_author = User.objects.get(id=review.user_id)
+
+    notify.send(
+        request_user,
+        recipient=[review_author],
+        verb='replied to',
+        action_object=reply,
+        target=review
     )
 
     replies, _, _ = __get_replies(Q(id=reply.id), request_user, None)

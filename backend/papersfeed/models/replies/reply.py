@@ -17,3 +17,6 @@ class Reply(BaseModel):
         """Table Meta"""
         db_table = 'swpp_reply'  # Table 이름
         ordering = ['-pk']  # Default Order
+
+    def __str__(self):
+        return self.text[:10] + "..." if len(self.text) > 10 else self.text[:10]
