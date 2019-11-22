@@ -8,6 +8,7 @@ import { reviewActions, replyActions } from "../../../store/actions";
 import { Reply } from "../../../components";
 import "./ReviewDetail.css";
 import SVG from "../../../components/svg";
+import { reviewStatus } from "../../../constants/constants";
 
 class ReviewDetail extends Component {
     constructor(props) {
@@ -42,6 +43,10 @@ class ReviewDetail extends Component {
     componentDidMount() {
         this.props.onGetReview({ id: Number(this.props.match.params.review_id) })
             .then(() => {
+                if (this.props.selectedReviewStatus === reviewStatus.REVIEW_NOT_EXIST) {
+                    this.props.history.push("/main");
+                    return;
+                }
                 this.setState({
                     thisReview: this.props.selectedReview,
                     isLiked: this.props.selectedReview.liked,
@@ -175,6 +180,7 @@ class ReviewDetail extends Component {
 
 const mapStateToProps = (state) => ({
     me: state.auth.me,
+    selectedReviewStatus: state.review.selected.status,
     selectedReview: state.review.selected.review,
     likeReviewStatus: state.review.like.status,
     afterLikeCount: state.review.like.count,
@@ -204,6 +210,7 @@ ReviewDetail.propTypes = {
     me: PropTypes.objectOf(PropTypes.any),
     history: PropTypes.objectOf(PropTypes.any),
     match: PropTypes.objectOf(PropTypes.any),
+    selectedReviewStatus: PropTypes.string,
     selectedReview: PropTypes.objectOf(PropTypes.any),
     onGetReview: PropTypes.func,
     onDeleteReview: PropTypes.func,
@@ -220,6 +227,7 @@ ReviewDetail.defaultProps = {
     me: null,
     history: null,
     match: null,
+    selectedReviewStatus: reviewStatus.NONE,
     selectedReview: {},
     onGetReview: () => {},
     onDeleteReview: () => {},

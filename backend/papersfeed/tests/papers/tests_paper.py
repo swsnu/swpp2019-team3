@@ -232,13 +232,13 @@ class PaperTestCase(TestCase):
         # mock two responses from arXiv API (one has a entry, and next one has no entry)
         mock_responses = []
 
-        stub_xml = open("papersfeed/tests/stub_xml.txt", 'r')
+        stub_xml = open("papersfeed/tests/papers/stub_arxiv_entry.xml", 'r')
         mock_responses.append(Mock(
             text=stub_xml.read(),
             status_code=200
         ))
 
-        stub_xml = open("papersfeed/tests/no_entry_xml.txt", 'r')
+        stub_xml = open("papersfeed/tests/papers/stub_arxiv_no_entry.xml", 'r')
         mock_responses.append(Mock(
             text=stub_xml.read(),
             status_code=200
@@ -246,7 +246,7 @@ class PaperTestCase(TestCase):
 
         mock_get.side_effect = mock_responses
 
-        stub_json = json.loads(open("papersfeed/tests/stub_key_phrases.json", 'r').read())
+        stub_json = json.loads(open("papersfeed/tests/papers/stub_key_phrases.json", 'r').read())
         # just for getting a clue about the id of paper which will be added in this test
         Paper.objects.create(
             title="test",
