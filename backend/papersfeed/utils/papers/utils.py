@@ -621,7 +621,7 @@ def __process_key_phrases(key_phrases, request_cnt):
 
     # print errors if exist
     if key_phrases['errors']:
-        print("- Request {} error".format(request_cnt))
+        print("- Request {} error while extracting keywords".format(request_cnt))
         pprint(key_phrases['errors'])
 
     # save information of mapping keyword to paper (abstract)

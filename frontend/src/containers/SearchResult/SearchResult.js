@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Tabs, Tab } from "react-bootstrap";
 
 import { PaperCard, CollectionCard, UserCard } from "../../components";
+import { paperStatus } from "../../constants/constants";
 import { paperActions, collectionActions, userActions } from "../../store/actions";
 import "./SearchResult.css";
 
@@ -14,6 +15,7 @@ class SearchResult extends Component {
             papers: [],
             collections: [],
             users: [],
+            searchPaperStatus: paperStatus.WAITING,
         };
 
         this.paperCardsMaker = this.paperCardsMaker.bind(this);
@@ -24,7 +26,10 @@ class SearchResult extends Component {
     componentDidMount() {
         this.props.onSearchPaper({ text: this.props.location.pathname.split("=")[1] })
             .then(() => {
-                this.setState({ papers: this.props.searchedPapers });
+                this.setState({
+                    papers: this.props.searchedPapers,
+                    searchPaperStatus: paperStatus.NONE,
+                });
             });
         this.props.onSearchCollection({ text: this.props.location.pathname.split("=")[1] })
             .then(() => {
@@ -88,9 +93,13 @@ class SearchResult extends Component {
         let collectionCardsRight = null;
         let userCardsLeft = null;
         let userCardsRight = null;
-        let paperMessage = "no papers";
+        let paperMessage = "please wait...";
         let collectionMessage = "no collections";
         let userMessage = "no users";
+
+        if (this.state.searchPaperStatus === paperStatus.NONE) {
+            paperMessage = "no papers";
+        }
 
         if (this.state.papers.length > 0) {
             paperCardsLeft = this.state.papers
