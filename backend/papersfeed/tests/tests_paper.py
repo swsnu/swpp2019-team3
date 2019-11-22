@@ -215,8 +215,9 @@ class PaperTestCase(TestCase):
 
         self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
 
+    @patch('requests.post')
     @patch('requests.get')
-    def test_paper_search_arxiv(self, mock_get):
+    def test_paper_search_arxiv(self, mock_get, mock_post):
         """Search Paper (arXiv)"""
         client = Client()
 
@@ -245,6 +246,12 @@ class PaperTestCase(TestCase):
 
         mock_get.side_effect = mock_responses
 
+        stub_json = open("papersfeed/tests/stub_key_phrases.json", 'r')
+        mock_post.return_value = MockResponse(
+            json_data=json.loads(stub_json.read()),
+            status_code=200
+        )
+
         # Search with Keyword 'blahblah' which doesn't exist in DB (send requests to arXiv)
         response = client.get('/api/paper/search',
                               data={
@@ -255,3 +262,14 @@ class PaperTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         # there was one result from arXiv, so our search API's response should have one paper result, too
         self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
+
+# pylint: disable=too-few-public-methods
+class MockResponse:
+    """MockResponse"""
+    def __init__(self, json_data, status_code):
+        self.json_data = json_data
+        self.status_code = status_code
+
+    def json(self):
+        """json()"""
+        return self.json_data
