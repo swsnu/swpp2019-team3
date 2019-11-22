@@ -89,6 +89,13 @@ class PaperDetail extends Component {
             .filter((x) => this.state.reviews.indexOf(x) % 2 === 1)
             .map((review) => this.reviewMaker(review));
 
+        let link = "";
+        if (this.props.selectedPaper.download_url) {
+            link = this.props.selectedPaper.download_url;
+        } else if (this.props.selectedPaper.file_url) {
+            link = this.props.selectedPaper.file_url;
+        }
+
         return (
             <div className="paperdetail-page">
                 <div className="paperdetail">
@@ -103,6 +110,7 @@ class PaperDetail extends Component {
                           likeCount={this.state.likeCount}
                           reviewCount={this.state.reviews.length}
                           isLiked={this.props.selectedPaper.liked}
+                          link={link}
                           addButtonExists
                           history={this.props.history}
                         />

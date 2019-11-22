@@ -17,6 +17,7 @@ class PaperCard extends Component {
             authorNames: "",
             keywords: "",
         };
+        this.processKeywords = this.processKeywords.bind(this);
         this.clickPaperCardUnlikeHandler = this.clickPaperCardUnlikeHandler.bind(this);
         this.clickPaperCardLikeHandler = this.clickPaperCardLikeHandler.bind(this);
     }
@@ -24,18 +25,31 @@ class PaperCard extends Component {
     componentDidMount() {
         if (this.props.authors.length > 0) {
             const authorNames = this.props.authors.map((author) => `${author.first_name} ${author.last_name}`);
-            this.setState({ authorNames: authorNames.join(", ") });
+            this.setState({ authorNames: authorNames.slice(0, 10).join(", ") });
         }
+        let authorKeywords = "";
+        let abstractKeywords = "";
         if (this.props.keywords.length > 0) {
-            const keywords = this.props.keywords.filter(
-                (keyword) => keyword.type === "author",
-            ).sort(
-                (a, b) => a.id - b.id,
-            ).map(
-                (keyword) => keyword.name,
-            );
-            this.setState({ keywords: keywords.join(", ") });
+            authorKeywords = this.processKeywords("author");
+            abstractKeywords = this.processKeywords("abstract");
+
+            if (authorKeywords.length > 0) {
+                this.setState({ keywords: authorKeywords });
+            } else {
+                this.setState({ keywords: abstractKeywords });
+            }
         }
+    }
+
+    processKeywords = (type) => {
+        const keywords = this.props.keywords.filter(
+            (keyword) => keyword.type === type,
+        ).sort(
+            (a, b) => a.id - b.id,
+        ).map(
+            (keyword) => keyword.name,
+        );
+        return keywords.slice(0, 10).join(", ");
     }
 
     // handle click 'Like' button

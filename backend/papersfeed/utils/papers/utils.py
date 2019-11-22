@@ -1,13 +1,15 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
 
-# import json
-# import datetime
-
+import urllib
+from pprint import pprint
+import requests
+import xmltodict
 from django.db.models import Q, Exists, OuterRef, Count
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
+from papersfeed.utils.papers.abstract_analysis import get_key_phrases
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.papers.author import Author
 from papersfeed.models.papers.keyword import Keyword
@@ -19,6 +21,11 @@ from papersfeed.models.papers.publication import Publication
 from papersfeed.models.papers.publisher import Publisher
 from papersfeed.models.reviews.review import Review
 from papersfeed.models.collections.collection_paper import CollectionPaper
+
+ARXIV_COUNT = 20 # pagination count for arXiv requests
+
+MAX_REQ_SIZE = 500000 # maxCharactersPerRequest of Text Analytics API is 524288
+MAX_DOC_SIZE = 5120 # size limit of one document is 5120 (request consists of multiple documents)
 
 
 def select_paper(args):
@@ -85,6 +92,29 @@ def select_paper_search(args):
     paper_ids = Paper.objects.filter(Q(title__icontains=keyword) | Q(abstract__icontains=keyword)) \
         .values_list('id', flat=True)
 
+    # if there is no result in our DB
+    if paper_ids.count() == 0:
+        # exploit arXiv
+        try:
+            start = 0
+            while True:
+                print("--- Sent a request for searching in arXiv({}~{})".format(start, start+ARXIV_COUNT-1))
+                arxiv_url = "http://export.arxiv.org/api/query"
+                query = "?search_query=" + urllib.parse.quote(keyword) \
+                    + "&start=" + str(start) + "&max_results=" + str(ARXIV_COUNT)
+                response = requests.get(arxiv_url + query)
+
+                if response.status_code == 200:
+                    response_xml = response.text
+                    response_dict = xmltodict.parse(response_xml)['feed']
+                    if 'entry' in response_dict and response_dict['entry']:
+                        paper_ids = __parse_and_save_arxiv_info(response_dict)
+                    else: # if 'entry' doesn't exist or it's the end of results
+                        break
+                start += ARXIV_COUNT # continue pagination
+        except requests.exceptions.RequestException as exception:
+            print(exception)
+
     # Filter Query
     filter_query = Q(id__in=paper_ids)
 
@@ -92,97 +122,6 @@ def select_paper_search(args):
     papers, _, _ = __get_papers(filter_query, request_user, None)
 
     return papers
-
-
-# def get_paper_migration():
-#     """Paper Migration from json"""
-#     with open('papersfeed/fixtures/cs_500.json', 'r') as papers_json:
-#         paper_related_objects = json.load(papers_json)
-#
-#         papers = []
-#         authors = []
-#         paper_authors = []
-#         publishers = []
-#         publications = []
-#         paper_publications = []
-#
-#         for paper_related_object in paper_related_objects:
-#             model = paper_related_object['model'].split('.')[1]
-#
-#             pk = paper_related_object['pk']
-#             if model == 'paper':
-#                 papers.append(
-#                     Paper(
-#                         id=pk,
-#                         title=paper_related_object['fields']['title'],
-#                         language=paper_related_object['fields']['language'],
-#                         abstract=paper_related_object['fields']['abstract'],
-#                         ISSN=paper_related_object['fields']['ISSN'],
-#                         eISSN=paper_related_object['fields']['eISSN'],
-#                         DOI=paper_related_object['fields']['DOI']
-#                     )
-#                 )
-#             elif model == 'author':
-#                 authors.append(
-#                     Author(
-#                         id=pk,
-#                         first_name=paper_related_object['fields']['first_name'],
-#                         last_name=paper_related_object['fields']['last_name'],
-#                         email=paper_related_object['fields']['email'],
-#                         address=paper_related_object['fields']['address'],
-#                         researcher_id=paper_related_object['fields']['researcher_id']
-#                     )
-#                 )
-#             elif model == 'paperauthor':
-#                 paper_authors.append(
-#                     PaperAuthor(
-#                         id=pk,
-#                         paper_id=paper_related_object['fields']['paper'],
-#                         author_id=paper_related_object['fields']['author'],
-#                         type=paper_related_object['fields']['type'],
-#                         rank=paper_related_object['fields']['rank']
-#                     )
-#                 )
-#             elif model == 'publisher':
-#                 publishers.append(
-#                     Publisher(
-#                         id=pk,
-#                         name=paper_related_object['fields']['name'],
-#                         city=paper_related_object['fields']['city'],
-#                         address=paper_related_object['fields']['address']
-#                     )
-#                 )
-#             elif model == 'publication':
-#                 publications.append(
-#                     Publication(
-#                         id=pk,
-#                         name=paper_related_object['fields']['name'],
-#                         type=paper_related_object['fields']['type'],
-#                         publisher_id=paper_related_object['fields']['publisher']
-#                     )
-#                 )
-#             elif model == 'paperpublication':
-#                 paper_publications.append(
-#                     PaperPublication(
-#                         id=pk,
-#                         paper_id=paper_related_object['fields']['paper'],
-#                         publication_id=paper_related_object['fields']['publication'],
-#                         volume=paper_related_object['fields']['volume'],
-#                         issue=paper_related_object['fields']['issue'],
-#                         date=datetime.datetime.strptime(paper_related_object['fields']['date'], '%Y-%m-%d')
-#                         if paper_related_object['fields']['date'] else None,
-#                         beginning_page=paper_related_object['fields']['beginning_page'],
-#                         ending_page=paper_related_object['fields']['ending_page'],
-#                         ISBN=paper_related_object['fields']['ISBN']
-#                     )
-#                 )
-#
-#         Paper.objects.bulk_create(papers)
-#         Author.objects.bulk_create(authors)
-#         PaperAuthor.objects.bulk_create(paper_authors)
-#         Publisher.objects.bulk_create(publishers)
-#         Publication.objects.bulk_create(publications)
-#         PaperPublication.objects.bulk_create(paper_publications)
 
 
 def get_papers(filter_query, request_user, count):
@@ -575,3 +514,134 @@ def __get_paper_review_count(paper_ids, group_by_field):
     )
 
     return {review_paper[group_by_field]: review_paper['count'] for review_paper in review_papers}
+
+
+def __parse_and_save_arxiv_info(feed):
+    paper_ids = []
+
+    abstracts = {} # key: primary key of paper, value: abstract of the paper
+
+    for entry in feed['entry']:
+        # find papers with the title in DB
+        dup_ids = Paper.objects.filter(title=entry['title']).values_list('id', flat=True)
+        if dup_ids.count() > 0: # if duplicate papers exist
+            paper_ids.extend(dup_ids) # just return their ids
+            continue
+
+        download_url = ""
+        for link in entry['link']:
+            if "@title" in link and link['@title'] == "pdf":
+                download_url = link['@href']
+                break
+
+        # save information of the paper
+        new_paper = Paper(
+            title=entry['title'][:400],
+            language="english",
+            abstract=entry['summary'][:5000],
+            DOI=entry['arxiv:doi']['#text'][:40] if "arxiv:doi" in entry and "#text" in entry['arxiv:doi'] else "",
+            file_url=entry['id'],
+            download_url=download_url
+        )
+        new_paper.save()
+        paper_ids.append(new_paper.id)
+
+        # save the abstract with key of paper for extracting keywords later
+        abstracts[new_paper.id] = entry['summary']
+
+        # save information of the authors
+        author_rank = 1
+        if isinstance(entry['author'], list):
+            for author in entry['author']:
+                __process_author(author, author_rank, new_paper.id)
+                author_rank += 1
+        else:
+            __process_author(entry['author'], author_rank, new_paper.id)
+
+    # for every abstract, extract keywords by calling 'get_key_phrases'
+    doc_list = []
+    request_len = 0
+    request_cnt = 0
+    for paper_key in abstracts:
+        request_len += min(len(abstracts[paper_key]), MAX_DOC_SIZE)
+
+        # create as few as requests possible, considering maximum sizes of request and doc
+        if request_len >= MAX_REQ_SIZE:
+            documents = {"documents": doc_list}
+            key_phrases = get_key_phrases(documents)
+            request_cnt += 1
+            __process_key_phrases(key_phrases, request_cnt)
+
+            doc_list = []
+            request_len = min(len(abstracts[paper_key]), MAX_DOC_SIZE)
+
+        doc_list.append({"id": str(paper_key), "language": "en", "text": abstracts[paper_key][:MAX_DOC_SIZE]})
+
+    # create a request with remaining abstracts
+    if doc_list:
+        documents = {"documents": doc_list}
+        key_phrases = get_key_phrases(documents)
+        request_cnt += 1
+        __process_key_phrases(key_phrases, request_cnt)
+
+    print("--- Sent {} requests for extracting keywords".format(request_cnt))
+
+    return paper_ids
+
+
+def __process_author(author, author_rank, new_paper_id):
+    """Create Author and PaperAuthor records"""
+    author_rank += 1
+    first_last = author['name'].split(' ')
+    first_name = first_last[0].strip()
+    last_name = first_last[1].strip() if len(first_last) > 1 else ''
+    new_author = Author(
+        first_name=first_name,
+        last_name=last_name,
+    )
+    new_author.save()
+
+    PaperAuthor.objects.create(
+        paper_id=new_paper_id,
+        author_id=new_author.id,
+        type="general",
+        rank=author_rank
+    )
+
+def __process_key_phrases(key_phrases, request_cnt):
+    """ process result of response and save them in DB
+        To check struct of response, refer to
+        https://koreacentral.dev.cognitive.microsoft.com/docs/services/TextAnalytics-v2-1/operations/56f30ceeeda5650db055a3c6
+    """
+
+    # print errors if exist
+    if key_phrases['errors']:
+        print("- Request {} error".format(request_cnt))
+        pprint(key_phrases['errors'])
+
+    # save information of mapping keyword to paper (abstract)
+    if key_phrases['documents']:
+        for result in key_phrases['documents']:
+            keyword_ids = []
+            for key_phrase in result['keyPhrases']:
+                key_phrase = key_phrase.lower()
+                paper_id = int(result['id'])
+
+                # find keywords with the name in DB
+                dup_ids = Keyword.objects.filter(name=key_phrase).values_list('id', flat=True)
+                if dup_ids.count() > 0: # if duplicate keywords don't exist
+                    keyword_ids.extend(dup_ids)
+                    continue
+
+                new_keyword = Keyword(
+                    name=key_phrase
+                )
+                new_keyword.save()
+                keyword_ids.append(new_keyword.id)
+
+            for keyword_id in keyword_ids:
+                PaperKeyword.objects.create(
+                    paper_id=paper_id,
+                    keyword_id=keyword_id,
+                    type="abstract"
+                )
