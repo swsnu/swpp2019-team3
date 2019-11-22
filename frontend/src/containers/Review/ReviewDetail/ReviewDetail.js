@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import {
     Form, Button, Card,
 } from "react-bootstrap";
-import { reviewActions } from "../../../store/actions";
+import { reviewActions, replyActions } from "../../../store/actions";
 import { Reply } from "../../../components";
 import "./ReviewDetail.css";
 import SVG from "../../../components/svg";
@@ -36,6 +36,7 @@ class ReviewDetail extends Component {
         this.clickDeleteButtonHandler = this.clickDeleteButtonHandler.bind(this);
         this.clickReplyAddButtonHandler = this.clickReplyAddButtonHandler.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleReplies = this.handleReplies.bind(this);
     }
 
     componentDidMount() {
@@ -47,6 +48,14 @@ class ReviewDetail extends Component {
                     likeCount: this.props.selectedReview.count.likes,
                     author: this.props.selectedReview.user,
                     paperId: this.props.selectedReview.paper.id,
+                    newReply: "",
+                });
+            }).catch(() => {});
+
+        this.props.onGetReplies({ id: Number(this.props.match.params.review_id) })
+            .then(() => {
+                this.setState({
+                    replies: this.props.replyList.list,
                 });
             }).catch(() => {});
     }
@@ -89,13 +98,22 @@ class ReviewDetail extends Component {
     }
 
     clickReplyAddButtonHandler() {
-        const nextState = ({
-            thisReview: {
-                ...this.state.thisReview,
-            },
-            replyCount: this.state.replyCount + 1,
-        });
-        this.setState(nextState);
+        this.props.onMakeNewReply({ id: this.state.thisReview.id, text: this.state.newReply })
+            .then(() => {
+                this.handleReplies();
+                this.setState({
+                    newReply: "",
+                });
+            });
+    }
+
+    handleReplies() {
+        this.props.onGetReplies({ id: Number(this.props.match.params.review_id) })
+            .then(() => {
+                this.setState({
+                    replies: this.props.replyList.list,
+                });
+            }).catch(() => {});
     }
 
     render() {
@@ -103,11 +121,17 @@ class ReviewDetail extends Component {
             <Reply
               key={reply.id}
               id={reply.id}
-              author={reply.author}
-              content={reply.content}
-              authorId={reply.authorId}
+              author={reply.user.username}
+              content={reply.text}
+              authorId={reply.user.id}
+              likeCount={reply.count.likes}
+              isLiked={reply.liked}
+              onChange={this.handleReplies}
+              userId={this.props.me.id}
+              type="review"
             />
         ));
+
 
         return (
             <div className="review-detail">
@@ -135,7 +159,7 @@ class ReviewDetail extends Component {
                                 <Form className="new-reply">
                                     <Form.Label className="username">{this.state.user.username}</Form.Label>
                                     <Form.Control className="reply-input" type="text" bsPrefix="reply-input" value={this.state.newReply} onChange={this.handleChange} />
-                                    <Button className="new-reply-button" onClick={this.clickReplyAddButtonHandler}>Add</Button>
+                                    <Button className="new-reply-button" onClick={this.clickReplyAddButtonHandler} disabled={this.state.newReply.length === 0}>Add</Button>
                                 </Form>
                                 <div className="replies">
                                     {replies}
@@ -156,6 +180,7 @@ const mapStateToProps = (state) => ({
     afterLikeCount: state.review.like.count,
     unlikeReviewStatus: state.review.unlike.status,
     afterUnlikeCount: state.review.unlike.count,
+    replyList: state.reply.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -166,6 +191,12 @@ const mapDispatchToProps = (dispatch) => ({
     ),
     onUnlikeReview: (reviewId) => dispatch(
         reviewActions.unlikeReview(reviewId),
+    ),
+    onGetReplies: (reviewId) => dispatch(
+        replyActions.getRepliesByReview(reviewId),
+    ),
+    onMakeNewReply: (reply) => dispatch(
+        replyActions.makeNewReplyReview(reply),
     ),
 });
 
@@ -180,6 +211,9 @@ ReviewDetail.propTypes = {
     afterUnlikeCount: PropTypes.number,
     onLikeReview: PropTypes.func,
     onUnlikeReview: PropTypes.func,
+    replyList: PropTypes.objectOf(PropTypes.any),
+    onGetReplies: PropTypes.func,
+    onMakeNewReply: PropTypes.func,
 };
 
 ReviewDetail.defaultProps = {
@@ -193,6 +227,9 @@ ReviewDetail.defaultProps = {
     afterUnlikeCount: 0,
     onLikeReview: () => {},
     onUnlikeReview: () => {},
+    replyList: { list: {} },
+    onGetReplies: () => {},
+    onMakeNewReply: () => {},
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReviewDetail);

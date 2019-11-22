@@ -19,6 +19,7 @@ const stubInitialState = {
         error: -1,
     },
     review: {},
+    reply: {},
 };
 
 const mockStore = getMockStore(stubInitialState);

@@ -7,6 +7,7 @@ from papersfeed.utils.users import utils as users_utils
 from papersfeed.utils.collections import utils as collections_utils
 from papersfeed.utils.reviews import utils as reviews_utils
 from papersfeed.utils.likes import utils as likes_utils
+from papersfeed.utils.replies import utils as replies_utils
 from papersfeed.utils.notifications import utils as notification_utils
 
 from . import constants
@@ -170,6 +171,46 @@ def post_like_collection(args):
 def delete_like_collection(args):
     """Delete Like Collection"""
     return {constants.COUNT: likes_utils.remove_like_collection(args)}
+
+def post_like_reply(args):
+    """Post like reply"""
+    return {constants.COUNT: likes_utils.insert_like_reply(args)}
+
+def delete_like_reply(args):
+    """Delete Like Collection"""
+    return {constants.COUNT: likes_utils.remove_like_reply(args)}
+
+def get_reply_collection(args):
+    """Get reply collection"""
+    return {constants.REPLIES: replies_utils.select_reply_collection(args)}
+
+def post_reply_collection(args):
+    """Post reply collection"""
+    return {constants.REPLY: replies_utils.insert_reply_collection(args)}
+
+def put_reply_collection(args):
+    """Put reply collection"""
+    return {constants.REPLY: replies_utils.update_reply(args)}
+
+def delete_reply_collection(args):
+    """Delete reply collection"""
+    return replies_utils.remove_reply(args)
+
+def get_reply_review(args):
+    """Get reply review"""
+    return {constants.REPLIES: replies_utils.select_reply_review(args)}
+
+def post_reply_review(args):
+    """Post reply review"""
+    return {constants.REPLY: replies_utils.insert_reply_review(args)}
+
+def put_reply_review(args):
+    """Put reply review"""
+    return {constants.REPLY: replies_utils.update_reply(args)}
+
+def delete_reply_review(args):
+    """Delete reply review"""
+    return replies_utils.remove_reply(args)
 
 def get_notification(args):
     """Get Notification"""
