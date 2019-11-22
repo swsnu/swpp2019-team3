@@ -20,9 +20,10 @@ class Header extends Component {
             searchWord: "",
         };
 
+        this.keyPressHandler = this.keyPressHandler.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.clickSignoutButtonHandler = this.clickSignoutButtonHandler.bind(this);
         this.readNotiHandler = this.readNotiHandler.bind(this);
-        this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount() {
@@ -30,6 +31,12 @@ class Header extends Component {
             .then(() => {})
             .catch(() => {});
     }
+
+    keyPressHandler = (e) => {
+        if (this.state.searchWord && e.charCode === 13) {
+            this.props.history.push(`/search=${this.state.searchWord}`);
+        }
+    };
 
     // for search input change
     handleChange(e) {
@@ -111,12 +118,6 @@ class Header extends Component {
             notifications = <h3 id="no-notifications-message">no notifications</h3>;
         }
 
-        const keyPressHandler = (e) => {
-            if (this.state.searchWord && e.charCode === 13) {
-                this.props.history.push(`/search=${this.state.searchWord}`);
-            }
-        };
-
         return (
             <div>
                 <Navbar className="header">
@@ -129,7 +130,7 @@ class Header extends Component {
                           bsPrefix="search-input"
                           value={this.state.searchWord}
                           onChange={this.handleChange}
-                          onKeyPress={keyPressHandler}
+                          onKeyPress={this.keyPressHandler}
                         />
                         <Button
                           className="search-button"

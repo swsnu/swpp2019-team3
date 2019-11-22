@@ -3,6 +3,7 @@ import { mount } from "enzyme";
 import { Provider } from "react-redux";
 
 import PaperDetail from "./PaperDetail";
+import { PaperSpec } from "../../components";
 import { paperActions } from "../../store/actions";
 import {
     paperStatus, collectionStatus, reviewStatus, signinStatus,
@@ -243,5 +244,45 @@ describe("<PaperDetail />", () => {
         expect(component.find("ReviewCard").length).toBe(2);
         expect(wrapperLeft.children().length).toBe(1);
         expect(wrapperRight.children().length).toBe(1);
+    });
+
+    it("should give proper link to PaperSpec", () => {
+        // if both urls exist, reflect download_url
+        stubInitialState = {
+            ...stubInitialState,
+            paper: {
+                getPaperStatus: paperStatus.NONE,
+                selectedPaper: {
+                    id: 1,
+                    author: [{ id: 1 }],
+                    file_url: "http://file_url",
+                    download_url: "http://download_url",
+                },
+            },
+        };
+        paperDetail = makePaperDetail(stubInitialState);
+        let component = mount(paperDetail);
+
+        let instance = component.find(PaperSpec.WrappedComponent).instance();
+        expect(instance.props.link).toEqual("http://download_url");
+
+        // if only file_url exist, reflect it
+        stubInitialState = {
+            ...stubInitialState,
+            paper: {
+                getPaperStatus: paperStatus.NONE,
+                selectedPaper: {
+                    id: 1,
+                    author: [{ id: 1 }],
+                    file_url: "http://file_url",
+                    download_url: "",
+                },
+            },
+        };
+        paperDetail = makePaperDetail(stubInitialState);
+        component = mount(paperDetail);
+
+        instance = component.find(PaperSpec.WrappedComponent).instance();
+        expect(instance.props.link).toEqual("http://file_url");
     });
 });
