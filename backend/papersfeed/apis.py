@@ -154,7 +154,7 @@ def delete_like_paper(args):
 
 
 def get_paper_like(args):
-    """Get Like Paper"""
+    """Get Paper Like"""
     return {constants.PAPERS: papers_utils.select_paper_like(args)}
 
 
@@ -168,6 +168,11 @@ def delete_like_review(args):
     return {constants.COUNT: likes_utils.remove_like_review(args)}
 
 
+def get_review_like(args):
+    """Get Review Like"""
+    return {constants.REVIEWS: reviews_utils.select_review_like(args)}
+
+
 def post_like_collection(args):
     """Post Like Collection"""
     return {constants.COUNT: likes_utils.insert_like_collection(args)}
@@ -176,6 +181,11 @@ def post_like_collection(args):
 def delete_like_collection(args):
     """Delete Like Collection"""
     return {constants.COUNT: likes_utils.remove_like_collection(args)}
+
+
+def get_collection_like(args):
+    """Get Collection Like"""
+    return {constants.COLLECTIONS: collections_utils.select_collection_like(args)}
 
 
 def post_like_reply(args):

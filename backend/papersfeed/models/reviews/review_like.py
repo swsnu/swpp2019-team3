@@ -3,7 +3,7 @@ from django.db import models
 
 from papersfeed.models.base_models import BaseModel
 from papersfeed.models.users.user import User
-from .review import Review
+from papersfeed.models.reviews.review import Review
 
 
 class ReviewLike(BaseModel):

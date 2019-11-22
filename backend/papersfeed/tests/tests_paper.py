@@ -206,7 +206,7 @@ class PaperTestCase(TestCase):
         # the last action comes first
         self.assertEqual(papers[0]['title'], 'paper1')
         self.assertEqual(papers[1]['title'], 'paper3')
-        self.assertEqual(papers[2]['title'], 'paper2')        
+        self.assertEqual(papers[2]['title'], 'paper2')
 
     def test_paper_search(self):
         """ PAPER SEARCH """
