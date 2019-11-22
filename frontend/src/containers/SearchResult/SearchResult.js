@@ -24,18 +24,19 @@ class SearchResult extends Component {
     }
 
     componentDidMount() {
-        this.props.onSearchPaper({ text: this.props.location.pathname.split("=")[1] })
+        const searchWord = this.props.location.pathname.split("=")[1];
+        this.props.onSearchPaper({ text: searchWord })
             .then(() => {
                 this.setState({
                     papers: this.props.searchedPapers,
                     searchPaperStatus: paperStatus.NONE,
                 });
             });
-        this.props.onSearchCollection({ text: this.props.location.pathname.split("=")[1] })
+        this.props.onSearchCollection({ text: searchWord })
             .then(() => {
                 this.setState({ collections: this.props.searchedCollections });
             });
-        this.props.onSearchUser({ text: this.props.location.pathname.split("=")[1] })
+        this.props.onSearchUser({ text: searchWord })
             .then(() => {
                 this.setState({ users: this.props.searchedUsers });
             });
