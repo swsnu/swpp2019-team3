@@ -194,12 +194,8 @@ def select_collection_search(args):
     # Search Keyword
     keyword = args[constants.TEXT]
 
-    # Collection Ids
-    collection_ids = Collection.objects.filter(Q(title__icontains=keyword) | Q(text__icontains=keyword))\
-        .values_list('id', flat=True)
-
     # Filter Query
-    filter_query = Q(id__in=collection_ids)
+    filter_query = Q(title__icontains=keyword) | Q(text__icontains=keyword)
 
     # Collections
     collections, _, _ = __get_collections(filter_query, request_user, None)

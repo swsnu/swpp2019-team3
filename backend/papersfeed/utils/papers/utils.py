@@ -5,7 +5,7 @@ import urllib
 from pprint import pprint
 import requests
 import xmltodict
-from django.db.models import Q, Exists, OuterRef, Count
+from django.db.models import Q, Exists, OuterRef, Count, Case, When
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
@@ -126,18 +126,36 @@ def select_paper_search(args):
     return papers
 
 
+def select_paper_like(args):
+    """Select Paper Like"""
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Paper Ids
+    paper_ids = PaperLike.objects.filter(Q(user_id=request_user.id)).order_by(
+        '-creation_date').values_list('paper_id', flat=True)
+
+    # need to maintain the order
+    preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(paper_ids)])
+
+    # Papers
+    papers, _, _ = __get_papers(Q(id__in=paper_ids), request_user, None, preserved)
+    return papers
+
+
 def get_papers(filter_query, request_user, count):
     """Public Get Papers"""
     return __get_papers(filter_query, request_user, count)
 
 
-def __get_papers(filter_query, request_user, count):
+def __get_papers(filter_query, request_user, count, order_by='-pk'):
     """Get Papers By Query"""
     queryset = Paper.objects.filter(
         filter_query
     ).annotate(
         is_liked=__is_paper_liked('id', request_user)
-    )
+    ).order_by(order_by)
 
     papers = get_results_from_queryset(queryset, count)
 
@@ -582,6 +600,7 @@ def __process_author(author, author_rank, new_paper_id):
         type="general",
         rank=author_rank
     )
+
 
 def __extract_keywords_from_abstract(abstracts):
     """for every abstract, extract keywords by calling 'get_key_phrases'"""
