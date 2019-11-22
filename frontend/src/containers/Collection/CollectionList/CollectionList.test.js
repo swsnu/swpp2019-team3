@@ -111,11 +111,11 @@ describe("<CollectionList />", () => {
         const component = mount(collectionList);
         const wrapper = component.find("CollectionList");
         expect(wrapper.length).toBe(1);
-        expect(spyGetCollections).toHaveBeenCalledTimes(0); // Fix me: it should be 1
         expect(spyGetMe).toHaveBeenCalledTimes(1);
-        const left = wrapper.find("#collectionCardsLeft");
+        expect(spyGetCollections).toHaveBeenCalledTimes(0); // Fix me: it should be 1
+        const left = wrapper.find("#collectionCardsLeft").hostNodes();
         expect(left.length).toBe(1);
-        const right = wrapper.find("#collectionCardsRight");
+        const right = wrapper.find("#collectionCardsRight").hostNodes();
         expect(right.length).toBe(1);
     });
 

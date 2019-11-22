@@ -46,6 +46,8 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
     case collectionConstants.ADD_COLLECTION:
+        // eslint-disable-next-line no-case-declarations
+        // const collectionListList = this.state.list.list;
         return {
             ...state,
             make: {
@@ -53,6 +55,10 @@ const reducer = (state = initialState, action) => {
                 status: collectionStatus.SUCCESS,
                 collection: action.target,
             },
+            // list: {
+            //     ...state.list,
+            //     list: collectionListList.concat(action.target),
+            // },
         };
     case collectionConstants.ADD_COLLECTION_FAILURE_MISSING_PARAM:
         return {

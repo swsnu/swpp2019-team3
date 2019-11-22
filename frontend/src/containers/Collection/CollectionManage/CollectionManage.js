@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/no-unused-state */
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -8,9 +6,9 @@ import { Button } from "react-bootstrap";
 
 import { collectionActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
+import { TransferOwnershipModal, WarningModal } from "../../../components";
 
 import "./CollectionManage.css";
-
 
 class CollectionManage extends Component {
     constructor(props) {
@@ -42,26 +40,15 @@ class CollectionManage extends Component {
     }
 
     updateCollectionHandler = () => {
-        // this.props.onUpdateCollectionInfo({
-        //     title: this.state.collectionName,
-        //     text: this.state.collectionDescription,
-        // });
-        console.log("edit button clicked");
-        // eslint-disable-next-line no-alert
-        // alert("Changes on the collection saved.");
-        // The way to show a message can be changed
-        // or it will be replaced by redirection to the collection detail page.
+        this.props.onUpdateCollectionInfo({
+            id: this.props.selectedCollection.id,
+            title: this.state.collectionName,
+            text: this.state.collectionDescription,
+        });
+        // message or popup that says "collection is updated" may need to be implemented
     }
 
     clickManageMemberHandler = () => {
-
-    }
-
-    clickTransferHandler = () => {
-
-    }
-
-    clickDeleteHandler = () => {
 
     }
 
@@ -96,7 +83,7 @@ class CollectionManage extends Component {
                     <div className="EditButtons">
                         <Button
                           id="UpdateCollectionButton"
-                          onClick={this.updateCollectionHandler()}
+                          onClick={this.updateCollectionHandler}
                           disabled={this.state.collectionName === ""}
                         >Update Collection
                         </Button>
@@ -115,7 +102,7 @@ class CollectionManage extends Component {
                         </h5>
                         <Button
                           id="manageMemberButton"
-                          onClick={this.clickManageMemberHandler()}
+                          onClick={this.clickManageMemberHandler}
                         >Manage Members
                         </Button>
                     </div>
@@ -124,21 +111,25 @@ class CollectionManage extends Component {
                             to the other member of this collection.
                             WARNING: This action cannot be undone.
                         </h5>
-                        <Button
-                          id="transferOwnershipButton"
-                          onClick={this.clickTransferHandler()}
-                        >Transfer Ownership
-                        </Button>
+                        <TransferOwnershipModal
+                          collectionId={this.props.selectedCollection.id}
+                          collectionName={this.props.selectedCollection.title}
+                          history={this.props.history}
+                        />
                     </div>
                     <div className="DeleteCollection">
                         <h5 id="deleteCollectionText">Delete this collection.
                             WARNING: This action cannot be undone.
                         </h5>
-                        <Button
-                          id="deleteCollectionButton"
-                          onClick={this.clickDeleteHandler()}
-                        >Delete this collection
-                        </Button>
+                        <WarningModal
+                          openButtonText="Delete this collection"
+                          whatToWarnText={`Delete colelction: ${this.props.selectedCollection.title}`}
+                          whatActionWillBeDone={() => this.props.onDeleteCollection(
+                              this.props.selectedCollection.id,
+                          )}
+                          whereToGoAfterConfirm="/collections"
+                          history={this.props.history}
+                        />
                     </div>
                 </div>
             </div>
@@ -156,6 +147,9 @@ const mapDispatchToProps = (dispatch) => ({
     onUpdateCollectionInfo: (newCollectionInfo) => dispatch(
         collectionActions.setTitleAndDescription(newCollectionInfo),
     ),
+    onDeleteCollection: (collectionId) => dispatch(
+        collectionActions.deleteCollection(collectionId),
+    ),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionManage);
@@ -164,7 +158,8 @@ CollectionManage.propTypes = {
     selectedCollection: PropTypes.objectOf(PropTypes.any),
     collectionStatus: PropTypes.string,
     onGetCollection: PropTypes.func,
-    // onUpdateCollectionInfo: PropTypes.func,
+    onUpdateCollectionInfo: PropTypes.func,
+    onDeleteCollection: PropTypes.func,
     history: PropTypes.objectOf(PropTypes.any),
     location: PropTypes.objectOf(PropTypes.any),
 };
@@ -173,7 +168,8 @@ CollectionManage.defaultProps = {
     selectedCollection: {},
     collectionStatus: collectionStatus.NONE,
     onGetCollection: null,
-    // onUpdateCollectionInfo: null,
+    onUpdateCollectionInfo: null,
+    onDeleteCollection: PropTypes.func,
     history: null,
     location: null,
 };

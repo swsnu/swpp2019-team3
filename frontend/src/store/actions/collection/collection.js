@@ -96,11 +96,15 @@ export const getCollectionPapers = (collectionId) => (dispatch) => axios.get("/a
     })); */
 
 // setOwner - no matching /api
-/* export const setOwner = (collectionID, userID) => (dispatch)
-=> axios.put(`/collection/${collectionID}`, { userID })
-    .then((res) => dispatch({
-        type: actionTypes.CHANGE_COLLECTION_OWNER, newOwnerID: userID,
-    })); */
+
+// eslint-disable-next-line no-unused-vars
+export const setOwner = (collectionId, targetUserId) => ({ /* do nothing for now */});
+
+// export const setOwner = (collectionID, userID) => (dispatch)
+// => axios.put(`/collection/${collectionID}`, { userID })
+//     .then((res) => dispatch({
+//         type: actionTypes.CHANGE_COLLECTION_OWNER, newOwnerID: userID,
+//     }));
 
 
 // setNameAndDescription of collection
@@ -162,11 +166,15 @@ export const removeCollectionPaper = (collectionsAndPaper) => (dispatch) => axio
 
 
 // add member to collection - no matching api
-/* export const addCollectionMember = (collectionID, userID) => (dispatch)
-=> axios.post(`/user/collection/${collectionID}`, userID)
-    .then((res) => dispatch({
-        type: actionTypes.ADD_COLLECTION_MEMBER, members: res.data,
-    })); */
+
+// eslint-disable-next-line no-unused-vars
+export const addNewMembers = (collectionId, userIdList) => {};
+
+// export const addCollectionMember = (collectionID, userID) => (dispatch)
+// => axios.post(`/user/collection/${collectionID}`, userID)
+//     .then((res) => dispatch({
+//         type: actionTypes.ADD_COLLECTION_MEMBER, members: res.data,
+//     }));
 
 // remove member from CollectionMember - no matching /api
 /* export const removeCollectionMember = (collectionID, userID) => (dispatch)
@@ -197,7 +205,7 @@ const deleteCollectionFailure = (error) => {
     };
 };
 
-export const deleteCollection = (collectionId) => (dispatch) => axios.delete("/api/collection", { params: collectionId })
+export const deleteCollection = (collectionId) => (dispatch) => axios.delete("/api/collection", { params: { id: collectionId } })
     .then((res) => { dispatch(deleteCollectionSuccess(res.data)); })
     .catch((err) => { (dispatch(deleteCollectionFailure(err))); });
 

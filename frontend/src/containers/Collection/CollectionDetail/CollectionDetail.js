@@ -3,18 +3,15 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import {
-    Button, Tabs, Tab,
-} from "react-bootstrap";
-import {
-    PaperCard, Reply,
-} from "../../../components";
+import { Button, Tabs, Tab } from "react-bootstrap";
+import { PaperCard, Reply, InviteToCollectionModal } from "../../../components";
 
 import { collectionActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
 import SVG from "../../../components/svg";
 
 import "./CollectionDetail.css";
+
 
 class CollectionDetail extends Component {
     constructor(props) {
@@ -57,8 +54,6 @@ class CollectionDetail extends Component {
             });
     }
 
-    // clickInviteButtonHandler(): Open ‘Invite to the collection’ popup.
-
     // clickRemovePaperButtonHandler(collection_id: number, paper_id: number)
     // : Call onRemoveCollectionPaper of CollectionDetail to remove the paper from the collection.
 
@@ -71,6 +66,8 @@ class CollectionDetail extends Component {
             isLiked: false,
             likeCount: 0,
         };
+        // const prevReplies = this.state.replies;
+        // this.setState({ replies: prevReplies.concat(newReply)})
         this.state.replies.concat(newReply);
     }
 
@@ -110,7 +107,6 @@ class CollectionDetail extends Component {
     }
 
     render() {
-        const inviteButton = <Button id="inviteButton">Invite</Button>;
         const editButton = (
             <Link id="editButtonLink" to={`/collection_id=${this.state.id}/edit/`}>
                 <Button id="editButton">Edit</Button>
@@ -158,7 +154,7 @@ class CollectionDetail extends Component {
                                     <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>
                                     {this.state.likeCount}
                                 </Button>
-                                {inviteButton}
+                                <InviteToCollectionModal openButtonName="Invite to ..." />
                                 {this.state.thisCollection.amIMember ? editButton : <div />}
                             </div>
                         </div>
