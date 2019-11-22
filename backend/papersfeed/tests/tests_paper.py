@@ -246,9 +246,24 @@ class PaperTestCase(TestCase):
 
         mock_get.side_effect = mock_responses
 
-        stub_json = open("papersfeed/tests/stub_key_phrases.json", 'r')
+        stub_json = json.loads(open("papersfeed/tests/stub_key_phrases.json", 'r').read())
+        # just for getting a clue about the id of paper which will be added in this test
+        Paper.objects.create(
+            title="test",
+            language="English",
+            abstract="AI",
+            ISSN="1",
+            eISSN="1",
+            DOI="1",
+            creation_date="2019-11-13",
+            modification_date="2019-11-13"
+        )
+        paper_id = Paper.objects.filter(title='test').first().id
+        # manipulate the id of static stub_key_phrases
+        stub_json['documents'][0]['id'] = str(paper_id + 1)
+
         mock_post.return_value = MockResponse(
-            json_data=json.loads(stub_json.read()),
+            json_data=stub_json,
             status_code=200
         )
 
