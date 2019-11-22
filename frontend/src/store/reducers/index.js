@@ -6,6 +6,7 @@ import authReducer from "./auth/auth";
 import paperReducer from "./paper/paper";
 import UserReducer from "./user/user";
 import ReviewReducer from "./review/review";
+import ReplyReducer from "./reply/reply";
 
 const rootReducer = (history) => combineReducers({
     paper: paperReducer,
@@ -13,6 +14,7 @@ const rootReducer = (history) => combineReducers({
     auth: authReducer,
     user: UserReducer,
     review: ReviewReducer,
+    reply: ReplyReducer,
     router: connectRouter(history),
 });
 export default rootReducer;

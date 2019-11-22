@@ -46,6 +46,7 @@ describe("<Header />", () => {
             paper: {},
             user: {},
             review: {},
+            reply: {},
         };
         header = makeHeader(stubInitialState);
         spySignout = jest.spyOn(authActions, "signout")
@@ -183,13 +184,10 @@ describe("<Header />", () => {
 
     it("should call signout when signout succeeds", () => {
         stubInitialState = {
+            ...stubInitialState,
             auth: {
                 signoutStatus: signoutStatus.SUCCESS,
             },
-            collection: {},
-            paper: {},
-            user: {},
-            review: {},
         };
         const component = mount(makeHeader(stubInitialState));
         const wrapper = component.find(".signout-button").hostNodes();
@@ -201,13 +199,10 @@ describe("<Header />", () => {
 
     it("should not call signout when signout fails", () => {
         stubInitialState = {
+            ...stubInitialState,
             auth: {
                 signoutStatus: signoutStatus.FAILURE,
             },
-            collection: {},
-            paper: {},
-            user: {},
-            review: {},
         };
         const component = mount(makeHeader(stubInitialState));
         const wrapper = component.find(".signout-button").hostNodes();
@@ -219,14 +214,11 @@ describe("<Header />", () => {
 
     it("if me exists, should set state appropriately", () => {
         stubInitialState = {
+            ...stubInitialState,
             auth: {
                 signoutStatus: signoutStatus.FAILURE,
                 me: { username: "swpp" },
             },
-            collection: {},
-            paper: {},
-            user: {},
-            review: {},
         };
         const component = mount(makeHeader(stubInitialState));
         const wrapper = component.find(".username-header").hostNodes();

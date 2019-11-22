@@ -12,6 +12,7 @@ const mockStore = getMockStore({
     collection: {},
     user: {},
     review: {},
+    reply: {},
 });
 
 describe("App", () => {

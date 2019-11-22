@@ -11,6 +11,8 @@ from papersfeed.models.reviews.review_like import ReviewLike
 from papersfeed.models.collections.collection import Collection
 from papersfeed.models.collections.collection_like import CollectionLike
 from papersfeed.models.users.user import User
+from papersfeed.models.replies.reply import Reply
+from papersfeed.models.replies.reply_like import ReplyLike
 
 
 class LikeTestCase(TestCase):
@@ -111,6 +113,29 @@ class LikeTestCase(TestCase):
         client.post('/api/like/collection',
                     data=json.dumps({
                         constants.ID: collection_id,
+                    }),
+                    content_type='application/json')
+
+
+        client.post('/api/reply/collection',
+                    json.dumps({
+                        constants.ID: collection_id,
+                        constants.TEXT: 'test_reply_1'
+                    }),
+                    content_type='application/json')
+
+        client.post('/api/reply/review',
+                    json.dumps({
+                        constants.ID: review_id,
+                        constants.TEXT: 'test_reply_2'
+                    }),
+                    content_type='application/json')
+
+        # liek reply2
+        reply_id = Reply.objects.filter(text='test_reply_2').first().id
+        client.post('/api/like/reply',
+                    data=json.dumps({
+                        constants.ID: reply_id,
                     }),
                     content_type='application/json')
 
@@ -272,3 +297,55 @@ class LikeTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(CollectionLike.objects.filter(collection_id=collection_id, user_id=user_id)), 0)
+
+    def test_like_reply(self):
+        """LIKE Reply"""
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        reply_id = Reply.objects.filter(text='test_reply_1').first().id
+        user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+        self.assertEqual(len(ReplyLike.objects.filter(reply_id=reply_id, user_id=user_id)), 0)
+
+        # Like Collection
+        response = client.post('/api/like/reply',
+                               data=json.dumps({
+                                   constants.ID: reply_id,
+                               }),
+                               content_type='application/json')
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(len(ReplyLike.objects.filter(reply_id=reply_id, user_id=user_id)), 1)
+
+    def test_unlike_reply(self):
+        """UNLIKE Reply"""
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        reply_id = Reply.objects.filter(text='test_reply_2').first().id
+        user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+        self.assertEqual(len(ReplyLike.objects.filter(reply_id=reply_id, user_id=user_id)), 1)
+
+        # Unlike Collection
+        response = client.delete('/api/like/reply',
+                                 data=json.dumps({
+                                     constants.ID: reply_id
+                                 }),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(ReplyLike.objects.filter(reply_id=reply_id, user_id=user_id)), 0)

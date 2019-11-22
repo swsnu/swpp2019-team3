@@ -43,6 +43,7 @@ describe("<CollectionCard />", () => {
             },
             review: {},
             user: {},
+            reply: {},
         };
         collectionCard = makeCollectionCard(stubInitialState);
         spyLikeCollection = jest.spyOn(collectionActions, "likeCollection")
