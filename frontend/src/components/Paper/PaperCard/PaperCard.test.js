@@ -34,6 +34,7 @@ describe("<PaperCard />", () => {
             collection: {},
             review: {},
             user: {},
+            reply: {},
         };
         paperCard = makePaperCard(stubInitialState);
         spyLikePaper = jest.spyOn(paperActions, "likePaper")
@@ -109,5 +110,16 @@ describe("<PaperCard />", () => {
         const component = mount(paperCard);
         const paperCardInstance = component.find(PaperCard.WrappedComponent).instance();
         expect(paperCardInstance.state.keywords).toBe("A, C");
+    });
+
+    it("if authorKeywords don't exist, show abstractKeywords", () => {
+        paperCard = makePaperCard(stubInitialState, {
+            keywords: [
+                { name: "B", type: "abstract" },
+            ],
+        });
+        const component = mount(paperCard);
+        const paperCardInstance = component.find(PaperCard.WrappedComponent).instance();
+        expect(paperCardInstance.state.keywords).toBe("B");
     });
 });

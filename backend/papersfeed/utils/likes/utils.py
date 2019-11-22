@@ -16,6 +16,11 @@ from papersfeed.models.reviews.review_like import ReviewLike
 from papersfeed.utils.collections.utils import __get_collection_like_count
 from papersfeed.models.collections.collection import Collection
 from papersfeed.models.collections.collection_like import CollectionLike
+from papersfeed.models.replies.reply import Reply
+from papersfeed.models.replies.reply_collection import ReplyCollection
+from papersfeed.models.replies.reply_review import ReplyReview
+from papersfeed.models.replies.reply_like import ReplyLike
+from papersfeed.utils.replies.utils import __get_reply_like_count
 from papersfeed.models.users.user import User
 from papersfeed.models.collections.collection_user import CollectionUser
 
@@ -99,7 +104,8 @@ def insert_like_review(args):
         request_user,
         recipient=[review_author],
         verb='liked',
-        action_object=review,
+        action_object=review_like,
+        target=review,
     )
 
     like_counts = __get_review_like_count([review_id], 'review_id')
@@ -164,7 +170,8 @@ def insert_like_collection(args):
         request_user,
         recipient=members,
         verb='liked',
-        action_object=collection,
+        action_object=collection_like,
+        target=collection,
     )
 
     like_counts = __get_collection_like_count([collection_id], 'collection_id')
@@ -192,3 +199,74 @@ def remove_like_collection(args):
 
     like_counts = __get_collection_like_count([collection_id], 'collection_id')
     return {constants.LIKES: like_counts[collection_id] if collection_id in like_counts else 0}
+
+def insert_like_reply(args):
+    """Insert Like of Reply"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Reply Id
+    reply_id = int(args[constants.ID])
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Check Reply Id
+    if not Reply.objects.filter(id=reply_id).exists():
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    # Create
+    ReplyLike.objects.create(
+        reply_id=reply_id,
+        user_id=request_user.id,
+    )
+
+    # send notifications to the author of the reply
+    reply = Reply.objects.get(id=reply_id)
+    reply_author = User.objects.get(id=reply.user_id)
+
+    # consider target as the object which has the reply, instead of reply object
+    try: # assume it is the reply of a collection
+        collection_id = ReplyCollection.objects.get(reply_id=reply_id).collection_id
+        target = Collection.objects.get(id=collection_id)
+    except ObjectDoesNotExist: # maybe it is the reply of a review
+        try:
+            review_id = ReplyReview.objects.get(reply_id=reply_id).review_id
+            target = Review.objects.get(id=review_id)
+        except ObjectDoesNotExist:
+            raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    notify.send(
+        request_user,
+        recipient=[reply_author],
+        verb='liked your reply of',
+        action_object=reply, # reply instead of reply_like
+        target=target,
+    )
+
+    like_counts = __get_reply_like_count([reply_id], 'reply_id')
+    return {constants.LIKES: like_counts[reply_id] if reply_id in like_counts else 0}
+
+
+def remove_like_reply(args):
+    """Remove Like of Reply"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Reply ID
+    reply_id = int(args[constants.ID])
+
+    # Request User
+    request_user = args[constants.USER]
+
+    try:
+        reply_like = ReplyLike.objects.get(reply_id=reply_id, user_id=request_user.id)
+    except ObjectDoesNotExist:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    reply_like.delete()
+
+    like_counts = __get_reply_like_count([reply_id], 'reply_id')
+    return {constants.LIKES: like_counts[reply_id] if reply_id in like_counts else 0}

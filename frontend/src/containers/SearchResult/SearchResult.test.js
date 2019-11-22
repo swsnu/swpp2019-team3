@@ -76,6 +76,7 @@ describe("<SearchResult />", () => {
             },
             user: {},
             review: {},
+            reply: {},
         };
         searchResult = makeSearchResult(stubInitialState);
         spySearchPaper = jest.spyOn(paperActions, "searchPaper")

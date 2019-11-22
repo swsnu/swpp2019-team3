@@ -3,7 +3,7 @@ import { mount } from "enzyme";
 import { Provider } from "react-redux";
 import { createBrowserHistory } from "history";
 import ReviewDetail from "./ReviewDetail";
-import { reviewActions } from "../../../store/actions";
+import { reviewActions, replyActions } from "../../../store/actions";
 import { reviewStatus, getMeStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 
@@ -30,6 +30,7 @@ describe("<ReviewDetail />", () => {
     let spyOnGetReview;
     let spyLikeReview;
     let spyUnlikeReview;
+    let spyGetReplies;
 
     beforeEach(() => {
         stubInitialState = {
@@ -81,6 +82,17 @@ describe("<ReviewDetail />", () => {
                 },
             },
             user: {},
+            reply: {
+                list: {
+                    list: [],
+                },
+                like: {
+                    count: 0,
+                },
+                unlike: {
+                    count: 0,
+                },
+            },
         };
 
         reviewDetail = makeReviewDetail(stubInitialState);
@@ -89,6 +101,8 @@ describe("<ReviewDetail />", () => {
         spyLikeReview = jest.spyOn(reviewActions, "likeReview")
             .mockImplementation(() => () => mockPromise);
         spyUnlikeReview = jest.spyOn(reviewActions, "unlikeReview")
+            .mockImplementation(() => () => mockPromise);
+        spyGetReplies = jest.spyOn(replyActions, "getRepliesByReview")
             .mockImplementation(() => () => mockPromise);
     });
 
@@ -102,6 +116,7 @@ describe("<ReviewDetail />", () => {
         const wrapper = component.find("ReviewDetail");
         expect(wrapper.length).toBe(1);
         expect(spyOnGetReview).toHaveBeenCalledTimes(1);
+        expect(spyGetReplies).toHaveBeenCalledTimes(1);
     });
 
     it("should handle change on new reply", () => {
@@ -178,16 +193,16 @@ describe("<ReviewDetail />", () => {
     });
 
     it("should handle add button", () => {
+        reviewDetail = makeReviewDetail(stubInitialState);
         const component = mount(reviewDetail);
-        const instance = component.find("ReviewDetail").instance();
-        instance.setState({
-            replyCount: 0,
-        });
+        const spyClickAdd = jest.spyOn(replyActions, "makeNewReplyReview")
+            .mockImplementation(() => () => mockPromise);
+        component.find("ReviewDetail").instance().setState({ newReply: "afdaf" });
         component.update();
         const button = component.find(".new-reply .new-reply-button").hostNodes();
         button.simulate("click");
 
-        expect(instance.state.replyCount).toBe(1);
+        expect(spyClickAdd).toHaveBeenCalledTimes(1);
     });
 
     it("should handle replies well", () => {
@@ -195,7 +210,33 @@ describe("<ReviewDetail />", () => {
         const instance = component.find("ReviewDetail").instance();
         instance.setState(
             {
-                replies: [{ id: 1 }, { id: 2 }, { id: 3 }],
+                replies: [{
+                    id: 1,
+                    user: {
+                        username: "afdaf",
+                    },
+                    count: {
+                        likes: 0,
+                    },
+                },
+                {
+                    id: 2,
+                    user: {
+                        username: "afdaf",
+                    },
+                    count: {
+                        likes: 0,
+                    },
+                },
+                {
+                    id: 3,
+                    user: {
+                        username: "afdaf",
+                    },
+                    count: {
+                        likes: 0,
+                    },
+                }],
             },
         );
         component.update();
