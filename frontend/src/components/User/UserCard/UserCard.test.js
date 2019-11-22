@@ -31,6 +31,7 @@ describe("<UserCard />", () => {
             collection: {},
             review: {},
             user: {},
+            reply: {},
         };
         userCard = makeUserCard(stubInitialState);
         spyFollow = jest.spyOn(userActions, "addUserFollowing")

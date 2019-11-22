@@ -100,6 +100,7 @@ describe("<ReviewControl />", () => {
                 },
             },
             user: {},
+            reply: {},
         };
 
         reviewControl0 = makeReviewControl(stubInitialState, 0);

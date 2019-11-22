@@ -186,6 +186,9 @@ def select_review_user(args):
 
     return reviews
 
+def get_reviews(filter_query, request_user, count):
+    """Get Reviews"""
+    return __get_reviews(filter_query, request_user, count)
 
 def __get_reviews(filter_query, request_user, count):
     """Get Reviews By Query"""

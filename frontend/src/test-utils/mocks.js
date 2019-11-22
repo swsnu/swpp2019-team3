@@ -23,6 +23,7 @@ export const getMockStore = (initialState) => {
     const mockCollectionReducer = getMockReducer(initialState.collection);
     const mockUserReducer = getMockReducer(initialState.user);
     const mockReviewReducer = getMockReducer(initialState.review);
+    const mockReplyReducer = getMockReducer(initialState.reply);
     const rootReducer = (his) => combineReducers({
         router: connectRouter(his),
         auth: mockAuthReducer,
@@ -30,6 +31,7 @@ export const getMockStore = (initialState) => {
         collection: mockCollectionReducer,
         user: mockUserReducer,
         review: mockReviewReducer,
+        reply: mockReplyReducer,
     });
 
     const mockStore = createStore(rootReducer(history), applyMiddleware(...middlewares));
