@@ -56,6 +56,24 @@ def __pack_notifications(notifications):
     packed = []
 
     for notification in notifications:
+        try:
+            target = {
+                constants.TYPE: str(notification.target_content_type),
+                constants.ID: notification.target.id,
+                constants.STRING: str(notification.target)
+            }
+        except AttributeError: # when the target is removed
+            target = {}
+
+        try:
+            action_object = {
+                constants.TYPE: str(notification.action_object_content_type),
+                constants.ID: notification.action_object.id,
+                constants.STRING: str(notification.action_object)
+            }
+        except AttributeError: # when the action_object is removed
+            action_object = {}
+
         packed_notification = {
             constants.ID: notification.id,
             constants.ACTOR: {
@@ -63,11 +81,8 @@ def __pack_notifications(notifications):
                 constants.USERNAME: notification.actor.username
             },
             constants.VERB: notification.verb,
-            constants.ACTION_OBJECT: {
-                constants.TYPE: str(notification.action_object_content_type),
-                constants.ID: notification.action_object.id,
-                constants.STRING: str(notification.action_object)
-            },
+            constants.TARGET: target,
+            constants.ACTION_OBJECT: action_object,
             constants.TIMESINCE: notification.timesince(),
         }
 

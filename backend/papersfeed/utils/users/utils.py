@@ -321,7 +321,8 @@ def insert_follow(args):
 
     # If Not Already Following, Create One
     if not UserFollow.objects.filter(following_user_id=following_user_id, followed_user_id=followed_user_id).exists():
-        UserFollow.objects.create(following_user_id=following_user_id, followed_user_id=followed_user_id)
+        userfollow = UserFollow(following_user_id=following_user_id, followed_user_id=followed_user_id)
+        userfollow.save()
 
         followed_user = User.objects.get(id=followed_user_id)
 
@@ -329,7 +330,8 @@ def insert_follow(args):
             request_user,
             recipient=[followed_user],
             verb='started following you',
-            action_object=followed_user,
+            action_object=userfollow,
+            target=followed_user
         )
 
     follow_counts = __get_follower_count([followed_user_id], 'followed_user_id')

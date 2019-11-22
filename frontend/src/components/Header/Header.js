@@ -78,22 +78,23 @@ class Header extends Component {
             notificationLabel = "notification (new)";
             notifications = this.props.notifications.map(
                 (notification) => {
-                    let actionObject = null;
-                    let actionObjectLink = "";
-                    if (notification.action_object.type === "collection") {
-                        actionObjectLink = "/collection_id=";
-                    } else if (notification.action_object.type === "review") {
-                        actionObjectLink = "/review_id=";
+                    let target = null;
+                    let targetLink = "";
+                    if (notification.target.type === "collection") {
+                        targetLink = "/collection_id=";
+                    } else if (notification.target.type === "review") {
+                        targetLink = "/review_id=";
                     }
 
-                    if (notification.action_object.type !== "user") {
-                        actionObject = (
+                    // if not follow notifications
+                    if (notification.target.type !== "user") {
+                        target = (
                             <Link
-                              id="action-object-link"
-                              to={actionObjectLink + notification.action_object.id}
+                              id="target-link"
+                              to={targetLink + notification.target.id}
                               onClick={() => this.readNotiHandler(notification.id)}
                             >
-                                {notification.action_object.string}&nbsp;
+                                {notification.target.string}&nbsp;
                             </Link>
                         );
                     }
@@ -107,7 +108,7 @@ class Header extends Component {
                                 {notification.actor.username}
                             </Link>
                                 &nbsp;{notification.verb}&nbsp;
-                            {actionObject}
+                            {target}
                             {notification.timesince} ago&nbsp;
                             <button type="button" className="read-button" onClick={() => this.readNotiHandler(notification.id)}>x</button>
                         </div>

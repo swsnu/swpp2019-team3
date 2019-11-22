@@ -77,19 +77,19 @@ describe("<Header />", () => {
                     id: 1,
                     actor: { id: 1, username: "user1" },
                     verb: "liked",
-                    action_object: { type: "review", id: 1, string: "review_title" },
+                    target: { type: "review", id: 1, string: "review_title" },
                 },
                 {
                     id: 2,
                     actor: { id: 1, username: "user1" },
                     verb: "liked",
-                    action_object: { type: "collection", id: 1, string: "collection_title" },
+                    target: { type: "collection", id: 1, string: "collection_title" },
                 },
                 {
                     id: 3,
                     actor: { id: 1, username: "user1" },
                     verb: "started following you",
-                    action_object: { type: "user", id: 1, string: "user2" },
+                    target: { type: "user", id: 1, string: "user2" },
                 },
                 ],
             },
@@ -108,7 +108,7 @@ describe("<Header />", () => {
                     id: 1,
                     actor: { id: 1, username: "user1" },
                     verb: "liked",
-                    action_object: { type: "review", id: 1, string: "review_title" },
+                    target: { type: "review", id: 1, string: "review_title" },
                 },
                 ],
             },
@@ -131,7 +131,7 @@ describe("<Header />", () => {
                     id: 1,
                     actor: { id: 1, username: "user1" },
                     verb: "liked",
-                    action_object: { type: "review", id: 1, string: "review_title" },
+                    target: { type: "review", id: 1, string: "review_title" },
                 },
                 ],
             },
@@ -146,7 +146,7 @@ describe("<Header />", () => {
         expect(spyReadNoti).toHaveBeenCalledTimes(1);
     });
 
-    it("should call readNoti if action-object-link is clicked", () => {
+    it("should call readNoti if target-link is clicked", () => {
         stubInitialState = {
             ...stubInitialState,
             auth: {
@@ -154,7 +154,7 @@ describe("<Header />", () => {
                     id: 1,
                     actor: { id: 1, username: "user1" },
                     verb: "liked",
-                    action_object: { type: "review", id: 1, string: "review_title" },
+                    target: { type: "review", id: 1, string: "review_title" },
                 },
                 ],
             },
@@ -162,7 +162,7 @@ describe("<Header />", () => {
         header = makeHeader(stubInitialState);
         const component = mount(header);
 
-        const wrapper = component.find("#action-object-link").hostNodes();
+        const wrapper = component.find("#target-link").hostNodes();
         expect(wrapper.length).toBe(1);
         wrapper.simulate("click");
 
