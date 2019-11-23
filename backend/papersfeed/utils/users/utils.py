@@ -305,7 +305,7 @@ def remove_follow(args):
 
 
 def select_user_collection(args):
-    """Get Users(members) of the given Collection"""
+    """Get Users of the given Collection"""
     is_parameter_exists([
         constants.ID
     ], args)
