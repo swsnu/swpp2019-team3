@@ -52,7 +52,7 @@ class FollowingList extends Component {
         }
 
         return (
-            <div className="follower-list">
+            <div className="following-list">
                 <div className="item-list">
                     <div id="user-cards">
                         <h3 id="user-message">{userMessage}</h3>

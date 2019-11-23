@@ -23,6 +23,9 @@ describe("<FollowingList />", () => {
 
     beforeEach(() => {
         stubInitialState = {
+            paper: {},
+            collection: {},
+            review: {},
             auth: {},
             user: {},
         };
