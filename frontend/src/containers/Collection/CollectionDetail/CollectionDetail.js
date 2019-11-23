@@ -171,6 +171,9 @@ class CollectionDetail extends Component {
                                     {this.state.likeCount}
                                 </Button>
                                 <InviteToCollectionModal openButtonName="Invite to ..." />
+                                <Link to={`/collection_id=${this.props.selectedCollection.id}/manage`}>
+                                    <Button id="manageButton">Manage</Button>
+                                </Link>
                                 {this.state.thisCollection.amIMember ? editButton : <div />}
                             </div>
                         </div>
