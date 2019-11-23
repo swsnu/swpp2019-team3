@@ -197,7 +197,24 @@ const ReviewReducer = (state = initialState, action) => {
                 error: action.target,
             },
         };
-    // case reviewConstants.CONSUME_REVIEW:
+    case reviewConstants.GET_REVIEW_LIKE_SUCCESS:
+        return {
+            ...state,
+            list: {
+                ...state.list,
+                status: reviewStatus.SUCCESS,
+                list: action.target,
+            },
+        };
+    case reviewConstants.GET_REVIEW_LIKE_FAILURE:
+        return {
+            ...state,
+            list: {
+                ...state.list,
+                status: reviewStatus.FAILURE,
+                error: action.target,
+            },
+        };
     default:
         return { ...state };
     }
