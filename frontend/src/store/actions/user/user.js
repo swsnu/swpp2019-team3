@@ -41,7 +41,7 @@ export const getFollowersByUserId = (userId) => (dispatch) => axios.get("/api/us
 
 // get a list of followings
 const getFollowingsByUserIdSuccess = (followings) => ({
-    type: userConstants.GET_FOLLOWERS,
+    type: userConstants.GET_FOLLOWINGS,
     target: followings.users,
 });
 
