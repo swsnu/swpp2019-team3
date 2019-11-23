@@ -141,7 +141,7 @@ class LikeTestCase(TestCase):
             constants.USERNAME: 'user2'
         })
         self.assertEqual(follow_noti['verb'], 'started following you')
-        self.assertEqual(follow_noti['action_object'], {
+        self.assertEqual(follow_noti['target'], {
             constants.TYPE: 'user',
             constants.ID: user1_id,
             constants.STRING: 'user1'
@@ -153,7 +153,7 @@ class LikeTestCase(TestCase):
             constants.USERNAME: 'user2'
         })
         self.assertEqual(collection_noti['verb'], 'liked')
-        self.assertEqual(collection_noti['action_object'], {
+        self.assertEqual(collection_noti['target'], {
             constants.TYPE: 'collection',
             constants.ID: collection_id,
             constants.STRING: 'collection1'
@@ -165,7 +165,7 @@ class LikeTestCase(TestCase):
             constants.USERNAME: 'user2'
         })
         self.assertEqual(review_noti['verb'], 'liked')
-        self.assertEqual(review_noti['action_object'], {
+        self.assertEqual(review_noti['target'], {
             constants.TYPE: 'review',
             constants.ID: review_id,
             constants.STRING: 'review1'

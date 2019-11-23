@@ -34,6 +34,7 @@ describe("<PaperSpec />", () => {
             collection: {},
             review: {},
             user: {},
+            reply: {},
         };
         paperSpec = makePaperSpec(stubInitialState);
         spyLikePaper = jest.spyOn(paperActions, "likePaper")
@@ -81,6 +82,9 @@ describe("<PaperSpec />", () => {
         const spyOpen = jest.spyOn(window, "open")
             .mockImplementation(jest.fn());
 
+        paperSpec = makePaperSpec(stubInitialState, {
+            link: "http://arxiv.org/pdf/1805.04177v1",
+        });
         const component = mount(paperSpec);
         const wrapper = component.find(".url-button").hostNodes();
         wrapper.simulate("click");

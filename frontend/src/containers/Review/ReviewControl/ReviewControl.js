@@ -98,6 +98,13 @@ class ReviewControl extends Component {
     }
 
     render() {
+        let link = "";
+        if (this.props.selectedPaper.download_url) {
+            link = this.props.selectedPaper.download_url;
+        } else if (this.props.selectedPaper.file_url) {
+            link = this.props.selectedPaper.file_url;
+        }
+
         return (
             <div className="review-control">
                 <div className="review-control-page">
@@ -105,14 +112,17 @@ class ReviewControl extends Component {
                         <div className="header">{this.props.mode ? "Edit Review For" : "Create Review For"}</div>
                         <div className="paper-spec">
                             <PaperSpec
-                              id={this.state.paper.id}
-                              title={this.state.paper.title}
-                              liked={this.state.paper.liked}
-                              abstract={this.state.paper.abstract}
-                              likeCount={this.state.likeCount}
-                              authors={this.state.authors}
+                              id={this.props.selectedPaper.id}
+                              title={this.props.selectedPaper.title}
+                              abstract={this.props.selectedPaper.abstract}
                               date={this.state.date}
+                              authors={this.state.authors}
                               keywords={this.state.keywords}
+                              likeCount={this.state.likeCount}
+                              isLiked={this.props.selectedPaper.liked}
+                              link={link}
+                              addButtonExists
+                              history={this.props.history}
                             />
                         </div>
                         <Form.Group className="form-title" controlId="formReviewTitle">

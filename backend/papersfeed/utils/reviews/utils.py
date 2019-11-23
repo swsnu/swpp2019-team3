@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, Exists, OuterRef, Count
+from django.db.models import Q, Exists, OuterRef, Count, Case, When
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
@@ -187,13 +187,36 @@ def select_review_user(args):
     return reviews
 
 
-def __get_reviews(filter_query, request_user, count):
+def select_review_like(args):
+    """Select Review Like"""
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Review Ids
+    review_ids = ReviewLike.objects.filter(Q(user_id=request_user.id)).order_by(
+        '-creation_date').values_list('review_id', flat=True)
+
+    # need to maintain the order
+    preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(review_ids)])
+
+    # Reviews
+    reviews, _, _ = __get_reviews(Q(id__in=review_ids), request_user, None, preserved)
+    return reviews
+
+
+def get_reviews(filter_query, request_user, count):
+    """Get Reviews"""
+    return __get_reviews(filter_query, request_user, count)
+
+
+def __get_reviews(filter_query, request_user, count, order_by='-pk'):
     """Get Reviews By Query"""
     queryset = Review.objects.filter(
         filter_query
     ).annotate(
         is_liked=__is_review_liked('id', request_user)
-    )
+    ).order_by(order_by)
 
     reviews = get_results_from_queryset(queryset, count)
 

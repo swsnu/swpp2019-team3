@@ -68,6 +68,7 @@ const makeStubState = (myId, targetId, follow) => (
             status: null,
             error: null,
         },
+        reply: {},
     }
 );
 

@@ -123,8 +123,8 @@ def get_papers(filename):
                     break
 
             first_last = author_name.split(',')
-            first_name = first_last[0].strip()
-            last_name = first_last[1].strip() if len(first_last) > 1 else ''
+            last_name = first_last[0].strip()
+            first_name = first_last[1].strip() if len(first_last) > 1 else ''
             author_fields = {
                 "first_name": first_name,
                 "last_name": last_name,

@@ -86,7 +86,12 @@ class PaperSpec extends Component {
                 <div className="paperInfo">
                     <h2 id="title">{this.props.title}</h2>
                     <h3 id="date">{this.props.date}</h3>
-                    <Button className="url-button" onClick={() => window.open(this.props.link)}>URL</Button>
+                    <Button
+                      className="url-button"
+                      onClick={() => window.open(this.props.link)}
+                      disabled={this.props.link.length === 0}
+                    >URL
+                    </Button>
                     <h3 id="authors">{authorNames}</h3>
                     <div className="author-keywords">
                         Defined by Authors

@@ -232,12 +232,8 @@ def select_user_search(args):
     # Search Keyword
     keyword = args[constants.TEXT]
 
-    # User Ids
-    user_ids = User.objects.filter(Q(username__icontains=keyword)) \
-        .values_list('id', flat=True)
-
     # Filter Query
-    filter_query = Q(id__in=user_ids)
+    filter_query = Q(username__icontains=keyword)
 
     # Users
     users, _, _ = __get_users(filter_query, request_user, None)
@@ -373,7 +369,8 @@ def insert_follow(args):
 
     # If Not Already Following, Create One
     if not UserFollow.objects.filter(following_user_id=following_user_id, followed_user_id=followed_user_id).exists():
-        UserFollow.objects.create(following_user_id=following_user_id, followed_user_id=followed_user_id)
+        userfollow = UserFollow(following_user_id=following_user_id, followed_user_id=followed_user_id)
+        userfollow.save()
 
         followed_user = User.objects.get(id=followed_user_id)
 
@@ -381,7 +378,8 @@ def insert_follow(args):
             request_user,
             recipient=[followed_user],
             verb='started following you',
-            action_object=followed_user,
+            action_object=userfollow,
+            target=followed_user
         )
 
     follow_counts = __get_follower_count([followed_user_id], 'followed_user_id')
