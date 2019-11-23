@@ -232,12 +232,8 @@ def select_user_search(args):
     # Search Keyword
     keyword = args[constants.TEXT]
 
-    # User Ids
-    user_ids = User.objects.filter(Q(username__icontains=keyword)) \
-        .values_list('id', flat=True)
-
     # Filter Query
-    filter_query = Q(id__in=user_ids)
+    filter_query = Q(username__icontains=keyword)
 
     # Users
     users, _, _ = __get_users(filter_query, request_user, None)

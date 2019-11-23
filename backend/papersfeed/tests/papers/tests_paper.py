@@ -142,6 +142,72 @@ class PaperTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_paper_like(self):
+        """ PAPER LIKE """
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Creating papers
+        Paper.objects.create(
+            title="paper2",
+            language="English",
+            abstract="test",
+            DOI="1",
+            creation_date="2019-11-13",
+            modification_date="2019-11-13"
+        )
+        Paper.objects.create(
+            title="paper3",
+            language="English",
+            abstract="AI",
+            DOI="1",
+            creation_date="2019-11-13",
+            modification_date="2019-11-13"
+        )
+
+        # Like paper2
+        paper_id = Paper.objects.filter(title='paper2').first().id
+        client.post('/api/like/paper',
+                    data=json.dumps({
+                        constants.ID: paper_id,
+                    }),
+                    content_type='application/json')
+
+        # Like paper3
+        paper_id = Paper.objects.filter(title='paper3').first().id
+        client.post('/api/like/paper',
+                    data=json.dumps({
+                        constants.ID: paper_id,
+                    }),
+                    content_type='application/json')
+
+        # Like paper1
+        paper_id = Paper.objects.filter(title='paper1').first().id
+        client.post('/api/like/paper',
+                    data=json.dumps({
+                        constants.ID: paper_id,
+                    }),
+                    content_type='application/json')
+
+        # Get Papers the user liked
+        response = client.get('/api/paper/like')
+        self.assertEqual(response.status_code, 200)
+
+        papers = json.loads(response.content)['papers']
+        self.assertEqual(len(papers), 3)
+
+        # the last action comes first
+        self.assertEqual(papers[0]['title'], 'paper1')
+        self.assertEqual(papers[1]['title'], 'paper3')
+        self.assertEqual(papers[2]['title'], 'paper2')
+
     def test_paper_search(self):
         """ PAPER SEARCH """
         client = Client()

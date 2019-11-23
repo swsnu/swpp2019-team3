@@ -153,6 +153,11 @@ def delete_like_paper(args):
     return {constants.COUNT: likes_utils.remove_like_paper(args)}
 
 
+def get_paper_like(args):
+    """Get Paper Like"""
+    return {constants.PAPERS: papers_utils.select_paper_like(args)}
+
+
 def post_like_review(args):
     """Post Like Review"""
     return {constants.COUNT: likes_utils.insert_like_review(args)}
@@ -161,6 +166,11 @@ def post_like_review(args):
 def delete_like_review(args):
     """Delete Like Review"""
     return {constants.COUNT: likes_utils.remove_like_review(args)}
+
+
+def get_review_like(args):
+    """Get Review Like"""
+    return {constants.REVIEWS: reviews_utils.select_review_like(args)}
 
 
 def post_like_collection(args):
@@ -172,49 +182,66 @@ def delete_like_collection(args):
     """Delete Like Collection"""
     return {constants.COUNT: likes_utils.remove_like_collection(args)}
 
+
+def get_collection_like(args):
+    """Get Collection Like"""
+    return {constants.COLLECTIONS: collections_utils.select_collection_like(args)}
+
+
 def post_like_reply(args):
     """Post like reply"""
     return {constants.COUNT: likes_utils.insert_like_reply(args)}
+
 
 def delete_like_reply(args):
     """Delete Like Collection"""
     return {constants.COUNT: likes_utils.remove_like_reply(args)}
 
+
 def get_reply_collection(args):
     """Get reply collection"""
     return {constants.REPLIES: replies_utils.select_reply_collection(args)}
+
 
 def post_reply_collection(args):
     """Post reply collection"""
     return {constants.REPLY: replies_utils.insert_reply_collection(args)}
 
+
 def put_reply_collection(args):
     """Put reply collection"""
     return {constants.REPLY: replies_utils.update_reply(args)}
+
 
 def delete_reply_collection(args):
     """Delete reply collection"""
     return replies_utils.remove_reply(args)
 
+
 def get_reply_review(args):
     """Get reply review"""
     return {constants.REPLIES: replies_utils.select_reply_review(args)}
+
 
 def post_reply_review(args):
     """Post reply review"""
     return {constants.REPLY: replies_utils.insert_reply_review(args)}
 
+
 def put_reply_review(args):
     """Put reply review"""
     return {constants.REPLY: replies_utils.update_reply(args)}
+
 
 def delete_reply_review(args):
     """Delete reply review"""
     return replies_utils.remove_reply(args)
 
+
 def get_notification(args):
     """Get Notification"""
     return {constants.NOTIFICATIONS: notification_utils.select_notifications(args)}
+
 
 def put_notification(args):
     """Put Notification"""

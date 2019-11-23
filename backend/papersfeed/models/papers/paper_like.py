@@ -3,7 +3,7 @@ from django.db import models
 
 from papersfeed.models.base_models import BaseModel
 from papersfeed.models.users.user import User
-from .paper import Paper
+from papersfeed.models.papers.paper import Paper
 
 
 class PaperLike(BaseModel):

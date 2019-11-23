@@ -293,3 +293,48 @@ class CollectionTestCase(TestCase):
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 0)
+
+    def test_collection_like(self):
+        """ COLLECTION LIKE """
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Creating a collection
+        Collection.objects.create(
+            title="collection2",
+            text="collection2_text"
+        )
+
+        # Like collection2
+        collection_id = Collection.objects.filter(title='collection2').first().id
+        client.post('/api/like/collection',
+                    data=json.dumps({
+                        constants.ID: collection_id,
+                    }),
+                    content_type='application/json')
+
+        # Like collection1(SWPP Papers)
+        collection_id = Collection.objects.filter(title='SWPP Papers').first().id
+        client.post('/api/like/collection',
+                    data=json.dumps({
+                        constants.ID: collection_id,
+                    }),
+                    content_type='application/json')
+
+        # Get Collections the user liked
+        response = client.get('/api/collection/like')
+        self.assertEqual(response.status_code, 200)
+
+        collections = json.loads(response.content)['collections']
+        self.assertEqual(len(collections), 2)
+
+        # the last action comes first
+        self.assertEqual(collections[0]['title'], 'SWPP Papers')
+        self.assertEqual(collections[1]['title'], 'collection2')
