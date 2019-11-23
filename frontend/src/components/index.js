@@ -14,6 +14,7 @@ import WarningModal from "./Modal/WarningModal/WarningModal";
 import TransferOwnershipModal from "./Modal/TrasferOwnershipModal/TransferOwnershipModal";
 import UserEntry from "./User/UserEntry/UserEntry";
 import InviteToCollectionModal from "./Modal/InviteToCollectionModal/InviteToCollectionModal";
+import ManageCollectionMemberModal from "./Modal/ManageCollectionMemberModal/ManageCollectionMemberModal";
 
 export {
     SideBar,
@@ -32,4 +33,5 @@ export {
     TransferOwnershipModal,
     UserEntry,
     InviteToCollectionModal,
+    ManageCollectionMemberModal,
 };

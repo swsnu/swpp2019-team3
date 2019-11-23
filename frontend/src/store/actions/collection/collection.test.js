@@ -431,7 +431,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.deleteCollection({ id: stubCollection.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/collection", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/collection", { params: { id: { id: 1 } } });
                 done();
             });
     });
@@ -450,7 +450,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.deleteCollection({ id: stubCollection.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/collection", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/collection", { params: { id: { id: 1 } } });
                 done();
             });
     });
@@ -469,7 +469,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.deleteCollection({ id: stubCollection.id }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/collection", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/collection", { params: { id: { id: 1 } } });
                 done();
             });
     });

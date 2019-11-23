@@ -3,8 +3,8 @@ import { mount } from "enzyme";
 import { Provider } from "react-redux";
 
 import { getMockStore } from "../../../test-utils/mocks";
+import ManageCollectionMemberModal from "./ManageCollectionMemberModal";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
-import TransferOwnershipModal from "./TransferOwnershipModal";
 
 const stubInitialState = {
     paper: {
@@ -48,47 +48,43 @@ const stubInitialState = {
     reply: {},
 };
 
-const mockHistory = { replace: jest.fn() };
-const makeTransferModal = (initialState) => (
+const makeManageCollectionMemberModal = (initialState) => (
     <Provider store={getMockStore(initialState)}>
-        <TransferOwnershipModal
-          collectionId={1}
-          collectionName="asdf"
-          history={mockHistory}
-        />
+        <ManageCollectionMemberModal />
     </Provider>
 );
 
-describe("TransferOwnershipModal test", () => {
-    let transferModal;
+describe("InviteToCollectionModal test", () => {
+    let manageCollectionMemberModal;
+
     beforeEach(() => {
-        transferModal = makeTransferModal(stubInitialState);
+        manageCollectionMemberModal = makeManageCollectionMemberModal(stubInitialState);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     it("should render without errors", () => {
-        const component = mount(transferModal);
-        const wrapper = component.find(".TransferOwnership");
+        const component = mount(manageCollectionMemberModal);
+        const wrapper = component.find(".ManageCollectionMemberModal");
         expect(wrapper.length).toBe(1);
     });
 
     it("should set state to open/close modal", () => {
-        const component = mount(transferModal);
+        const component = mount(manageCollectionMemberModal);
 
         // open by pressing open button
         let wrapper = component.find("#modalOpenButton").hostNodes();
         expect(wrapper.length).toBe(1);
         wrapper.simulate("click");
-        const instance = component.find("TransferOwnershipModal").instance();
+        const instance = component.find("ManageCollectionMemberModal").instance();
         expect(instance.state.isModalOpen).toBe(true);
 
         // close by pressing cancel button
-        wrapper = component.find("#cancelButton").hostNodes();
+        wrapper = component.find("#closeButton").hostNodes();
         expect(wrapper.length).toBe(1);
         wrapper.simulate("click");
         expect(instance.state.isModalOpen).toBe(false);
     });
-
-    // it("clickWarningConfirmAction should be called in WarningModal", () => {
-    //     TODO: Implement this test
-    // })
 });

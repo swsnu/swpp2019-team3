@@ -46,6 +46,7 @@ const stubInitialState = {
     },
     user: {},
     review: {},
+    reply: {},
 };
 
 const makeCreateNewCollectionModal = (initialState) => (

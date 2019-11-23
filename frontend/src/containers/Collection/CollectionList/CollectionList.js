@@ -8,22 +8,6 @@ import { collectionActions, authActions } from "../../../store/actions";
 import "./CollectionList.css";
 
 class CollectionList extends Component {
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         collections: [],
-    //         me: null,
-    //     };
-    // }
-
-    // this code is implemented to update props, but not works as expected
-    // static getDerivedStateFromProps(nextProps, prevState) {
-    //     if (nextProps.storedCollections !== prevState.collections) {
-    //         return { collections: nextProps.storedCollections };
-    //     }
-    //     return null;
-    // }
-
     componentDidMount() {
         this.props.onGetMe()
             .then(() => {
@@ -75,17 +59,14 @@ class CollectionList extends Component {
 
 const mapStateToProps = (state) => ({
     me: state.auth.me,
+    storedCollections: state.collection.list.list,
     makeNewCollectionStatus: state.collection.make.status,
     getCollectionsStatus: state.collection.list.status,
-    storedCollections: state.collection.list.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onMakeNewCollection: (newCollection) => dispatch(
-        collectionActions.makeNewCollection(newCollection),
-    ),
-    onGetCollections: (userId) => dispatch(collectionActions.getCollectionsByUserId(userId)),
     onGetMe: () => dispatch(authActions.getMe()),
+    onGetCollections: (userId) => dispatch(collectionActions.getCollectionsByUserId(userId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionList);
@@ -99,7 +80,7 @@ CollectionList.propTypes = {
 
 CollectionList.defaultProps = {
     me: null,
-    onGetCollections: null,
     storedCollections: [],
     onGetMe: () => {},
+    onGetCollections: () => {},
 };

@@ -28,7 +28,6 @@ class CreateNewCollectionModal extends Component {
             text: this.state.newCollectionDesc,
         });
         this.props.onUpdateCollection({ id: this.props.me.id });
-        // FIXME: collection list is not updated after this line as expected
         this.setState({
             isModalOpen: false,
             newCollectionName: "",

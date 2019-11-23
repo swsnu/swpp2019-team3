@@ -6,7 +6,7 @@ import { Button } from "react-bootstrap";
 
 import { collectionActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
-import { TransferOwnershipModal, WarningModal } from "../../../components";
+import { TransferOwnershipModal, WarningModal, ManageCollectionMemberModal } from "../../../components";
 
 import "./CollectionManage.css";
 
@@ -46,10 +46,6 @@ class CollectionManage extends Component {
             text: this.state.collectionDescription,
         });
         // message or popup that says "collection is updated" may need to be implemented
-    }
-
-    clickManageMemberHandler = () => {
-
     }
 
     render() {
@@ -100,11 +96,7 @@ class CollectionManage extends Component {
                         <h5 id="manageMemberText">Looks for current members of this collections,
                             invite new members, or kick off some.
                         </h5>
-                        <Button
-                          id="manageMemberButton"
-                          onClick={this.clickManageMemberHandler}
-                        >Manage Members
-                        </Button>
+                        <ManageCollectionMemberModal />
                     </div>
                     <div className="TransferOwnership">
                         <h5 id="transferOwnershipText">Transfer the ownership of this collection
