@@ -246,3 +246,13 @@ def get_notification(args):
 def put_notification(args):
     """Put Notification"""
     return notification_utils.read_notification(args)
+
+
+def get_user_following(args):
+    """Get Users User is Following"""
+    return {constants.USERS: users_utils.select_user_following(args)}
+
+
+def get_user_followed(args):
+    """Get User’s Followers"""
+    return {constants.USERS: users_utils.select_user_followed(args)}

@@ -5,6 +5,7 @@ import json
 from django.test import TestCase, Client
 from papersfeed import constants
 from papersfeed.models.users.user import User
+from papersfeed.models.users.user_follow import UserFollow
 
 
 class UserTestCase(TestCase):
@@ -316,3 +317,131 @@ class UserTestCase(TestCase):
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 0)
+
+    def test_get_user_following(self):
+        """Get Users User is Following"""
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        swpp_user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+        swpp2_user_id = User.objects.filter(email='swpp2@snu.ac.kr').first().id
+        swpp3_user_id = User.objects.filter(email='swpp3@snu.ac.kr').first().id
+
+        # My Following User count : 0
+        response = client.get('/api/user/following',
+                              data={
+                                  constants.ID: swpp_user_id
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 0)
+
+        # My Following User count : 1
+        UserFollow.objects.create(following_user_id=swpp_user_id, followed_user_id=swpp2_user_id)
+        response = client.get('/api/user/following',
+                              data={
+                                  constants.ID: swpp_user_id
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 1)
+
+        # My Following User count : 2
+        UserFollow.objects.create(following_user_id=swpp_user_id, followed_user_id=swpp3_user_id)
+        response = client.get('/api/user/following',
+                              data={
+                                  constants.ID: swpp_user_id
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 2)
+
+        # Other's Following User count : 0
+        response = client.get('/api/user/following',
+                              data={
+                                  constants.ID: swpp2_user_id
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 0)
+
+        # Other's Following User count : 1
+        UserFollow.objects.create(following_user_id=swpp2_user_id, followed_user_id=swpp_user_id)
+        response = client.get('/api/user/following',
+                              data={
+                                  constants.ID: swpp2_user_id
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 1)
+
+    def test_get_user_followed(self):
+        """Get User’s Followers"""
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        swpp_user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+        swpp2_user_id = User.objects.filter(email='swpp2@snu.ac.kr').first().id
+        swpp3_user_id = User.objects.filter(email='swpp3@snu.ac.kr').first().id
+
+        # My Followed User count : 0
+        response = client.get('/api/user/followed',
+                              data={
+                                  constants.ID: swpp_user_id
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 0)
+
+        # My Followed User count : 1
+        UserFollow.objects.create(following_user_id=swpp2_user_id, followed_user_id=swpp_user_id)
+        response = client.get('/api/user/followed',
+                              data={
+                                  constants.ID: swpp_user_id
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 1)
+
+        # My Followed User count : 2
+        UserFollow.objects.create(following_user_id=swpp3_user_id, followed_user_id=swpp_user_id)
+        response = client.get('/api/user/followed',
+                              data={
+                                  constants.ID: swpp_user_id
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 2)
+
+        # Other's Followed User count : 0
+        response = client.get('/api/user/followed',
+                              data={
+                                  constants.ID: swpp2_user_id
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 0)
+
+        # Other's Followed User count : 1
+        UserFollow.objects.create(following_user_id=swpp_user_id, followed_user_id=swpp2_user_id)
+        response = client.get('/api/user/followed',
+                              data={
+                                  constants.ID: swpp2_user_id
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 1)
