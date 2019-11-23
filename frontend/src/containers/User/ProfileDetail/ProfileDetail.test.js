@@ -153,14 +153,14 @@ describe("<ProfileDetail />", () => {
         const stubInitState = makeStubState(1, 1, false);
         const profileDetail = setProfileDetail(stubInitState);
         const component = mount(profileDetail);
-        expect(component.find("Link").at(0).prop("to")).toBe("/followers=1");
+        expect(component.find("Link").at(0).prop("to")).toBe("/profile_id=1/followers");
     });
 
     it("click following number and moves to follower list page", () => {
         const stubInitState = makeStubState(1, 1, false);
         const profileDetail = setProfileDetail(stubInitState);
         const component = mount(profileDetail);
-        expect(component.find("Link").at(1).prop("to")).toBe("/followings=1");
+        expect(component.find("Link").at(1).prop("to")).toBe("/profile_id=1/followings");
     });
 
     it("should make collection cards", () => {

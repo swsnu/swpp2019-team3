@@ -166,11 +166,11 @@ class ProfileDetail extends Component {
                                 <h5 id="reviewCount">{this.state.reviews.length}</h5>
                                 <h5 id="reviewText">Reviews</h5>
                             </div>
-                            <Link id="followerStat" to={`/followers=${this.props.thisUser.id}`}>
+                            <Link id="followerStat" to={`/profile_id=${this.props.thisUser.id}/followers`}>
                                 <h5 id="followerCount">{this.state.followerCount}</h5>
                                 <h5 id="followerText">Follower</h5>
                             </Link>
-                            <Link id="followingStat" to={`/followings=${this.props.thisUser.id}`}>
+                            <Link id="followingStat" to={`/profile_id=${this.props.thisUser.id}/followings`}>
                                 <h5 id="followingCount">{this.state.followingCount}</h5>
                                 <h5 id="followingText">Following</h5>
                             </Link>

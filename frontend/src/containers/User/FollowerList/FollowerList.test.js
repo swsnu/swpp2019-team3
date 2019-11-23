@@ -9,7 +9,7 @@ import { getMockStore } from "../../../test-utils/mocks";
 const mockHistory = { push: jest.fn() };
 const makeFollowerList = (initialState) => (
     <Provider store={getMockStore(initialState)}>
-        <FollowerList history={mockHistory} location={{ pathname: "/followers=1" }} />
+        <FollowerList history={mockHistory} location={{ pathname: "/followers/profile_id=1" }} />
     </Provider>
 );
 /* eslint-disable no-unused-vars */
@@ -28,6 +28,7 @@ describe("<FollowerList />", () => {
             review: {},
             auth: {},
             user: {},
+            reply: {},
         };
         followerList = makeFollowerList(stubInitialState);
         spyFollowersUser = jest.spyOn(userActions, "getFollowersByUserId")
