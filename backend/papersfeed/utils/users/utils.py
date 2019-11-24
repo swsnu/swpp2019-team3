@@ -247,8 +247,7 @@ def select_user_search(args):
 def select_user_following(args):
     """Select Users User is Following"""
     is_parameter_exists([
-        constants.ID,
-        constants.PAGE_NUMBER
+        constants.ID
     ], args)
 
     # Request User
@@ -258,7 +257,7 @@ def select_user_following(args):
     requested_user_id = args[constants.ID]
 
     # Page Number
-    page_number = args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
 
     # Following QuerySet
     queryset = UserFollow.objects.filter(following_user=requested_user_id).values_list('followed_user', flat=True)
@@ -278,8 +277,7 @@ def select_user_following(args):
 def select_user_followed(args):
     """Select User’s Followers"""
     is_parameter_exists([
-        constants.ID,
-        constants.PAGE_NUMBER
+        constants.ID
     ], args)
 
     # Request User
@@ -289,7 +287,7 @@ def select_user_followed(args):
     requested_user_id = args[constants.ID]
 
     # Page Number
-    page_number = args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
 
     # Follower QuerySet
     queryset = UserFollow.objects.filter(followed_user=requested_user_id).values_list('following_user', flat=True)
@@ -376,17 +374,23 @@ def select_user_collection(args):
 
     request_user = args[constants.USER]
 
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Members QuerySet
+    queryset = CollectionUser.objects.filter(collection_id=collection_id)
+
     # Members(including owner) Of Collections
-    collection_members = CollectionUser.objects.filter(collection_id=collection_id)
+    collection_members = get_results_from_queryset(queryset, 10, page_number)
 
     # Member Ids
     member_ids = [collection_member.user_id for collection_member in collection_members]
     member_ids = list(set(member_ids))
 
     # Get Members
-    members, _, _ = __get_users(Q(id__in=member_ids), request_user, None)
+    members, _, is_finished = __get_users(Q(id__in=member_ids), request_user, 10)
 
-    return members
+    return members, page_number, is_finished
 
 
 def insert_user_collection(args):

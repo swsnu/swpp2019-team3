@@ -12,15 +12,11 @@ from papersfeed.models.users.user import User
 
 def select_notifications(args):
     """Get Notifications of the current User"""
-    is_parameter_exists([
-        constants.PAGE_NUMBER
-    ], args)
-
     # Request User
     request_user = args[constants.USER] if constants.USER in args else None
 
     # Page Number
-    page_number = args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
 
     # User
     user = User.objects.get(pk=request_user.id)

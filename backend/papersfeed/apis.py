@@ -240,7 +240,10 @@ def delete_reply_review(args):
 
 def get_user_collection(args):
     """Get User Collection"""
-    return {constants.USERS: users_utils.select_user_collection(args)}
+    users, page_number, is_finished = users_utils.select_user_collection(args)
+    return {constants.USERS: users,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
 
 
 def post_user_collection(args):
