@@ -98,7 +98,7 @@ def select_paper_search(args):
         try:
             start = 0
             while True:
-                print("--- Sent a request for searching in arXiv ({}~{})".format(start, start+ARXIV_COUNT-1))
+                print("[arXiv API] searching ({}~{})".format(start, start+ARXIV_COUNT-1))
                 arxiv_url = "http://export.arxiv.org/api/query"
                 query = "?search_query=" + urllib.parse.quote(keyword) \
                     + "&start=" + str(start) + "&max_results=" + str(ARXIV_COUNT)
@@ -110,8 +110,10 @@ def select_paper_search(args):
                     if 'entry' in response_dict and response_dict['entry']:
                         paper_ids = __parse_and_save_arxiv_info(response_dict)
                     else: # if 'entry' doesn't exist or it's the end of results
+                        print("[arXiv API] more entries don't exist")
                         break
                 else:
+                    print("[arXiv API] error code {}".format(response.status_code))
                     break
                 start += ARXIV_COUNT # continue pagination
         except requests.exceptions.RequestException as exception:
@@ -606,7 +608,6 @@ def __extract_keywords_from_abstract(abstracts):
     """for every abstract, extract keywords by calling 'get_key_phrases'"""
     doc_list = []
     request_len = 0
-    request_cnt = 0
     for paper_key in abstracts:
         request_len += min(len(abstracts[paper_key]), MAX_DOC_SIZE)
 
@@ -614,8 +615,8 @@ def __extract_keywords_from_abstract(abstracts):
         if request_len >= MAX_REQ_SIZE:
             documents = {"documents": doc_list}
             key_phrases = get_key_phrases(documents)
-            request_cnt += 1
-            __process_key_phrases(key_phrases, request_cnt)
+            if key_phrases:
+                __process_key_phrases(key_phrases)
 
             doc_list = []
             request_len = min(len(abstracts[paper_key]), MAX_DOC_SIZE)
@@ -626,13 +627,11 @@ def __extract_keywords_from_abstract(abstracts):
     if doc_list:
         documents = {"documents": doc_list}
         key_phrases = get_key_phrases(documents)
-        request_cnt += 1
-        __process_key_phrases(key_phrases, request_cnt)
-
-    print("--- Sent {} requests for extracting keywords".format(request_cnt))
+        if key_phrases:
+            __process_key_phrases(key_phrases)
 
 
-def __process_key_phrases(key_phrases, request_cnt):
+def __process_key_phrases(key_phrases):
     """ process result of response and save them in DB
         To check struct of response, refer to
         https://koreacentral.dev.cognitive.microsoft.com/docs/services/TextAnalytics-v2-1/operations/56f30ceeeda5650db055a3c6
@@ -640,7 +639,7 @@ def __process_key_phrases(key_phrases, request_cnt):
 
     # print errors if exist
     if key_phrases['errors']:
-        print("- Request {} error while extracting keywords".format(request_cnt))
+        print("[Text Analytics API] there were errors")
         pprint(key_phrases['errors'])
 
     # save information of mapping keyword to paper (abstract)

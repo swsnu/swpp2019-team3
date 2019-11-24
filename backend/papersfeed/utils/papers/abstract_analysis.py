@@ -22,8 +22,13 @@ def get_key_phrases(documents):
 
     headers = {"Ocp-Apim-Subscription-Key": subscription_key}
     response = requests.post(keyphrase_url, headers=headers, json=documents)
-    key_phrases = response.json()
-    return key_phrases
+    print("[Text Analytics API] a request for extracting keywords")
+
+    if response.status_code != 200:
+        print("[Text Analytics API] error code {}".format(response.status_code))
+        return None
+    else:
+        return response.json()
 
 if __name__ == '__main__':
     # pylint: disable=invalid-name
