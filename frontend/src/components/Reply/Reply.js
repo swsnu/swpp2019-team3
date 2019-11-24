@@ -155,7 +155,10 @@ class Reply extends Component {
                         <Modal.Footer className="modal-footer">
                             <Button
                               onClick={this.clickConfirmButtonHandler}
-                              disabled={this.state.tempContent.length === 0 || this.state.tempContent === this.props.content}
+                              disabled={
+                                  this.state.tempContent.length === 0
+                                  || this.state.tempContent === this.props.content
+                              }
                             >
                                         Confirm
                             </Button>
