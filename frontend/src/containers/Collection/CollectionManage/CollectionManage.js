@@ -14,6 +14,8 @@ class CollectionManage extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            initName: "",
+            initDescription: "",
             collectionName: "",
             collectionDescription: "",
         };
@@ -27,7 +29,9 @@ class CollectionManage extends Component {
                     this.props.history.push("/main");
                 } else {
                     this.setState({
+                        initName: this.props.selectedCollection.title,
                         collectionName: this.props.selectedCollection.title,
+                        initDescription: this.props.selectedCollection.text,
                         collectionDescription: this.props.selectedCollection.text,
                         // collectionName: JSON.parse(JSON.stringify(
                         //     this.props.selectedCollection.title,
@@ -82,7 +86,9 @@ class CollectionManage extends Component {
                         <Button
                           id="UpdateCollectionButton"
                           onClick={this.updateCollectionHandler}
-                          disabled={this.state.collectionName === ""}
+                          disabled={this.state.collectionName === ""
+                            || (this.state.initName === this.state.collectionName
+                                && this.state.initDescription === this.state.collectionDescription)}
                         >Update Collection
                         </Button>
                         <Link to={`/collection_id=${this.props.selectedCollection.id}`}>
