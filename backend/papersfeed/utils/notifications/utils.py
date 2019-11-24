@@ -32,7 +32,9 @@ def select_notifications(args):
 
     notifications = __pack_notifications(notifications)
 
-    return notifications
+    is_finished = len(notifications) < 10
+
+    return notifications, page_number, is_finished
 
 
 def read_notification(args):

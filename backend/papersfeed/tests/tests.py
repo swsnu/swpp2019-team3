@@ -47,6 +47,7 @@ class ApiEntryTestCase(TestCase):
 
         self.assertEqual(response.status_code, 520)
 
+    # pylint: disable=too-many-locals
     def test_pagination(self):
         """pagination should return isFinished value correctly, and current page number"""
         client = Client()
@@ -178,6 +179,8 @@ class ApiEntryTestCase(TestCase):
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 6)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(json.loads(response.content.decode())[constants.PAGE_NUMBER], '1')
 
         swpp8_user_id = User.objects.filter(email='swpp8@snu.ac.kr').first().id
         swpp9_user_id = User.objects.filter(email='swpp9@snu.ac.kr').first().id
@@ -198,6 +201,8 @@ class ApiEntryTestCase(TestCase):
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 10)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], False)
+        self.assertEqual(json.loads(response.content.decode())[constants.PAGE_NUMBER], '1')
 
         response = client.get('/api/user/following',
                               data={
@@ -207,3 +212,6 @@ class ApiEntryTestCase(TestCase):
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 1)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(json.loads(response.content.decode())[constants.PAGE_NUMBER], '2')
+    # pylint: enable=too-many-locals

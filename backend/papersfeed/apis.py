@@ -260,7 +260,10 @@ def delete_user_collection(args):
 
 def get_notification(args):
     """Get Notification"""
-    return {constants.NOTIFICATIONS: notification_utils.select_notifications(args)}
+    notifications, page_number, is_finished = notification_utils.select_notifications(args)
+    return {constants.NOTIFICATIONS: notifications,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
 
 
 def put_notification(args):
@@ -270,9 +273,15 @@ def put_notification(args):
 
 def get_user_following(args):
     """Get Users User is Following"""
-    return {constants.USERS: users_utils.select_user_following(args)}
+    users, page_number, is_finished = users_utils.select_user_following(args)
+    return {constants.USERS: users,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
 
 
 def get_user_followed(args):
     """Get User’s Followers"""
-    return {constants.USERS: users_utils.select_user_followed(args)}
+    users, page_number, is_finished = users_utils.select_user_followed(args)
+    return {constants.USERS: users,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}

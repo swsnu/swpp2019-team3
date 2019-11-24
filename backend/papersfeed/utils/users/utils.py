@@ -270,9 +270,9 @@ def select_user_following(args):
     filter_query = Q(id__in=user_ids)
 
     # Users
-    users, _, _ = __get_users(filter_query, request_user, None)
+    users, _, is_finished = __get_users(filter_query, request_user, 10)
 
-    return users
+    return users, page_number, is_finished
 
 
 def select_user_followed(args):
@@ -301,9 +301,9 @@ def select_user_followed(args):
     filter_query = Q(id__in=user_ids)
 
     # Users
-    users, _, _ = __get_users(filter_query, request_user, None)
+    users, _, is_finished = __get_users(filter_query, request_user, 10)
 
-    return users
+    return users, page_number, is_finished
 
 
 def get_users(filter_query, request_user, count):
