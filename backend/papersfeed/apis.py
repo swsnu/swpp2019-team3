@@ -130,7 +130,10 @@ def get_review_user(args):
 
 def get_paper_search(args):
     """Get Paper Search"""
-    return {constants.PAPERS: papers_utils.select_paper_search(args)}
+    papers, page_number, is_finished = papers_utils.select_paper_search(args)
+    return {constants.PAPERS: papers,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
 
 
 def get_collection_search(args):
