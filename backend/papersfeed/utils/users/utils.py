@@ -235,13 +235,19 @@ def select_user_search(args):
     # Search Keyword
     keyword = args[constants.TEXT]
 
-    # Filter Query
-    filter_query = Q(username__icontains=keyword)
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # User Queryset
+    queryset = User.objects.filter(Q(username__icontains=keyword)).values_list('id', flat=True)
+
+    # User Ids
+    user_ids = get_results_from_queryset(queryset, 10, page_number)
 
     # Users
-    users, _, _ = __get_users(filter_query, request_user, None)
+    users, _, is_finished = __get_users(Q(id__in=user_ids), request_user, 10)
 
-    return users
+    return users, page_number, is_finished
 
 
 def select_user_following(args):
