@@ -238,6 +238,6 @@ describe("<Header />", () => {
         expect(mockHistory.push).toHaveBeenCalledTimes(0);
 
         wrapper.simulate("keypress", { charCode: 13 });
-        expect(mockHistory.push).toHaveBeenCalledTimes(1);
+        expect(mockHistory.push).toHaveBeenCalledTimes(0);
     });
 });
