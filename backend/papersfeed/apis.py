@@ -220,7 +220,10 @@ def delete_reply_collection(args):
 
 def get_reply_review(args):
     """Get reply review"""
-    return {constants.REPLIES: replies_utils.select_reply_review(args)}
+    replies, page_number, is_finished = replies_utils.select_reply_review(args)
+    return {constants.REPLIES: replies,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
 
 
 def post_reply_review(args):
