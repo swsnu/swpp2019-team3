@@ -185,7 +185,10 @@ def delete_like_collection(args):
 
 def get_collection_like(args):
     """Get Collection Like"""
-    return {constants.COLLECTIONS: collections_utils.select_collection_like(args)}
+    collections, page_number, is_finished = collections_utils.select_collection_like(args)
+    return {constants.COLLECTIONS: collections,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
 
 
 def post_like_reply(args):

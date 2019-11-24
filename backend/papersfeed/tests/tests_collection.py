@@ -331,6 +331,8 @@ class CollectionTestCase(TestCase):
         # Get Collections the user liked
         response = client.get('/api/collection/like')
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         collections = json.loads(response.content)['collections']
         self.assertEqual(len(collections), 2)
