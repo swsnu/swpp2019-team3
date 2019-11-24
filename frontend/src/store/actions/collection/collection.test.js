@@ -280,6 +280,96 @@ describe("collectionActions", () => {
             });
     });
 
+    it("getCollectionMembers should call axios.get", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: [],
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.getCollectionMembers(1))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/collection", { params: { id: 1 } });
+                done();
+            });
+    });
+
+    it("getCollectionMembers should handle error", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 404,
+                        data: [],
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(collectionActions.getCollectionMembers(1))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/collection", { params: { id: 1 } });
+                done();
+            });
+    });
+
+    it("setOwner should call axios.put", (done) => {
+        const spy = jest.spyOn(axios, "put")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: [],
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.setOwner(1, 2))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/collection", { id: 1, user_id: 2 });
+                done();
+            });
+    });
+
+    it("setOwner should handle collection_not_exist", (done) => {
+        const spy = jest.spyOn(axios, "put")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 404,
+                        data: [],
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(collectionActions.setOwner(1, 2))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/collection", { id: 1, user_id: 2 });
+                done();
+            });
+    });
+
+    it("setOwner should handle auth_error", (done) => {
+        const spy = jest.spyOn(axios, "put")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 403,
+                        data: [],
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(collectionActions.setOwner(1, 2))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/collection", { id: 1, user_id: 2 });
+                done();
+            });
+    });
 
     it("setTitleandDescription should call axios.put", (done) => {
         const spy = jest.spyOn(axios, "put")
@@ -418,6 +508,116 @@ describe("collectionActions", () => {
             });
     });
 
+    it("addNewMembers should call axios.post", (done) => {
+        const spy = jest.spyOn(axios, "post")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.addNewMembers(1, [2, 3, 4]))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/collection", { id: 1, user_ids: [2, 3, 4] });
+                done();
+            });
+    });
+
+    it("addNewMembers should handle not_authorized", (done) => {
+        const spy = jest.spyOn(axios, "post")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 403,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(collectionActions.addNewMembers(1, [2, 3, 4]))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/collection", { id: 1, user_ids: [2, 3, 4] });
+                done();
+            });
+    });
+
+    it("addNewMembers should handle more_than_usercount", (done) => {
+        const spy = jest.spyOn(axios, "post")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 422,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(collectionActions.addNewMembers(1, [2, 3, 4]))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/collection", { id: 1, user_ids: [2, 3, 4] });
+                done();
+            });
+    });
+
+    // FIXME: 400 bad request
+    it("deleteMembers should call axios.delete", (done) => {
+        const spy = jest.spyOn(axios, "delete")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.deleteMembers(1, [2, 3, 4]))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/collection", { id: 1, user_ids: [2, 3, 4] });
+                done();
+            });
+    });
+
+    it("deleteMembers should handle collection_not_exist", (done) => {
+        const spy = jest.spyOn(axios, "delete")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(collectionActions.deleteMembers(1, [2, 3, 4]))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/collection", { id: 1, user_ids: [2, 3, 4] });
+                done();
+            });
+    });
+
+    it("deleteMembers should handle auth_error", (done) => {
+        const spy = jest.spyOn(axios, "delete")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 403,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(collectionActions.deleteMembers(1, [2, 3, 4]))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/collection", { id: 1, user_ids: [2, 3, 4] });
+                done();
+            });
+    });
 
     it("deleteCollection should call axios.delete", (done) => {
         const spy = jest.spyOn(axios, "delete")

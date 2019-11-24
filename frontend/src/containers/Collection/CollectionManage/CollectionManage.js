@@ -35,8 +35,8 @@ class CollectionManage extends Component {
                         )),
                     });
                 }
-                return null;
             });
+        this.props.onGetMembers(collectionId);
     }
 
     updateCollectionHandler = () => {
@@ -103,11 +103,7 @@ class CollectionManage extends Component {
                             to the other member of this collection.
                             WARNING: This action cannot be undone.
                         </h5>
-                        <TransferOwnershipModal
-                          collectionId={this.props.selectedCollection.id}
-                          collectionName={this.props.selectedCollection.title}
-                          history={this.props.history}
-                        />
+                        <TransferOwnershipModal />
                     </div>
                     <div className="DeleteCollection">
                         <h5 id="deleteCollectionText">Delete this collection.
@@ -142,26 +138,33 @@ const mapDispatchToProps = (dispatch) => ({
     onDeleteCollection: (collectionId) => dispatch(
         collectionActions.deleteCollection(collectionId),
     ),
+    onGetMembers: (collectionId) => dispatch(collectionActions.getCollectionMembers(collectionId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionManage);
 
 CollectionManage.propTypes = {
+    history: PropTypes.objectOf(PropTypes.any),
+    location: PropTypes.objectOf(PropTypes.any),
+
     selectedCollection: PropTypes.objectOf(PropTypes.any),
     collectionStatus: PropTypes.string,
+
     onGetCollection: PropTypes.func,
     onUpdateCollectionInfo: PropTypes.func,
     onDeleteCollection: PropTypes.func,
-    history: PropTypes.objectOf(PropTypes.any),
-    location: PropTypes.objectOf(PropTypes.any),
+    onGetMembers: PropTypes.func,
 };
 
 CollectionManage.defaultProps = {
-    selectedCollection: {},
-    collectionStatus: collectionStatus.NONE,
-    onGetCollection: null,
-    onUpdateCollectionInfo: null,
-    onDeleteCollection: PropTypes.func,
     history: null,
     location: null,
+
+    selectedCollection: {},
+    collectionStatus: collectionStatus.NONE,
+
+    onGetCollection: () => {},
+    onUpdateCollectionInfo: () => {},
+    onDeleteCollection: () => {},
+    onGetMembers: () => {},
 };

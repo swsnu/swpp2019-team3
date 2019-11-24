@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, Exists, OuterRef, Count
+from django.db.models import Q, Exists, OuterRef, Count, Case, When
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
@@ -177,7 +177,7 @@ def select_collection_user(args):
         paper_id = args[constants.PAPER]
 
     # Collections
-    collections, _, _ = __get_collections(filter_query, request_user, None, paper_id)
+    collections, _, _ = __get_collections(filter_query, request_user, None, paper_id=paper_id)
 
     return collections
 
@@ -194,16 +194,30 @@ def select_collection_search(args):
     # Search Keyword
     keyword = args[constants.TEXT]
 
-    # Collection Ids
-    collection_ids = Collection.objects.filter(Q(title__icontains=keyword) | Q(text__icontains=keyword))\
-        .values_list('id', flat=True)
-
     # Filter Query
-    filter_query = Q(id__in=collection_ids)
+    filter_query = Q(title__icontains=keyword) | Q(text__icontains=keyword)
 
     # Collections
     collections, _, _ = __get_collections(filter_query, request_user, None)
 
+    return collections
+
+
+def select_collection_like(args):
+    """Select Collection Like"""
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Collection Ids
+    collection_ids = CollectionLike.objects.filter(Q(user_id=request_user.id)).order_by(
+        '-creation_date').values_list('collection_id', flat=True)
+
+    # need to maintain the order
+    preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(collection_ids)])
+
+    # Collections
+    collections, _, _ = __get_collections(Q(id__in=collection_ids), request_user, None, order_by=preserved)
     return collections
 
 
@@ -232,9 +246,11 @@ def update_paper_collection(args):
     # Remove From Collections
     __remove_paper_from_collections(paper_id, list(set(containing_collection_ids) - set(collection_ids)))
 
+
 def get_collections(filter_query, request_user, count, paper_id=None):
     """Get Collections"""
-    return __get_collections(filter_query, request_user, count, paper_id)
+    return __get_collections(filter_query, request_user, count, paper_id=paper_id)
+
 
 def __get_collections_contains_paper(paper_id, request_user):
     """Get Collections Containing paper"""
@@ -270,13 +286,13 @@ def __add_paper_to_collections(paper_id, collection_ids):
         )
 
 
-def __get_collections(filter_query, request_user, count, paper_id=None):
+def __get_collections(filter_query, request_user, count, paper_id=None, order_by='-pk'):
     """Get Collections By Query"""
     queryset = Collection.objects.filter(
         filter_query
     ).annotate(
         is_liked=__is_collection_liked('id', request_user),
-        contains_paper=__contains_paper('id', paper_id))
+        contains_paper=__contains_paper('id', paper_id)).order_by(order_by)
 
     collections = get_results_from_queryset(queryset, count)
 
@@ -402,85 +418,3 @@ def __contains_paper(outer_ref, paper_id):
     return Exists(
         CollectionPaper.objects.filter(collection_id=OuterRef(outer_ref), paper_id=paper_id if paper_id else None)
     )
-
-
-# pylint: disable=pointless-string-statement
-"""
-def __get_members_collection(filter_query):
-    # Get Members Of Collection
-
-    # Members Of Collections
-    collection_members = CollectionUser.objects.filter(
-        filter_query
-    )
-
-    # Result
-    # {collection_id: [member]}
-    result = {}
-
-    # Member Ids
-    member_ids = [collection_member.user_id for collection_member in collection_members]
-    member_ids = list(set(member_ids))
-
-    # Get Members
-    members = __get_members(Q(id__in=member_ids))
-
-    # {member_id: member}
-    members = {member[constants.ID]: member for member in members}
-
-    for collection_member in collection_members:
-        # Ids
-        collection_id = collection_member.collection_id
-        member_id = collection_member.user_id
-
-        # Initialize
-        if collection_id not in result:
-            result[collection_id] = []
-
-        if member_id in members:
-            member = members[member_id]
-
-            # Inesrt Type
-            member[constants.TYPE] = collection_member.type
-
-            result[collection_id].append(member)
-
-    return result
-
-
-def __get_members(filter_query):
-    # Get Members By Query
-
-    queryset = User.objects.filter(
-        filter_query
-    )
-
-    members = get_results_from_queryset(queryset, None)
-
-    members = __pack_members(members)
-
-    return members
-
-
-def __pack_members(members):
-    # Pack Members
-
-    # Packed
-    packed = []
-
-    for member in members:
-
-        # Member Id
-        member_id = member.id
-
-        packed.append(
-            {
-                constants.ID: member_id,
-                constants.USERNAME: member.username,
-                constants.EMAIL: member.email,
-            }
-        )
-
-    return packed
-"""
-# pylint: enable=pointless-string-statement

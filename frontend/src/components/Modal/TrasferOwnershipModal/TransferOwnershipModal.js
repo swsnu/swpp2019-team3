@@ -1,16 +1,19 @@
 import React, { Component } from "react";
-// import { connect } from "react-redux";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Modal, Button } from "react-bootstrap";
 
-// import { collectionActions } from "../../../store/actions";
+import { collectionActions } from "../../../store/actions";
 import WarningModal from "../WarningModal/WarningModal";
+import UserEntry from "../../User/UserEntry/UserEntry";
 
 class TransferOwnershipModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isModalOpen: false,
+            selectedUserId: -1,
+            selectedUserName: "",
         };
     }
 
@@ -19,18 +22,47 @@ class TransferOwnershipModal extends Component {
     }
 
     clickCancelHandler = () => {
-        this.setState({ isModalOpen: false });
+        this.setState({
+            isModalOpen: false,
+            selectedUserId: -1,
+            selectedUserName: "",
+        });
+    }
+
+    checkHandler = (user) => {
+        this.setState({
+            selectedUserId: user.id,
+            selectedUserName: user.username,
+        });
     }
 
     clickWarningConfirmAction = () => {
-        // this.props.onTransferOwnership();
+        this.props.onTransferOwnership(this.props.thisCollection.id, this.state.selectedUserId);
+    }
 
-        // Currently, there is no api for get a list of members of the collection
-        // and change ownership of it. Once they are implemented, this function can
-        // also be implemented and it should work.
+    transferDisableCond = () => {
+        if (this.props.me) {
+            return this.state.selectedUserId <= 0 || this.state.selectedUserId === this.props.me.id;
+        }
+        return true;
     }
 
     render() {
+        let memberList = (<div />);
+        if (this.props.members.length > 0) {
+            memberList = this.props.members.map((user) => (
+                <UserEntry
+                  key={user.id}
+                  id={user.id}
+                  userName={user.username}
+                  userDesc={user.descrpition}
+                  isChecked={this.state.selectedUserId === user.id}
+                  checkhandler={() => this.checkHandler(user)}
+                  type="radio"
+                />
+            ));
+        }
+
         return (
             <div className="TransferOwnership">
                 <div id="openButtonDiv">
@@ -38,21 +70,22 @@ class TransferOwnershipModal extends Component {
                         Transfer Ownership
                     </Button>
                 </div>
-                <Modal id="transferModal" show={this.state.isModalOpen} centered>
+                <Modal id="transferModal" show={this.state.isModalOpen} onHide={this.clickCancelHandler} centered>
                     <Modal.Header>
                         <h5 id="transferHeaderText">Transfer ownership of {this.collectionName}</h5>
                     </Modal.Header>
                     <Modal.Body>
-                        <h5 id="temp">temp content: the list of collection members should be here</h5>
-                        {/* the list of collection members should be here */}
+                        {memberList}
                     </Modal.Body>
                     <Modal.Footer>
                         <WarningModal
+                        //   history={this.props.history}
                           openButtonText="Transfer to ..."
-                          whatToWarnText={`Trnasfer "${this.props.collectionName}" to "${"Test User"}"`}
+                          whatToWarnText={`Transfer "${this.props.thisCollection.title}" to "${this.state.selectedUserName}"`}
                           whatActionWillBeDone={this.clickWarningConfirmAction}
-                          whereToGoAfterConfirm={`/collection_id=${this.props.collectionId}`}
-                          history={this.props.history}
+                          whereToGoAfterConfirm={`/collection_id=${this.props.thisCollection.id}`}
+                          disableCondition={this.transferDisableCond()}
+                          disableMessage="Select a user except you"
                         />
                         <Button id="cancelButton" onClick={this.clickCancelHandler}>
                             Cancel
@@ -64,27 +97,37 @@ class TransferOwnershipModal extends Component {
     }
 }
 
-// const mapStateToProps = (state) => ({
-//     collectionMembers: state.collection.selected.members,
-// });
+const mapStateToProps = (state) => ({
+    me: state.auth.me,
+    thisCollection: state.collection.selected.collection,
+    members: state.collection.selected.members,
+});
 
-// const mapDispatchToProps = (dispatch) => ({
-//     onGetCollectionMembers,
-//     onTransferOwnership: (collectionId, targetUserId) =>
-//         dispatch(collectionActions.setOwner(collectionId, targetUserId)),
-// });
+const mapDispatchToProps = (dispatch) => ({
+    onTransferOwnership: (collectionId, targetUserId) => dispatch(
+        collectionActions.setOwner(collectionId, targetUserId),
+    ),
+});
 
-// export default connect(mapStateToProps, mapDispatchToProps)(TransferOwnershipModal);
-export default TransferOwnershipModal;
+export default connect(mapStateToProps, mapDispatchToProps)(TransferOwnershipModal);
+// export default TransferOwnershipModal;
 
 TransferOwnershipModal.propTypes = {
-    collectionId: PropTypes.number,
-    collectionName: PropTypes.string,
-    history: PropTypes.objectOf(PropTypes.any),
+    // history: PropTypes.objectOf(PropTypes.any),
+
+    me: PropTypes.objectOf(PropTypes.any),
+    thisCollection: PropTypes.objectOf(PropTypes.any),
+    members: PropTypes.arrayOf(PropTypes.any),
+
+    onTransferOwnership: PropTypes.func,
 };
 
 TransferOwnershipModal.defaultProps = {
-    collectionId: -1,
-    collectionName: "",
-    history: null,
+    // history: {},
+
+    me: {},
+    thisCollection: {},
+    members: [],
+
+    onTransferOwnership: () => {},
 };

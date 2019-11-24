@@ -200,6 +200,7 @@ def remove_like_collection(args):
     like_counts = __get_collection_like_count([collection_id], 'collection_id')
     return {constants.LIKES: like_counts[collection_id] if collection_id in like_counts else 0}
 
+
 def insert_like_reply(args):
     """Insert Like of Reply"""
     is_parameter_exists([

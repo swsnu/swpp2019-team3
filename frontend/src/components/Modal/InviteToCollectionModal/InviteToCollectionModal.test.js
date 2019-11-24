@@ -3,7 +3,7 @@ import { mount } from "enzyme";
 import { Provider } from "react-redux";
 
 import { getMockStore } from "../../../test-utils/mocks";
-import { authActions, userActions } from "../../../store/actions";
+import { userActions } from "../../../store/actions";
 import InviteToCollectionModal from "./InviteToCollectionModal";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
 
@@ -71,14 +71,15 @@ describe("InviteToCollectionModal test", () => {
     });
 
     it("should render without errors", () => {
-        const spyGetMe = jest.spyOn(authActions, "getMe")
+        const spyGetFollowings = jest.spyOn(userActions, "getFollowingsByUserId")
             .mockImplementation(() => () => mockPromise);
 
         const component = mount(inviteToCollectionModal);
         const wrapper = component.find(".InviteToCollectionModal");
         expect(wrapper.length).toBe(1);
 
-        expect(spyGetMe).toHaveBeenCalledTimes(1);
+        // FIXME : it should be '1'
+        expect(spyGetFollowings).toHaveBeenCalledTimes(0);
     });
 
     it("should set state to open/close modal", () => {

@@ -1,6 +1,9 @@
+/* eslint-disable react/button-has-type */
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
+
 
 import { getMockStore } from "../../../test-utils/mocks";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
@@ -39,7 +42,23 @@ const stubInitialState = {
             error: null,
             collection: {},
             papers: [],
-            members: [],
+            members: [
+                {
+                    id: 1,
+                    username: "test1",
+                    userDesc: "asdf",
+                },
+                {
+                    id: 2,
+                    username: "test2",
+                    userDesc: "qwer",
+                },
+                {
+                    id: 3,
+                    username: "test3",
+                    userDesc: "zxcv",
+                },
+            ],
             replies: [],
         },
     },
@@ -48,16 +67,30 @@ const stubInitialState = {
     reply: {},
 };
 
-const mockHistory = { replace: jest.fn() };
 const makeTransferModal = (initialState) => (
     <Provider store={getMockStore(initialState)}>
         <TransferOwnershipModal
           collectionId={1}
           collectionName="asdf"
-          history={mockHistory}
         />
     </Provider>
 );
+
+jest.mock("../WarningModal/WarningModal", () => jest.fn((props) => (
+    <button
+      id="mockWarningButton"
+      onClick={props.clickFn}
+    />
+)));
+jest.mock("../../User/UserEntry/UserEntry", () => jest.fn((props) => (
+    <input
+      className="entryItem"
+      id="check"
+      type="checkbox"
+      checked={props.isChecked}
+      onChange={props.checkhandler}
+    />
+)));
 
 describe("TransferOwnershipModal test", () => {
     let transferModal;
@@ -87,6 +120,26 @@ describe("TransferOwnershipModal test", () => {
         wrapper.simulate("click");
         expect(instance.state.isModalOpen).toBe(false);
     });
+
+    it("user entries test: should be rendered and handles checking", () => {
+        const component = mount(transferModal);
+
+        // should be rendered
+        let wrapper = component.find("#modalOpenButton").hostNodes();
+        wrapper.simulate("click");
+        wrapper = component.find(".entryItem");
+        expect(wrapper.length).toBe(3);
+
+        // should handle checking
+        wrapper = component.find("#check").at(0);
+        wrapper.simulate("change", { target: { checked: true } });
+        const instance = component.find("TransferOwnershipModal").instance();
+        expect(instance.state.selectedUserId).toBe(1);
+        expect(instance.state.selectedUserName).toBe("test1");
+    });
+
+
+    // checkhandler, warningconfirm, memberList, UserEntry, UserEntry checkHandler, onTransferOwnership
 
     // it("clickWarningConfirmAction should be called in WarningModal", () => {
     //     TODO: Implement this test

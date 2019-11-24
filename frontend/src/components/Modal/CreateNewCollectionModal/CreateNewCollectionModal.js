@@ -51,7 +51,7 @@ class CreateNewCollectionModal extends Component {
                         Create New ...
                     </Button>
                 </div>
-                <Modal id="createModal" show={this.state.isModalOpen} centered>
+                <Modal id="createModal" show={this.state.isModalOpen} onHide={this.clickCancelHandler} centered>
                     <Modal.Header>
                         <h5 id="createHeaderText">Create New Collection</h5>
                     </Modal.Header>

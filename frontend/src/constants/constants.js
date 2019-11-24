@@ -51,6 +51,7 @@ export const collectionStatus = {
     MISSING_PARAM: "MISSING_PARAM",
     COLLECTION_NOT_EXIST: "COLLECTION_NOT_EXIST",
     AUTH_ERROR: "AUTH_ERROR",
+    USER_SELF_ADDING: "USER_SELF_ADDING",
 };
 
 export const reviewStatus = {

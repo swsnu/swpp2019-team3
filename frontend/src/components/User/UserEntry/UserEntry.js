@@ -9,7 +9,6 @@ const UserEntry = (props) => (
                 <Form.Check
                   className="entryItem"
                   id="check"
-                  //   label={props.userName}
                   type={props.type}
                   checked={props.isChecked}
                   onChange={props.checkhandler}

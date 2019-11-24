@@ -3,12 +3,13 @@
 
 # Api Error Code
 AUTH_ERROR = 403  # 인증 오류, 권한 없음 혹은 비밀번호 오류
-PARAMETER_ERROR = 400  # 필수 파라미터 에러
+PARAMETER_ERROR = 400  # 필수 파라미터 에러 (syntax, parsing error)
 NOT_AVAILABLE_API = 405  # 지원하지 않는 API 버전
 INVALID_SESSION = 440  # 잘못된 세션
 NOT_EXIST_OBJECT = 404  # 존재하지 않는 Object
 USERNAME_ALREADY_EXISTS = 419  # 이미 존재하는 사용자 이름
 EMAIL_ALREADY_EXISTS = 420  # 이미 존재하는 이메일
+UNPROCESSABLE_ENTITY = 422  # semantic error (ex> self following)
 INVALID_JSON = 520  # json.loads 에러
 
 # Common
@@ -27,6 +28,8 @@ TYPE = 'type'
 # User
 USER = 'user'
 USERS = 'users'
+USER_ID = 'user_id'
+USER_IDS = 'user_ids'
 EMAIL = 'email'
 USERNAME = 'username'
 PASSWORD = 'password'

@@ -8,6 +8,7 @@ import { ConnectedRouter } from "connected-react-router";
 import {
     Intro, Main, SearchResult, ReviewDetail, PaperDetail, ReviewControl,
     ProfileDetail, AccountSetting, CollectionDetail, CollectionList,
+    UserList,
 } from "./containers";
 import {
     PrivateRoute, Header, SideBar,
@@ -60,6 +61,8 @@ function App(props) {
                             <Route path="/collections" exact component={CollectionList} />
                             <Route path="/collection_id=:collection_id" exact component={CollectionDetail} />
                             <Route path="/collection_id=:collection_id/manage" exact component={CollectionManage} />
+                            <Route path="/profile_id=:profile_id/followers" exact component={UserList} />
+                            <Route path="/profile_id=:profile_id/followings" exact component={UserList} />
                         </Switch>
                     </>
                 </Switch>

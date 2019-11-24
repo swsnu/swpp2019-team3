@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Modal, Button, Form } from "react-bootstrap";
 import PropTypes from "prop-types";
 
-import { authActions, userActions, collectionActions } from "../../../store/actions";
+import { userActions, collectionActions } from "../../../store/actions";
 import UserEntry from "../../User/UserEntry/UserEntry";
 
 class InviteToCollectionModal extends Component {
@@ -17,11 +17,10 @@ class InviteToCollectionModal extends Component {
         };
     }
 
-    componentDidMount() {
-        this.props.onGetMe()
-            .then(() => {
-                this.props.onGetFollowings({ id: this.props.me.id });
-            });
+    componentDidUpdate(prevProps) {
+        if (this.props.me !== prevProps.me) {
+            this.props.onGetFollowings({ id: this.props.me.id });
+        }
     }
 
     // handler functions for buttons
@@ -44,6 +43,7 @@ class InviteToCollectionModal extends Component {
     }
 
     clickInviteUsersHandler = () => {
+        // console.log(this.state.checkedUserIdList);
         this.props.onInviteUsers(this.props.thisCollection.id, this.state.checkedUserIdList);
         this.setState({
             searchKeyWord: "",
@@ -75,7 +75,6 @@ class InviteToCollectionModal extends Component {
           userName={user.username}
           userDesc={user.description}
           isChecked={this.state.checkedUserIdList.includes(user.id)}
-          // if we can get a list of collection members, it should be changed
           checkhandler={() => this.checkHandler(user)}
         />
     ))
@@ -92,9 +91,16 @@ class InviteToCollectionModal extends Component {
                         {this.props.openButtonName}
                     </Button>
                 </div>
-                <Modal id="inviteModal" show={this.state.isModalOpen} centered>
+                <Modal id="inviteModal" show={this.state.isModalOpen} onHide={this.clickCancelHandler} centered>
                     <Modal.Header>
                         <h5 id="inviteHeaderText">Invite users to {this.props.thisCollection.title}</h5>
+                        <Button
+                          id="inviteButton"
+                          onClick={this.clickInviteUsersHandler}
+                          disabled={this.state.checkedUserIdList.length === 0}
+                        >
+                            Invite
+                        </Button>
                         <Button id="cancelButton" onClick={this.clickCancelHandler}>
                             Cancel
                         </Button>
@@ -135,7 +141,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onGetMe: () => dispatch(authActions.getMe()),
     onGetFollowings: (userId) => dispatch(userActions.getFollowingsByUserId(userId)),
     onSearchUsers: (keyword) => dispatch(userActions.searchUser(keyword)),
     onInviteUsers: (collectionId, userIdList) => dispatch(
@@ -154,7 +159,6 @@ InviteToCollectionModal.propTypes = {
     searchedUsers: PropTypes.arrayOf(PropTypes.any),
     me: PropTypes.objectOf(PropTypes.any),
 
-    onGetMe: PropTypes.func,
     onGetFollowings: PropTypes.func,
     onSearchUsers: PropTypes.func,
     onInviteUsers: PropTypes.func,
@@ -168,7 +172,6 @@ InviteToCollectionModal.defaultProps = {
     searchedUsers: [],
     me: null,
 
-    onGetMe: () => {},
     onGetFollowings: () => {},
     onSearchUsers: () => {},
     onInviteUsers: () => {},

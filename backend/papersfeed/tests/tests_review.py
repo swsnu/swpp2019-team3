@@ -196,3 +196,59 @@ class ReviewTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+
+    def test_review_like(self):
+        """ REVIEW LIKE """
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        paper_id = Paper.objects.filter(title='paper1').first().id
+        user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+
+        # Creating reviews
+        Review.objects.create(
+            title="review1",
+            text="review1_text",
+            paper_id=paper_id,
+            user_id=user_id
+        )
+        Review.objects.create(
+            title="review2",
+            text="review2_text",
+            paper_id=paper_id,
+            user_id=user_id
+        )
+
+        # Like review1
+        review_id = Review.objects.filter(title='review1').first().id
+        client.post('/api/like/review',
+                    data=json.dumps({
+                        constants.ID: review_id,
+                    }),
+                    content_type='application/json')
+
+        # Like review2
+        review_id = Review.objects.filter(title='review2').first().id
+        client.post('/api/like/review',
+                    data=json.dumps({
+                        constants.ID: review_id,
+                    }),
+                    content_type='application/json')
+
+        # Get Reviews the user liked
+        response = client.get('/api/review/like')
+        self.assertEqual(response.status_code, 200)
+
+        reviews = json.loads(response.content)['reviews']
+        self.assertEqual(len(reviews), 2)
+
+        # the last action comes first
+        self.assertEqual(reviews[0]['title'], 'review2')
+        self.assertEqual(reviews[1]['title'], 'review1')

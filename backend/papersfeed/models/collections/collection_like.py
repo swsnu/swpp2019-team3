@@ -3,7 +3,7 @@ from django.db import models
 
 from papersfeed.models.base_models import BaseModel
 from papersfeed.models.users.user import User
-from .collection import Collection
+from papersfeed.models.collections.collection import Collection
 
 
 class CollectionLike(BaseModel):

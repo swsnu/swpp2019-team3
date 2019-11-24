@@ -3,16 +3,15 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { CreateNewCollectionModal, CollectionCard } from "../../../components";
-import { collectionActions, authActions } from "../../../store/actions";
+import { collectionActions } from "../../../store/actions";
 
 import "./CollectionList.css";
 
 class CollectionList extends Component {
-    componentDidMount() {
-        this.props.onGetMe()
-            .then(() => {
-                this.props.onGetCollections({ id: this.props.me.id });
-            });
+    componentDidUpdate(prevProps) {
+        if (this.props.me !== prevProps.me) {
+            this.props.onGetCollections({ id: this.props.me.id });
+        }
     }
 
     cardsMaker = (collection) => (
@@ -65,7 +64,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onGetMe: () => dispatch(authActions.getMe()),
     onGetCollections: (userId) => dispatch(collectionActions.getCollectionsByUserId(userId)),
 });
 
@@ -75,12 +73,10 @@ CollectionList.propTypes = {
     me: PropTypes.objectOf(PropTypes.any),
     onGetCollections: PropTypes.func,
     storedCollections: PropTypes.arrayOf(PropTypes.any),
-    onGetMe: PropTypes.func,
 };
 
 CollectionList.defaultProps = {
     me: null,
     storedCollections: [],
-    onGetMe: () => {},
     onGetCollections: () => {},
 };

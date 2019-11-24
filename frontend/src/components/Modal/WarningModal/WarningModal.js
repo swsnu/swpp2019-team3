@@ -17,8 +17,13 @@ class WarningModal extends Component {
     clickConfirmHandler = () => {
         this.props.whatActionWillBeDone();
         this.setState({ isModalOpen: false });
-        // after the job is done, should not return, so use replace
-        this.props.history.replace(this.props.whereToGoAfterConfirm);
+        if (this.props.moveAfterDone) {
+            // after the job is done, should not return, so use replace
+
+            // FIXME: history.replace does not work propery
+            // please de-commentize below line after the problem is solved
+            // this.props.history.replace(this.props.whereToGoAfterConfirm);
+        }
     }
 
     clickCancelHandler = () => {
@@ -26,14 +31,26 @@ class WarningModal extends Component {
     }
 
     render() {
+        const disableMessage = this.props.disableCondition
+            ? (
+                <div>
+                    <h5 id="disableMessage">{this.props.disableMessage}</h5>
+                </div>
+            )
+            : <div />;
         return (
             <div className="WarningModal">
                 <div id="openButtonDiv">
-                    <Button id="modalOpenButton" onClick={this.clickOpenHandler}>
+                    {disableMessage}
+                    <Button
+                      id="modalOpenButton"
+                      onClick={this.clickOpenHandler}
+                      disabled={this.props.disableCondition}
+                    >
                         {this.props.openButtonText}
                     </Button>
                 </div>
-                <Modal id="warningModal" show={this.state.isModalOpen} centered>
+                <Modal id="warningModal" show={this.state.isModalOpen} onHide={this.clickCancelHandler} centered>
                     <Modal.Header>
                         <h5 id="warningHeaderText">Warning</h5>
                     </Modal.Header>
@@ -62,17 +79,27 @@ class WarningModal extends Component {
 export default WarningModal;
 
 WarningModal.propTypes = {
+    // history: PropTypes.objectOf(PropTypes.any),
+
+    // the following props should be given by a calling component
     openButtonText: PropTypes.string,
     whatToWarnText: PropTypes.string,
     whatActionWillBeDone: PropTypes.func,
+    moveAfterDone: PropTypes.bool,
+    // eslint-disable-next-line react/no-unused-prop-types
     whereToGoAfterConfirm: PropTypes.string,
-    history: PropTypes.objectOf(PropTypes.any),
+    disableCondition: PropTypes.bool,
+    disableMessage: PropTypes.string,
 };
 
 WarningModal.defaultProps = {
+    // history: null,
+
     openButtonText: "",
     whatToWarnText: "",
     whatActionWillBeDone: null,
+    moveAfterDone: true,
     whereToGoAfterConfirm: "",
-    history: null,
+    disableCondition: false,
+    disableMessage: "",
 };

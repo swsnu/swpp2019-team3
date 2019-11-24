@@ -23,7 +23,7 @@ export const getUserByUserId = (userId) => (dispatch) => axios.get("/api/user", 
 // get a list of followers
 const getFollowersByUserIdSuccess = (followers) => ({
     type: userConstants.GET_FOLLOWERS,
-    target: followers.followers,
+    target: followers.users,
 });
 
 const getFollowersByUserIdFailure = (error) => {
@@ -41,8 +41,8 @@ export const getFollowersByUserId = (userId) => (dispatch) => axios.get("/api/us
 
 // get a list of followings
 const getFollowingsByUserIdSuccess = (followings) => ({
-    type: userConstants.GET_FOLLOWERS,
-    target: followings.followings,
+    type: userConstants.GET_FOLLOWINGS,
+    target: followings.users,
 });
 
 const getFollowingsByUserIdFailure = (error) => {
@@ -65,7 +65,7 @@ const addUserFollowingSuccess = (count) => ({
 });
 
 const addUserFollowingFailure = (error) => {
-    const actionType = error.response.status === 400
+    const actionType = error.response.status === 422
         ? userConstants.ADD_FOLLOWING_FAILURE_SELF_FOLLOWING : null;
     return {
         type: actionType,

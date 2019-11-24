@@ -3,15 +3,18 @@
 import uuid
 import hashlib
 
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Exists, OuterRef, Count
 from notifications.signals import notify
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
+from papersfeed.utils.collections.utils import __get_collection_user_count
 from papersfeed.models.users.user import User
 from papersfeed.models.users.user_follow import UserFollow
+from papersfeed.models.collections.collection import Collection
+from papersfeed.models.collections.collection_user import CollectionUser, COLLECTION_USER_TYPE
 
 
 def select_session(args):
@@ -232,9 +235,53 @@ def select_user_search(args):
     # Search Keyword
     keyword = args[constants.TEXT]
 
+    # Filter Query
+    filter_query = Q(username__icontains=keyword)
+
+    # Users
+    users, _, _ = __get_users(filter_query, request_user, None)
+
+    return users
+
+
+def select_user_following(args):
+    """Select Users User is Following"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Requested User ID
+    requested_user_id = args[constants.ID]
+
     # User Ids
-    user_ids = User.objects.filter(Q(username__icontains=keyword)) \
-        .values_list('id', flat=True)
+    user_ids = UserFollow.objects.filter(following_user=requested_user_id).values_list('followed_user', flat=True)
+
+    # Filter Query
+    filter_query = Q(id__in=user_ids)
+
+    # Users
+    users, _, _ = __get_users(filter_query, request_user, None)
+
+    return users
+
+
+def select_user_followed(args):
+    """Select User’s Followers"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Requested User ID
+    requested_user_id = args[constants.ID]
+
+    # User Ids
+    user_ids = UserFollow.objects.filter(followed_user=requested_user_id).values_list('following_user', flat=True)
 
     # Filter Query
     filter_query = Q(id__in=user_ids)
@@ -248,6 +295,199 @@ def select_user_search(args):
 def get_users(filter_query, request_user, count):
     """Public Get Users"""
     return __get_users(filter_query, request_user, count)
+
+
+def insert_follow(args):
+    """Insert Follow"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Followed User Id
+    followed_user_id = int(args[constants.ID])
+
+    # Following User
+    request_user = args[constants.USER]
+    following_user_id = request_user.id
+
+    # Self Follow
+    if followed_user_id == following_user_id:
+        raise ApiError(constants.UNPROCESSABLE_ENTITY)
+
+    # If Not Already Following, Create One
+    if not UserFollow.objects.filter(following_user_id=following_user_id, followed_user_id=followed_user_id).exists():
+        userfollow = UserFollow(following_user_id=following_user_id, followed_user_id=followed_user_id)
+        userfollow.save()
+
+        followed_user = User.objects.get(id=followed_user_id)
+
+        notify.send(
+            request_user,
+            recipient=[followed_user],
+            verb='started following you',
+            action_object=userfollow,
+            target=followed_user
+        )
+
+    follow_counts = __get_follower_count([followed_user_id], 'followed_user_id')
+    return {constants.FOLLOWER: follow_counts[followed_user_id] if followed_user_id in follow_counts else 0}
+
+
+def remove_follow(args):
+    """Remove Follow"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Followed User Id
+    followed_user_id = int(args[constants.ID])
+
+    # Following User
+    following_user_id = args[constants.USER].id
+
+    # Delete Existing Follow
+    UserFollow.objects.filter(following_user_id=following_user_id, followed_user_id=followed_user_id).delete()
+
+    follow_counts = __get_follower_count([followed_user_id], 'followed_user_id')
+    return {constants.FOLLOWER: follow_counts[followed_user_id] if followed_user_id in follow_counts else 0}
+
+
+def select_user_collection(args):
+    """Get Users of the given Collection"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    collection_id = args[constants.ID]
+
+    request_user = args[constants.USER]
+
+    # Members(including owner) Of Collections
+    collection_members = CollectionUser.objects.filter(collection_id=collection_id)
+
+    # Member Ids
+    member_ids = [collection_member.user_id for collection_member in collection_members]
+    member_ids = list(set(member_ids))
+
+    # Get Members
+    members, _, _ = __get_users(Q(id__in=member_ids), request_user, None)
+
+    return members
+
+
+def insert_user_collection(args):
+    """Add Users(members) of the given Collection"""
+    is_parameter_exists([
+        constants.ID, constants.USER_IDS
+    ], args)
+
+    collection_id = int(args[constants.ID])
+    user_ids = args[constants.USER_IDS]
+
+    request_user = args[constants.USER]
+
+    # Check Collection Id
+    if not Collection.objects.filter(id=collection_id).exists():
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    # if request_user is not owner, then raise AUTH_ERROR
+    collection_user = CollectionUser.objects.get(collection_id=collection_id, user_id=request_user.id)
+    if collection_user.type != COLLECTION_USER_TYPE[0]:
+        raise ApiError(constants.AUTH_ERROR)
+
+    # Self Add
+    if request_user.id in user_ids:
+        raise ApiError(constants.UNPROCESSABLE_ENTITY)
+
+    # Add Users to Collection
+    for user_id in user_ids:
+        CollectionUser.objects.update_or_create(
+            collection_id=collection_id,
+            user_id=user_id,
+            type=COLLECTION_USER_TYPE[1], # member, not owner
+        )
+
+    # Get the number of Members(including owner) Of Collections
+    user_counts = __get_collection_user_count([collection_id], 'collection_id')
+    return {constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0}
+
+
+@transaction.atomic
+def update_user_collection(args):
+    """Transfer ownership of the Collection to the User"""
+    is_parameter_exists([
+        constants.ID, constants.USER_ID
+    ], args)
+
+    collection_id = int(args[constants.ID])
+    user_id = args[constants.USER_ID]
+
+    request_user = args[constants.USER]
+
+    # Revoke ownership from request_user
+    try:
+        collection_user = CollectionUser.objects.get(collection_id=collection_id, user_id=request_user.id)
+    except ObjectDoesNotExist:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    # if request_user is not owner, then raise AUTH_ERROR
+    if collection_user.type != COLLECTION_USER_TYPE[0]:
+        raise ApiError(constants.AUTH_ERROR)
+
+    collection_user.type = COLLECTION_USER_TYPE[1] # change to member
+    collection_user.save()
+
+    # Grant ownership to the user whose id is user_id
+    try:
+        collection_user = CollectionUser.objects.get(collection_id=collection_id, user_id=user_id)
+    except ObjectDoesNotExist:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    collection_user.type = COLLECTION_USER_TYPE[0] # change to owner
+    collection_user.save()
+
+
+def remove_user_collection(args):
+    """Remove the User(s) from the Collection"""
+    is_parameter_exists([
+        constants.ID, constants.USER_IDS
+    ], args)
+
+    collection_id = int(args[constants.ID])
+    # user_id = args[constants.USER_ID]
+    user_ids = args[constants.USER_IDS]
+
+    request_user = args[constants.USER]
+
+    # Check Collection Id
+    if not Collection.objects.filter(id=collection_id).exists():
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    # if request_user is not owner, then raise AUTH_ERROR
+    collection_user = CollectionUser.objects.get(collection_id=collection_id, user_id=request_user.id)
+    if collection_user.type != COLLECTION_USER_TYPE[0]:
+        raise ApiError(constants.AUTH_ERROR)
+
+    # the owner cannot delete himself or herself
+    # if the owner want to leave a collection, he or she must transfer it to other user
+    # or deleting the collection would be a solution
+    if request_user.id in user_ids:
+        raise ApiError(constants.UNPROCESSABLE_ENTITY)
+    # original codes
+    # user_counts = __get_collection_user_count([collection_id], 'collection_id')
+    # user_count = user_counts[collection_id] if collection_id in user_counts else 0
+
+    # # if there are more than two members, owner can't just leave
+    # if user_count > 1 and user_id == request_user.id:
+    #     raise ApiError(constants.UNPROCESSABLE_ENTITY)
+
+    # FIXME : there may better way to delete multiple users
+    for user_id in user_ids:
+        CollectionUser.objects.filter(user_id=user_id, collection_id=collection_id).delete()
+
+    # Get the number of Members(including owner) Of Collections
+    user_counts = __get_collection_user_count([collection_id], 'collection_id')
+    return {constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0}
 
 
 def __get_users(filter_query, request_user, count):
@@ -304,61 +544,6 @@ def __pack_users(users, request_user):
         packed.append(packed_user)
 
     return packed
-
-
-def insert_follow(args):
-    """Insert Follow"""
-    is_parameter_exists([
-        constants.ID
-    ], args)
-
-    # Followed User Id
-    followed_user_id = int(args[constants.ID])
-
-    # Following User
-    request_user = args[constants.USER]
-    following_user_id = request_user.id
-
-    # Self Follow
-    if followed_user_id == following_user_id:
-        raise ApiError(constants.PARAMETER_ERROR)
-
-    # If Not Already Following, Create One
-    if not UserFollow.objects.filter(following_user_id=following_user_id, followed_user_id=followed_user_id).exists():
-        userfollow = UserFollow(following_user_id=following_user_id, followed_user_id=followed_user_id)
-        userfollow.save()
-
-        followed_user = User.objects.get(id=followed_user_id)
-
-        notify.send(
-            request_user,
-            recipient=[followed_user],
-            verb='started following you',
-            action_object=userfollow,
-            target=followed_user
-        )
-
-    follow_counts = __get_follower_count([followed_user_id], 'followed_user_id')
-    return {constants.FOLLOWER: follow_counts[followed_user_id] if followed_user_id in follow_counts else 0}
-
-
-def remove_follow(args):
-    """Remove Follow"""
-    is_parameter_exists([
-        constants.ID
-    ], args)
-
-    # Followed User Id
-    followed_user_id = int(args[constants.ID])
-
-    # Following User
-    following_user_id = args[constants.USER].id
-
-    # Delete Existing Follow
-    UserFollow.objects.filter(following_user_id=following_user_id, followed_user_id=followed_user_id).delete()
-
-    follow_counts = __get_follower_count([followed_user_id], 'followed_user_id')
-    return {constants.FOLLOWER: follow_counts[followed_user_id] if followed_user_id in follow_counts else 0}
 
 
 def __is_following(outer_ref, request_user):
