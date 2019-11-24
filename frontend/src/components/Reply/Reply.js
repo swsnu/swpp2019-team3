@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import {
     Modal, FormControl, Button,
 } from "react-bootstrap";
-// d
+
 import "./Reply.css";
 import SVG from "../svg";
 
