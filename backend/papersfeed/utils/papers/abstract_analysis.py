@@ -27,8 +27,8 @@ def get_key_phrases(documents):
     if response.status_code != 200:
         print("[Text Analytics API] error code {}".format(response.status_code))
         return None
-    else:
-        return response.json()
+
+    return response.json()
 
 if __name__ == '__main__':
     # pylint: disable=invalid-name
