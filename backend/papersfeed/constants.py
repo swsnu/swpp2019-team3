@@ -24,6 +24,7 @@ REQUEST = 'request'
 LIKED = 'liked'
 LIKES = 'likes'
 TYPE = 'type'
+PAGE_NUMBER = 'page_number'
 
 # User
 USER = 'user'

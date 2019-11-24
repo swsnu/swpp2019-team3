@@ -247,7 +247,8 @@ def select_user_search(args):
 def select_user_following(args):
     """Select Users User is Following"""
     is_parameter_exists([
-        constants.ID
+        constants.ID,
+        constants.PAGE_NUMBER
     ], args)
 
     # Request User
@@ -256,8 +257,14 @@ def select_user_following(args):
     # Requested User ID
     requested_user_id = args[constants.ID]
 
+    # Page Number
+    page_number = args[constants.PAGE_NUMBER]
+
+    # Following QuerySet
+    queryset = UserFollow.objects.filter(following_user=requested_user_id).values_list('followed_user', flat=True)
+
     # User Ids
-    user_ids = UserFollow.objects.filter(following_user=requested_user_id).values_list('followed_user', flat=True)
+    user_ids = get_results_from_queryset(queryset, 10, page_number)
 
     # Filter Query
     filter_query = Q(id__in=user_ids)
@@ -271,7 +278,8 @@ def select_user_following(args):
 def select_user_followed(args):
     """Select User’s Followers"""
     is_parameter_exists([
-        constants.ID
+        constants.ID,
+        constants.PAGE_NUMBER
     ], args)
 
     # Request User
@@ -280,8 +288,14 @@ def select_user_followed(args):
     # Requested User ID
     requested_user_id = args[constants.ID]
 
+    # Page Number
+    page_number = args[constants.PAGE_NUMBER]
+
+    # Follower QuerySet
+    queryset = UserFollow.objects.filter(followed_user=requested_user_id).values_list('following_user', flat=True)
+
     # User Ids
-    user_ids = UserFollow.objects.filter(followed_user=requested_user_id).values_list('following_user', flat=True)
+    user_ids = get_results_from_queryset(queryset, 10, page_number)
 
     # Filter Query
     filter_query = Q(id__in=user_ids)

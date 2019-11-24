@@ -339,7 +339,8 @@ class UserTestCase(TestCase):
         # My Following User count : 0
         response = client.get('/api/user/following',
                               data={
-                                  constants.ID: swpp_user_id
+                                  constants.ID: swpp_user_id,
+                                  constants.PAGE_NUMBER: 1
                               },
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
@@ -349,7 +350,8 @@ class UserTestCase(TestCase):
         UserFollow.objects.create(following_user_id=swpp_user_id, followed_user_id=swpp2_user_id)
         response = client.get('/api/user/following',
                               data={
-                                  constants.ID: swpp_user_id
+                                  constants.ID: swpp_user_id,
+                                  constants.PAGE_NUMBER: 1
                               },
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
@@ -359,7 +361,8 @@ class UserTestCase(TestCase):
         UserFollow.objects.create(following_user_id=swpp_user_id, followed_user_id=swpp3_user_id)
         response = client.get('/api/user/following',
                               data={
-                                  constants.ID: swpp_user_id
+                                  constants.ID: swpp_user_id,
+                                  constants.PAGE_NUMBER: 1
                               },
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
@@ -368,7 +371,8 @@ class UserTestCase(TestCase):
         # Other's Following User count : 0
         response = client.get('/api/user/following',
                               data={
-                                  constants.ID: swpp2_user_id
+                                  constants.ID: swpp2_user_id,
+                                  constants.PAGE_NUMBER: 1
                               },
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
@@ -378,7 +382,8 @@ class UserTestCase(TestCase):
         UserFollow.objects.create(following_user_id=swpp2_user_id, followed_user_id=swpp_user_id)
         response = client.get('/api/user/following',
                               data={
-                                  constants.ID: swpp2_user_id
+                                  constants.ID: swpp2_user_id,
+                                  constants.PAGE_NUMBER: 1
                               },
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
@@ -403,7 +408,8 @@ class UserTestCase(TestCase):
         # My Followed User count : 0
         response = client.get('/api/user/followed',
                               data={
-                                  constants.ID: swpp_user_id
+                                  constants.ID: swpp_user_id,
+                                  constants.PAGE_NUMBER: 1
                               },
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
@@ -413,7 +419,8 @@ class UserTestCase(TestCase):
         UserFollow.objects.create(following_user_id=swpp2_user_id, followed_user_id=swpp_user_id)
         response = client.get('/api/user/followed',
                               data={
-                                  constants.ID: swpp_user_id
+                                  constants.ID: swpp_user_id,
+                                  constants.PAGE_NUMBER: 1
                               },
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
@@ -423,7 +430,8 @@ class UserTestCase(TestCase):
         UserFollow.objects.create(following_user_id=swpp3_user_id, followed_user_id=swpp_user_id)
         response = client.get('/api/user/followed',
                               data={
-                                  constants.ID: swpp_user_id
+                                  constants.ID: swpp_user_id,
+                                  constants.PAGE_NUMBER: 1
                               },
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
@@ -432,7 +440,8 @@ class UserTestCase(TestCase):
         # Other's Followed User count : 0
         response = client.get('/api/user/followed',
                               data={
-                                  constants.ID: swpp2_user_id
+                                  constants.ID: swpp2_user_id,
+                                  constants.PAGE_NUMBER: 1
                               },
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
@@ -442,7 +451,8 @@ class UserTestCase(TestCase):
         UserFollow.objects.create(following_user_id=swpp_user_id, followed_user_id=swpp2_user_id)
         response = client.get('/api/user/followed',
                               data={
-                                  constants.ID: swpp2_user_id
+                                  constants.ID: swpp2_user_id,
+                                  constants.PAGE_NUMBER: 1
                               },
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
