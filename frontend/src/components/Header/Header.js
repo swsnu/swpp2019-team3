@@ -128,7 +128,7 @@ class Header extends Component {
                         <Form.Control
                           className="search-input"
                           type="text"
-                          placeholder="Search"
+                          placeholder="Search (by clicking 'Search' button)"
                           bsPrefix="search-input"
                           value={this.state.searchWord}
                           onChange={this.handleChange}
