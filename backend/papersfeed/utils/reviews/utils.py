@@ -182,9 +182,18 @@ def select_review_user(args):
     # Request Uer
     request_user = args[constants.USER]
 
-    reviews, _, _ = __get_reviews(Q(user_id=user_id), request_user, None)
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
 
-    return reviews
+    # Reviews Queryset
+    queryset = Review.objects.filter(Q(user_id=user_id)).values_list('id', flat=True)
+
+    # Review Ids
+    review_ids = get_results_from_queryset(queryset, 10, page_number)
+
+    reviews, _, is_finished = __get_reviews(Q(id__in=review_ids), request_user, 10)
+
+    return reviews, page_number, is_finished
 
 
 def select_review_like(args):

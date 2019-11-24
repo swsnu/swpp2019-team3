@@ -125,7 +125,10 @@ def get_review_paper(args):
 
 def get_review_user(args):
     """Get Review User"""
-    return {constants.REVIEWS: reviews_utils.select_review_user(args)}
+    reviews, page_number, is_finished = reviews_utils.select_review_user(args)
+    return {constants.REVIEWS: reviews,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
 
 
 def get_paper_search(args):
