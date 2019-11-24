@@ -395,7 +395,7 @@ class UserTestCase(TestCase):
                        constants.PASSWORD: 'iluvswpp1234'
                    },
                    content_type='application/json')
-     
+
         swpp_user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
         swpp2_user_id = User.objects.filter(email='swpp2@snu.ac.kr').first().id
         swpp3_user_id = User.objects.filter(email='swpp3@snu.ac.kr').first().id
@@ -493,7 +493,7 @@ class UserTestCase(TestCase):
                        constants.PASSWORD: 'iluvswpp1234'
                    },
                    content_type='application/json')
-        
+
         # Make Collection
         client.post('/api/collection',
                     json.dumps({
