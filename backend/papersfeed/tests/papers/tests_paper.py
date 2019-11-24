@@ -116,6 +116,8 @@ class PaperTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
     def test_put_paper_collection(self):
         """ PUT PAPER TO COLLECTION OR REMOVE PAPRE FROM COLLECTION"""
@@ -141,6 +143,7 @@ class PaperTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+
 
     def test_paper_like(self):
         """ PAPER LIKE """

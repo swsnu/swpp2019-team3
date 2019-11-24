@@ -90,7 +90,10 @@ def get_paper(args):
 
 def get_paper_collection(args):
     """Get Paper Collection"""
-    return {constants.PAPERS: papers_utils.select_paper_collection(args)}
+    papers, page_number, is_finished = papers_utils.select_paper_collection(args)
+    return {constants.PAPERS: papers,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
 
 
 def put_paper_collection(args):

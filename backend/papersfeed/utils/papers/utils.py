@@ -64,16 +64,22 @@ def select_paper_collection(args):
     # Collection Id
     collection_id = args[constants.ID]
 
-    # Papers
-    collection_papers = CollectionPaper.objects.filter(
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Papers Queryset
+    queryset = CollectionPaper.objects.filter(
         collection_id=collection_id
     )
 
+    # Papers
+    collection_papers = get_results_from_queryset(queryset, 10, page_number)
+
     paper_ids = [collection_paper.paper_id for collection_paper in collection_papers]
 
-    papers, _, _ = __get_papers(Q(id__in=paper_ids), request_user, None)
+    papers, _, is_finished = __get_papers(Q(id__in=paper_ids), request_user, 10)
 
-    return papers
+    return papers, page_number, is_finished
 
 
 # pylint: disable=too-many-locals
