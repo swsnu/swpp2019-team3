@@ -64,18 +64,25 @@ def select_paper_collection(args):
     # Collection Id
     collection_id = args[constants.ID]
 
-    # Papers
-    collection_papers = CollectionPaper.objects.filter(
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Papers Queryset
+    queryset = CollectionPaper.objects.filter(
         collection_id=collection_id
     )
 
+    # Papers
+    collection_papers = get_results_from_queryset(queryset, 10, page_number)
+
     paper_ids = [collection_paper.paper_id for collection_paper in collection_papers]
 
-    papers, _, _ = __get_papers(Q(id__in=paper_ids), request_user, None)
+    papers, _, is_finished = __get_papers(Q(id__in=paper_ids), request_user, 10)
 
-    return papers
+    return papers, page_number, is_finished
 
 
+# pylint: disable=too-many-locals
 def select_paper_search(args):
     """Select Paper Search"""
     is_parameter_exists([
@@ -88,17 +95,23 @@ def select_paper_search(args):
     # Search Keyword
     keyword = args[constants.TEXT]
 
-    # Paper Ids
-    paper_ids = Paper.objects.filter(Q(title__icontains=keyword) | Q(abstract__icontains=keyword)) \
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Papers Queryset
+    queryset = Paper.objects.filter(Q(title__icontains=keyword) | Q(abstract__icontains=keyword)) \
         .values_list('id', flat=True)
 
+    # Paper Ids
+    paper_ids = get_results_from_queryset(queryset, 20, page_number)
+
     # if there is no result in our DB
-    if paper_ids.count() == 0:
+    if paper_ids.object_list.count() == 0:
         # exploit arXiv
         try:
             start = 0
             while True:
-                print("--- Sent a request for searching in arXiv ({}~{})".format(start, start+ARXIV_COUNT-1))
+                print("[arXiv API] searching ({}~{})".format(start, start+ARXIV_COUNT-1))
                 arxiv_url = "http://export.arxiv.org/api/query"
                 query = "?search_query=" + urllib.parse.quote(keyword) \
                     + "&start=" + str(start) + "&max_results=" + str(ARXIV_COUNT)
@@ -110,8 +123,10 @@ def select_paper_search(args):
                     if 'entry' in response_dict and response_dict['entry']:
                         paper_ids = __parse_and_save_arxiv_info(response_dict)
                     else: # if 'entry' doesn't exist or it's the end of results
+                        print("[arXiv API] more entries don't exist")
                         break
                 else:
+                    print("[arXiv API] error code {}".format(response.status_code))
                     break
                 start += ARXIV_COUNT # continue pagination
         except requests.exceptions.RequestException as exception:
@@ -121,10 +136,10 @@ def select_paper_search(args):
     filter_query = Q(id__in=paper_ids)
 
     # Papers
-    papers, _, _ = __get_papers(filter_query, request_user, None)
+    papers, _, is_finished = __get_papers(filter_query, request_user, 20)
 
-    return papers
-
+    return papers, page_number, is_finished
+# pylint: enable=too-many-locals
 
 def select_paper_like(args):
     """Select Paper Like"""
@@ -132,16 +147,22 @@ def select_paper_like(args):
     # Request User
     request_user = args[constants.USER]
 
-    # Paper Ids
-    paper_ids = PaperLike.objects.filter(Q(user_id=request_user.id)).order_by(
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Papers Queryset
+    queryset = PaperLike.objects.filter(Q(user_id=request_user.id)).order_by(
         '-creation_date').values_list('paper_id', flat=True)
+
+    # Paper Ids
+    paper_ids = get_results_from_queryset(queryset, 10, page_number)
 
     # need to maintain the order
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(paper_ids)])
 
     # Papers
-    papers, _, _ = __get_papers(Q(id__in=paper_ids), request_user, None, preserved)
-    return papers
+    papers, _, is_finished = __get_papers(Q(id__in=paper_ids), request_user, 10, preserved)
+    return papers, page_number, is_finished
 
 
 def get_papers(filter_query, request_user, count):
@@ -606,7 +627,6 @@ def __extract_keywords_from_abstract(abstracts):
     """for every abstract, extract keywords by calling 'get_key_phrases'"""
     doc_list = []
     request_len = 0
-    request_cnt = 0
     for paper_key in abstracts:
         request_len += min(len(abstracts[paper_key]), MAX_DOC_SIZE)
 
@@ -614,8 +634,8 @@ def __extract_keywords_from_abstract(abstracts):
         if request_len >= MAX_REQ_SIZE:
             documents = {"documents": doc_list}
             key_phrases = get_key_phrases(documents)
-            request_cnt += 1
-            __process_key_phrases(key_phrases, request_cnt)
+            if key_phrases:
+                __process_key_phrases(key_phrases)
 
             doc_list = []
             request_len = min(len(abstracts[paper_key]), MAX_DOC_SIZE)
@@ -626,13 +646,11 @@ def __extract_keywords_from_abstract(abstracts):
     if doc_list:
         documents = {"documents": doc_list}
         key_phrases = get_key_phrases(documents)
-        request_cnt += 1
-        __process_key_phrases(key_phrases, request_cnt)
-
-    print("--- Sent {} requests for extracting keywords".format(request_cnt))
+        if key_phrases:
+            __process_key_phrases(key_phrases)
 
 
-def __process_key_phrases(key_phrases, request_cnt):
+def __process_key_phrases(key_phrases):
     """ process result of response and save them in DB
         To check struct of response, refer to
         https://koreacentral.dev.cognitive.microsoft.com/docs/services/TextAnalytics-v2-1/operations/56f30ceeeda5650db055a3c6
@@ -640,7 +658,7 @@ def __process_key_phrases(key_phrases, request_cnt):
 
     # print errors if exist
     if key_phrases['errors']:
-        print("- Request {} error while extracting keywords".format(request_cnt))
+        print("[Text Analytics API] there were errors")
         pprint(key_phrases['errors'])
 
     # save information of mapping keyword to paper (abstract)

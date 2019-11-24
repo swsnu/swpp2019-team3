@@ -133,6 +133,8 @@ class CollectionTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         collection_id = Collection.objects.filter(title='SWPP Papers').first().id
         self.assertJSONEqual(response.content, {
@@ -148,7 +150,9 @@ class CollectionTestCase(TestCase):
                     constants.LIKES: 0,
                     constants.REPLIES: 0,
                 }
-            }]
+            }],
+            constants.PAGE_NUMBER: 1,
+            constants.IS_FINISHED: True
         })
 
     def test_get_collections_of_user_with_paper(self):
@@ -174,6 +178,9 @@ class CollectionTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
+
         collection_id = Collection.objects.filter(title='SWPP Papers').first().id
         self.assertJSONEqual(response.content, {
             constants.COLLECTIONS: [{
@@ -188,7 +195,9 @@ class CollectionTestCase(TestCase):
                     constants.LIKES: 0,
                     constants.REPLIES: 0,
                 }
-            }]
+            }],
+            constants.PAGE_NUMBER: 1,
+            constants.IS_FINISHED: True
         })
 
     def test_delete_collection(self):
@@ -275,6 +284,8 @@ class CollectionTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 1)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         # Search with Keyword 'keyword'
         response = client.get('/api/collection/search',
@@ -284,6 +295,8 @@ class CollectionTestCase(TestCase):
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 3)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         # Search with Keyword 'blahblah'
         response = client.get('/api/collection/search',
@@ -293,6 +306,8 @@ class CollectionTestCase(TestCase):
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 0)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
     def test_collection_like(self):
         """ COLLECTION LIKE """
@@ -331,6 +346,8 @@ class CollectionTestCase(TestCase):
         # Get Collections the user liked
         response = client.get('/api/collection/like')
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         collections = json.loads(response.content)['collections']
         self.assertEqual(len(collections), 2)

@@ -26,6 +26,8 @@ describe("Paper reducer", () => {
             unlikePaperStatus: paperStatus.NONE,
             unlikeCount: 0,
             selectedPaper: {},
+            getLikedPapersStatus: paperStatus.NONE,
+            likedPapers: [],
         });
     });
 
@@ -94,5 +96,21 @@ describe("Paper reducer", () => {
             target: stubError,
         });
         expect(newState.searchPaperStatus).toEqual(paperStatus.FAILURE);
+    });
+
+    it("should handle getPaperLike success", () => {
+        const newState = reducer(undefined, {
+            type: paperConstants.GET_PAPER_LIKE_SUCCESS,
+            target: [],
+        });
+        expect(newState.getLikedPapersStatus).toEqual(paperStatus.SUCCESS);
+    });
+
+    it("should handle getPaperLike failure", () => {
+        const newState = reducer(undefined, {
+            type: paperConstants.GET_PAPER_LIKE_FAILURE,
+            target: stubError,
+        });
+        expect(newState.getLikedPapersStatus).toEqual(paperStatus.FAILURE);
     });
 });

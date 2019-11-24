@@ -116,6 +116,8 @@ class PaperTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
     def test_put_paper_collection(self):
         """ PUT PAPER TO COLLECTION OR REMOVE PAPRE FROM COLLECTION"""
@@ -141,6 +143,7 @@ class PaperTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+
 
     def test_paper_like(self):
         """ PAPER LIKE """
@@ -199,6 +202,8 @@ class PaperTestCase(TestCase):
         # Get Papers the user liked
         response = client.get('/api/paper/like')
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         papers = json.loads(response.content)['papers']
         self.assertEqual(len(papers), 3)
@@ -260,6 +265,8 @@ class PaperTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 2)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         # Search with Keyword 'AI'
         response = client.get('/api/paper/search',
@@ -270,6 +277,8 @@ class PaperTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         # Search with Keyword 'Computer'
         response = client.get('/api/paper/search',
@@ -280,6 +289,8 @@ class PaperTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
     @patch('requests.post')
     @patch('requests.get')
@@ -343,6 +354,8 @@ class PaperTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         # there was one result from arXiv, so our search API's response should have one paper result, too
         self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
 # pylint: disable=too-few-public-methods
 class MockResponse:

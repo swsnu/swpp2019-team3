@@ -294,3 +294,18 @@ const searchCollectionFailure = (error) => ({
 export const searchCollection = (searchWord) => (dispatch) => axios.get("/api/collection/search", { params: searchWord })
     .then((res) => dispatch(searchCollectionSuccess(res.data)))
     .catch((err) => dispatch(searchCollectionFailure(err)));
+
+// Get Collection Like
+const getCollectionLikeSuccess = (collections) => ({
+    type: collectionConstants.GET_COLLECTION_LIKE_SUCCESS,
+    target: collections.collections,
+});
+
+const getCollectionLikeFailure = (error) => ({
+    type: collectionConstants.GET_COLLECTION_LIKE_FAILURE,
+    target: error,
+});
+
+export const getCollectionLike = () => (dispatch) => axios.get("/api/collection/like")
+    .then((res) => dispatch(getCollectionLikeSuccess(res.data)))
+    .catch((err) => dispatch(getCollectionLikeFailure(err)));

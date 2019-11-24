@@ -331,4 +331,20 @@ describe("Collection reducer", () => {
         });
         expect(newState.list.status).toEqual(collectionStatus.FAILURE);
     });
+
+    it("should handle getCollectionLike success", () => {
+        const newState = reducer(undefined, {
+            type: collectionConstants.GET_COLLECTION_LIKE_SUCCESS,
+            target: [],
+        });
+        expect(newState.list.status).toEqual(collectionStatus.SUCCESS);
+    });
+
+    it("should handle getCollectionLike failure", () => {
+        const newState = reducer(undefined, {
+            type: collectionConstants.GET_COLLECTION_LIKE_FAILURE,
+            target: stubError,
+        });
+        expect(newState.list.status).toEqual(collectionStatus.FAILURE);
+    });
 });

@@ -2,6 +2,15 @@
     background: rgb(242,243,247);
     margin-left: 18%;
     display: flex;
+    min-height: 1000px;
+}
+
+.feeds #tmp-message{
+    margin-top: 20%;
+    margin-left: 10%;
+    font-size: 200%;
+    color: gray;
+    width: 100000%;
 }
 
 .feeds .board {

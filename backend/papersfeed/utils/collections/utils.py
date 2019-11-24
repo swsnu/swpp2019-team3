@@ -166,8 +166,14 @@ def select_collection_user(args):
     # User Id
     user_id = args[constants.ID]
 
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Collections Queryset
+    queryset = CollectionUser.objects.filter(user_id=user_id).values_list('collection_id', flat=True)
+
     # User's Collections
-    collection_ids = CollectionUser.objects.filter(user_id=user_id).values_list('collection_id', flat=True)
+    collection_ids = get_results_from_queryset(queryset, 10, page_number)
 
     # Filter Query
     filter_query = Q(id__in=collection_ids)
@@ -177,9 +183,9 @@ def select_collection_user(args):
         paper_id = args[constants.PAPER]
 
     # Collections
-    collections, _, _ = __get_collections(filter_query, request_user, None, paper_id=paper_id)
+    collections, _, is_finished = __get_collections(filter_query, request_user, 10, paper_id=paper_id)
 
-    return collections
+    return collections, page_number, is_finished
 
 
 def select_collection_search(args):
@@ -194,13 +200,20 @@ def select_collection_search(args):
     # Search Keyword
     keyword = args[constants.TEXT]
 
-    # Filter Query
-    filter_query = Q(title__icontains=keyword) | Q(text__icontains=keyword)
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Collections Queryset
+    queryset = Collection.objects.filter(Q(title__icontains=keyword) | Q(text__icontains=keyword))\
+        .values_list('id', flat=True)
+
+    # Collection Ids
+    collection_ids = get_results_from_queryset(queryset, 10, page_number)
 
     # Collections
-    collections, _, _ = __get_collections(filter_query, request_user, None)
+    collections, _, is_finished = __get_collections(Q(id__in=collection_ids), request_user, 10)
 
-    return collections
+    return collections, page_number, is_finished
 
 
 def select_collection_like(args):
@@ -209,16 +222,24 @@ def select_collection_like(args):
     # Request User
     request_user = args[constants.USER]
 
-    # Collection Ids
-    collection_ids = CollectionLike.objects.filter(Q(user_id=request_user.id)).order_by(
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Collections Queryset
+
+    queryset = CollectionLike.objects.filter(Q(user_id=request_user.id)).order_by(
         '-creation_date').values_list('collection_id', flat=True)
+
+    # Collection Ids
+    collection_ids = get_results_from_queryset(queryset, 10, page_number)
 
     # need to maintain the order
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(collection_ids)])
 
     # Collections
-    collections, _, _ = __get_collections(Q(id__in=collection_ids), request_user, None, order_by=preserved)
-    return collections
+    collections, _, is_finished = __get_collections(Q(id__in=collection_ids), request_user, 10, order_by=preserved)
+
+    return collections, page_number, is_finished
 
 
 def update_paper_collection(args):

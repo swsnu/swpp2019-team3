@@ -69,3 +69,18 @@ const searchPaperFailure = (error) => ({
 export const searchPaper = (searchWord) => (dispatch) => axios.get("/api/paper/search", { params: searchWord })
     .then((res) => dispatch(searchPaperSuccess(res.data)))
     .catch((err) => dispatch(searchPaperFailure(err)));
+
+// Get Ppaer Like
+const getPaperLikeSuccess = (papers) => ({
+    type: paperConstants.GET_PAPER_LIKE_SUCCESS,
+    target: papers.papers,
+});
+
+const getPaperLikeFailure = (error) => ({
+    type: paperConstants.GET_PAPER_LIKE_FAILURE,
+    target: error,
+});
+
+export const getPaperLike = () => (dispatch) => axios.get("/api/paper/like")
+    .then((res) => dispatch(getPaperLikeSuccess(res.data)))
+    .catch((err) => dispatch(getPaperLikeFailure(err)));

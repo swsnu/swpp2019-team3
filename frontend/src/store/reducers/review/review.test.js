@@ -217,4 +217,22 @@ describe("Review reducer", () => {
         });
         expect(newState.unlike.status).toBe(reviewStatus.FAILURE);
     });
+
+    it("should return get_review_like", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.GET_REVIEW_LIKE_SUCCESS,
+            target: stubReview,
+        });
+        expect(newState.list.status).toBe(reviewStatus.SUCCESS);
+        expect(newState.list.list).toBe(stubReview);
+    });
+
+    it("should not return get_review_like", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.GET_REVIEW_LIKE_FAILURE,
+            target: 204,
+        });
+        expect(newState.list.status).toBe(reviewStatus.FAILURE);
+        expect(newState.list.error).toBe(204);
+    });
 });

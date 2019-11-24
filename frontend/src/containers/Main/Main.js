@@ -10,54 +10,7 @@ class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            feeds: [{
-                type: "Collection",
-                source: "made",
-                id: 2,
-                title: "Papers for tasty cat cans",
-                user: "Canpicker",
-                paperCount: 3,
-                replyCount: 3,
-                owner: "Ddaeggeol",
-                likeCount: 15,
-            }, {
-                type: "Review",
-                source: "liked",
-                id: 2,
-                title: "What computer-lovers should read",
-                user: "Goyangineun Yaong",
-                author: "Alpha",
-                date: "2019-11-05",
-                likeCount: 14,
-                replyCount: 2,
-            },
-            {
-                type: "Paper",
-                source: "liked",
-                authors: [{ first_name: "Espitau", last_name: "Thomas" },
-                    { first_name: "Joux", last_name: "Antonie" }],
-                id: 3,
-                paperId: 3,
-                date: "2019-11-06",
-                title: "CERTIFIED LATTICE REDUCTION",
-                user: "Ha",
-                likeCount: 0,
-                reviewCount: 1,
-                keywords: [{ name: "Combinational optimization Problems", type: "author" },
-                    { name: "Facility Layout Problem", type: "author" },
-                    { name: "Quadratic Assignment Problem", type: "author" }],
-            },
-            {
-                type: "Review",
-                source: "wrote",
-                id: 4,
-                title: "Best way to go to sleep",
-                user: "Uluk",
-                author: "Girin",
-                date: "2019-10-31",
-                likeCount: 75,
-                replyCount: 12,
-            }],
+            feeds: [],
         };
 
         this.feedMaker = this.feedMaker.bind(this);
@@ -116,6 +69,7 @@ class Main extends Component {
     }
 
     render() {
+        const tmpMessage = "Welcome to PapersFeed. Subscription and Recommendation system will be ready soon!";
         const feedsLeft = this.state.feeds.filter((x) => this.state.feeds.indexOf(x) % 2 === 0)
             .map((feed) => this.feedMaker(feed));
         const feedsRight = this.state.feeds.filter((x) => this.state.feeds.indexOf(x) % 2 === 1)
@@ -124,6 +78,7 @@ class Main extends Component {
         return (
             <div className="main">
                 <div className="feeds">
+                    <h2 id="tmp-message">{tmpMessage}</h2>
                     <div className="board">
                         <div className="left">{feedsLeft}</div>
                         <div className="right">{feedsRight}</div>
