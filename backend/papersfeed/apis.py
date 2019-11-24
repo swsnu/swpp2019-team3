@@ -200,7 +200,10 @@ def delete_like_reply(args):
 
 def get_reply_collection(args):
     """Get reply collection"""
-    return {constants.REPLIES: replies_utils.select_reply_collection(args)}
+    replies, page_number, is_finished = replies_utils.select_reply_collection(args)
+    return {constants.REPLIES: replies,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
 
 
 def post_reply_collection(args):
