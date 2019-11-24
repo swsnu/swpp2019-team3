@@ -32,10 +32,11 @@ class Header extends Component {
             .catch(() => {});
     }
 
-    keyPressHandler = (e) => {
-        if (this.state.searchWord && e.charCode === 13) {
-            this.props.history.push(`/search=${this.state.searchWord}`);
-        }
+    keyPressHandler = () => {
+        // FIXME: For now, there is an issue that if users press enter, search APIs are called twice
+        // if (this.state.searchWord && e.charCode === 13) {
+        //    this.props.history.push(`/search=${this.state.searchWord}`);
+        // }
     };
 
     // for search input change
