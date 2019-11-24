@@ -33,12 +33,6 @@ class CollectionManage extends Component {
                         collectionName: this.props.selectedCollection.title,
                         initDescription: this.props.selectedCollection.text,
                         collectionDescription: this.props.selectedCollection.text,
-                        // collectionName: JSON.parse(JSON.stringify(
-                        //     this.props.selectedCollection.title,
-                        // )),
-                        // collectionDescription: JSON.parse(JSON.stringify(
-                        //     this.props.selectedCollection.text,
-                        // )),
                     });
                 }
             });

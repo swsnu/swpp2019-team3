@@ -90,9 +90,15 @@ describe("CollectionManage test", () => {
     });
 
     it("should render without errors", () => {
+        const spyGetCollection = jest.spyOn(collectionActions, "getCollection")
+            // eslint-disable-next-line no-unused-vars
+            .mockImplementation(() => () => new Promise((resolve, reject) => { resolve(); }));
+
         const component = mount(collectionManage);
         const wrapper = component.find(".CollectionManage");
         expect(wrapper.length).toBe(1);
+
+        expect(spyGetCollection).toHaveBeenCalledTimes(1);
     });
 
     it("should handle edit collection title and description", () => {
