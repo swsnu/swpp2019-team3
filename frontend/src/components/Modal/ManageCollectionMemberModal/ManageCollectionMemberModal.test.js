@@ -1,3 +1,5 @@
+/* eslint-disable react/button-has-type */
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
@@ -39,7 +41,23 @@ const stubInitialState = {
             error: null,
             collection: {},
             papers: [],
-            members: [],
+            members: [
+                {
+                    id: 1,
+                    username: "test1",
+                    userDesc: "asdf",
+                },
+                {
+                    id: 2,
+                    username: "test2",
+                    userDesc: "qwer",
+                },
+                {
+                    id: 3,
+                    username: "test3",
+                    userDesc: "zxcv",
+                },
+            ],
             replies: [],
         },
     },
@@ -53,6 +71,22 @@ const makeManageCollectionMemberModal = (initialState) => (
         <ManageCollectionMemberModal />
     </Provider>
 );
+
+jest.mock("../WarningModal/WarningModal", () => jest.fn((props) => (
+    <button
+      id="mockWarningButton"
+      onClick={props.clickFn}
+    />
+)));
+jest.mock("../../User/UserEntry/UserEntry", () => jest.fn((props) => (
+    <input
+      className="entryItem"
+      id="check"
+      type="checkbox"
+      checked={props.isChecked}
+      onChange={props.checkhandler}
+    />
+)));
 
 describe("InviteToCollectionModal test", () => {
     let manageCollectionMemberModal;
@@ -87,4 +121,26 @@ describe("InviteToCollectionModal test", () => {
         wrapper.simulate("click");
         expect(instance.state.isModalOpen).toBe(false);
     });
+
+    it("user entries test: should be rendered and handles checking", () => {
+        const component = mount(manageCollectionMemberModal);
+
+        // should be rendered
+        let wrapper = component.find("#modalOpenButton").hostNodes();
+        wrapper.simulate("click");
+        wrapper = component.find(".entryItem");
+        expect(wrapper.length).toBe(3);
+
+        // should handle checking
+        wrapper = component.find("#check").at(0);
+        wrapper.simulate("change", { target: { checked: true } });
+        const instance = component.find("ManageCollectionMemberModal").instance();
+        expect(instance.state.checkedUserIdList).toEqual([1]);
+    });
+
+    // it("confirmDisableCond test", () => {
+    //     const component = mount(manageCollectionMemberModal);
+
+    //     let wrapper = component.find("#modalOpenButton").hostNodes();
+    // })
 });

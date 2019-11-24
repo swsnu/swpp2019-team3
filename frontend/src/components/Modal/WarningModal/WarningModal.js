@@ -17,13 +17,13 @@ class WarningModal extends Component {
     clickConfirmHandler = () => {
         this.props.whatActionWillBeDone();
         this.setState({ isModalOpen: false });
-        if (this.props.moveAfterDone) {
-            // after the job is done, should not return, so use replace
+        // if (this.props.moveAfterDone) {
+        // after the job is done, should not return, so use replace
 
-            // FIXME: history.replace does not work propery
-            // please de-commentize below line after the problem is solved
-            // this.props.history.replace(this.props.whereToGoAfterConfirm);
-        }
+        // FIXME: history.replace does not work propery
+        // please de-commentize below line after the problem is solved
+        // this.props.history.replace(this.props.whereToGoAfterConfirm);
+        // }
     }
 
     clickCancelHandler = () => {
@@ -85,6 +85,7 @@ WarningModal.propTypes = {
     openButtonText: PropTypes.string,
     whatToWarnText: PropTypes.string,
     whatActionWillBeDone: PropTypes.func,
+    // eslint-disable-next-line react/no-unused-prop-types
     moveAfterDone: PropTypes.bool,
     // eslint-disable-next-line react/no-unused-prop-types
     whereToGoAfterConfirm: PropTypes.string,

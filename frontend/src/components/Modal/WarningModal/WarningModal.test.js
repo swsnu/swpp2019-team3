@@ -108,4 +108,16 @@ describe("WarningModal test", () => {
         // expect(mockHistory.replace).toHaveBeenCalledTimes(1);
         expect(instance.state.isModalOpen).toBe(false);
     });
+
+    // it("disableMessage test", () => {
+    //     const component = mount(createWarningModal);
+
+    //     let wrapper = component.find("#disableMessage").hostNodes();
+    //     expect(wrapper.length).toBe(0);
+
+    //     component.setProps({ disableCondition: true, disableMessage: "asdf" });
+    //     component.update();
+    //     wrapper = component.find("#disableMessage").hostNodes();
+    //     expect(wrapper.length).toBe(1);
+    // });
 });

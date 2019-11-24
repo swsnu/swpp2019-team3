@@ -581,12 +581,12 @@ describe("collectionActions", () => {
             });
     });
 
-    it("deleteMembers should handle collection_not_exist", (done) => {
+    it("deleteMembers should handle more_than_usercount", (done) => {
         const spy = jest.spyOn(axios, "delete")
             .mockImplementation(() => new Promise((_, reject) => {
                 const result = {
                     response: {
-                        status: 404,
+                        status: 422,
                         data: {},
                     },
                 };
