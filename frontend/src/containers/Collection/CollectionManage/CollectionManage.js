@@ -27,12 +27,14 @@ class CollectionManage extends Component {
                     this.props.history.push("/main");
                 } else {
                     this.setState({
-                        collectionName: JSON.parse(JSON.stringify(
-                            this.props.selectedCollection.title,
-                        )),
-                        collectionDescription: JSON.parse(JSON.stringify(
-                            this.props.selectedCollection.text,
-                        )),
+                        collectionName: this.props.selectedCollection.title,
+                        collectionDescription: this.props.selectedCollection.text,
+                        // collectionName: JSON.parse(JSON.stringify(
+                        //     this.props.selectedCollection.title,
+                        // )),
+                        // collectionDescription: JSON.parse(JSON.stringify(
+                        //     this.props.selectedCollection.text,
+                        // )),
                     });
                 }
             });
