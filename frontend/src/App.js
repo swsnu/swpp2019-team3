@@ -8,7 +8,7 @@ import { ConnectedRouter } from "connected-react-router";
 import {
     Intro, Main, SearchResult, ReviewDetail, PaperDetail, ReviewControl,
     ProfileDetail, AccountSetting, CollectionDetail, CollectionList,
-    UserList,
+    UserList, History,
 } from "./containers";
 import {
     PrivateRoute, Header, SideBar,
@@ -54,6 +54,7 @@ function App(props) {
                                   </div>
                               )}
                             />
+                            <Route path="/history" exact component={History} />
                             <Route path="/paper_id=:paper_id" exact component={PaperDetail} />
                             <Route path="/profile_id=:profile_id" exact component={ProfileDetail} />
                             <Route path="/account_setting" exact component={AccountSetting} />

@@ -39,6 +39,7 @@ class Reply extends Component {
     clickReplyEditButtonHandler() {
         this.setState({
             isModalOpen: true,
+            tempContent: this.props.content,
         });
     }
 
@@ -154,7 +155,7 @@ class Reply extends Component {
                         <Modal.Footer className="modal-footer">
                             <Button
                               onClick={this.clickConfirmButtonHandler}
-                              disabled={this.state.tempContent.length === 0}
+                              disabled={this.state.tempContent.length === 0 || this.state.tempContent === this.props.content}
                             >
                                         Confirm
                             </Button>

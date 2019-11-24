@@ -241,7 +241,7 @@ const reducer = (state = initialState, action) => {
             list: {
                 ...state.list,
                 status: collectionStatus.SUCCESS,
-                error: action.target,
+                list: action.target,
             },
         };
     case collectionConstants.GET_COLLECTION_LIKE_FAILURE:

@@ -6,6 +6,8 @@ import { Tabs, Tab } from "react-bootstrap";
 import { PaperCard, ReviewCard, CollectionCard } from "../../components";
 import { paperActions, reviewActions, collectionActions } from "../../store/actions";
 
+import "./History.css";
+
 class History extends Component {
     constructor(props) {
         super(props);
@@ -66,7 +68,7 @@ class History extends Component {
           author={card.author}
           id={card.id}
           title={card.title}
-          user={card.user}
+          user={card.user.username}
           date={card.date}
           likeCount={card.likeCount}
           replyCount={card.replyCount}
@@ -123,10 +125,10 @@ class History extends Component {
         if (this.state.collections.length > 0) {
             collectionCardLeft = this.state.collections
                 .filter((x) => this.state.collections.indexOf(x) % 2 === 0)
-                .map((collection) => this.cardsMaker(collection));
+                .map((collection) => this.collectionCardMaker(collection));
             collectionCardRight = this.state.collections
                 .filter((x) => this.state.collections.indexOf(x) % 2 === 1)
-                .map((collection) => this.cardsMaker(collection));
+                .map((collection) => this.collectionCardMaker(collection));
             collectionMessage = null;
         }
 
@@ -169,9 +171,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onGetReviewLike: () => dispatch(reviewActions.getReviewLike),
-    onGetPaperLike: () => dispatch(paperActions.getPaperLike),
-    onGetCollectionLike: () => dispatch(collectionActions.getCollectionLike),
+    onGetReviewLike: () => dispatch(reviewActions.getReviewLike()),
+    onGetPaperLike: () => dispatch(paperActions.getPaperLike()),
+    onGetCollectionLike: () => dispatch(collectionActions.getCollectionLike()),
 
 });
 

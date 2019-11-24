@@ -172,7 +172,7 @@ export const deleteReview = (reviewId) => (dispatch) => axios.delete("/api/revie
 // get Review Like
 const getReviewLikeSuccess = (reviews) => ({
     type: reviewConstants.GET_REVIEW_LIKE_SUCCESS,
-    target: reviews,
+    target: reviews.reviews,
 });
 
 const getReviewLikeFailure = (error) => ({
