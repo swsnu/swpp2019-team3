@@ -5,6 +5,8 @@ import json
 from django.test import TestCase, Client
 from papersfeed import constants
 from papersfeed.models.users.user import User
+from papersfeed.models.collections.collection import Collection
+from papersfeed.models.collections.collection_user import CollectionUser
 from papersfeed.models.users.user_follow import UserFollow
 
 
@@ -445,3 +447,184 @@ class UserTestCase(TestCase):
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 1)
+
+    def test_get_user_collection(self):
+        """" GET USERS OF COLLECTION """
+
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Make Collection
+        client.post('/api/collection',
+                    json.dumps({
+                        constants.TITLE: 'SWPP Papers',
+                        constants.TEXT: 'papers for swpp 2019 class'
+                    }),
+                    content_type='application/json')
+
+        collection_id = Collection.objects.filter(title='SWPP Papers').first().id
+
+        response = client.get('/api/user/collection',
+                              {constants.ID: collection_id},
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+        users = json.loads(response.content)['users']
+        self.assertEqual(len(users), 1)
+        self.assertEqual(users[0]['username'], "swpp")
+
+    def test_post_user_collection(self):
+        """" ADD USERS TO COLLECTION """
+
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Make Collection
+        client.post('/api/collection',
+                    json.dumps({
+                        constants.TITLE: 'SWPP Papers',
+                        constants.TEXT: 'papers for swpp 2019 class'
+                    }),
+                    content_type='application/json')
+
+        collection_id = Collection.objects.filter(title='SWPP Papers').first().id
+
+        user_ids = []
+        user_ids.append(User.objects.filter(email='swpp2@snu.ac.kr').first().id)
+        user_ids.append(User.objects.filter(email='swpp3@snu.ac.kr').first().id)
+
+        # Add the User to the Collection
+        response = client.post('/api/user/collection',
+                               json.dumps({
+                                   constants.ID: collection_id,
+                                   constants.USER_IDS: user_ids
+                               }),
+                               content_type='application/json')
+
+        self.assertEqual(response.status_code, 201)
+
+        self.assertEqual(json.loads(response.content)['count']['users'], 3)
+
+        collection_user = CollectionUser.objects.get(user_id=user_ids[0])
+        self.assertEqual(collection_user.type, "member")
+
+        collection_user = CollectionUser.objects.get(user_id=user_ids[1])
+        self.assertEqual(collection_user.type, "member")
+
+        user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+        collection_user = CollectionUser.objects.get(user_id=user_id)
+        self.assertEqual(collection_user.type, "owner")
+
+    def test_put_user_collection(self):
+        """" CHANGE OWNERSHIP OF COLLECTION """
+
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Make Collection
+        client.post('/api/collection',
+                    json.dumps({
+                        constants.TITLE: 'SWPP Papers',
+                        constants.TEXT: 'papers for swpp 2019 class'
+                    }),
+                    content_type='application/json')
+
+        collection_id = Collection.objects.filter(title='SWPP Papers').first().id
+
+        user_id = User.objects.filter(email='swpp2@snu.ac.kr').first().id
+
+        # Add the User to the Collection
+        response = client.post('/api/user/collection',
+                               json.dumps({
+                                   constants.ID: collection_id,
+                                   constants.USER_IDS: [user_id]
+                               }),
+                               content_type='application/json')
+
+        self.assertEqual(response.status_code, 201)
+
+        # Transfer ownership to the user
+        response = client.put('/api/user/collection',
+                              json.dumps({
+                                  constants.ID: collection_id,
+                                  constants.USER_ID: user_id
+                              }),
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+        collection_user = CollectionUser.objects.get(user_id=user_id)
+        self.assertEqual(collection_user.type, "owner")
+
+        user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+        collection_user = CollectionUser.objects.get(user_id=user_id)
+        self.assertEqual(collection_user.type, "member")
+
+    def test_remove_user_collection(self):
+        """" DELETE USER FROM COLLECTION """
+
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Make Collection
+        client.post('/api/collection',
+                    json.dumps({
+                        constants.TITLE: 'SWPP Papers',
+                        constants.TEXT: 'papers for swpp 2019 class'
+                    }),
+                    content_type='application/json')
+
+        collection_id = Collection.objects.filter(title='SWPP Papers').first().id
+
+        user_id = User.objects.filter(email='swpp2@snu.ac.kr').first().id
+
+        # Add the User to the Collection
+        response = client.post('/api/user/collection',
+                               json.dumps({
+                                   constants.ID: collection_id,
+                                   constants.USER_IDS: [user_id]
+                               }),
+                               content_type='application/json')
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(json.loads(response.content)['count']['users'], 2)
+
+        # Delete the User from the Collection
+        response = client.delete('/api/user/collection',
+                                 json.dumps({
+                                     constants.ID: collection_id,
+                                     constants.USER_ID: user_id
+                                 }),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content)['count']['users'], 1)

@@ -238,6 +238,26 @@ def delete_reply_review(args):
     return replies_utils.remove_reply(args)
 
 
+def get_user_collection(args):
+    """Get User Collection"""
+    return {constants.USERS: users_utils.select_user_collection(args)}
+
+
+def post_user_collection(args):
+    """Post User Collection"""
+    return {constants.COUNT: users_utils.insert_user_collection(args)}
+
+
+def put_user_collection(args):
+    """Put User Collection"""
+    return users_utils.update_user_collection(args)
+
+
+def delete_user_collection(args):
+    """Delete User Collection"""
+    return {constants.COUNT: users_utils.remove_user_collection(args)}
+
+
 def get_notification(args):
     """Get Notification"""
     return {constants.NOTIFICATIONS: notification_utils.select_notifications(args)}

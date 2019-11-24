@@ -65,7 +65,7 @@ const addUserFollowingSuccess = (count) => ({
 });
 
 const addUserFollowingFailure = (error) => {
-    const actionType = error.response.status === 400
+    const actionType = error.response.status === 422
         ? userConstants.ADD_FOLLOWING_FAILURE_SELF_FOLLOWING : null;
     return {
         type: actionType,
