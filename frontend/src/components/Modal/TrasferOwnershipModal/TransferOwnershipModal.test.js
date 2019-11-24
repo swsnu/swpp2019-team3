@@ -138,9 +138,6 @@ describe("TransferOwnershipModal test", () => {
         expect(instance.state.selectedUserName).toBe("test1");
     });
 
-
-    // checkhandler, warningconfirm, memberList, UserEntry, UserEntry checkHandler, onTransferOwnership
-
     // it("clickWarningConfirmAction should be called in WarningModal", () => {
     //     TODO: Implement this test
     // })
