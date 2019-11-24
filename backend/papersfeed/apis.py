@@ -170,7 +170,10 @@ def delete_like_review(args):
 
 def get_review_like(args):
     """Get Review Like"""
-    return {constants.REVIEWS: reviews_utils.select_review_like(args)}
+    reviews, page_number, is_finished = reviews_utils.select_review_like(args)
+    return {constants.REVIEWS: reviews,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
 
 
 def post_like_collection(args):

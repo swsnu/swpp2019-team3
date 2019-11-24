@@ -245,6 +245,8 @@ class ReviewTestCase(TestCase):
         # Get Reviews the user liked
         response = client.get('/api/review/like')
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         reviews = json.loads(response.content)['reviews']
         self.assertEqual(len(reviews), 2)

@@ -193,16 +193,23 @@ def select_review_like(args):
     # Request User
     request_user = args[constants.USER]
 
-    # Review Ids
-    review_ids = ReviewLike.objects.filter(Q(user_id=request_user.id)).order_by(
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Reviews Queryset
+    queryset = ReviewLike.objects.filter(Q(user_id=request_user.id)).order_by(
         '-creation_date').values_list('review_id', flat=True)
+
+    # Review Ids
+    review_ids = get_results_from_queryset(queryset, 10, page_number)
 
     # need to maintain the order
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(review_ids)])
 
     # Reviews
-    reviews, _, _ = __get_reviews(Q(id__in=review_ids), request_user, None, preserved)
-    return reviews
+    reviews, _, is_finished = __get_reviews(Q(id__in=review_ids), request_user, 10, preserved)
+
+    return reviews, page_number, is_finished
 
 
 def get_reviews(filter_query, request_user, count):
