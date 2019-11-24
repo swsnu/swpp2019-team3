@@ -15,6 +15,7 @@ import {
     likePaper,
     unlikePaper,
     searchPaper,
+    getPaperLike,
 } from "./paper/paper";
 
 import {
@@ -34,6 +35,7 @@ import {
     likeCollection,
     unlikeCollection,
     searchCollection,
+    getCollectionLike,
 } from "./collection/collection";
 
 import {
@@ -55,7 +57,7 @@ import {
     likeReview,
     unlikeReview,
     deleteReview,
-// consume Review,
+    getReviewLike,
 } from "./review/review";
 
 import {
@@ -90,6 +92,7 @@ export const collectionActions = {
     likeCollection,
     unlikeCollection,
     searchCollection,
+    getCollectionLike,
 };
 
 export const reviewActions = {
@@ -101,7 +104,7 @@ export const reviewActions = {
     likeReview,
     unlikeReview,
     deleteReview,
-    // consume Review,
+    getReviewLike,
 };
 
 export const authActions = {
@@ -117,6 +120,7 @@ export const paperActions = {
     likePaper,
     unlikePaper,
     searchPaper,
+    getPaperLike,
 };
 
 export const userActions = {

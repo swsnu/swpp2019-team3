@@ -169,4 +169,17 @@ export const deleteReview = (reviewId) => (dispatch) => axios.delete("/api/revie
     .then((res) => dispatch(deleteReviewSuccess(res.data)))
     .catch((err) => dispatch(deleteReviewFailure(err)));
 
-// consume review - no matching api
+// get Review Like
+const getReviewLikeSuccess = (reviews) => ({
+    type: reviewConstants.GET_REVIEW_LIKE_SUCCESS,
+    target: reviews.reviews,
+});
+
+const getReviewLikeFailure = (error) => ({
+    type: reviewConstants.GET_REVIEW_LIKE_FAILURE,
+    target: error,
+});
+
+export const getReviewLike = () => (dispatch) => axios.get("/api/review/like")
+    .then((res) => dispatch(getReviewLikeSuccess(res.data)))
+    .catch((err) => dispatch(getReviewLikeFailure(err)));
