@@ -120,7 +120,10 @@ def delete_review(args):
 
 def get_review_paper(args):
     """Get Review Paper"""
-    return {constants.REVIEWS: reviews_utils.select_review_paper(args)}
+    reviews, page_number, is_finished = reviews_utils.select_review_paper(args)
+    return {constants.REVIEWS: reviews,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
 
 
 def get_review_user(args):
