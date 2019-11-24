@@ -88,12 +88,18 @@ def select_paper_search(args):
     # Search Keyword
     keyword = args[constants.TEXT]
 
-    # Paper Ids
-    paper_ids = Paper.objects.filter(Q(title__icontains=keyword) | Q(abstract__icontains=keyword)) \
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Papers Queryset
+    queryset = Paper.objects.filter(Q(title__icontains=keyword) | Q(abstract__icontains=keyword)) \
         .values_list('id', flat=True)
 
+    # Paper Ids
+    paper_ids = get_results_from_queryset(queryset, 20, page_number)
+
     # if there is no result in our DB
-    if paper_ids.count() == 0:
+    if paper_ids.object_list.count() == 0:
         # exploit arXiv
         try:
             start = 0
@@ -123,9 +129,9 @@ def select_paper_search(args):
     filter_query = Q(id__in=paper_ids)
 
     # Papers
-    papers, _, _ = __get_papers(filter_query, request_user, None)
+    papers, _, is_finished = __get_papers(filter_query, request_user, 20)
 
-    return papers
+    return papers, page_number, is_finished
 
 
 def select_paper_like(args):
