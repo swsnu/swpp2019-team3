@@ -166,8 +166,14 @@ def select_collection_user(args):
     # User Id
     user_id = args[constants.ID]
 
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Collections Queryset
+    queryset = CollectionUser.objects.filter(user_id=user_id).values_list('collection_id', flat=True)
+
     # User's Collections
-    collection_ids = CollectionUser.objects.filter(user_id=user_id).values_list('collection_id', flat=True)
+    collection_ids = get_results_from_queryset(queryset, 10, page_number)
 
     # Filter Query
     filter_query = Q(id__in=collection_ids)
@@ -177,9 +183,9 @@ def select_collection_user(args):
         paper_id = args[constants.PAPER]
 
     # Collections
-    collections, _, _ = __get_collections(filter_query, request_user, None, paper_id=paper_id)
+    collections, _, is_finished = __get_collections(filter_query, request_user, 10, paper_id=paper_id)
 
-    return collections
+    return collections, page_number, is_finished
 
 
 def select_collection_search(args):

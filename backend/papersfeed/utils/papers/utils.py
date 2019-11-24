@@ -139,7 +139,7 @@ def select_paper_search(args):
     papers, _, is_finished = __get_papers(filter_query, request_user, 20)
 
     return papers, page_number, is_finished
-# pylint: ensable=too-many-locals
+# pylint: enable=too-many-locals
 
 def select_paper_like(args):
     """Select Paper Like"""

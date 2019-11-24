@@ -80,7 +80,10 @@ def delete_collection(args):
 
 def get_collection_user(args):
     """Get Collection User"""
-    return {constants.COLLECTIONS: collections_utils.select_collection_user(args)}
+    collections, page_number, is_finished = collections_utils.select_collection_user(args)
+    return {constants.COLLECTIONS: collections,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
 
 
 def get_paper(args):

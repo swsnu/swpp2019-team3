@@ -133,6 +133,8 @@ class CollectionTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         collection_id = Collection.objects.filter(title='SWPP Papers').first().id
         self.assertJSONEqual(response.content, {
@@ -148,7 +150,9 @@ class CollectionTestCase(TestCase):
                     constants.LIKES: 0,
                     constants.REPLIES: 0,
                 }
-            }]
+            }],
+            constants.PAGE_NUMBER: 1,
+            constants.IS_FINISHED: True
         })
 
     def test_get_collections_of_user_with_paper(self):
@@ -174,6 +178,9 @@ class CollectionTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
+
         collection_id = Collection.objects.filter(title='SWPP Papers').first().id
         self.assertJSONEqual(response.content, {
             constants.COLLECTIONS: [{
@@ -188,7 +195,9 @@ class CollectionTestCase(TestCase):
                     constants.LIKES: 0,
                     constants.REPLIES: 0,
                 }
-            }]
+            }],
+            constants.PAGE_NUMBER: 1,
+            constants.IS_FINISHED: True
         })
 
     def test_delete_collection(self):
