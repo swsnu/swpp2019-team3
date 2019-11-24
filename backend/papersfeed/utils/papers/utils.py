@@ -134,16 +134,22 @@ def select_paper_like(args):
     # Request User
     request_user = args[constants.USER]
 
-    # Paper Ids
-    paper_ids = PaperLike.objects.filter(Q(user_id=request_user.id)).order_by(
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Papers Queryset
+    queryset = PaperLike.objects.filter(Q(user_id=request_user.id)).order_by(
         '-creation_date').values_list('paper_id', flat=True)
+
+    # Paper Ids
+    paper_ids = get_results_from_queryset(queryset, 10, page_number)
 
     # need to maintain the order
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(paper_ids)])
 
     # Papers
-    papers, _, _ = __get_papers(Q(id__in=paper_ids), request_user, None, preserved)
-    return papers
+    papers, _, is_finished = __get_papers(Q(id__in=paper_ids), request_user, 10, preserved)
+    return papers, page_number, is_finished
 
 
 def get_papers(filter_query, request_user, count):

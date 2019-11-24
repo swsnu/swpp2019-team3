@@ -155,7 +155,10 @@ def delete_like_paper(args):
 
 def get_paper_like(args):
     """Get Paper Like"""
-    return {constants.PAPERS: papers_utils.select_paper_like(args)}
+    papers, page_number, is_finished = papers_utils.select_paper_like(args)
+    return {constants.PAPERS: papers,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
 
 
 def post_like_review(args):

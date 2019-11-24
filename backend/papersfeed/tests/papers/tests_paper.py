@@ -199,6 +199,8 @@ class PaperTestCase(TestCase):
         # Get Papers the user liked
         response = client.get('/api/paper/like')
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         papers = json.loads(response.content)['papers']
         self.assertEqual(len(papers), 3)
