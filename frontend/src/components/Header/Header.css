@@ -4,6 +4,7 @@
     display: flexbox;
     position: sticky;
     border-bottom: 2px solid rgb(220,224,227);
+    z-index: 10 !important;
 }
 
 .header .logo {
