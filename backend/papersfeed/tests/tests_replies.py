@@ -151,8 +151,12 @@ class ReplyTestCase(TestCase):
             + '"contains_paper": false, "count": {"users": 1, "papers": 0, "likes": 0, "replies": 1}},'
             + ' "user": {"id": ' + str(user_id)
             + ', "username": "swpp", "email": "swpp@snu.ac.kr", "description": "", '
-            + '"count": {"follower": 0, "following": 0}}, "count": {"likes": 0}}]}',
+            + '"count": {"follower": 0, "following": 0}}, "count": {"likes": 0}}], '
+            + '"page_number": 1, '
+            + '"is_finished": true}',
             response.content.decode())
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         # Get Replies Review
         response = client.get('/api/reply/review',
@@ -162,6 +166,8 @@ class ReplyTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
     def test_edit_reply(self):
         """EDIT REPLY"""

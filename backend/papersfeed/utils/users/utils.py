@@ -235,13 +235,19 @@ def select_user_search(args):
     # Search Keyword
     keyword = args[constants.TEXT]
 
-    # Filter Query
-    filter_query = Q(username__icontains=keyword)
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # User Queryset
+    queryset = User.objects.filter(Q(username__icontains=keyword)).values_list('id', flat=True)
+
+    # User Ids
+    user_ids = get_results_from_queryset(queryset, 10, page_number)
 
     # Users
-    users, _, _ = __get_users(filter_query, request_user, None)
+    users, _, is_finished = __get_users(Q(id__in=user_ids), request_user, 10)
 
-    return users
+    return users, page_number, is_finished
 
 
 def select_user_following(args):
@@ -256,16 +262,22 @@ def select_user_following(args):
     # Requested User ID
     requested_user_id = args[constants.ID]
 
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Following QuerySet
+    queryset = UserFollow.objects.filter(following_user=requested_user_id).values_list('followed_user', flat=True)
+
     # User Ids
-    user_ids = UserFollow.objects.filter(following_user=requested_user_id).values_list('followed_user', flat=True)
+    user_ids = get_results_from_queryset(queryset, 10, page_number)
 
     # Filter Query
     filter_query = Q(id__in=user_ids)
 
     # Users
-    users, _, _ = __get_users(filter_query, request_user, None)
+    users, _, is_finished = __get_users(filter_query, request_user, 10)
 
-    return users
+    return users, page_number, is_finished
 
 
 def select_user_followed(args):
@@ -280,16 +292,22 @@ def select_user_followed(args):
     # Requested User ID
     requested_user_id = args[constants.ID]
 
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Follower QuerySet
+    queryset = UserFollow.objects.filter(followed_user=requested_user_id).values_list('following_user', flat=True)
+
     # User Ids
-    user_ids = UserFollow.objects.filter(followed_user=requested_user_id).values_list('following_user', flat=True)
+    user_ids = get_results_from_queryset(queryset, 10, page_number)
 
     # Filter Query
     filter_query = Q(id__in=user_ids)
 
     # Users
-    users, _, _ = __get_users(filter_query, request_user, None)
+    users, _, is_finished = __get_users(filter_query, request_user, 10)
 
-    return users
+    return users, page_number, is_finished
 
 
 def get_users(filter_query, request_user, count):
@@ -362,17 +380,23 @@ def select_user_collection(args):
 
     request_user = args[constants.USER]
 
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Members QuerySet
+    queryset = CollectionUser.objects.filter(collection_id=collection_id)
+
     # Members(including owner) Of Collections
-    collection_members = CollectionUser.objects.filter(collection_id=collection_id)
+    collection_members = get_results_from_queryset(queryset, 10, page_number)
 
     # Member Ids
     member_ids = [collection_member.user_id for collection_member in collection_members]
     member_ids = list(set(member_ids))
 
     # Get Members
-    members, _, _ = __get_users(Q(id__in=member_ids), request_user, None)
+    members, _, is_finished = __get_users(Q(id__in=member_ids), request_user, 10)
 
-    return members
+    return members, page_number, is_finished
 
 
 def insert_user_collection(args):

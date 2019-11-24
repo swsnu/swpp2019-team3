@@ -173,6 +173,8 @@ class ReviewTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
     def test_get_reviews_of_paper(self):
         """ GET PAPER'S REVIEWS """
@@ -196,6 +198,8 @@ class ReviewTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
     def test_review_like(self):
         """ REVIEW LIKE """
@@ -245,6 +249,8 @@ class ReviewTestCase(TestCase):
         # Get Reviews the user liked
         response = client.get('/api/review/like')
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         reviews = json.loads(response.content)['reviews']
         self.assertEqual(len(reviews), 2)

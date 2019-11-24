@@ -64,18 +64,25 @@ def select_paper_collection(args):
     # Collection Id
     collection_id = args[constants.ID]
 
-    # Papers
-    collection_papers = CollectionPaper.objects.filter(
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Papers Queryset
+    queryset = CollectionPaper.objects.filter(
         collection_id=collection_id
     )
 
+    # Papers
+    collection_papers = get_results_from_queryset(queryset, 10, page_number)
+
     paper_ids = [collection_paper.paper_id for collection_paper in collection_papers]
 
-    papers, _, _ = __get_papers(Q(id__in=paper_ids), request_user, None)
+    papers, _, is_finished = __get_papers(Q(id__in=paper_ids), request_user, 10)
 
-    return papers
+    return papers, page_number, is_finished
 
 
+# pylint: disable=too-many-locals
 def select_paper_search(args):
     """Select Paper Search"""
     is_parameter_exists([
@@ -88,12 +95,18 @@ def select_paper_search(args):
     # Search Keyword
     keyword = args[constants.TEXT]
 
-    # Paper Ids
-    paper_ids = Paper.objects.filter(Q(title__icontains=keyword) | Q(abstract__icontains=keyword)) \
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Papers Queryset
+    queryset = Paper.objects.filter(Q(title__icontains=keyword) | Q(abstract__icontains=keyword)) \
         .values_list('id', flat=True)
 
+    # Paper Ids
+    paper_ids = get_results_from_queryset(queryset, 20, page_number)
+
     # if there is no result in our DB
-    if paper_ids.count() == 0:
+    if paper_ids.object_list.count() == 0:
         # exploit arXiv
         try:
             start = 0
@@ -123,10 +136,10 @@ def select_paper_search(args):
     filter_query = Q(id__in=paper_ids)
 
     # Papers
-    papers, _, _ = __get_papers(filter_query, request_user, None)
+    papers, _, is_finished = __get_papers(filter_query, request_user, 20)
 
-    return papers
-
+    return papers, page_number, is_finished
+# pylint: enable=too-many-locals
 
 def select_paper_like(args):
     """Select Paper Like"""
@@ -134,16 +147,22 @@ def select_paper_like(args):
     # Request User
     request_user = args[constants.USER]
 
-    # Paper Ids
-    paper_ids = PaperLike.objects.filter(Q(user_id=request_user.id)).order_by(
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Papers Queryset
+    queryset = PaperLike.objects.filter(Q(user_id=request_user.id)).order_by(
         '-creation_date').values_list('paper_id', flat=True)
+
+    # Paper Ids
+    paper_ids = get_results_from_queryset(queryset, 10, page_number)
 
     # need to maintain the order
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(paper_ids)])
 
     # Papers
-    papers, _, _ = __get_papers(Q(id__in=paper_ids), request_user, None, preserved)
-    return papers
+    papers, _, is_finished = __get_papers(Q(id__in=paper_ids), request_user, 10, preserved)
+    return papers, page_number, is_finished
 
 
 def get_papers(filter_query, request_user, count):

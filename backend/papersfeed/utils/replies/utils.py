@@ -32,16 +32,21 @@ def select_reply_collection(args):
     # Request User
     request_user = args[constants.USER]
 
-    # Replies
-    collection_replies = ReplyCollection.objects.filter(
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Replies Queryset
+    queryset = ReplyCollection.objects.filter(
         collection_id=collection_id
     )
+    # Replies
+    collection_replies = get_results_from_queryset(queryset, 10, page_number)
 
     reply_ids = [collection_reply.reply_id for collection_reply in collection_replies]
 
-    replies, _, _ = __get_replies(Q(id__in=reply_ids), request_user, None)
+    replies, _, is_finished = __get_replies(Q(id__in=reply_ids), request_user, 10)
 
-    return replies
+    return replies, page_number, is_finished
 
 def select_reply_review(args):
     """Select reply collection"""
@@ -55,16 +60,22 @@ def select_reply_review(args):
     # Request User
     request_user = args[constants.USER]
 
-    # Replies
-    review_replies = ReplyReview.objects.filter(
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Replies Queryset
+    queryset = ReplyReview.objects.filter(
         review_id=review_id
     )
 
+    # Replies
+    review_replies = get_results_from_queryset(queryset, 10, page_number)
+
     reply_ids = [review_reply.reply_id for review_reply in review_replies]
 
-    replies, _, _ = __get_replies(Q(id__in=reply_ids), request_user, None)
+    replies, _, is_finished = __get_replies(Q(id__in=reply_ids), request_user, 10)
 
-    return replies
+    return replies, page_number, is_finished
 
 def insert_reply_collection(args):
     """Insert Reply Collection"""
