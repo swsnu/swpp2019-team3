@@ -451,6 +451,16 @@ class UserTestCase(TestCase):
     def test_get_user_collection(self):
         """" GET USERS OF COLLECTION """
 
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
         # Make Collection
         client.post('/api/collection',
                     json.dumps({
@@ -474,6 +484,16 @@ class UserTestCase(TestCase):
     def test_post_user_collection(self):
         """" ADD USERS TO COLLECTION """
 
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+        
         # Make Collection
         client.post('/api/collection',
                     json.dumps({
