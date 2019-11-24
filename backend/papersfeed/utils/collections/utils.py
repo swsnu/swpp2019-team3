@@ -194,13 +194,20 @@ def select_collection_search(args):
     # Search Keyword
     keyword = args[constants.TEXT]
 
-    # Filter Query
-    filter_query = Q(title__icontains=keyword) | Q(text__icontains=keyword)
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Collections Queryset
+    queryset = Collection.objects.filter(Q(title__icontains=keyword) | Q(text__icontains=keyword))\
+        .values_list('id', flat=True)
+
+    # Collection Ids
+    collection_ids = get_results_from_queryset(queryset, 10, page_number)
 
     # Collections
-    collections, _, _ = __get_collections(filter_query, request_user, None)
+    collections, _, is_finished = __get_collections(Q(id__in=collection_ids), request_user, 10)
 
-    return collections
+    return collections, page_number, is_finished
 
 
 def select_collection_like(args):

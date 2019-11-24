@@ -275,6 +275,8 @@ class CollectionTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 1)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         # Search with Keyword 'keyword'
         response = client.get('/api/collection/search',
@@ -284,6 +286,8 @@ class CollectionTestCase(TestCase):
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 3)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         # Search with Keyword 'blahblah'
         response = client.get('/api/collection/search',
@@ -293,6 +297,8 @@ class CollectionTestCase(TestCase):
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 0)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
     def test_collection_like(self):
         """ COLLECTION LIKE """

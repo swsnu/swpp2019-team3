@@ -135,7 +135,10 @@ def get_paper_search(args):
 
 def get_collection_search(args):
     """Get Collection Search"""
-    return {constants.COLLECTIONS: collections_utils.select_collection_search(args)}
+    collections, page_number, is_finished = collections_utils.select_collection_search(args)
+    return {constants.COLLECTIONS: collections,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
 
 
 def get_user_search(args):
