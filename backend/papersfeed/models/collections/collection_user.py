@@ -4,7 +4,7 @@ from django_mysql.models import EnumField
 
 from papersfeed.models.base_models import BaseModel
 from papersfeed.models.users.user import User
-from .collection import Collection
+from papersfeed.models.collections.collection import Collection
 
 
 COLLECTION_USER_TYPE = [
