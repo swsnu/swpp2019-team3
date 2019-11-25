@@ -168,6 +168,15 @@ class CollectionDetail extends Component {
             />
         ));
 
+        let inviteModal = null;
+        if (this.props.me && this.props.members.map((x) => x.id).includes(this.props.me.id)) {
+            inviteModal = (
+                <InviteToCollectionModal
+                  openButtonName="Invite to ..."
+                  members={this.props.members}
+                />
+            );
+        }
         let manageButton = null;
         if (this.props.me && this.state.owner.id === this.props.me.id) {
             manageButton = (
@@ -210,10 +219,7 @@ class CollectionDetail extends Component {
                                     <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>
                                     {this.state.likeCount}
                                 </Button>
-                                <InviteToCollectionModal
-                                  openButtonName="Invite to ..."
-                                  members={this.props.members}
-                                />
+                                {inviteModal}
                                 {manageButton}
                                 {this.state.thisCollection.amIMember ? editButton : <div />}
                             </div>

@@ -415,11 +415,6 @@ def insert_user_collection(args):
     if not Collection.objects.filter(id=collection_id).exists():
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
-    # if request_user is not owner, then raise AUTH_ERROR
-    collection_user = CollectionUser.objects.get(collection_id=collection_id, user_id=request_user.id)
-    if collection_user.type != COLLECTION_USER_TYPE[0]:
-        raise ApiError(constants.AUTH_ERROR)
-
     # Self Add
     if request_user.id in user_ids:
         raise ApiError(constants.UNPROCESSABLE_ENTITY)
