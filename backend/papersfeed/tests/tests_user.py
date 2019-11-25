@@ -645,7 +645,7 @@ class UserTestCase(TestCase):
         response = client.delete('/api/user/collection',
                                  json.dumps({
                                      constants.ID: collection_id,
-                                     constants.USER_ID: user_id
+                                     constants.USER_IDS: [user_id]
                                  }),
                                  content_type='application/json')
 

@@ -80,13 +80,19 @@ export const getCollectionPapers = (collectionId) => (dispatch) => axios.get("/a
     .then((res) => { dispatch(getCollectionPapersSuccess(res.data)); })
     .catch((err) => { (dispatch(getCollectionPapersFailure(err))); });
 
+const getCollectionMembersSuccess = (members) => ({
+    type: collectionConstants.GET_COLLECTION_MEMBERS,
+    target: members.users,
+});
 
-// getCollectionMembers - no matching api
-/* export const getCollectionMembers = (collectionID) => (dispatch)
-=> axios.get(`/user/collection/${collectionID}`)
-    .then((res) => dispatch({
-        type: actionTypes.GET_COLLECTION_MEMBERS, members: res.data,
-    })); */
+const getCollectionMembersFailure = (error) => ({
+    type: null,
+    target: error,
+});
+
+export const getCollectionMembers = (collectionID) => (dispatch) => axios.get("/api/user/collection", { params: { id: collectionID } })
+    .then((res) => { dispatch(getCollectionMembersSuccess(res.data)); })
+    .catch((err) => { dispatch(getCollectionMembersFailure(err)); });
 
 // getCollectionReplies - no matching /api
 /* export const getCollectionReplies = (collectionID) => (dispatch)
@@ -95,13 +101,25 @@ export const getCollectionPapers = (collectionId) => (dispatch) => axios.get("/a
         type: actionTypes.GET_COLLECTION_REPLIES, replies: res.data,
     })); */
 
-// setOwner - no matching /api
-/* export const setOwner = (collectionID, userID) => (dispatch)
-=> axios.put(`/collection/${collectionID}`, { userID })
-    .then((res) => dispatch({
-        type: actionTypes.CHANGE_COLLECTION_OWNER, newOwnerID: userID,
-    })); */
+const setOwnerSuccess = () => ({
+    type: collectionConstants.SET_OWNER,
+});
 
+const setOwnerFailure = (error) => {
+    let actionType = null;
+    if (error.response.status === 403) {
+        actionType = collectionConstants.SET_OWNER_FAILURE_AUTH_ERROR;
+    }
+
+    return {
+        type: actionType,
+        target: error,
+    };
+};
+
+export const setOwner = (collectionId, targetUserId) => (dispatch) => axios.put("/api/user/collection", { id: collectionId, user_id: targetUserId })
+    .then(() => dispatch(setOwnerSuccess()))
+    .catch((err) => { dispatch(setOwnerFailure(err)); });
 
 // setNameAndDescription of collection
 const setTitleAndDescriptionSuccess = (collection) => ({
@@ -158,23 +176,54 @@ const removeCollectionPaperFailure = (error) => ({
 
 export const removeCollectionPaper = (collectionsAndPaper) => (dispatch) => axios.put("/api/paper/collection", collectionsAndPaper)
     .then((res) => { dispatch(removeCollectionPaperSuccess(res.data)); })
-    .catch((err) => { (dispatch(removeCollectionPaperFailure(err))); });
+    .catch((err) => { dispatch(removeCollectionPaperFailure(err)); });
 
+const addNewMembersSuccess = (count) => ({
+    type: collectionConstants.ADD_COLLECTION_MEMBER,
+    count,
+});
 
-// add member to collection - no matching api
-/* export const addCollectionMember = (collectionID, userID) => (dispatch)
-=> axios.post(`/user/collection/${collectionID}`, userID)
-    .then((res) => dispatch({
-        type: actionTypes.ADD_COLLECTION_MEMBER, members: res.data,
-    })); */
+const addNewMembersFailure = (error) => {
+    let actionType = null;
+    if (error.response.status === 403) {
+        actionType = collectionConstants.ADD_COLLECTION_MEMBER_FAILURE_NOT_AUTHORIZED;
+    }
+    if (error.response.status === 422) {
+        actionType = collectionConstants.ADD_COLLECTION_MEMBER_FAILURE_SELF_ADDING;
+    }
+    return {
+        type: actionType,
+        target: error,
+    };
+};
 
-// remove member from CollectionMember - no matching /api
-/* export const removeCollectionMember = (collectionID, userID) => (dispatch)
-=> axios.delete(`/user/collection/${collectionID}`, userID)
-    .then((res) => dispatch({
-        type: actionTypes.DEL_COLLECTION_MEMBER, members: res.data,
-    })); */
+export const addNewMembers = (collectionId, userIdList) => (dispatch) => axios.post("/api/user/collection", { id: collectionId, user_ids: userIdList })
+    .then((res) => { dispatch(addNewMembersSuccess(res.data)); })
+    .catch((err) => { dispatch(addNewMembersFailure(err)); });
 
+const deleteMembersSuccess = (count) => ({
+    type: collectionConstants.DEL_COLLECTION_MEMBER,
+    count,
+});
+
+const deleteMembersFailure = (error) => {
+    let actionType = null;
+    if (error.response.status === 403) {
+        actionType = collectionConstants.DEL_COLLECTION_MEMBER_FAILURE_NOT_AUTHORIZED;
+    }
+    if (error.response.status === 422) {
+        actionType = collectionConstants.DEL_COLLECTION_MEMBER_FAILURE_MORE_THAN_USERCOUNT;
+    }
+    return {
+        type: actionType,
+        target: error,
+    };
+};
+
+// FIXME : 400 bad request
+export const deleteMembers = (collectionId, userIdList) => (dispatch) => axios.delete("/api/user/collection", { id: collectionId, user_ids: userIdList })
+    .then((res) => { dispatch(deleteMembersSuccess(res.data)); })
+    .catch((err) => { dispatch(deleteMembersFailure(err)); });
 
 // deleteCollection
 const deleteCollectionSuccess = (collection) => ({
@@ -197,7 +246,7 @@ const deleteCollectionFailure = (error) => {
     };
 };
 
-export const deleteCollection = (collectionId) => (dispatch) => axios.delete("/api/collection", { params: collectionId })
+export const deleteCollection = (collectionId) => (dispatch) => axios.delete("/api/collection", { params: { id: collectionId } })
     .then((res) => { dispatch(deleteCollectionSuccess(res.data)); })
     .catch((err) => { (dispatch(deleteCollectionFailure(err))); });
 

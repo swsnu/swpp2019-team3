@@ -26,7 +26,9 @@ const stubInitialState = {
     selected: {
         status: collectionStatus.NONE,
         error: null,
-        collection: {},
+        collection: {
+            user_counts: 5,
+        },
         papers: [],
         members: [],
         replies: [],
@@ -50,6 +52,10 @@ const stubCollection = {
     title: "SWPP",
     text: "SWPP2019fall",
 };
+
+const stubMembers = [
+    "stub", "members", "test",
+];
 
 const stubError = {
     response: {
@@ -103,6 +109,15 @@ describe("Collection reducer", () => {
         expect(newState.selected.collection).toBe(stubCollection);
     });
 
+    it("should return get_collection_failure_collection_not_exist", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.GET_COLLECTION_FAILURE_COLLECTION_NOT_EXIST,
+            target: stubCollection,
+        });
+        expect(newState.selected.status).toBe(collectionStatus.COLLECTION_NOT_EXIST);
+        expect(newState.selected.error).toBe(stubCollection);
+    });
+
     it("should return get_collection_papers", () => {
         const newState = reducer(stubInitialState, {
             type: collectionConstants.GET_COLLECTION_PAPERS,
@@ -112,13 +127,30 @@ describe("Collection reducer", () => {
         expect(newState.selected.papers).toBe(stubCollection);
     });
 
-    it("should return get_collection_failure_collection_not_exist", () => {
+    it("should return get_collection_members", () => {
         const newState = reducer(stubInitialState, {
-            type: collectionConstants.GET_COLLECTION_FAILURE_COLLECTION_NOT_EXIST,
-            target: stubCollection,
+            type: collectionConstants.GET_COLLECTION_MEMBERS,
+            target: stubMembers,
         });
-        expect(newState.selected.status).toBe(collectionStatus.COLLECTION_NOT_EXIST);
-        expect(newState.selected.error).toBe(stubCollection);
+        expect(newState.selected.status).toBe(collectionStatus.SUCCESS);
+        expect(newState.selected.members).toBe(stubMembers);
+    });
+
+    it("should return set_owner", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.SET_OWNER,
+        });
+        // it really does nothing in reducer
+        expect(newState.selected.status).toBe(collectionStatus.NONE);
+    });
+
+    it("should return set_owner_failure_auth_error", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.SET_OWNER_FAILURE_AUTH_ERROR,
+            target: "error",
+        });
+        expect(newState.selected.status).toBe(collectionStatus.AUTH_ERROR);
+        expect(newState.selected.error).toBe("error");
     });
 
     it("should return edit_collection", () => {
@@ -167,6 +199,59 @@ describe("Collection reducer", () => {
         expect(newState.edit.collection).toBe(stubCollection);
     });
 
+    it("should return add_collection_member", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.ADD_COLLECTION_MEMBER,
+            count: 2,
+        });
+        expect(newState.selected.status).toBe(collectionStatus.SUCCESS);
+        expect(newState.selected.collection.user_counts).toBe(7);
+    });
+
+    it("should return add_collection_member_failure_not_authorized", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.ADD_COLLECTION_MEMBER_FAILURE_NOT_AUTHORIZED,
+            target: "error",
+        });
+        expect(newState.selected.status).toBe(collectionStatus.AUTH_ERROR);
+        expect(newState.selected.error).toBe("error");
+    });
+
+    it("should return add_collection_member_failure_self_adding", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.ADD_COLLECTION_MEMBER_FAILURE_SELF_ADDING,
+            target: "error",
+        });
+        expect(newState.selected.status).toBe(collectionStatus.USER_SELF_ADDING);
+        expect(newState.selected.error).toBe("error");
+    });
+
+    it("should return del_collection_member", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.DEL_COLLECTION_MEMBER,
+            count: 2,
+        });
+        expect(newState.selected.status).toBe(collectionStatus.SUCCESS);
+        expect(newState.selected.collection.user_counts).toBe(3);
+    });
+
+    it("should return del_collection_member_failure_not_authorized", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.DEL_COLLECTION_MEMBER_FAILURE_NOT_AUTHORIZED,
+            target: "error",
+        });
+        expect(newState.selected.status).toBe(collectionStatus.AUTH_ERROR);
+        expect(newState.selected.error).toBe("error");
+    });
+
+    it("should return del_collection_member_failure_more_than_usercount", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.DEL_COLLECTION_MEMBER_FAILURE_MORE_THAN_USERCOUNT,
+            target: "error",
+        });
+        expect(newState.selected.status).toBe(collectionStatus.FAILURE);
+        expect(newState.selected.error).toBe("error");
+    });
 
     it("should return delete_collection", () => {
         const newState = reducer(stubInitialState, {

@@ -9,6 +9,12 @@ import AddPaperModal from "./Modal/AddPaperModal/AddPaperModal";
 import Reply from "./Reply/Reply";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import UserCard from "./User/UserCard/UserCard";
+import CreateNewCollectionModal from "./Modal/CreateNewCollectionModal/CreateNewCollectionModal";
+import WarningModal from "./Modal/WarningModal/WarningModal";
+import TransferOwnershipModal from "./Modal/TrasferOwnershipModal/TransferOwnershipModal";
+import UserEntry from "./User/UserEntry/UserEntry";
+import InviteToCollectionModal from "./Modal/InviteToCollectionModal/InviteToCollectionModal";
+import ManageCollectionMemberModal from "./Modal/ManageCollectionMemberModal/ManageCollectionMemberModal";
 
 export {
     SideBar,
@@ -22,4 +28,10 @@ export {
     Reply,
     PrivateRoute,
     UserCard,
+    CreateNewCollectionModal,
+    WarningModal,
+    TransferOwnershipModal,
+    UserEntry,
+    InviteToCollectionModal,
+    ManageCollectionMemberModal,
 };

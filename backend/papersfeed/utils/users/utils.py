@@ -472,13 +472,14 @@ def update_user_collection(args):
 
 
 def remove_user_collection(args):
-    """Remove the User from the Collection"""
+    """Remove the User(s) from the Collection"""
     is_parameter_exists([
-        constants.ID, constants.USER_ID
+        constants.ID, constants.USER_IDS
     ], args)
 
     collection_id = int(args[constants.ID])
-    user_id = args[constants.USER_ID]
+    # user_id = args[constants.USER_ID]
+    user_ids = args[constants.USER_IDS]
 
     request_user = args[constants.USER]
 
@@ -491,15 +492,22 @@ def remove_user_collection(args):
     if collection_user.type != COLLECTION_USER_TYPE[0]:
         raise ApiError(constants.AUTH_ERROR)
 
-    user_counts = __get_collection_user_count([collection_id], 'collection_id')
-    user_count = user_counts[collection_id] if collection_id in user_counts else 0
-
-    # if there are more than two members, owner can't just leave
-    if user_count > 1 and user_id == request_user.id:
+    # the owner cannot delete himself or herself
+    # if the owner want to leave a collection, he or she must transfer it to other user
+    # or deleting the collection would be a solution
+    if request_user.id in user_ids:
         raise ApiError(constants.UNPROCESSABLE_ENTITY)
+    # original codes
+    # user_counts = __get_collection_user_count([collection_id], 'collection_id')
+    # user_count = user_counts[collection_id] if collection_id in user_counts else 0
 
-    # Delete Existing CollectionUser
-    CollectionUser.objects.filter(user_id=user_id, collection_id=collection_id).delete()
+    # # if there are more than two members, owner can't just leave
+    # if user_count > 1 and user_id == request_user.id:
+    #     raise ApiError(constants.UNPROCESSABLE_ENTITY)
+
+    # FIXME : there may better way to delete multiple users
+    for user_id in user_ids:
+        CollectionUser.objects.filter(user_id=user_id, collection_id=collection_id).delete()
 
     # Get the number of Members(including owner) Of Collections
     user_counts = __get_collection_user_count([collection_id], 'collection_id')
