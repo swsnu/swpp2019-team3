@@ -17,14 +17,12 @@ class CollectionDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // getCollectionStatus: collectionStatus.NONE,
             userCount: 0,
             likeCount: 0,
-            // eslint-disable-next-line react/no-unused-state
             paperCount: 0,
+            replyCount: 0,
             newReplyContent: "",
             isLiked: false,
-            // members: [],
             replies: [],
             papers: [],
             thisCollection: {},
@@ -46,6 +44,9 @@ class CollectionDetail extends Component {
                         thisCollection: this.props.selectedCollection,
                         isLiked: this.props.selectedCollection.liked,
                         likeCount: this.props.selectedCollection.count.likes,
+                        userCount: this.props.selectedCollection.count.users,
+                        replyCount: this.props.selectedCollection.count.replies,
+                        paperCount: this.props.selectedCollection.count.papers,
                     });
                 }
             });
@@ -60,6 +61,16 @@ class CollectionDetail extends Component {
                 });
             }).catch(() => {});
     }
+
+    /* eslint-disable react/no-did-update-set-state */
+    componentDidUpdate(prevProps) {
+        if (this.props.selectedCollection !== prevProps.selectedCollection) {
+            this.setState({
+                userCount: this.props.selectedCollection.count.users,
+            });
+        }
+    }
+    /* eslint-enable react/no-did-update-set-state */
 
     // clickRemovePaperButtonHandler(collection_id: number, paper_id: number)
     // : Call onRemoveCollectionPaper of CollectionDetail to remove the paper from the collection.
@@ -187,13 +198,13 @@ class CollectionDetail extends Component {
                     </div>
                     <div className="itemList">
                         <Tabs defaultActiveKey="paperTab" id="itemTabs">
-                            <Tab eventKey="paperTab" title="Papers">
+                            <Tab eventKey="paperTab" title={`Papers(${this.state.paperCount})`}>
                                 <div id="paperCards">
                                     <div id="paperCardsLeft">{paperCardsLeft}</div>
                                     <div id="paperCardsRight">{paperCardsRight}</div>
                                 </div>
                             </Tab>
-                            <Tab className="reply-tab" eventKey="replyTab" title="Replies">
+                            <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${this.state.replyCount})`}>
                                 <div id="replies">
                                     <div id="createNewReply">
                                         <textarea

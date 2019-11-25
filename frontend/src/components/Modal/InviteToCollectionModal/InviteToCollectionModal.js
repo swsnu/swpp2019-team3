@@ -46,13 +46,16 @@ class InviteToCollectionModal extends Component {
 
     clickInviteUsersHandler = () => {
         // console.log(this.state.checkedUserIdList);
-        this.props.onInviteUsers(this.props.thisCollection.id, this.state.checkedUserIdList);
-        this.setState({
-            searchKeyWord: "",
-            isModalOpen: false,
-            isSearchResult: false,
-            checkedUserIdList: [],
-        });
+        this.props.onInviteUsers(this.props.thisCollection.id, this.state.checkedUserIdList)
+            .then(() => {
+                this.setState({
+                    searchKeyWord: "",
+                    isModalOpen: false,
+                    isSearchResult: false,
+                    checkedUserIdList: [],
+                });
+                this.props.onGetCollection({ id: this.props.thisCollection.id });
+            });
     }
 
     // handler function for user entry
@@ -147,6 +150,7 @@ const mapDispatchToProps = (dispatch) => ({
     onInviteUsers: (collectionId, userIdList) => dispatch(
         collectionActions.addNewMembers(collectionId, userIdList),
     ),
+    onGetCollection: (collectionId) => dispatch(collectionActions.getCollection(collectionId)),
 });
 
 
@@ -163,6 +167,7 @@ InviteToCollectionModal.propTypes = {
     onGetFollowings: PropTypes.func,
     onSearchUsers: PropTypes.func,
     onInviteUsers: PropTypes.func,
+    onGetCollection: PropTypes.func,
 };
 
 InviteToCollectionModal.defaultProps = {
@@ -176,4 +181,5 @@ InviteToCollectionModal.defaultProps = {
     onGetFollowings: () => {},
     onSearchUsers: () => {},
     onInviteUsers: () => {},
+    onGetCollection: () => {},
 };
