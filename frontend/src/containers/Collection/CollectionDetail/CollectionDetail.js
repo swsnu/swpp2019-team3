@@ -50,6 +50,7 @@ class CollectionDetail extends Component {
                     });
                 }
             });
+        this.props.onGetMembers(this.props.location.pathname.split("=")[1]);
         this.props.onGetCollectionPapers({ id: Number(this.props.location.pathname.split("=")[1]) })
             .then(() => {
                 this.setState({ papers: this.props.storedPapers });
@@ -181,7 +182,10 @@ class CollectionDetail extends Component {
                                     <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>
                                     {this.state.likeCount}
                                 </Button>
-                                <InviteToCollectionModal openButtonName="Invite to ..." />
+                                <InviteToCollectionModal
+                                  openButtonName="Invite to ..."
+                                  members={this.props.members}
+                                />
                                 <Link to={`/collection_id=${this.props.selectedCollection.id}/manage`}>
                                     <Button id="manageButton">Manage</Button>
                                 </Link>
@@ -245,6 +249,7 @@ const mapStateToProps = (state) => ({
     unlikeCollectionStatus: state.collection.unlike.status,
     afterUnlikeCount: state.collection.unlike.count,
     replyList: state.reply.list,
+    members: state.collection.selected.members,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -252,14 +257,17 @@ const mapDispatchToProps = (dispatch) => ({
     onGetCollectionPapers: (collectionId) => dispatch(
         collectionActions.getCollectionPapers(collectionId),
     ),
+    onGetReplies: (collectionId) => dispatch(
+        replyActions.getRepliesByCollection(collectionId),
+    ),
+    onGetMembers: (collectionId) => dispatch(
+        collectionActions.getCollectionMembers(collectionId),
+    ),
     onLikeCollection: (collectionId) => dispatch(
         collectionActions.likeCollection(collectionId),
     ),
     onUnlikeCollection: (collectionId) => dispatch(
         collectionActions.unlikeCollection(collectionId),
-    ),
-    onGetReplies: (collectionId) => dispatch(
-        replyActions.getRepliesByCollection(collectionId),
     ),
     onMakeNewReply: (reply) => dispatch(
         replyActions.makeNewReplyCollection(reply),
@@ -282,8 +290,10 @@ CollectionDetail.propTypes = {
     onLikeCollection: PropTypes.func,
     onUnlikeCollection: PropTypes.func,
     onGetReplies: PropTypes.func,
+    onGetMembers: PropTypes.func,
     onMakeNewReply: PropTypes.func,
     replyList: PropTypes.objectOf(PropTypes.any),
+    members: PropTypes.arrayOf(PropTypes.any),
 };
 
 CollectionDetail.defaultProps = {
@@ -300,6 +310,8 @@ CollectionDetail.defaultProps = {
     onLikeCollection: () => {},
     onUnlikeCollection: () => {},
     onGetReplies: () => {},
+    onGetMembers: () => {},
     onMakeNewReply: () => {},
     replyList: {},
+    members: [],
 };

@@ -135,7 +135,10 @@ class ManageCollectionMemberModal extends Component {
                         <h5 id="createHeaderText">Manage members of {this.props.thisCollection.title}</h5>
                     </Modal.Header>
                     <Modal.Body>
-                        <InviteToCollectionModal openButtonName="Invite New Users" />
+                        <InviteToCollectionModal
+                          openButtonName="Invite New Users"
+                          members={this.props.members}
+                        />
                         <div id="membersListDiv">
                             {memberList}
                         </div>
