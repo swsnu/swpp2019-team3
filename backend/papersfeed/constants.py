@@ -39,6 +39,7 @@ IS_FOLLOWING = 'is_following'
 IS_FOLLOWED = 'is_followed'
 FOLLOWER = 'follower'
 FOLLOWING = 'following'
+COLLECTION_USER_TYPE = 'collection_user_type'
 
 # Notification
 NOTIFICATION = 'notification'

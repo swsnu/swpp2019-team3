@@ -395,7 +395,7 @@ def select_user_collection(args):
     member_ids = list(set(member_ids))
 
     # Get Members
-    members, _, is_finished = __get_users(Q(id__in=member_ids), request_user, 10)
+    members, _, is_finished = __get_users(Q(id__in=member_ids), request_user, 10, collection_id=collection_id)
 
     return members, page_number, is_finished
 
@@ -505,7 +505,7 @@ def remove_user_collection(args):
     return {constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0}
 
 
-def __get_users(filter_query, request_user, count):
+def __get_users(filter_query, request_user, count, collection_id=None):
     """Get Users By Query"""
     queryset = User.objects.filter(
         filter_query
@@ -520,12 +520,12 @@ def __get_users(filter_query, request_user, count):
 
     is_finished = len(users) < count if count and pagination_value != 0 else True
 
-    users = __pack_users(users, request_user)
+    users = __pack_users(users, request_user, collection_id=collection_id)
 
     return users, pagination_value, is_finished
 
 
-def __pack_users(users, request_user):
+def __pack_users(users, request_user, collection_id=None):
     """Pack User Info"""
     packed = []
 
@@ -555,6 +555,11 @@ def __pack_users(users, request_user):
             # 내 정보가 아니면 follow 관계 여부 추가
             packed_user[constants.IS_FOLLOWED] = user.is_followed
             packed_user[constants.IS_FOLLOWING] = user.is_following
+
+        if collection_id:
+            packed_user[constants.COLLECTION_USER_TYPE] = CollectionUser.objects.get(
+                user_id=user_id, collection_id=collection_id
+            ).type
 
         packed.append(packed_user)
 

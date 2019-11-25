@@ -26,6 +26,7 @@ class CollectionDetail extends Component {
             replies: [],
             papers: [],
             thisCollection: {},
+            owner: {},
         };
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
         this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
@@ -50,7 +51,14 @@ class CollectionDetail extends Component {
                     });
                 }
             });
-        this.props.onGetMembers(this.props.location.pathname.split("=")[1]);
+        this.props.onGetMembers(this.props.location.pathname.split("=")[1])
+            .then(() => {
+                this.props.members.forEach((x) => {
+                    if (x.collection_user_type === "owner") {
+                        this.setState({ owner: x });
+                    }
+                });
+            });
         this.props.onGetCollectionPapers({ id: Number(this.props.location.pathname.split("=")[1]) })
             .then(() => {
                 this.setState({ papers: this.props.storedPapers });
@@ -160,6 +168,17 @@ class CollectionDetail extends Component {
             />
         ));
 
+        let manageButton = null;
+        if (this.props.me && this.state.owner.id === this.props.me.id) {
+            manageButton = (
+                <Button
+                  id="manageButton"
+                  href={`/collection_id=${this.props.selectedCollection.id}/manage`}
+                >Manage
+                </Button>
+            );
+        }
+
         return (
             <div className="CollectionDetail">
                 <div className="CollectionDetailContent">
@@ -186,9 +205,7 @@ class CollectionDetail extends Component {
                                   openButtonName="Invite to ..."
                                   members={this.props.members}
                                 />
-                                <Link to={`/collection_id=${this.props.selectedCollection.id}/manage`}>
-                                    <Button id="manageButton">Manage</Button>
-                                </Link>
+                                {manageButton}
                                 {this.state.thisCollection.amIMember ? editButton : <div />}
                             </div>
                         </div>
