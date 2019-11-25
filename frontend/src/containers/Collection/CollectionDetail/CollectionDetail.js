@@ -314,7 +314,7 @@ CollectionDetail.propTypes = {
 };
 
 CollectionDetail.defaultProps = {
-    me: null,
+    me: {},
     history: null,
     location: null,
     onGetCollection: null,

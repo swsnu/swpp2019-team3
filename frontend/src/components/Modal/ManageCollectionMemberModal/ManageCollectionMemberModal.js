@@ -79,18 +79,20 @@ class ManageCollectionMemberModal extends Component {
 
     render() {
         let memberList = (<div />);
-        if (this.props.members.length > 0) {
-            memberList = this.props.members.map((user) => (
-                <UserEntry
-                  key={user.id}
-                  id={user.id}
-                  userName={user.username}
-                  userDesc={user.descrpition}
-                  isChecked={this.state.checkedUserIdList.includes(user.id)}
-                  checkhandler={() => this.checkHandler(user)}
-                  showCheck={this.state.removeMode}
-                />
-            ));
+        if (this.props.me && this.props.members.length > 0) {
+            memberList = this.props.members
+                .filter((user) => (!this.state.removeMode || user.id !== this.props.me.id))
+                .map((user) => (
+                    <UserEntry
+                      key={user.id}
+                      id={user.id}
+                      userName={user.username}
+                      userDesc={user.descrpition}
+                      isChecked={this.state.checkedUserIdList.includes(user.id)}
+                      checkhandler={() => this.checkHandler(user)}
+                      showCheck={this.state.removeMode}
+                    />
+                ));
         }
 
         const kickOffSupporter = this.state.removeMode

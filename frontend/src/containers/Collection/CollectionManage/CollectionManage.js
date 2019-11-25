@@ -32,7 +32,16 @@ class CollectionManage extends Component {
                     });
                 }
             });
-        this.props.onGetMembers(collectionId);
+        this.props.onGetMembers(collectionId)
+            .then(() => {
+                this.props.members.forEach((x) => {
+                    if (x.collection_user_type === "owner") {
+                        if (this.props.me.id !== x.id) {
+                            this.props.history.goBack();
+                        }
+                    }
+                });
+            });
     }
 
     updateCollectionHandler = () => {
@@ -133,8 +142,10 @@ class CollectionManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    me: state.auth.me,
     collectionStatus: state.collection.selected.status,
     selectedCollection: state.collection.selected.collection,
+    members: state.collection.selected.members,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -151,11 +162,13 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionManage);
 
 CollectionManage.propTypes = {
+    me: PropTypes.objectOf(PropTypes.any),
     history: PropTypes.objectOf(PropTypes.any),
     location: PropTypes.objectOf(PropTypes.any),
 
     selectedCollection: PropTypes.objectOf(PropTypes.any),
     collectionStatus: PropTypes.string,
+    members: PropTypes.arrayOf(PropTypes.any),
 
     onGetCollection: PropTypes.func,
     onUpdateCollectionInfo: PropTypes.func,
@@ -164,11 +177,13 @@ CollectionManage.propTypes = {
 };
 
 CollectionManage.defaultProps = {
+    me: {},
     history: null,
     location: null,
 
     selectedCollection: {},
     collectionStatus: collectionStatus.NONE,
+    members: [],
 
     onGetCollection: () => {},
     onUpdateCollectionInfo: () => {},
