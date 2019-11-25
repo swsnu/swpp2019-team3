@@ -137,8 +137,9 @@ def select_paper_search(args):
 
     # Papers
     papers, _, is_finished = __get_papers(filter_query, request_user, 20)
+    return papers, page_number, is_finished
 
-def select_paper_search(args):
+def select_paper_search_ml(args):
     """Select Paper Search"""
     is_parameter_exists([
         constants.TEXT
@@ -188,7 +189,7 @@ def select_paper_search(args):
     # Papers
     papers, _, _ = __get_papers(filter_query, request_user, None)
 
-    return papers, page_number, is_finished
+    return papers
 # pylint: enable=too-many-locals
 
 def select_paper_like(args):

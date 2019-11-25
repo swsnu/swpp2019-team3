@@ -75,14 +75,14 @@ def insert_review(args):
 
     # Create action for recommendation
     try:
-        obj = UserAction.get(
+        obj = UserAction.objects.get(
             user_id=request_user.id, 
             paper_id=paper_id,
             type='review'
         )
         setattr(obj, 'count', obj.count + 1)
         obj.save()
-    except UserAction.DoesNotExist:
+    except ObjectDoesNotExist:
         UserAction.objects.create(
             user_id=request_user.id,
             paper_id=paper_id,
@@ -172,7 +172,7 @@ def remove_review(args):
 
     review.delete()
 
-    obj = UserAction.get(
+    obj = UserAction.objects.get(
         user_id=request_user.id, 
         paper_id=paper_id,
         type='review'

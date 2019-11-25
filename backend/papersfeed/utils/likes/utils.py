@@ -50,14 +50,14 @@ def insert_like_paper(args):
 
     # Create action for recommendation
     try:
-        obj = UserAction.get(
+        obj = UserAction.objects.get(
             user_id=request_user.id, 
             paper_id=paper_id,
             type='like'
             )
         setattr(obj, 'count', obj.count + 1)
         obj.save()
-    except UserAction.DoesNotExist:
+    except ObjectDoesNotExist:
         UserAction.objects.create(
             user_id=request_user.id,
             paper_id=paper_id,
@@ -89,7 +89,7 @@ def remove_like_paper(args):
     paper_like.delete()
 
     # Update action count for recommendation
-    obj = UserAction.get(
+    obj = UserAction.objects.get(
         user_id=request_user.id, 
         paper_id=paper_id,
         type='like'
