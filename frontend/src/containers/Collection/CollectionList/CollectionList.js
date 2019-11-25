@@ -8,6 +8,12 @@ import { collectionActions } from "../../../store/actions";
 import "./CollectionList.css";
 
 class CollectionList extends Component {
+    componentDidMount() {
+        if (this.props.me) {
+            this.props.onGetCollections({ id: this.props.me.id });
+        }
+    }
+
     componentDidUpdate(prevProps) {
         if (this.props.me !== prevProps.me) {
             this.props.onGetCollections({ id: this.props.me.id });

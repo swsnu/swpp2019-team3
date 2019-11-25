@@ -79,7 +79,7 @@ class TransferOwnershipModal extends Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <WarningModal
-                        //   history={this.props.history}
+                          history={this.props.history}
                           openButtonText="Transfer to ..."
                           whatToWarnText={`Transfer "${this.props.thisCollection.title}" to "${this.state.selectedUserName}"`}
                           whatActionWillBeDone={this.clickWarningConfirmAction}
@@ -113,7 +113,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(TransferOwnershipMod
 // export default TransferOwnershipModal;
 
 TransferOwnershipModal.propTypes = {
-    // history: PropTypes.objectOf(PropTypes.any),
+    history: PropTypes.objectOf(PropTypes.any),
 
     me: PropTypes.objectOf(PropTypes.any),
     thisCollection: PropTypes.objectOf(PropTypes.any),
@@ -123,7 +123,7 @@ TransferOwnershipModal.propTypes = {
 };
 
 TransferOwnershipModal.defaultProps = {
-    // history: {},
+    history: {},
 
     me: {},
     thisCollection: {},

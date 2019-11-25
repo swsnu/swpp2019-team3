@@ -17,15 +17,10 @@ class InviteToCollectionModal extends Component {
         };
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.me !== prevProps.me) {
-            this.props.onGetFollowings({ id: this.props.me.id });
-        }
-    }
-
     // handler functions for buttons
     clickOpenHandler = () => {
         this.setState({ isModalOpen: true });
+        this.props.onGetFollowings({ id: this.props.me.id });
     }
 
     clickCancelHandler = () => {
@@ -107,9 +102,8 @@ class InviteToCollectionModal extends Component {
                     </Modal.Header>
                     <Modal.Body className="ModalBody">
                         <div id="searchArea">
-                            <textarea
+                            <input
                               id="userSearchBar"
-                              rows="1"
                               type="text"
                               placeholder="search users"
                               value={this.state.searchKeyWord}

@@ -15,15 +15,14 @@ class WarningModal extends Component {
     }
 
     clickConfirmHandler = () => {
-        this.props.whatActionWillBeDone();
-        this.setState({ isModalOpen: false });
-        // if (this.props.moveAfterDone) {
-        // after the job is done, should not return, so use replace
-
-        // FIXME: history.replace does not work propery
-        // please de-commentize below line after the problem is solved
-        // this.props.history.replace(this.props.whereToGoAfterConfirm);
-        // }
+        this.props.whatActionWillBeDone()
+            .then(() => {
+                this.setState({ isModalOpen: false });
+                if (this.props.moveAfterDone) {
+                    // after the job is done, should not return, so use replace
+                    this.props.history.replace(this.props.whereToGoAfterConfirm);
+                }
+            });
     }
 
     clickCancelHandler = () => {
@@ -79,7 +78,7 @@ class WarningModal extends Component {
 export default WarningModal;
 
 WarningModal.propTypes = {
-    // history: PropTypes.objectOf(PropTypes.any),
+    history: PropTypes.objectOf(PropTypes.any),
 
     // the following props should be given by a calling component
     openButtonText: PropTypes.string,
@@ -94,11 +93,11 @@ WarningModal.propTypes = {
 };
 
 WarningModal.defaultProps = {
-    // history: null,
+    history: null,
 
     openButtonText: "",
     whatToWarnText: "",
-    whatActionWillBeDone: null,
+    whatActionWillBeDone: () => {},
     moveAfterDone: true,
     whereToGoAfterConfirm: "",
     disableCondition: false,
