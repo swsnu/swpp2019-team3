@@ -2,33 +2,22 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { CollectionCard } from "../../../components";
-import { collectionActions, authActions } from "../../../store/actions";
-// import { collectionStatus } from "../../../constants/constants";
+import { CreateNewCollectionModal, CollectionCard } from "../../../components";
+import { collectionActions } from "../../../store/actions";
 
 import "./CollectionList.css";
 
 class CollectionList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            // makeNewCollectionStatus: collectionStatus.NONE,
-            collections: [],
-            me: null,
-        };
+    componentDidMount() {
+        if (this.props.me) {
+            this.props.onGetCollections({ id: this.props.me.id });
+        }
     }
 
-    componentDidMount() {
-        this.props.onGetMe()
-            .then(() => {
-                this.setState({ me: this.props.me });
-                this.props.onGetCollections({ id: this.state.me.id })
-                    .then(() => {
-                        this.setState({ collections: this.props.storedCollections });
-                    })
-                    .catch(() => {});
-            })
-            .catch(() => {});
+    componentDidUpdate(prevProps) {
+        if (this.props.me !== prevProps.me) {
+            this.props.onGetCollections({ id: this.props.me.id });
+        }
     }
 
     cardsMaker = (collection) => (
@@ -48,18 +37,21 @@ class CollectionList extends Component {
     )
 
     render() {
-        const collectionCardsLeft = this.state.collections
-            .filter((x) => this.state.collections.indexOf(x) % 2 === 0)
+        const collectionCardsLeft = this.props.storedCollections
+            .filter((x) => this.props.storedCollections.indexOf(x) % 2 === 0)
             .map((collection) => this.cardsMaker(collection));
 
-        const collectionCardsRight = this.state.collections
-            .filter((x) => this.state.collections.indexOf(x) % 2 === 1)
+        const collectionCardsRight = this.props.storedCollections
+            .filter((x) => this.props.storedCollections.indexOf(x) % 2 === 1)
             .map((collection) => this.cardsMaker(collection));
 
         return (
             <div className="CollectionList">
                 <div className="CollectionListContent">
                     <div id="collectionListText">My Collections</div>
+                    <div id="collectionNewButtonDiv">
+                        <CreateNewCollectionModal />
+                    </div>
                     <div id="colletionCards">
                         <div id="collectionCardsLeft">{collectionCardsLeft}</div>
                         <div id="collectionCardsRight">{collectionCardsRight}</div>
@@ -72,35 +64,25 @@ class CollectionList extends Component {
 
 const mapStateToProps = (state) => ({
     me: state.auth.me,
+    storedCollections: state.collection.list.list,
     makeNewCollectionStatus: state.collection.make.status,
     getCollectionsStatus: state.collection.list.status,
-    storedCollections: state.collection.list.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onMakeNewCollection: (newCollection) => dispatch(
-        collectionActions.makeNewCollection(newCollection),
-    ),
     onGetCollections: (userId) => dispatch(collectionActions.getCollectionsByUserId(userId)),
-    onGetMe: () => dispatch(authActions.getMe()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionList);
 
 CollectionList.propTypes = {
     me: PropTypes.objectOf(PropTypes.any),
-    // onMakeNewCollection: PropTypes.func,
     onGetCollections: PropTypes.func,
-    // makeNewCollectionStatus: PropTypes.string,
     storedCollections: PropTypes.arrayOf(PropTypes.any),
-    onGetMe: PropTypes.func,
 };
 
 CollectionList.defaultProps = {
     me: null,
-    // onMakeNewCollection: null,
-    onGetCollections: null,
-    // makeNewCollectionStatus: collectionStatus.NONE,
     storedCollections: [],
-    onGetMe: () => {},
+    onGetCollections: () => {},
 };

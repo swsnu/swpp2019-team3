@@ -124,8 +124,14 @@ class LikeTestCase(TestCase):
                    content_type='application/json')
 
         # User1 Get Notifications
-        response = client.get('/api/notification')
+        response = client.get('/api/notification',
+                              data={
+                                  constants.PAGE_NUMBER: 1
+                              },
+                              content_type='application/json')
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         user2_id = User.objects.get(email='user2@snu.ac.kr').id
 

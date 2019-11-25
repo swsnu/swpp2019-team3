@@ -2,7 +2,7 @@ import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
-import { Route, Switch } from "react-router-dom";
+
 import { createBrowserHistory } from "history";
 import { collectionActions, replyActions } from "../../../store/actions";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
@@ -14,17 +14,7 @@ import CollectionDetail from "./CollectionDetail";
 const makeCollectionDetail = (initialState, props = {}) => (
     <Provider store={getMockStore(initialState)}>
         <ConnectedRouter history={createBrowserHistory()}>
-            <Switch>
-                <Route
-                  path="/"
-                  exact
-                  render={() => (
-                      <div>
-                          <CollectionDetail location={{ pathname: "/paper_id=1" }} {...props} />
-                      </div>
-                  )}
-                />
-            </Switch>
+            <CollectionDetail location={{ pathname: "/paper_id=1" }} {...props} />
         </ConnectedRouter>
     </Provider>
 );

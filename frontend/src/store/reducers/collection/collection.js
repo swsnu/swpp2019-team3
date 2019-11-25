@@ -53,6 +53,10 @@ const reducer = (state = initialState, action) => {
                 status: collectionStatus.SUCCESS,
                 collection: action.target,
             },
+            list: {
+                ...state.list,
+                list: [action.target].concat(state.list.list),
+            },
         };
     case collectionConstants.ADD_COLLECTION_FAILURE_MISSING_PARAM:
         return {
@@ -99,11 +103,29 @@ const reducer = (state = initialState, action) => {
                 error: action.target,
             },
         };
-    // case collectionConstants.GET_COLLECTION_MEMBERS:
-        // return { ...state };
+    case collectionConstants.GET_COLLECTION_MEMBERS:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.SUCCESS,
+                members: action.target,
+            },
+        };
+    case collectionConstants.SET_OWNER:
+        return {
+            ...state,
+        };
+    case collectionConstants.SET_OWNER_FAILURE_AUTH_ERROR:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.AUTH_ERROR,
+                error: action.target,
+            },
+        };
     // case collectionConstants.GET_COLLECTION_REPLIES:
-        // return { ...state };
-    // case collectionConstants.CHANGE_COLLECTION_OWNER:
         // return { ...state };
     case collectionConstants.EDIT_COLLECTION:
         return {
@@ -150,10 +172,66 @@ const reducer = (state = initialState, action) => {
                 collection: action.target,
             },
         };
-    // case collectionConstants.ADD_COLLECTION_MEMBER:
-        // return { ...state };
-    // case collectionConstants.DEL_COLLECTION_MEMBER:
-        // return { ...state };
+    case collectionConstants.ADD_COLLECTION_MEMBER:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.SUCCESS,
+                collection: {
+                    ...state.selected.collection,
+                    user_counts: state.selected.collection.user_counts + action.count,
+                },
+            },
+        };
+    case collectionConstants.ADD_COLLECTION_MEMBER_FAILURE_NOT_AUTHORIZED:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.AUTH_ERROR,
+                error: action.target,
+            },
+        };
+    case collectionConstants.ADD_COLLECTION_MEMBER_FAILURE_SELF_ADDING:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.USER_SELF_ADDING,
+                error: action.target,
+            },
+        };
+    case collectionConstants.DEL_COLLECTION_MEMBER:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.SUCCESS,
+                collection: {
+                    ...state.selected.collection,
+                    user_counts: state.selected.collection.user_counts - action.count,
+                },
+            },
+        };
+    case collectionConstants.DEL_COLLECTION_MEMBER_FAILURE_NOT_AUTHORIZED:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.AUTH_ERROR,
+                error: action.target,
+            },
+        };
+    case collectionConstants.DEL_COLLECTION_MEMBER_FAILURE_MORE_THAN_USERCOUNT:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
     case collectionConstants.DEL_COLLECTION:
         return {
             ...state,
