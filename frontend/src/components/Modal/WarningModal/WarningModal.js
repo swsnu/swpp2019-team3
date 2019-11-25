@@ -8,6 +8,10 @@ class WarningModal extends Component {
         this.state = {
             isModalOpen: false,
         };
+
+        this.clickOpenHandler = this.clickOpenHandler.bind(this);
+        this.clickConfirmHandler = this.clickConfirmHandler.bind(this);
+        this.clickCancelHandler = this.clickCancelHandler.bind(this);
     }
 
     clickOpenHandler = () => {
@@ -22,7 +26,8 @@ class WarningModal extends Component {
                     // after the job is done, should not return, so use replace
                     this.props.history.replace(this.props.whereToGoAfterConfirm);
                 }
-            });
+            })
+            .catch(() => {});
     }
 
     clickCancelHandler = () => {
@@ -94,7 +99,6 @@ WarningModal.propTypes = {
 
 WarningModal.defaultProps = {
     history: null,
-
     openButtonText: "",
     whatToWarnText: "",
     whatActionWillBeDone: () => {},

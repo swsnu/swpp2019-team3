@@ -15,6 +15,12 @@ class TransferOwnershipModal extends Component {
             selectedUserId: -1,
             selectedUserName: "",
         };
+
+
+        this.clickOpenHandler = this.clickOpenHandler.bind(this);
+        this.clickCancelHandler = this.clickCancelHandler.bind(this);
+        this.checkHandler = this.checkHandler.bind(this);
+        this.transferDisableCond = this.transferDisableCond.bind(this);
     }
 
     clickOpenHandler = () => {
@@ -34,10 +40,6 @@ class TransferOwnershipModal extends Component {
             selectedUserId: user.id,
             selectedUserName: user.username,
         });
-    }
-
-    clickWarningConfirmAction = () => {
-        this.props.onTransferOwnership(this.props.thisCollection.id, this.state.selectedUserId);
     }
 
     transferDisableCond = () => {
@@ -82,7 +84,10 @@ class TransferOwnershipModal extends Component {
                           history={this.props.history}
                           openButtonText="Transfer to ..."
                           whatToWarnText={`Transfer "${this.props.thisCollection.title}" to "${this.state.selectedUserName}"`}
-                          whatActionWillBeDone={this.clickWarningConfirmAction}
+                          whatActionWillBeDone={() => this.props.onTransferOwnership(
+                              this.props.thisCollection.id,
+                              this.state.selectedUserId,
+                          )}
                           whereToGoAfterConfirm={`/collection_id=${this.props.thisCollection.id}`}
                           disableCondition={this.transferDisableCond()}
                           disableMessage="Select a user except you"

@@ -628,24 +628,26 @@ class UserTestCase(TestCase):
 
         collection_id = Collection.objects.filter(title='SWPP Papers').first().id
 
-        user_id = User.objects.filter(email='swpp2@snu.ac.kr').first().id
+        user_ids = []
+        user_ids.append(User.objects.filter(email='swpp2@snu.ac.kr').first().id)
+        user_ids.append(User.objects.filter(email='swpp3@snu.ac.kr').first().id)
 
         # Add the User to the Collection
         response = client.post('/api/user/collection',
                                json.dumps({
                                    constants.ID: collection_id,
-                                   constants.USER_IDS: [user_id]
+                                   constants.USER_IDS: user_ids
                                }),
                                content_type='application/json')
 
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(json.loads(response.content)['count']['users'], 2)
+        self.assertEqual(json.loads(response.content)['count']['users'], 3)
 
         # Delete the User from the Collection
         response = client.delete('/api/user/collection',
                                  json.dumps({
                                      constants.ID: collection_id,
-                                     constants.USER_IDS: [user_id]
+                                     constants.USER_IDS: user_ids
                                  }),
                                  content_type='application/json')
 

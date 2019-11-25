@@ -17,6 +17,13 @@ class ManageCollectionMemberModal extends Component {
             removeMode: false,
             checkedUserIdList: [],
         };
+
+        this.clickOpenHandler = this.clickOpenHandler.bind(this);
+        this.clickCloseHandler = this.clickCloseHandler.bind(this);
+        this.clickKickOffCancelHandler = this.clickKickOffCancelHandler.bind(this);
+        this.clickKickOffEnableHandler = this.clickKickOffEnableHandler.bind(this);
+        this.checkHandler = this.checkHandler.bind(this);
+        this.confirmDisableCond = this.confirmDisableCond.bind(this);
     }
 
     // opening and closing modal
@@ -39,11 +46,6 @@ class ManageCollectionMemberModal extends Component {
         this.setState({
             removeMode: true,
         });
-    }
-
-    clickKickOffConfirmHandler = () => {
-        // FIXME : 400 bad request
-        // this.props.onDeleteMembers(this.props.thisCollection.id, this.state.checkedUserIdList);
     }
 
     clickKickOffCancelHandler = () => {
@@ -98,7 +100,10 @@ class ManageCollectionMemberModal extends Component {
                       history={this.props.history}
                       openButtonText="Confirm"
                       whatToWarnText={`Kick off following users from "${this.props.thisCollection.title}" \n asdf`}
-                      whatActionWillBeDone={this.clickKickOffConfirmHandler}
+                      whatActionWillBeDone={() => this.props.onDeleteMembers(
+                          this.props.thisCollection.id,
+                          this.state.checkedUserIdList,
+                      )}
                       whereToGoAfterConfirm={`/collection_id=${this.props.thisCollection.id}`}
                       moveAfterDone={false}
                       disableCondition={this.confirmDisableCond()}
@@ -113,11 +118,8 @@ class ManageCollectionMemberModal extends Component {
                 <Button
                   id="kickOffEnableButton"
                   onClick={this.clickKickOffEnableHandler}
-                  disabled
-                  // FIXME : delete these comments and above 'disabled'
-                  // after 'bad request issue' for 'deleteMembers' action function is solved
                 >
-                    Kick Off ...
+                    Kick Off...
                 </Button>
             );
 
@@ -169,7 +171,6 @@ ManageCollectionMemberModal.propTypes = {
     me: PropTypes.objectOf(PropTypes.any),
     thisCollection: PropTypes.objectOf(PropTypes.any),
     members: PropTypes.arrayOf(PropTypes.any),
-    // eslint-disable-next-line react/no-unused-prop-types
     onDeleteMembers: PropTypes.func,
 };
 

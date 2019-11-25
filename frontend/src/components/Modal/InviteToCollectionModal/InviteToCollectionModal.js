@@ -15,6 +15,13 @@ class InviteToCollectionModal extends Component {
             isSearchResult: false,
             checkedUserIdList: [],
         };
+
+        this.clickOpenHandler = this.clickOpenHandler.bind(this);
+        this.clickCancelHandler = this.clickCancelHandler.bind(this);
+        this.clickSearchHandler = this.clickSearchHandler.bind(this);
+        this.clickInviteUsersHandler = this.clickInviteUsersHandler.bind(this);
+        this.checkHandler = this.checkHandler.bind(this);
+        this.userEntryMapper = this.userEntryMapper.bind(this);
     }
 
     // handler functions for buttons
