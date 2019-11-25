@@ -73,9 +73,9 @@ class CollectionDetail extends Component {
 
     /* eslint-disable react/no-did-update-set-state */
     componentDidUpdate(prevProps) {
-        if (this.props.selectedCollection !== prevProps.selectedCollection) {
+        if (this.props.memberCount !== prevProps.memberCount) {
             this.setState({
-                userCount: this.props.selectedCollection.count.users,
+                userCount: this.props.memberCount,
             });
         }
     }
@@ -179,6 +179,15 @@ class CollectionDetail extends Component {
             );
         }
 
+        let creationDate = "";
+        let modificationDate = "";
+        if (Object.keys(this.props.selectedCollection).length > 0) {
+            /* eslint-disable prefer-destructuring */
+            creationDate = this.props.selectedCollection.creation_date.split("T")[0];
+            modificationDate = this.props.selectedCollection.modification_date.split("T")[0];
+            /* eslint-enable prefer-destructuring */
+        }
+
         return (
             <div className="CollectionDetail">
                 <div className="CollectionDetailContent">
@@ -211,8 +220,8 @@ class CollectionDetail extends Component {
                         </div>
                         <div id="collectionDescription">
                             <div id="date">
-                                <div id="creationDate">Created: {this.state.thisCollection.creationDate}</div>
-                                <div id="lastUpdateDate">Last Update: {this.state.thisCollection.lastUpdateDate}</div>
+                                <div id="creationDate">Created: {creationDate}</div>
+                                <div id="lastUpdateDate">Last Update: {modificationDate}</div>
                             </div>
                             <p id="descriptionBox">{this.state.thisCollection.text}</p>
                         </div>
@@ -267,6 +276,7 @@ const mapStateToProps = (state) => ({
     afterUnlikeCount: state.collection.unlike.count,
     replyList: state.reply.list,
     members: state.collection.selected.members,
+    memberCount: state.collection.selected.memberCount,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -311,6 +321,7 @@ CollectionDetail.propTypes = {
     onMakeNewReply: PropTypes.func,
     replyList: PropTypes.objectOf(PropTypes.any),
     members: PropTypes.arrayOf(PropTypes.any),
+    memberCount: PropTypes.number,
 };
 
 CollectionDetail.defaultProps = {
@@ -331,4 +342,5 @@ CollectionDetail.defaultProps = {
     onMakeNewReply: () => {},
     replyList: {},
     members: [],
+    memberCount: 0,
 };

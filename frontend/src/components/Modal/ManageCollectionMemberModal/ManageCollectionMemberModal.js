@@ -16,6 +16,7 @@ class ManageCollectionMemberModal extends Component {
             isModalOpen: false,
             removeMode: false,
             checkedUserIdList: [],
+            members: [],
         };
 
         this.clickOpenHandler = this.clickOpenHandler.bind(this);
@@ -23,8 +24,17 @@ class ManageCollectionMemberModal extends Component {
         this.clickKickOffCancelHandler = this.clickKickOffCancelHandler.bind(this);
         this.clickKickOffEnableHandler = this.clickKickOffEnableHandler.bind(this);
         this.checkHandler = this.checkHandler.bind(this);
-        this.confirmDisableCond = this.confirmDisableCond.bind(this);
     }
+
+    /* eslint-disable react/no-did-update-set-state */
+    componentDidUpdate(prevProps) {
+        if (this.props.members !== prevProps.members) {
+            this.setState({
+                members: this.props.members,
+            });
+        }
+    }
+    /* eslint-enable react/no-did-update-set-state */
 
     // opening and closing modal
     clickOpenHandler = () => {
@@ -69,18 +79,10 @@ class ManageCollectionMemberModal extends Component {
         }
     }
 
-    confirmDisableCond = () => {
-        if (this.props.me) {
-            return this.state.checkedUserIdList.length === 0
-                || this.state.checkedUserIdList.includes(this.props.me.id);
-        }
-        return true;
-    }
-
     render() {
         let memberList = (<div />);
-        if (this.props.me && this.props.members.length > 0) {
-            memberList = this.props.members
+        if (this.props.me && this.state.members.length > 0) {
+            memberList = this.state.members
                 .filter((user) => (!this.state.removeMode || user.id !== this.props.me.id))
                 .map((user) => (
                     <UserEntry
@@ -99,17 +101,20 @@ class ManageCollectionMemberModal extends Component {
             ? (
                 <div id="kickOffButtons">
                     <WarningModal
-                      history={this.props.history}
                       openButtonText="Confirm"
                       whatToWarnText={`Kick off following users from "${this.props.thisCollection.title}" \n asdf`}
                       whatActionWillBeDone={() => this.props.onDeleteMembers(
                           this.props.thisCollection.id,
                           this.state.checkedUserIdList,
                       )}
-                      whereToGoAfterConfirm={`/collection_id=${this.props.thisCollection.id}`}
-                      moveAfterDone={false}
-                      disableCondition={this.confirmDisableCond()}
-                      disableMessage="Select users except you"
+                      whatActionWillFollow={
+                          () => {
+                              this.props.onGetMembers(this.props.thisCollection.id);
+                              this.setState({ checkedUserIdList: [] });
+                          }
+                      }
+                      disableCondition={this.state.checkedUserIdList.length === 0}
+                      disableMessage="Select users"
                     />
                     <Button id="kickOffCancelButton" onClick={this.clickKickOffCancelHandler}>
                         Cancel
@@ -167,6 +172,9 @@ const mapDispatchToProps = (dispatch) => ({
     onDeleteMembers: (collectionId, memberIdList) => dispatch(
         collectionActions.deleteMembers(collectionId, memberIdList),
     ),
+    onGetMembers: (collectionId) => dispatch(
+        collectionActions.getCollectionMembers(collectionId),
+    ),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageCollectionMemberModal);
@@ -177,6 +185,7 @@ ManageCollectionMemberModal.propTypes = {
     thisCollection: PropTypes.objectOf(PropTypes.any),
     members: PropTypes.arrayOf(PropTypes.any),
     onDeleteMembers: PropTypes.func,
+    onGetMembers: PropTypes.func,
 };
 
 ManageCollectionMemberModal.defaultProps = {
@@ -185,4 +194,5 @@ ManageCollectionMemberModal.defaultProps = {
     thisCollection: {},
     members: [],
     onDeleteMembers: () => {},
+    onGetMembers: () => {},
 };

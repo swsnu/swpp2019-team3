@@ -26,6 +26,8 @@ LIKES = 'likes'
 TYPE = 'type'
 PAGE_NUMBER = 'page_number'
 IS_FINISHED = 'is_finished'
+CREATION_DATE = 'creation_date'
+MODIFICATION_DATE = 'modification_date'
 
 # User
 USER = 'user'

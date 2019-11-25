@@ -22,9 +22,8 @@ class WarningModal extends Component {
         this.props.whatActionWillBeDone()
             .then(() => {
                 this.setState({ isModalOpen: false });
-                if (this.props.moveAfterDone) {
-                    // after the job is done, should not return, so use replace
-                    this.props.history.replace(this.props.whereToGoAfterConfirm);
+                if (this.props.whatActionWillFollow) {
+                    this.props.whatActionWillFollow();
                 }
             })
             .catch(() => {});
@@ -83,27 +82,20 @@ class WarningModal extends Component {
 export default WarningModal;
 
 WarningModal.propTypes = {
-    history: PropTypes.objectOf(PropTypes.any),
-
     // the following props should be given by a calling component
     openButtonText: PropTypes.string,
     whatToWarnText: PropTypes.string,
     whatActionWillBeDone: PropTypes.func,
-    // eslint-disable-next-line react/no-unused-prop-types
-    moveAfterDone: PropTypes.bool,
-    // eslint-disable-next-line react/no-unused-prop-types
-    whereToGoAfterConfirm: PropTypes.string,
+    whatActionWillFollow: PropTypes.func,
     disableCondition: PropTypes.bool,
     disableMessage: PropTypes.string,
 };
 
 WarningModal.defaultProps = {
-    history: null,
     openButtonText: "",
     whatToWarnText: "",
     whatActionWillBeDone: () => {},
-    moveAfterDone: true,
-    whereToGoAfterConfirm: "",
+    whatActionWillFollow: null,
     disableCondition: false,
     disableMessage: "",
 };

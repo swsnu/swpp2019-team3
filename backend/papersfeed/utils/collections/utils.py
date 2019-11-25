@@ -3,6 +3,7 @@
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Exists, OuterRef, Count, Case, When
+from django.utils import timezone
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
@@ -357,6 +358,8 @@ def __pack_collections(collections, request_user, paper_id=None):  # pylint: dis
                 constants.LIKES: like_counts[collection_id] if collection_id in like_counts else 0,
                 constants.REPLIES: reply_counts[collection_id] if collection_id in reply_counts else 0
             },
+            constants.CREATION_DATE: collection.creation_date,
+            constants.MODIFICATION_DATE: collection.modification_date
         }
 
         if paper_id:

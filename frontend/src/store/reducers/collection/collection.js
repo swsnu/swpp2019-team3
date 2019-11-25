@@ -30,6 +30,7 @@ const initialState = {
         papers: [],
         members: [],
         replies: [],
+        memberCount: 0,
     },
     like: {
         status: collectionStatus.NONE,
@@ -125,8 +126,6 @@ const reducer = (state = initialState, action) => {
                 error: action.target,
             },
         };
-    // case collectionConstants.GET_COLLECTION_REPLIES:
-        // return { ...state };
     case collectionConstants.EDIT_COLLECTION:
         return {
             ...state,
@@ -178,10 +177,7 @@ const reducer = (state = initialState, action) => {
             selected: {
                 ...state.selected,
                 status: collectionStatus.SUCCESS,
-                collection: {
-                    ...state.selected.collection,
-                    user_counts: state.selected.collection.user_counts + action.count,
-                },
+                memberCount: action.target.users,
             },
         };
     case collectionConstants.ADD_COLLECTION_MEMBER_FAILURE_NOT_AUTHORIZED:
@@ -208,10 +204,7 @@ const reducer = (state = initialState, action) => {
             selected: {
                 ...state.selected,
                 status: collectionStatus.SUCCESS,
-                collection: {
-                    ...state.selected.collection,
-                    user_counts: state.selected.collection.user_counts - action.count,
-                },
+                memberCount: action.target.users,
             },
         };
     case collectionConstants.DEL_COLLECTION_MEMBER_FAILURE_NOT_AUTHORIZED:

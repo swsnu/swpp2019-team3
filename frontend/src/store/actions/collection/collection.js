@@ -181,7 +181,7 @@ export const removeCollectionPaper = (collectionsAndPaper) => (dispatch) => axio
 
 const addNewMembersSuccess = (count) => ({
     type: collectionConstants.ADD_COLLECTION_MEMBER,
-    count,
+    target: count.count,
 });
 
 const addNewMembersFailure = (error) => {
@@ -205,7 +205,7 @@ export const addNewMembers = (collectionId, userIdList) => (dispatch) => axios.p
 
 const deleteMembersSuccess = (count) => ({
     type: collectionConstants.DEL_COLLECTION_MEMBER,
-    count,
+    target: count.count,
 });
 
 const deleteMembersFailure = (error) => {

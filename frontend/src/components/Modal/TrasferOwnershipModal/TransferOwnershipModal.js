@@ -20,7 +20,6 @@ class TransferOwnershipModal extends Component {
         this.clickOpenHandler = this.clickOpenHandler.bind(this);
         this.clickCancelHandler = this.clickCancelHandler.bind(this);
         this.checkHandler = this.checkHandler.bind(this);
-        this.transferDisableCond = this.transferDisableCond.bind(this);
     }
 
     clickOpenHandler = () => {
@@ -40,13 +39,6 @@ class TransferOwnershipModal extends Component {
             selectedUserId: user.id,
             selectedUserName: user.username,
         });
-    }
-
-    transferDisableCond = () => {
-        if (this.props.me) {
-            return this.state.selectedUserId <= 0 || this.state.selectedUserId === this.props.me.id;
-        }
-        return true;
     }
 
     render() {
@@ -83,16 +75,17 @@ class TransferOwnershipModal extends Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <WarningModal
-                          history={this.props.history}
                           openButtonText="Transfer to ..."
                           whatToWarnText={`Transfer "${this.props.thisCollection.title}" to "${this.state.selectedUserName}"`}
                           whatActionWillBeDone={() => this.props.onTransferOwnership(
                               this.props.thisCollection.id,
                               this.state.selectedUserId,
                           )}
-                          whereToGoAfterConfirm={`/collection_id=${this.props.thisCollection.id}`}
-                          disableCondition={this.transferDisableCond()}
-                          disableMessage="Select a user except you"
+                          whatActionWillFollow={() => {
+                              this.props.history.replace(`/collection_id=${this.props.thisCollection.id}`);
+                          }}
+                          disableCondition={this.state.selectedUserId <= 0}
+                          disableMessage="Select a user"
                         />
                         <Button id="cancelButton" onClick={this.clickCancelHandler}>
                             Cancel

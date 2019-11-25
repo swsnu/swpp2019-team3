@@ -67,7 +67,7 @@ class InviteToCollectionModal extends Component {
                     isModalOpen: false,
                     checkedUserIdList: [],
                 });
-                this.props.onGetCollection({ id: this.props.thisCollection.id });
+                this.props.onGetMembers(this.props.thisCollection.id);
             });
     }
 
@@ -162,6 +162,9 @@ const mapDispatchToProps = (dispatch) => ({
         collectionActions.addNewMembers(collectionId, userIdList),
     ),
     onGetCollection: (collectionId) => dispatch(collectionActions.getCollection(collectionId)),
+    onGetMembers: (collectionId) => dispatch(
+        collectionActions.getCollectionMembers(collectionId),
+    ),
 });
 
 
@@ -179,7 +182,7 @@ InviteToCollectionModal.propTypes = {
     onGetFollowings: PropTypes.func,
     onSearchUsers: PropTypes.func,
     onInviteUsers: PropTypes.func,
-    onGetCollection: PropTypes.func,
+    onGetMembers: PropTypes.func,
 };
 
 InviteToCollectionModal.defaultProps = {
@@ -194,5 +197,5 @@ InviteToCollectionModal.defaultProps = {
     onGetFollowings: () => {},
     onSearchUsers: () => {},
     onInviteUsers: () => {},
-    onGetCollection: () => {},
+    onGetMembers: () => {},
 };

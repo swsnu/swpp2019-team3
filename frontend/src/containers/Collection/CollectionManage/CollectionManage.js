@@ -119,7 +119,7 @@ class CollectionManage extends Component {
                             to the other member of this collection.
                             WARNING: This action cannot be undone.
                         </h5>
-                        <TransferOwnershipModal />
+                        <TransferOwnershipModal history={this.props.history} />
                     </div>
                     <div className="DeleteCollection">
                         <h5 id="deleteCollectionText">Delete this collection.
@@ -131,7 +131,7 @@ class CollectionManage extends Component {
                           whatActionWillBeDone={() => this.props.onDeleteCollection(
                               this.props.selectedCollection.id,
                           )}
-                          whereToGoAfterConfirm="/collections"
+                          whatActionWillFollow={() => this.props.history.replace("/collections")}
                           history={this.props.history}
                         />
                     </div>
