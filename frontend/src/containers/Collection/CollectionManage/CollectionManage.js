@@ -14,8 +14,6 @@ class CollectionManage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            initName: "",
-            initDescription: "",
             collectionName: "",
             collectionDescription: "",
         };
@@ -29,9 +27,7 @@ class CollectionManage extends Component {
                     this.props.history.push("/main");
                 } else {
                     this.setState({
-                        initName: this.props.selectedCollection.title,
                         collectionName: this.props.selectedCollection.title,
-                        initDescription: this.props.selectedCollection.text,
                         collectionDescription: this.props.selectedCollection.text,
                     });
                 }
@@ -44,19 +40,28 @@ class CollectionManage extends Component {
             id: this.props.selectedCollection.id,
             title: this.state.collectionName,
             text: this.state.collectionDescription,
-        });
-        // message or popup that says "collection is updated" may need to be implemented
+        })
+            .then(() => {
+                this.props.onGetCollection({ id: this.props.selectedCollection.id });
+                // message or popup that says "collection is updated" may need to be implemented
+            });
     }
 
     render() {
+        let beforeName = null;
+        let beforeDescription = null;
+        if (this.props.selectedCollection) {
+            beforeName = this.props.selectedCollection.title;
+            beforeDescription = this.props.selectedCollection.text;
+        }
+
         return (
             <div className="CollectionManage">
                 <div className="EditCollectionInfo">
                     <div className="EditCollectionName">
                         <h3 id="editNameTag">Collection Name</h3>
-                        <textarea
+                        <input
                           id="editName"
-                          rows="1"
                           type="text"
                           value={this.state.collectionName}
                           onChange={(event) => this.setState({
@@ -81,8 +86,8 @@ class CollectionManage extends Component {
                           id="UpdateCollectionButton"
                           onClick={this.updateCollectionHandler}
                           disabled={this.state.collectionName === ""
-                            || (this.state.initName === this.state.collectionName
-                                && this.state.initDescription === this.state.collectionDescription)}
+                            || (beforeName === this.state.collectionName
+                                && beforeDescription === this.state.collectionDescription)}
                         >Update Collection
                         </Button>
                         <Link to={`/collection_id=${this.props.selectedCollection.id}`}>
