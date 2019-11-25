@@ -22,6 +22,7 @@ from papersfeed.models.replies.reply_review import ReplyReview
 from papersfeed.models.replies.reply_like import ReplyLike
 from papersfeed.utils.replies.utils import __get_reply_like_count
 from papersfeed.models.users.user import User
+from papersfeed.models.users.user_action import UserAction
 from papersfeed.models.collections.collection_user import CollectionUser
 
 
@@ -47,6 +48,23 @@ def insert_like_paper(args):
         user_id=request_user.id,
     )
 
+    # Create action for recommendation
+    try:
+        obj = UserAction.get(
+            user_id=request_user.id, 
+            paper_id=paper_id,
+            type='like'
+            )
+        setattr(obj, 'count', obj.count + 1)
+        obj.save()
+    except UserAction.DoesNotExist:
+        UserAction.objects.create(
+            user_id=request_user.id,
+            paper_id=paper_id,
+            type='like',
+            count=1,
+        )
+
     like_counts = __get_paper_like_count([paper_id], 'paper_id')
     return {constants.LIKES: like_counts[paper_id] if paper_id in like_counts else 0}
 
@@ -69,6 +87,15 @@ def remove_like_paper(args):
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     paper_like.delete()
+
+    # Update action count for recommendation
+    obj = UserAction.get(
+        user_id=request_user.id, 
+        paper_id=paper_id,
+        type='like'
+        )
+    setattr(obj, 'count', obj.count - 1)
+    obj.save()
 
     like_counts = __get_paper_like_count([paper_id], 'paper_id')
     return {constants.LIKES: like_counts[paper_id] if paper_id in like_counts else 0}
