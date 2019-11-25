@@ -110,7 +110,6 @@ describe("WarningModal test", () => {
         // what should be done
         const instance = component.find("WarningModal").instance();
         expect(mockActionWillBeDone).toHaveBeenCalledTimes(1);
-        // expect(mockHistory.replace).toHaveBeenCalledTimes(1);
         expect(instance.state.isModalOpen).toBe(true); // FIXME: async problems
     });
 
