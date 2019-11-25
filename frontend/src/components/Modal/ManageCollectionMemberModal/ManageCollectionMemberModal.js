@@ -180,7 +180,6 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(ManageCollectionMemberModal);
 
 ManageCollectionMemberModal.propTypes = {
-    history: PropTypes.objectOf(PropTypes.any),
     me: PropTypes.objectOf(PropTypes.any),
     thisCollection: PropTypes.objectOf(PropTypes.any),
     members: PropTypes.arrayOf(PropTypes.any),
@@ -189,7 +188,6 @@ ManageCollectionMemberModal.propTypes = {
 };
 
 ManageCollectionMemberModal.defaultProps = {
-    history: {},
     me: {},
     thisCollection: {},
     members: [],

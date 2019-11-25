@@ -31,7 +31,8 @@ class CollectionManage extends Component {
                         collectionDescription: this.props.selectedCollection.text,
                     });
                 }
-            });
+            })
+            .catch(() => {});
         this.props.onGetMembers(collectionId)
             .then(() => {
                 this.props.members.forEach((x) => {
@@ -41,7 +42,8 @@ class CollectionManage extends Component {
                         }
                     }
                 });
-            });
+            })
+            .catch(() => {});
     }
 
     updateCollectionHandler = () => {
@@ -53,7 +55,8 @@ class CollectionManage extends Component {
             .then(() => {
                 this.props.onGetCollection({ id: this.props.selectedCollection.id });
                 // message or popup that says "collection is updated" may need to be implemented
-            });
+            })
+            .catch(() => {});
     }
 
     render() {

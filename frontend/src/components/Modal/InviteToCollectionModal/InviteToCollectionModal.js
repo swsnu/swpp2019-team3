@@ -161,7 +161,6 @@ const mapDispatchToProps = (dispatch) => ({
     onInviteUsers: (collectionId, userIdList) => dispatch(
         collectionActions.addNewMembers(collectionId, userIdList),
     ),
-    onGetCollection: (collectionId) => dispatch(collectionActions.getCollection(collectionId)),
     onGetMembers: (collectionId) => dispatch(
         collectionActions.getCollectionMembers(collectionId),
     ),

@@ -3,7 +3,6 @@
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Exists, OuterRef, Count, Case, When
-from django.utils import timezone
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
@@ -363,7 +362,7 @@ def __pack_collections(collections, request_user, paper_id=None):  # pylint: dis
         }
 
         if paper_id:
-            packed_collection[constants.CONTAINS_PAPER] = collection.contains_paper,
+            packed_collection[constants.CONTAINS_PAPER] = collection.contains_paper
 
         packed.append(packed_collection)
 

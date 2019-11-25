@@ -12,17 +12,18 @@ const UserEntry = (props) => (
                   type={props.type}
                   checked={props.isChecked}
                   onChange={props.checkhandler}
+                  label={props.userName}
                 />
             )
             : <div /> }
-        <h5>{props.userName}</h5>
-        <h5>{props.userDesc}</h5>
     </Form.Row>
 );
 
 UserEntry.propTypes = {
     userName: PropTypes.string,
+    /* eslint-disable react/no-unused-prop-types */
     userDesc: PropTypes.string,
+    /* eslint-enable react/no-unused-prop-types */
     type: PropTypes.string,
     isChecked: PropTypes.bool,
     checkhandler: PropTypes.func,

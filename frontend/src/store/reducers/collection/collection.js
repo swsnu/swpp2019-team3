@@ -25,12 +25,12 @@ const initialState = {
     },
     selected: {
         status: collectionStatus.NONE,
-        error: null,
         collection: {},
+        error: null,
         papers: [],
         members: [],
-        replies: [],
         memberCount: 0,
+        replies: [],
     },
     like: {
         status: collectionStatus.NONE,

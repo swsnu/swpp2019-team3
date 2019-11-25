@@ -13,7 +13,11 @@ const stubInitialState = {
     },
     auth: {
         signinStatus: signinStatus.SUCCESS,
-        me: { id: 1 },
+        me: {
+            id: 1,
+            username: "test1",
+            description: "asdf",
+        },
     },
     collection: {
         make: {
@@ -37,27 +41,28 @@ const stubInitialState = {
             error: null,
         },
         selected: {
+            collection: {},
             status: collectionStatus.NONE,
             error: null,
-            collection: {},
             papers: [],
             members: [
                 {
                     id: 1,
                     username: "test1",
-                    userDesc: "asdf",
+                    description: "asdf",
                 },
                 {
                     id: 2,
                     username: "test2",
-                    userDesc: "qwer",
+                    description: "qwer",
                 },
                 {
                     id: 3,
                     username: "test3",
-                    userDesc: "zxcv",
+                    description: "zxcv",
                 },
             ],
+            memberCount: 3,
             replies: [],
         },
     },
@@ -88,7 +93,7 @@ jest.mock("../../User/UserEntry/UserEntry", () => jest.fn((props) => (
     />
 )));
 
-describe("InviteToCollectionModal test", () => {
+describe("ManageCollectionMemberModal test", () => {
     let manageCollectionMemberModal;
 
     beforeEach(() => {
@@ -124,6 +129,28 @@ describe("InviteToCollectionModal test", () => {
 
     it("user entries test: should be rendered and handles checking", () => {
         const component = mount(manageCollectionMemberModal);
+        const instance = component.find("ManageCollectionMemberModal").instance();
+
+        instance.setState({
+            members: [
+                {
+                    id: 1,
+                    username: "test1",
+                    description: "asdf",
+                },
+                {
+                    id: 2,
+                    username: "test2",
+                    description: "qwer",
+                },
+                {
+                    id: 3,
+                    username: "test3",
+                    description: "zxcv",
+                },
+            ],
+        });
+        component.update();
 
         // should be rendered
         let wrapper = component.find("#modalOpenButton").hostNodes();
@@ -134,13 +161,7 @@ describe("InviteToCollectionModal test", () => {
         // should handle checking
         wrapper = component.find("#check").at(0);
         wrapper.simulate("change", { target: { checked: true } });
-        const instance = component.find("ManageCollectionMemberModal").instance();
+
         expect(instance.state.checkedUserIdList).toEqual([1]);
     });
-
-    // it("confirmDisableCond test", () => {
-    //     const component = mount(manageCollectionMemberModal);
-
-    //     let wrapper = component.find("#modalOpenButton").hostNodes();
-    // })
 });
