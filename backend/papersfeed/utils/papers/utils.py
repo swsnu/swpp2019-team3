@@ -83,6 +83,7 @@ def select_paper_collection(args):
     return papers, page_number, is_finished
 
 
+# pylint: disable=too-many-locals
 def select_paper_search(args):
     """Select Paper Search"""
     is_parameter_exists([
@@ -150,8 +151,10 @@ def select_paper_search(args):
     papers, _, is_finished = __get_papers(Q(id__in=paper_ids), request_user, SEARCH_COUNT, order_by=preserved)
 
     return papers, page_number, is_finished
+# pylint: enable=too-many-locals
 
 
+# pylint: disable=too-many-locals
 def select_paper_search_ml(args):
     """Select Paper Search for ML(dummy data)"""
     is_parameter_exists([
@@ -215,6 +218,7 @@ def select_paper_search_ml(args):
     papers = __get_papers_ml(paper_ids, titles)
 
     return papers
+# pylint: enable=too-many-locals
 
 
 def select_paper_like(args):
