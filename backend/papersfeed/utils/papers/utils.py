@@ -145,9 +145,6 @@ def select_paper_search_ml(args):
         constants.TEXT
     ], args)
 
-    # Request User
-    request_user = args[constants.USER]
-
     # Search Keyword
     keyword = args[constants.TEXT]
 
@@ -187,7 +184,7 @@ def select_paper_search_ml(args):
     filter_query = Q(id__in=paper_ids)
 
     # Papers
-    papers, _, _ = __get_papers(filter_query, request_user, None)
+    papers, _, _ = __get_papers(filter_query, None, None)
 
     return papers
 # pylint: enable=too-many-locals

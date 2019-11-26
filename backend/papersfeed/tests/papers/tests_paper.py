@@ -357,6 +357,142 @@ class PaperTestCase(TestCase):
         self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
         self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
+    def test_paper_search_ml(self):
+        """ PAPER SEARCH ML """
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Creating papers
+        Paper.objects.create(
+            title="computer",
+            language="English",
+            abstract="test",
+            ISSN="1",
+            eISSN="1",
+            DOI="1",
+            creation_date="2019-11-13",
+            modification_date="2019-11-13"
+        )
+        Paper.objects.create(
+            title="test",
+            language="English",
+            abstract="AI",
+            ISSN="1",
+            eISSN="1",
+            DOI="1",
+            creation_date="2019-11-13",
+            modification_date="2019-11-13"
+        )
+        Paper.objects.create(
+            title="paper2",
+            language="English",
+            abstract="abstract2",
+            ISSN="1",
+            eISSN="1",
+            DOI="1",
+            creation_date="2019-11-13",
+            modification_date="2019-11-13"
+        )
+        # Search with Keyword 'Paper'
+        response = client.get('/api/paper/search/ml',
+                              data={
+                                  constants.TEXT: 'paper'
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 2)
+
+        # Search with Keyword 'AI'
+        response = client.get('/api/paper/search',
+                              data={
+                                  constants.TEXT: 'AI'
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
+
+        # Search with Keyword 'Computer'
+        response = client.get('/api/paper/search',
+                              data={
+                                  constants.TEXT: 'Computer'
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
+
+    @patch('requests.post')
+    @patch('requests.get')
+    def test_paper_search_ml_arxiv(self, mock_get, mock_post):
+        """Search Paper (arXiv)"""
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # mock two responses from arXiv API (one has a entry, and next one has no entry)
+        mock_responses = []
+
+        stub_xml = open("papersfeed/tests/papers/stub_arxiv_entry.xml", 'r')
+        mock_responses.append(Mock(
+            text=stub_xml.read(),
+            status_code=200
+        ))
+
+        stub_xml = open("papersfeed/tests/papers/stub_arxiv_no_entry.xml", 'r')
+        mock_responses.append(Mock(
+            text=stub_xml.read(),
+            status_code=200
+        ))
+
+        mock_get.side_effect = mock_responses
+
+        stub_json = json.loads(open("papersfeed/tests/papers/stub_key_phrases.json", 'r').read())
+        # just for getting a clue about the id of paper which will be added in this test
+        Paper.objects.create(
+            title="test",
+            language="English",
+            abstract="AI",
+            ISSN="1",
+            eISSN="1",
+            DOI="1",
+            creation_date="2019-11-13",
+            modification_date="2019-11-13"
+        )
+        paper_id = Paper.objects.filter(title='test').first().id
+        # manipulate the id of static stub_key_phrases
+        stub_json['documents'][0]['id'] = str(paper_id + 1)
+
+        mock_post.return_value = MockResponse(
+            json_data=stub_json,
+            status_code=200
+        )
+
+        # Search with Keyword 'blahblah' which doesn't exist in DB (send requests to arXiv)
+        response = client.get('/api/paper/search/ml',
+                              data={
+                                  constants.TEXT: 'blahblah'
+                              },
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        # there was one result from arXiv, so our search API's response should have one paper result, too
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
+
 # pylint: disable=too-few-public-methods
 class MockResponse:
     """MockResponse"""
