@@ -17,6 +17,11 @@ const makeFollowerList = (initialState) => (
         <UserList history={mockHistory} location={{ pathname: "/profile_id=1/followers" }} />
     </Provider>
 );
+const makeWrongList = (initialState) => (
+    <Provider store={getMockStore(initialState)}>
+        <UserList history={mockHistory} location={{ pathname: "/profile_id=1/wrong" }} />
+    </Provider>
+);
 /* eslint-disable no-unused-vars */
 const mockPromise = new Promise((resolve, reject) => { resolve(); });
 /* eslint-enable no-unused-vars */
@@ -59,6 +64,12 @@ describe("<UserList />", () => {
         const followerWrapper = followerComponent.find(".user-list");
         expect(followerWrapper.length).toBe(1);
         expect(spyFollowersUser).toBeCalledTimes(1);
+    });
+
+    it("should not call anything when wrong pathname", () => {
+        mount(makeWrongList(stubInitialState));
+        expect(spyFollowingsUser).toBeCalledTimes(0);
+        expect(spyFollowersUser).toBeCalledTimes(0);
     });
 
     it("should make userCardsLeft and userCardsRight well", () => {

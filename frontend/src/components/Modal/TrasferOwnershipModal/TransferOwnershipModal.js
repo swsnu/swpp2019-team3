@@ -15,6 +15,11 @@ class TransferOwnershipModal extends Component {
             selectedUserId: -1,
             selectedUserName: "",
         };
+
+
+        this.clickOpenHandler = this.clickOpenHandler.bind(this);
+        this.clickCancelHandler = this.clickCancelHandler.bind(this);
+        this.checkHandler = this.checkHandler.bind(this);
     }
 
     clickOpenHandler = () => {
@@ -36,31 +41,22 @@ class TransferOwnershipModal extends Component {
         });
     }
 
-    clickWarningConfirmAction = () => {
-        this.props.onTransferOwnership(this.props.thisCollection.id, this.state.selectedUserId);
-    }
-
-    transferDisableCond = () => {
-        if (this.props.me) {
-            return this.state.selectedUserId <= 0 || this.state.selectedUserId === this.props.me.id;
-        }
-        return true;
-    }
-
     render() {
         let memberList = (<div />);
-        if (this.props.members.length > 0) {
-            memberList = this.props.members.map((user) => (
-                <UserEntry
-                  key={user.id}
-                  id={user.id}
-                  userName={user.username}
-                  userDesc={user.descrpition}
-                  isChecked={this.state.selectedUserId === user.id}
-                  checkhandler={() => this.checkHandler(user)}
-                  type="radio"
-                />
-            ));
+        if (this.props.me && this.props.members.length > 0) {
+            memberList = this.props.members
+                .filter((user) => user.id !== this.props.me.id)
+                .map((user) => (
+                    <UserEntry
+                      key={user.id}
+                      id={user.id}
+                      userName={user.username}
+                      userDesc={user.descrpition}
+                      isChecked={this.state.selectedUserId === user.id}
+                      checkhandler={() => this.checkHandler(user)}
+                      type="radio"
+                    />
+                ));
         }
 
         return (
@@ -79,13 +75,17 @@ class TransferOwnershipModal extends Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <WarningModal
-                          history={this.props.history}
                           openButtonText="Transfer to ..."
                           whatToWarnText={`Transfer "${this.props.thisCollection.title}" to "${this.state.selectedUserName}"`}
-                          whatActionWillBeDone={this.clickWarningConfirmAction}
-                          whereToGoAfterConfirm={`/collection_id=${this.props.thisCollection.id}`}
-                          disableCondition={this.transferDisableCond()}
-                          disableMessage="Select a user except you"
+                          whatActionWillBeDone={() => this.props.onTransferOwnership(
+                              this.props.thisCollection.id,
+                              this.state.selectedUserId,
+                          )}
+                          whatActionWillFollow={() => {
+                              this.props.history.replace(`/collection_id=${this.props.thisCollection.id}`);
+                          }}
+                          disableCondition={this.state.selectedUserId <= 0}
+                          disableMessage="Select a user"
                         />
                         <Button id="cancelButton" onClick={this.clickCancelHandler}>
                             Cancel

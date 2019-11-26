@@ -11,7 +11,6 @@ from papersfeed.models.collections.collection_like import CollectionLike
 from papersfeed.models.collections.collection_user import CollectionUser, COLLECTION_USER_TYPE
 from papersfeed.models.collections.collection_paper import CollectionPaper
 from papersfeed.models.replies.reply_collection import ReplyCollection
-# from papersfeed.models.users.user import User
 
 
 def insert_collection(args):
@@ -321,12 +320,12 @@ def __get_collections(filter_query, request_user, count, paper_id=None, order_by
 
     is_finished = len(collections) < count if count and pagination_value != 0 else True
 
-    collections = __pack_collections(collections, request_user)
+    collections = __pack_collections(collections, request_user, paper_id=paper_id)
 
     return collections, pagination_value, is_finished
 
 
-def __pack_collections(collections, request_user):  # pylint: disable=unused-argument
+def __pack_collections(collections, request_user, paper_id=None):  # pylint: disable=unused-argument
     """Pack Collections"""
     packed = []
 
@@ -352,14 +351,18 @@ def __pack_collections(collections, request_user):  # pylint: disable=unused-arg
             constants.TITLE: collection.title,
             constants.TEXT: collection.text,
             constants.LIKED: collection.is_liked,
-            constants.CONTAINS_PAPER: collection.contains_paper,
             constants.COUNT: {
                 constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0,
                 constants.PAPERS: paper_counts[collection_id] if collection_id in paper_counts else 0,
                 constants.LIKES: like_counts[collection_id] if collection_id in like_counts else 0,
                 constants.REPLIES: reply_counts[collection_id] if collection_id in reply_counts else 0
-            }
+            },
+            constants.CREATION_DATE: collection.creation_date,
+            constants.MODIFICATION_DATE: collection.modification_date
         }
+
+        if paper_id:
+            packed_collection[constants.CONTAINS_PAPER] = collection.contains_paper
 
         packed.append(packed_collection)
 

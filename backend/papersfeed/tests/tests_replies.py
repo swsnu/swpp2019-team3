@@ -4,7 +4,6 @@ import json
 
 from django.test import TestCase, Client
 from papersfeed import constants
-from papersfeed.models.users.user import User
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.reviews.review import Review
 from papersfeed.models.collections.collection import Collection
@@ -130,10 +129,8 @@ class ReplyTestCase(TestCase):
                    },
                    content_type='application/json')
 
-        user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
         collection_id = Collection.objects.filter(title='test_collection_1').first().id
         review_id = Review.objects.filter(title="test_review_1").first().id
-        collection_reply_id = ReplyCollection.objects.filter(collection_id=collection_id).first().reply_id
 
         # Get Replies Collection
         response = client.get('/api/reply/collection',
@@ -143,18 +140,11 @@ class ReplyTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn(
-            '{"replies": [{"id": ' + str(collection_reply_id)
-            + ', "text": "test_reply_1", "liked": false, "review": {}, "collection": {"id":'
-            + ' ' + str(collection_id)
-            + ', "title": "test_collection_1", "text": "test_collection_1", "liked": false, '
-            + '"contains_paper": false, "count": {"users": 1, "papers": 0, "likes": 0, "replies": 1}},'
-            + ' "user": {"id": ' + str(user_id)
-            + ', "username": "swpp", "email": "swpp@snu.ac.kr", "description": "", '
-            + '"count": {"follower": 0, "following": 0}}, "count": {"likes": 0}}], '
-            + '"page_number": 1, '
-            + '"is_finished": true}',
-            response.content.decode())
+
+        replies = json.loads(response.content)[constants.REPLIES]
+        self.assertEqual(len(replies), 1)
+        self.assertEqual(replies[0][constants.TEXT], "test_reply_1")
+
         self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
         self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 

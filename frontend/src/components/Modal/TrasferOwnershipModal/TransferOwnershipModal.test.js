@@ -14,7 +14,11 @@ const stubInitialState = {
     },
     auth: {
         signinStatus: signinStatus.SUCCESS,
-        me: { id: 1 },
+        me: {
+            id: 1,
+            username: "test1",
+            description: "asdf",
+        },
     },
     collection: {
         make: {
@@ -46,19 +50,20 @@ const stubInitialState = {
                 {
                     id: 1,
                     username: "test1",
-                    userDesc: "asdf",
+                    description: "asdf",
                 },
                 {
                     id: 2,
                     username: "test2",
-                    userDesc: "qwer",
+                    description: "qwer",
                 },
                 {
                     id: 3,
                     username: "test3",
-                    userDesc: "zxcv",
+                    description: "zxcv",
                 },
             ],
+            memberCount: 3,
             replies: [],
         },
     },
@@ -123,19 +128,40 @@ describe("TransferOwnershipModal test", () => {
 
     it("user entries test: should be rendered and handles checking", () => {
         const component = mount(transferModal);
+        const instance = component.find("TransferOwnershipModal").instance();
+
+        instance.setState({
+            members: [
+                {
+                    id: 1,
+                    username: "test1",
+                    description: "asdf",
+                },
+                {
+                    id: 2,
+                    username: "test2",
+                    description: "qwer",
+                },
+                {
+                    id: 3,
+                    username: "test3",
+                    description: "zxcv",
+                },
+            ],
+        });
+        component.update();
 
         // should be rendered
         let wrapper = component.find("#modalOpenButton").hostNodes();
         wrapper.simulate("click");
         wrapper = component.find(".entryItem");
-        expect(wrapper.length).toBe(3);
+        expect(wrapper.length).toBe(2); // excluding 'me'
 
         // should handle checking
         wrapper = component.find("#check").at(0);
         wrapper.simulate("change", { target: { checked: true } });
-        const instance = component.find("TransferOwnershipModal").instance();
-        expect(instance.state.selectedUserId).toBe(1);
-        expect(instance.state.selectedUserName).toBe("test1");
+        expect(instance.state.selectedUserId).toBe(2); // the first user of entries is "test2"
+        expect(instance.state.selectedUserName).toBe("test2");
     });
 
     // it("clickWarningConfirmAction should be called in WarningModal", () => {

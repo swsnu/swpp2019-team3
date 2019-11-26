@@ -576,7 +576,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.deleteMembers(1, [2, 3, 4]))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/user/collection", { id: 1, user_ids: [2, 3, 4] });
+                expect(spy).toHaveBeenCalledWith("/api/user/collection", { params: { id: 1, user_ids: JSON.stringify([2, 3, 4]) } });
                 done();
             });
     });
@@ -595,7 +595,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.deleteMembers(1, [2, 3, 4]))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/user/collection", { id: 1, user_ids: [2, 3, 4] });
+                expect(spy).toHaveBeenCalledWith("/api/user/collection", { params: { id: 1, user_ids: JSON.stringify([2, 3, 4]) } });
                 done();
             });
     });
@@ -614,7 +614,7 @@ describe("collectionActions", () => {
 
         mockStore.dispatch(collectionActions.deleteMembers(1, [2, 3, 4]))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/user/collection", { id: 1, user_ids: [2, 3, 4] });
+                expect(spy).toHaveBeenCalledWith("/api/user/collection", { params: { id: 1, user_ids: JSON.stringify([2, 3, 4]) } });
                 done();
             });
     });
