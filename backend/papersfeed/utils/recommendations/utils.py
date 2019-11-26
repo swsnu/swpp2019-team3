@@ -23,7 +23,7 @@ def select_user_actions(_):
 
     new_actions = list(new_actions)
 
-    UserAction.objects.filter(~Q(count=3)).update(count=0)
+    UserAction.objects.filter(~Q(count=0)).update(count=0)
 
     return new_actions
 
