@@ -1,7 +1,6 @@
 """tests_paper.py"""
 # -*- coding: utf-8 -*-
 import json
-# 
 
 from unittest.mock import Mock, patch
 from django.test import TestCase, Client
