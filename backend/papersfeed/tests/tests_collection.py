@@ -4,6 +4,7 @@ import json
 
 from django.test import TestCase, Client
 from papersfeed import constants
+from papersfeed.models.papers.paper import Paper
 from papersfeed.models.collections.collection import Collection
 from papersfeed.models.users.user import User
 
@@ -136,24 +137,9 @@ class CollectionTestCase(TestCase):
         self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
         self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
-        collection_id = Collection.objects.filter(title='SWPP Papers').first().id
-        self.assertJSONEqual(response.content, {
-            constants.COLLECTIONS: [{
-                constants.ID: collection_id,
-                constants.TITLE: 'SWPP Papers',
-                constants.TEXT: 'papers for swpp 2019 class',
-                constants.LIKED: False,
-                constants.CONTAINS_PAPER: False,
-                constants.COUNT: {
-                    constants.USERS: 1,
-                    constants.PAPERS: 0,
-                    constants.LIKES: 0,
-                    constants.REPLIES: 0,
-                }
-            }],
-            constants.PAGE_NUMBER: 1,
-            constants.IS_FINISHED: True
-        })
+        collections = json.loads(response.content)[constants.COLLECTIONS]
+        self.assertEqual(len(collections), 1)
+        self.assertEqual(collections[0][constants.TITLE], 'SWPP Papers')
 
     def test_get_collections_of_user_with_paper(self):
         """ GET USER'S COLLECTIONS """
@@ -169,11 +155,30 @@ class CollectionTestCase(TestCase):
 
         user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
 
+        # Creating papers
+        Paper.objects.create(
+            title="paper1",
+            language="English",
+            abstract="abstract1",
+        )
+
+        collection_id = Collection.objects.filter(title='SWPP Papers').first().id
+
+        paper_id = Paper.objects.filter(title='paper1').first().id
+
+        # Add paper to 'SWPP Papers'
+        client.put('/api/paper/collection',
+                   json.dumps({
+                       constants.ID: paper_id,
+                       constants.COLLECTION_IDS: [collection_id]
+                   }),
+                   content_type='application/json')
+
         # Get User's Collections
         response = client.get('/api/collection/user',
                               data={
                                   constants.ID: user_id,
-                                  constants.PAPER: 1,
+                                  constants.PAPER: paper_id,
                               },
                               content_type='application/json')
 
@@ -181,24 +186,10 @@ class CollectionTestCase(TestCase):
         self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
         self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
-        collection_id = Collection.objects.filter(title='SWPP Papers').first().id
-        self.assertJSONEqual(response.content, {
-            constants.COLLECTIONS: [{
-                constants.ID: collection_id,
-                constants.TITLE: 'SWPP Papers',
-                constants.TEXT: 'papers for swpp 2019 class',
-                constants.LIKED: False,
-                constants.CONTAINS_PAPER: False,
-                constants.COUNT: {
-                    constants.USERS: 1,
-                    constants.PAPERS: 0,
-                    constants.LIKES: 0,
-                    constants.REPLIES: 0,
-                }
-            }],
-            constants.PAGE_NUMBER: 1,
-            constants.IS_FINISHED: True
-        })
+        collections = json.loads(response.content)[constants.COLLECTIONS]
+        self.assertEqual(len(collections), 1)
+        self.assertEqual(collections[0][constants.TITLE], 'SWPP Papers')
+        self.assertEqual(collections[0][constants.CONTAINS_PAPER], True)
 
     def test_delete_collection(self):
         """ DELETE Collection """

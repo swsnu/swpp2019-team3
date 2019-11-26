@@ -23,16 +23,21 @@ class CreateNewCollectionModal extends Component {
     }
 
     clickCreateHandler = () => {
+        const newCollectionDesc = this.state.newCollectionDesc.length > 0
+            ? this.state.newCollectionDesc : `This is ${this.state.newCollectionName} collection.`;
+
         this.props.onCreateNewCollection({
             title: this.state.newCollectionName,
-            text: this.state.newCollectionDesc,
-        });
-        this.props.onUpdateCollection({ id: this.props.me.id });
-        this.setState({
-            isModalOpen: false,
-            newCollectionName: "",
-            newCollectionDesc: "",
-        });
+            text: newCollectionDesc,
+        })
+            .then(() => {
+                this.props.onUpdateCollection({ id: this.props.me.id });
+                this.setState({
+                    isModalOpen: false,
+                    newCollectionName: "",
+                    newCollectionDesc: "",
+                });
+            });
     }
 
     clickCancelHandler = () => {
@@ -48,7 +53,7 @@ class CreateNewCollectionModal extends Component {
             <div className="CreateNewCollectionModal">
                 <div id="openButtonDiv">
                     <Button id="modalOpenButton" onClick={this.clickOpenHandler}>
-                        Create New ...
+                        Create New...
                     </Button>
                 </div>
                 <Modal id="createModal" show={this.state.isModalOpen} onHide={this.clickCancelHandler} centered>

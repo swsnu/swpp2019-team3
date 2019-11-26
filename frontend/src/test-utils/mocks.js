@@ -44,3 +44,9 @@ export const mockComponent = (componentName) => (props) => (
     <div className={componentName} {...props} />
     /* eslint-enable react/jsx-props-no-spreading */
 );
+
+/* eslint-disable no-unused-vars */
+export const mockPromise = new Promise((resolve, reject) => { resolve(); });
+/* eslint-enable no-unused-vars */
+
+export const flushPromises = () => new Promise(setImmediate);
