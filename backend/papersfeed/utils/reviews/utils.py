@@ -12,6 +12,7 @@ from papersfeed.models.reviews.review import Review
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.reviews.review_like import ReviewLike
 from papersfeed.models.replies.reply_review import ReplyReview
+from papersfeed.models.users.user_action import UserAction, USER_ACTION_TYPE
 
 
 def select_review(args):
@@ -71,6 +72,23 @@ def insert_review(args):
         title=title,
         text=text
     )
+
+    # Create action for recommendation
+    try:
+        obj = UserAction.objects.get(
+            user_id=request_user.id,
+            paper_id=paper_id,
+            type=USER_ACTION_TYPE[2]
+        )
+        obj.count = obj.count + 1
+        obj.save()
+    except ObjectDoesNotExist:
+        UserAction.objects.create(
+            user_id=request_user.id,
+            paper_id=paper_id,
+            type=USER_ACTION_TYPE[2],
+            count=1,
+        )
 
     reviews, _, _ = __get_reviews(Q(id=review.id), request_user, None)
 
@@ -150,7 +168,17 @@ def remove_review(args):
     if review.user_id != request_user.id:
         raise ApiError(constants.AUTH_ERROR)
 
+    paper_id = review.paper_id
+
     review.delete()
+
+    obj = UserAction.objects.get(
+        user_id=request_user.id,
+        paper_id=paper_id,
+        type=USER_ACTION_TYPE[2]
+    )
+    obj.count = obj.count - 1
+    obj.save()
 
 
 def select_review_paper(args):

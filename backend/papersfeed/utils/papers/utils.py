@@ -137,8 +137,51 @@ def select_paper_search(args):
 
     # Papers
     papers, _, is_finished = __get_papers(filter_query, request_user, 20)
-
     return papers, page_number, is_finished
+
+def select_paper_search_ml(args):
+    """Select Paper Search"""
+    is_parameter_exists([
+        constants.TEXT
+    ], args)
+
+    # Search Keyword
+    keyword = args[constants.TEXT]
+
+    # Paper Ids
+    paper_ids = Paper.objects.filter(Q(title__icontains=keyword)) \
+        .values_list('id', flat=True)
+
+    # if there is no result in our DB
+    if paper_ids.count() == 0:
+        # exploit arXiv
+        try:
+            start = 0
+            print("[arXiv API] searching ({}~{})".format(start, start + 1))
+            arxiv_url = "http://export.arxiv.org/api/query"
+            query = "?search_query=" + urllib.parse.quote(keyword) \
+                + "&start=" + str(start) + "&max_results=" + str(1)
+            response = requests.get(arxiv_url + query)
+
+            if response.status_code == 200:
+                response_xml = response.text
+                response_dict = xmltodict.parse(response_xml)['feed']
+                if 'entry' in response_dict and response_dict['entry']:
+                    paper_ids = __parse_and_save_arxiv_info(response_dict)
+                else: # if 'entry' doesn't exist or it's the end of results
+                    print("[arXiv API] more entries don't exist")
+            else:
+                print("[arXiv API] error code {}".format(response.status_code))
+        except requests.exceptions.RequestException as exception:
+            print(exception)
+
+    # Filter Query
+    filter_query = Q(id__in=paper_ids)
+
+    # Papers
+    papers, _, _ = __get_papers(filter_query, None, None)
+
+    return papers
 # pylint: enable=too-many-locals
 
 def select_paper_like(args):
