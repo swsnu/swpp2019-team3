@@ -157,26 +157,21 @@ def select_paper_search_ml(args):
         # exploit arXiv
         try:
             start = 0
-            while True:
-                print("[arXiv API] searching ({}~{})".format(start, start + 1))
-                arxiv_url = "http://export.arxiv.org/api/query"
-                query = "?search_query=" + urllib.parse.quote(keyword) \
-                    + "&start=" + str(start) + "&max_results=" + str(ARXIV_COUNT)
-                response = requests.get(arxiv_url + query)
+            print("[arXiv API] searching ({}~{})".format(start, start + 1))
+            arxiv_url = "http://export.arxiv.org/api/query"
+            query = "?search_query=" + urllib.parse.quote(keyword) \
+                + "&start=" + str(start) + "&max_results=" + str(1)
+            response = requests.get(arxiv_url + query)
 
-                if response.status_code == 200:
-                    response_xml = response.text
-                    response_dict = xmltodict.parse(response_xml)['feed']
-                    if 'entry' in response_dict and response_dict['entry']:
-                        paper_ids = __parse_and_save_arxiv_info(response_dict)
-                        break
-                    else: # if 'entry' doesn't exist or it's the end of results
-                        print("[arXiv API] more entries don't exist")
-                        break
-                else:
-                    print("[arXiv API] error code {}".format(response.status_code))
-                    break
-                start += 1 # continue pagination
+            if response.status_code == 200:
+                response_xml = response.text
+                response_dict = xmltodict.parse(response_xml)['feed']
+                if 'entry' in response_dict and response_dict['entry']:
+                    paper_ids = __parse_and_save_arxiv_info(response_dict)
+                else: # if 'entry' doesn't exist or it's the end of results
+                    print("[arXiv API] more entries don't exist")
+            else:
+                print("[arXiv API] error code {}".format(response.status_code))
         except requests.exceptions.RequestException as exception:
             print(exception)
 
