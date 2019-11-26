@@ -12,40 +12,63 @@ class InviteToCollectionModal extends Component {
         this.state = {
             searchKeyWord: "",
             isModalOpen: false,
-            isSearchResult: false,
+            memberIds: [],
+            users: [],
             checkedUserIdList: [],
         };
+
+        this.clickOpenHandler = this.clickOpenHandler.bind(this);
+        this.clickCancelHandler = this.clickCancelHandler.bind(this);
+        this.clickSearchHandler = this.clickSearchHandler.bind(this);
+        this.clickInviteUsersHandler = this.clickInviteUsersHandler.bind(this);
+        this.checkHandler = this.checkHandler.bind(this);
+        this.userEntryMapper = this.userEntryMapper.bind(this);
     }
 
     // handler functions for buttons
     clickOpenHandler = () => {
-        this.setState({ isModalOpen: true });
-        this.props.onGetFollowings({ id: this.props.me.id });
+        this.setState({ memberIds: this.props.members.map((x) => x.id) });
+        this.props.onGetFollowings({ id: this.props.me.id })
+            .then(() => {
+                const { memberIds } = this.state;
+                this.setState({
+                    isModalOpen: true,
+                    users: this.props.myFollowings
+                        .filter((x) => !memberIds.includes(x.id)),
+                });
+            });
     }
 
     clickCancelHandler = () => {
         this.setState({
             searchKeyWord: "",
             isModalOpen: false,
-            isSearchResult: false,
             checkedUserIdList: [],
         });
     }
 
     clickSearchHandler = () => {
-        this.setState({ isSearchResult: true, checkedUserIdList: [] });
-        this.props.onSearchUsers({ text: this.state.searchKeyWord });
+        this.setState({ checkedUserIdList: [] });
+        this.props.onSearchUsers({ text: this.state.searchKeyWord })
+            .then(() => {
+                const { memberIds } = this.state;
+                this.setState({
+                    users: this.props.searchedUsers
+                        .filter((x) => !memberIds.includes(x.id)),
+                });
+            });
     }
 
     clickInviteUsersHandler = () => {
-        // console.log(this.state.checkedUserIdList);
-        this.props.onInviteUsers(this.props.thisCollection.id, this.state.checkedUserIdList);
-        this.setState({
-            searchKeyWord: "",
-            isModalOpen: false,
-            isSearchResult: false,
-            checkedUserIdList: [],
-        });
+        this.props.onInviteUsers(this.props.thisCollection.id, this.state.checkedUserIdList)
+            .then(() => {
+                this.setState({
+                    searchKeyWord: "",
+                    isModalOpen: false,
+                    checkedUserIdList: [],
+                });
+                this.props.onGetMembers(this.props.thisCollection.id);
+            });
     }
 
     // handler function for user entry
@@ -75,9 +98,7 @@ class InviteToCollectionModal extends Component {
     ))
 
     render() {
-        const userEntries = this.state.isSearchResult
-            ? this.userEntryMapper(this.props.searchedUsers)
-            : this.userEntryMapper(this.props.myFollowings);
+        const userEntries = this.userEntryMapper(this.state.users);
 
         return (
             <div className="InviteToCollectionModal">
@@ -140,6 +161,9 @@ const mapDispatchToProps = (dispatch) => ({
     onInviteUsers: (collectionId, userIdList) => dispatch(
         collectionActions.addNewMembers(collectionId, userIdList),
     ),
+    onGetMembers: (collectionId) => dispatch(
+        collectionActions.getCollectionMembers(collectionId),
+    ),
 });
 
 
@@ -149,6 +173,7 @@ InviteToCollectionModal.propTypes = {
     openButtonName: PropTypes.string,
 
     thisCollection: PropTypes.objectOf(PropTypes.any),
+    members: PropTypes.arrayOf(PropTypes.any),
     myFollowings: PropTypes.arrayOf(PropTypes.any),
     searchedUsers: PropTypes.arrayOf(PropTypes.any),
     me: PropTypes.objectOf(PropTypes.any),
@@ -156,12 +181,14 @@ InviteToCollectionModal.propTypes = {
     onGetFollowings: PropTypes.func,
     onSearchUsers: PropTypes.func,
     onInviteUsers: PropTypes.func,
+    onGetMembers: PropTypes.func,
 };
 
 InviteToCollectionModal.defaultProps = {
     openButtonName: "",
 
     thisCollection: {},
+    members: [],
     myFollowings: [],
     searchedUsers: [],
     me: null,
@@ -169,4 +196,5 @@ InviteToCollectionModal.defaultProps = {
     onGetFollowings: () => {},
     onSearchUsers: () => {},
     onInviteUsers: () => {},
+    onGetMembers: () => {},
 };

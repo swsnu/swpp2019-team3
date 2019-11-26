@@ -178,9 +178,10 @@ export const removeCollectionPaper = (collectionsAndPaper) => (dispatch) => axio
     .then((res) => { dispatch(removeCollectionPaperSuccess(res.data)); })
     .catch((err) => { dispatch(removeCollectionPaperFailure(err)); });
 
+
 const addNewMembersSuccess = (count) => ({
     type: collectionConstants.ADD_COLLECTION_MEMBER,
-    count,
+    target: count.count,
 });
 
 const addNewMembersFailure = (error) => {
@@ -201,9 +202,10 @@ export const addNewMembers = (collectionId, userIdList) => (dispatch) => axios.p
     .then((res) => { dispatch(addNewMembersSuccess(res.data)); })
     .catch((err) => { dispatch(addNewMembersFailure(err)); });
 
+
 const deleteMembersSuccess = (count) => ({
     type: collectionConstants.DEL_COLLECTION_MEMBER,
-    count,
+    target: count.count,
 });
 
 const deleteMembersFailure = (error) => {
@@ -220,10 +222,10 @@ const deleteMembersFailure = (error) => {
     };
 };
 
-// FIXME : 400 bad request
-export const deleteMembers = (collectionId, userIdList) => (dispatch) => axios.delete("/api/user/collection", { id: collectionId, user_ids: userIdList })
+export const deleteMembers = (collectionId, userIdList) => (dispatch) => axios.delete("/api/user/collection", { params: { id: collectionId, user_ids: JSON.stringify(userIdList) } })
     .then((res) => { dispatch(deleteMembersSuccess(res.data)); })
     .catch((err) => { dispatch(deleteMembersFailure(err)); });
+
 
 // deleteCollection
 const deleteCollectionSuccess = (collection) => ({
@@ -294,6 +296,7 @@ const searchCollectionFailure = (error) => ({
 export const searchCollection = (searchWord) => (dispatch) => axios.get("/api/collection/search", { params: searchWord })
     .then((res) => dispatch(searchCollectionSuccess(res.data)))
     .catch((err) => dispatch(searchCollectionFailure(err)));
+
 
 // Get Collection Like
 const getCollectionLikeSuccess = (collections) => ({
