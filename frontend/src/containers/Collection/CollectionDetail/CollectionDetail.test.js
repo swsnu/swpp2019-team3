@@ -6,7 +6,7 @@ import { ConnectedRouter } from "connected-react-router";
 import { createBrowserHistory } from "history";
 import { collectionActions, replyActions } from "../../../store/actions";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
-import { getMockStore } from "../../../test-utils/mocks";
+import { getMockStore, mockPromise, flushPromises } from "../../../test-utils/mocks";
 import CollectionDetail from "./CollectionDetail";
 
 
@@ -19,9 +19,6 @@ const makeCollectionDetail = (initialState, props = {}) => (
     </Provider>
 );
 /* eslint-enable react/jsx-props-no-spreading */
-
-const mockPromise = new Promise((resolve) => { resolve(); });
-const flushPromises = () => new Promise(setImmediate);
 
 describe("CollectionDetail Test", () => {
     let stubInitialState;

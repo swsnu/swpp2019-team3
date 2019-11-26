@@ -6,7 +6,7 @@ import { ConnectedRouter } from "connected-react-router";
 import { createBrowserHistory } from "history";
 import CollectionManage from "./CollectionManage";
 import { collectionStatus } from "../../../constants/constants";
-import { getMockStore } from "../../../test-utils/mocks";
+import { getMockStore, mockPromise, flushPromises } from "../../../test-utils/mocks";
 import { collectionActions } from "../../../store/actions";
 
 const makeCollectionManage = (initialState) => (
@@ -16,11 +16,6 @@ const makeCollectionManage = (initialState) => (
         </ConnectedRouter>
     </Provider>
 );
-
-/* eslint-disable no-unused-vars */
-const mockPromise = new Promise((resolve, reject) => { resolve(); });
-/* eslint-enable no-unused-vars */
-const flushPromises = () => new Promise(setImmediate);
 
 describe("CollectionManage test", () => {
     let collectionManage;

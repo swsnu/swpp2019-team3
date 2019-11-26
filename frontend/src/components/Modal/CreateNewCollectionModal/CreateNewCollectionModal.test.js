@@ -2,52 +2,11 @@ import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
 
-import { getMockStore } from "../../../test-utils/mocks";
+import { getMockStore, mockPromise, flushPromises } from "../../../test-utils/mocks";
 import { collectionActions } from "../../../store/actions";
 import CreateNewCollectionModal from "./CreateNewCollectionModal";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
 
-const stubInitialState = {
-    paper: {
-    },
-    auth: {
-        signinStatus: signinStatus.SUCCESS,
-        me: { id: 1 },
-    },
-    collection: {
-        make: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        list: {
-            status: collectionStatus.NONE,
-            list: [],
-            error: null,
-        },
-        edit: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        delete: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        selected: {
-            status: collectionStatus.NONE,
-            error: null,
-            collection: {},
-            papers: [],
-            members: [],
-            replies: [],
-        },
-    },
-    user: {},
-    review: {},
-    reply: {},
-};
 
 const makeCreateNewCollectionModal = (initialState) => (
     <Provider store={getMockStore(initialState)}>
@@ -55,14 +14,52 @@ const makeCreateNewCollectionModal = (initialState) => (
     </Provider>
 );
 
-/* eslint-disable no-unused-vars */
-const mockPromise = new Promise((resolve, reject) => { resolve(); });
-/* eslint-enable no-unused-vars */
-
 describe("CreateNewCollection test", () => {
+    let stubInitialState;
     let createNewCollection;
 
     beforeEach(() => {
+        stubInitialState = {
+            paper: {
+            },
+            auth: {
+                signinStatus: signinStatus.SUCCESS,
+                me: { id: 1 },
+            },
+            collection: {
+                make: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                list: {
+                    status: collectionStatus.NONE,
+                    list: [],
+                    error: null,
+                },
+                edit: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                delete: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                selected: {
+                    status: collectionStatus.NONE,
+                    error: null,
+                    collection: {},
+                    papers: [],
+                    members: [],
+                    replies: [],
+                },
+            },
+            user: {},
+            review: {},
+            reply: {},
+        };
         createNewCollection = makeCreateNewCollectionModal(stubInitialState);
     });
 
@@ -100,7 +97,7 @@ describe("CreateNewCollection test", () => {
         expect(instance.state.newCollectionDesc).toBe("qwer");
     });
 
-    it("should handle making new collection", () => {
+    it("should handle making new collection", async () => {
         // mocking actions
         /* eslint-disable no-unused-vars */
         const spyMakeNewCollection = jest.spyOn(collectionActions, "makeNewCollection")
@@ -123,8 +120,12 @@ describe("CreateNewCollection test", () => {
 
         // expect actions to be called
         expect(spyMakeNewCollection).toHaveBeenCalledTimes(1);
-        expect(spyGetCollectionsByUserId).toHaveBeenCalledTimes(0); // FIXME: async problems
+
+        await flushPromises();
+        component.update();
+
+        expect(spyGetCollectionsByUserId).toHaveBeenCalledTimes(1);
         const instance = component.find("CreateNewCollectionModal").instance();
-        expect(instance.state.isModalOpen).toBe(true); // FIXME: async problems
+        expect(instance.state.isModalOpen).toBe(false);
     });
 });

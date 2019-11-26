@@ -2,7 +2,7 @@ import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
 
-import { getMockStore } from "../../../test-utils/mocks";
+import { getMockStore, mockPromise, flushPromises } from "../../../test-utils/mocks";
 import { collectionActions, userActions } from "../../../store/actions";
 import InviteToCollectionModal from "./InviteToCollectionModal";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
@@ -12,11 +12,6 @@ const makeInviteToCollectionModal = (initialState) => (
         <InviteToCollectionModal />
     </Provider>
 );
-
-/* eslint-disable no-unused-vars */
-const mockPromise = new Promise((resolve, reject) => { resolve(); });
-/* eslint-enable no-unused-vars */
-const flushPromises = () => new Promise(setImmediate);
 
 jest.mock("../../User/UserEntry/UserEntry", () => jest.fn((props) => (
     <input
