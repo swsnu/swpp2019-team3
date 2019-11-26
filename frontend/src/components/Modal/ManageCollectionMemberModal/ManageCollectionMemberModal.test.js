@@ -172,7 +172,7 @@ describe("ManageCollectionMemberModal test", () => {
     });
 
     // more tests should be implemented
-    it("should call deleteCollection when deleting", async () => {
+    it("should call deleteMembers when deleting", async () => {
         const component = mount(manageCollectionMemberModal);
         const instance = component.find(ManageCollectionMemberModal.WrappedComponent).instance();
         instance.setState({

@@ -7,49 +7,6 @@ import { collectionActions, userActions } from "../../../store/actions";
 import InviteToCollectionModal from "./InviteToCollectionModal";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
 
-const stubInitialState = {
-    paper: {
-    },
-    auth: {
-        signinStatus: signinStatus.SUCCESS,
-        me: { id: 4 },
-    },
-    collection: {
-        make: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        list: {
-            status: collectionStatus.NONE,
-            list: [],
-            error: null,
-        },
-        edit: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        delete: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        selected: {
-            status: collectionStatus.NONE,
-            error: null,
-            collection: {},
-            papers: [],
-            members: [],
-            memberCount: 0,
-            replies: [],
-        },
-    },
-    user: {},
-    review: {},
-    reply: {},
-};
-
 const makeInviteToCollectionModal = (initialState) => (
     <Provider store={getMockStore(initialState)}>
         <InviteToCollectionModal />
@@ -59,12 +16,84 @@ const makeInviteToCollectionModal = (initialState) => (
 /* eslint-disable no-unused-vars */
 const mockPromise = new Promise((resolve, reject) => { resolve(); });
 /* eslint-enable no-unused-vars */
+const flushPromises = () => new Promise(setImmediate);
 
 describe("InviteToCollectionModal test", () => {
+    let stubInitialState;
     let inviteToCollectionModal;
+    let spyGetFollowings;
+    let spyAddNewMemers;
+    let spySearch;
 
     beforeEach(() => {
+        stubInitialState = {
+            paper: {
+            },
+            auth: {
+                signinStatus: signinStatus.SUCCESS,
+                me: { id: 4 },
+            },
+            collection: {
+                make: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                list: {
+                    status: collectionStatus.NONE,
+                    list: [],
+                    error: null,
+                },
+                edit: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                delete: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                selected: {
+                    status: collectionStatus.NONE,
+                    error: null,
+                    collection: {},
+                    papers: [],
+                    members: [],
+                    memberCount: 0,
+                    replies: [],
+                },
+            },
+            user: {
+                selectedFollowing: [
+                    {
+                        id: 1,
+                        username: "test1",
+                        description: "asdf",
+                    },
+                    {
+                        id: 2,
+                        username: "test2",
+                        description: "qwer",
+                    },
+                    {
+                        id: 3,
+                        username: "test3",
+                        description: "zxcv",
+                    },
+                ],
+            },
+            review: {},
+            reply: {},
+        };
+
         inviteToCollectionModal = makeInviteToCollectionModal(stubInitialState);
+        spyGetFollowings = jest.spyOn(userActions, "getFollowingsByUserId")
+            .mockImplementation(() => () => mockPromise);
+        spyAddNewMemers = jest.spyOn(collectionActions, "addNewMembers")
+            .mockImplementation(() => () => mockPromise);
+        spySearch = jest.spyOn(userActions, "searchUser")
+            .mockImplementation(() => () => mockPromise);
     });
 
     afterEach(() => {
@@ -77,21 +106,19 @@ describe("InviteToCollectionModal test", () => {
         expect(wrapper.length).toBe(1);
     });
 
-    it("should set state to open/close modal", () => {
-        const spyGetFollowings = jest.spyOn(userActions, "getFollowingsByUserId")
-            .mockImplementation(() => () => mockPromise);
-
+    it("should set state to open/close modal", async () => {
         const component = mount(inviteToCollectionModal);
 
         // open and call getFollowingsByUserId by pressing open button
         let wrapper = component.find("#modalOpenButton").hostNodes();
         expect(wrapper.length).toBe(1);
         wrapper.simulate("click");
-        const instance = component.find(InviteToCollectionModal.WrappedComponent).instance();
         expect(spyGetFollowings).toHaveBeenCalledTimes(1);
-        expect(instance.state.isModalOpen).toBe(false); // FIXME: async problems
 
-        instance.setState({ isModalOpen: true });
+        await flushPromises();
+
+        const instance = component.find(InviteToCollectionModal.WrappedComponent).instance();
+        expect(instance.state.isModalOpen).toBe(true);
         component.update();
 
         // close by pressing cancel button
@@ -131,9 +158,6 @@ describe("InviteToCollectionModal test", () => {
     });
 
     it("should call addNewMembers when inviting", () => {
-        const spyAddNewMemers = jest.spyOn(collectionActions, "addNewMembers")
-            .mockImplementation(() => () => mockPromise);
-
         const component = mount(inviteToCollectionModal);
         const instance = component.find(InviteToCollectionModal.WrappedComponent).instance();
         instance.setState({
@@ -165,9 +189,6 @@ describe("InviteToCollectionModal test", () => {
     });
 
     it("should handle search", () => {
-        const spySearch = jest.spyOn(userActions, "searchUser")
-            .mockImplementation(() => () => mockPromise);
-
         const component = mount(inviteToCollectionModal);
 
         const instance = component.find(InviteToCollectionModal.WrappedComponent).instance();
