@@ -121,7 +121,7 @@ def select_paper_search(args):
     except requests.exceptions.RequestException as exception:
         print(exception)
 
-    # if there is no result in our DB
+    # if cannot get any results from arXiv
     if not paper_ids:
         print("[naive-search] Searching in PapersFeed DB")
 
