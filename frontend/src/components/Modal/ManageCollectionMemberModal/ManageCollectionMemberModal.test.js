@@ -6,70 +6,9 @@ import { Provider } from "react-redux";
 
 import { getMockStore } from "../../../test-utils/mocks";
 import ManageCollectionMemberModal from "./ManageCollectionMemberModal";
+import { collectionActions } from "../../../store/actions";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
 
-const stubInitialState = {
-    paper: {
-    },
-    auth: {
-        signinStatus: signinStatus.SUCCESS,
-        me: {
-            id: 1,
-            username: "test1",
-            description: "asdf",
-        },
-    },
-    collection: {
-        make: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        list: {
-            status: collectionStatus.NONE,
-            list: [],
-            error: null,
-        },
-        edit: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        delete: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        selected: {
-            collection: {},
-            status: collectionStatus.NONE,
-            error: null,
-            papers: [],
-            members: [
-                {
-                    id: 1,
-                    username: "test1",
-                    description: "asdf",
-                },
-                {
-                    id: 2,
-                    username: "test2",
-                    description: "qwer",
-                },
-                {
-                    id: 3,
-                    username: "test3",
-                    description: "zxcv",
-                },
-            ],
-            memberCount: 3,
-            replies: [],
-        },
-    },
-    user: {},
-    review: {},
-    reply: {},
-};
 
 const makeManageCollectionMemberModal = (initialState) => (
     <Provider store={getMockStore(initialState)}>
@@ -77,12 +16,11 @@ const makeManageCollectionMemberModal = (initialState) => (
     </Provider>
 );
 
-jest.mock("../WarningModal/WarningModal", () => jest.fn((props) => (
-    <button
-      id="mockWarningButton"
-      onClick={props.clickFn}
-    />
-)));
+/* eslint-disable no-unused-vars */
+const mockPromise = new Promise((resolve, reject) => { resolve(); });
+/* eslint-enable no-unused-vars */
+const flushPromises = () => new Promise(setImmediate);
+
 jest.mock("../../User/UserEntry/UserEntry", () => jest.fn((props) => (
     <input
       className="entryItem"
@@ -94,10 +32,81 @@ jest.mock("../../User/UserEntry/UserEntry", () => jest.fn((props) => (
 )));
 
 describe("ManageCollectionMemberModal test", () => {
+    let stubInitialState;
     let manageCollectionMemberModal;
+    let spyDeleteMembers;
 
     beforeEach(() => {
+        stubInitialState = {
+            paper: {
+            },
+            auth: {
+                signinStatus: signinStatus.SUCCESS,
+                me: {
+                    id: 1,
+                    username: "test1",
+                    description: "asdf",
+                },
+            },
+            collection: {
+                make: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                list: {
+                    status: collectionStatus.NONE,
+                    list: [],
+                    error: null,
+                },
+                edit: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                delete: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                selected: {
+                    collection: {
+                        id: 1,
+                    },
+                    status: collectionStatus.SUCCESS,
+                    error: null,
+                    papers: [],
+                    members: [
+                        {
+                            id: 1,
+                            username: "test1",
+                            description: "asdf",
+                            collection_member_type: "owner",
+                        },
+                        {
+                            id: 2,
+                            username: "test2",
+                            description: "qwer",
+                            collection_member_type: "member",
+                        },
+                        {
+                            id: 3,
+                            username: "test3",
+                            description: "zxcv",
+                            collection_member_type: "member",
+                        },
+                    ],
+                    memberCount: 3,
+                    replies: [],
+                },
+            },
+            user: {},
+            review: {},
+            reply: {},
+        };
         manageCollectionMemberModal = makeManageCollectionMemberModal(stubInitialState);
+        spyDeleteMembers = jest.spyOn(collectionActions, "deleteMembers")
+            .mockImplementation(() => () => mockPromise);
     });
 
     afterEach(() => {
@@ -127,7 +136,7 @@ describe("ManageCollectionMemberModal test", () => {
         expect(instance.state.isModalOpen).toBe(false);
     });
 
-    it("user entries test: should be rendered and handles checking", () => {
+    it("user entries test: should be rendered", () => {
         const component = mount(manageCollectionMemberModal);
         const instance = component.find("ManageCollectionMemberModal").instance();
 
@@ -137,16 +146,19 @@ describe("ManageCollectionMemberModal test", () => {
                     id: 1,
                     username: "test1",
                     description: "asdf",
+                    collection_member_type: "owner",
                 },
                 {
                     id: 2,
                     username: "test2",
                     description: "qwer",
+                    collection_member_type: "member",
                 },
                 {
                     id: 3,
                     username: "test3",
                     description: "zxcv",
+                    collection_member_type: "member",
                 },
             ],
         });
@@ -157,11 +169,57 @@ describe("ManageCollectionMemberModal test", () => {
         wrapper.simulate("click");
         wrapper = component.find(".entryItem");
         expect(wrapper.length).toBe(3);
+    });
 
-        // should handle checking
-        wrapper = component.find("#check").at(0);
+    // more tests should be implemented
+    it("should call deleteCollection when deleting", async () => {
+        const component = mount(manageCollectionMemberModal);
+        const instance = component.find(ManageCollectionMemberModal.WrappedComponent).instance();
+        instance.setState({
+            isModalOpen: true,
+            members: [
+                {
+                    id: 1,
+                    username: "test1",
+                    description: "asdf",
+                    collection_member_type: "owner",
+                },
+                {
+                    id: 2,
+                    username: "test2",
+                    description: "qwer",
+                    collection_member_type: "member",
+                },
+                {
+                    id: 3,
+                    username: "test3",
+                    description: "zxcv",
+                    collection_member_type: "member",
+                },
+            ],
+        });
+        component.update();
+
+        let wrapper = component.find("#kickOffEnableButton").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+        component.update();
+
+        wrapper = component.find("#check").at(0); // test2 (excluding 'me')
+        expect(wrapper.length).toBe(1);
         wrapper.simulate("change", { target: { checked: true } });
+        expect(instance.state.checkedUserIdList).toEqual([2]);
 
-        expect(instance.state.checkedUserIdList).toEqual([1]);
+        wrapper = component.find(".WarningModal #modalOpenButton").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        wrapper = component.find(".WarningModal #confirmButton").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        await flushPromises();
+
+        expect(spyDeleteMembers).toHaveBeenCalledTimes(1);
     });
 });

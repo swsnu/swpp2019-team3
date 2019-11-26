@@ -166,7 +166,7 @@ class CollectionTestCase(TestCase):
 
         paper_id = Paper.objects.filter(title='paper1').first().id
 
-        # Add paper to test_collection_1
+        # Add paper to 'SWPP Papers'
         client.put('/api/paper/collection',
                    json.dumps({
                        constants.ID: paper_id,

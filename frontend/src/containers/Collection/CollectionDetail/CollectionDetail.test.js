@@ -21,6 +21,7 @@ const makeCollectionDetail = (initialState, props = {}) => (
 /* eslint-enable react/jsx-props-no-spreading */
 
 const mockPromise = new Promise((resolve) => { resolve(); });
+const flushPromises = () => new Promise(setImmediate);
 
 describe("CollectionDetail Test", () => {
     let stubInitialState;
@@ -29,6 +30,8 @@ describe("CollectionDetail Test", () => {
     let spyGetCollectionPapers;
     let spyLikeCollection;
     let spyUnlikeCollection;
+    let spyGetCollectionMembers;
+    let spyGetRepliesByCollection;
 
     beforeEach(() => {
         stubInitialState = {
@@ -95,11 +98,15 @@ describe("CollectionDetail Test", () => {
         collectionDetail = makeCollectionDetail(stubInitialState);
         spyGetCollection = jest.spyOn(collectionActions, "getCollection")
             .mockImplementation(() => () => mockPromise);
+        spyGetCollectionMembers = jest.spyOn(collectionActions, "getCollectionMembers")
+            .mockImplementation(() => () => mockPromise);
         spyGetCollectionPapers = jest.spyOn(collectionActions, "getCollectionPapers")
             .mockImplementation(() => () => mockPromise);
         spyLikeCollection = jest.spyOn(collectionActions, "likeCollection")
             .mockImplementation(() => () => mockPromise);
         spyUnlikeCollection = jest.spyOn(collectionActions, "unlikeCollection")
+            .mockImplementation(() => () => mockPromise);
+        spyGetRepliesByCollection = jest.spyOn(replyActions, "getRepliesByCollection")
             .mockImplementation(() => () => mockPromise);
     });
 
@@ -107,11 +114,60 @@ describe("CollectionDetail Test", () => {
         jest.clearAllMocks();
     });
 
-    it("should render without errors", () => {
-        // eslint-disable-next-line no-unused-vars
-        const component = mount(collectionDetail);
+    it("should render without errors", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            auth: {
+                me: {
+                    id: 1,
+                    username: "test1",
+                    description: "asdf",
+                },
+            },
+            collection: {
+                selected: {
+                    status: collectionStatus.SUCCESS,
+                    collection: {
+                        title: "test collection",
+                        text: "test description",
+                        creation_date: "2019-11-26T11:59:41.126",
+                        modification_date: "2019-11-26T11:59:41.126",
+                        count: {},
+                    },
+                    members: [
+                        {
+                            id: 1,
+                            username: "test1",
+                            description: "asdf",
+                            collection_user_type: "owner",
+                        },
+                        {
+                            id: 2,
+                            username: "test2",
+                            description: "qwer",
+                            ollection_user_type: "member",
+                        },
+                    ],
+                },
+                like: {},
+                unlike: {},
+            },
+        };
+
+        const component = mount(makeCollectionDetail(stubInitialState));
+        const wrapper = component.find(".CollectionDetail");
+        expect(wrapper.length).toBe(1);
         expect(spyGetCollection).toHaveBeenCalledTimes(1);
+
+        await flushPromises(); // flush onGetCollection
+        await flushPromises(); // flush onGetMembers
+        await flushPromises(); // flush onGetCollectionPapers
+        await flushPromises(); // flush onGetReplies
+
+        expect(spyGetCollection).toHaveBeenCalledTimes(1);
+        expect(spyGetCollectionMembers).toHaveBeenCalledTimes(1);
         expect(spyGetCollectionPapers).toHaveBeenCalledTimes(1);
+        expect(spyGetRepliesByCollection).toHaveBeenCalledTimes(1);
     });
 
     it("should call likeReview when Like Button is clicked", () => {

@@ -17,9 +17,17 @@ const makeCollectionManage = (initialState) => (
     </Provider>
 );
 
+/* eslint-disable no-unused-vars */
+const mockPromise = new Promise((resolve, reject) => { resolve(); });
+/* eslint-enable no-unused-vars */
+const flushPromises = () => new Promise(setImmediate);
+
 describe("CollectionManage test", () => {
     let collectionManage;
     let stubInitialState;
+    let spyGetCollection;
+    let spySetTitleAndDescription;
+    let spyDeleteCollection;
 
     beforeEach(() => {
         stubInitialState = {
@@ -83,6 +91,12 @@ describe("CollectionManage test", () => {
             reply: {},
         };
         collectionManage = makeCollectionManage(stubInitialState);
+        spyGetCollection = jest.spyOn(collectionActions, "getCollection")
+            .mockImplementation(() => () => mockPromise);
+        spySetTitleAndDescription = jest.spyOn(collectionActions, "setTitleAndDescription")
+            .mockImplementation(() => () => mockPromise);
+        spyDeleteCollection = jest.spyOn(collectionActions, "deleteCollection")
+            .mockImplementation(() => () => mockPromise);
     });
 
     afterEach(() => {
@@ -90,36 +104,55 @@ describe("CollectionManage test", () => {
     });
 
     it("should render without errors", async () => {
-        const spyGetCollection = jest.spyOn(collectionActions, "getCollection")
-            // eslint-disable-next-line no-unused-vars
-            .mockImplementation(() => () => new Promise((resolve, reject) => { resolve(); }));
-
         stubInitialState = {
             ...stubInitialState,
+            auth: {
+                me: {
+                    id: 1,
+                    username: "test1",
+                    description: "asdf",
+                },
+            },
             collection: {
                 selected: {
                     status: collectionStatus.SUCCESS,
-                    title: "test collection",
-                    text: "test description",
+                    collection: {
+                        title: "test collection",
+                        text: "test description",
+                    },
+                    members: [
+                        {
+                            id: 1,
+                            username: "test1",
+                            description: "asdf",
+                            collection_user_type: "owner",
+                        },
+                        {
+                            id: 2,
+                            username: "test2",
+                            description: "qwer",
+                            ollection_user_type: "member",
+                        },
+                    ],
                 },
             },
         };
 
-        const component = mount(collectionManage);
+        const component = mount(makeCollectionManage(stubInitialState));
         const wrapper = component.find(".CollectionManage");
         expect(wrapper.length).toBe(1);
-
-        const flushPromises = () => new Promise(setImmediate);
-        await flushPromises();
-
         expect(spyGetCollection).toHaveBeenCalledTimes(1);
+
+        await flushPromises(); // flush onGetCollection
+        await flushPromises(); // flush onGetMembers
+
+        const instance = component.find(CollectionManage.WrappedComponent).instance();
+        expect(instance.state.collectionName).toBe("test collection");
+        expect(instance.state.collectionDescription).toBe("test description");
     });
 
     it("should handle edit collection title and description", () => {
         const component = mount(collectionManage);
-        const spySetTitleAndDescription = jest.spyOn(collectionActions, "setTitleAndDescription")
-            // eslint-disable-next-line no-unused-vars
-            .mockImplementation(() => () => new Promise((resolve, reject) => { resolve(); }));
 
         // change title
         let wrapper = component.find("#editName").hostNodes();
@@ -140,4 +173,18 @@ describe("CollectionManage test", () => {
     });
 
     // more tests should be implemented
+    it("should call deleteCollection when deleting", async () => {
+        const component = mount(collectionManage);
+        let wrapper = component.find(".WarningModal #modalOpenButton").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        wrapper = component.find(".WarningModal #confirmButton").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        await flushPromises();
+
+        expect(spyDeleteCollection).toHaveBeenCalledTimes(1);
+    });
 });
