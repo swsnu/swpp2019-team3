@@ -50,6 +50,10 @@ ACTION_OBJECT = 'action_object'
 TIMESINCE = 'timesince'
 STRING = 'string'
 
+# Subsciption
+SUBSCRIPTION = 'subscription'
+SUBSCRIPTIONS = 'subscription'
+
 # Collection
 COLLECTION = 'collection'
 COLLECTIONS = 'collections'
