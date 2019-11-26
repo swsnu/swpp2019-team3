@@ -16,13 +16,15 @@ from papersfeed.models.reviews.review_like import ReviewLike
 from papersfeed.utils.collections.utils import __get_collection_like_count
 from papersfeed.models.collections.collection import Collection
 from papersfeed.models.collections.collection_like import CollectionLike
+from papersfeed.models.collections.collection_user import CollectionUser
 from papersfeed.models.replies.reply import Reply
 from papersfeed.models.replies.reply_collection import ReplyCollection
 from papersfeed.models.replies.reply_review import ReplyReview
 from papersfeed.models.replies.reply_like import ReplyLike
 from papersfeed.utils.replies.utils import __get_reply_like_count
 from papersfeed.models.users.user import User
-from papersfeed.models.collections.collection_user import CollectionUser
+from papersfeed.models.users.user_follow import UserFollow
+from papersfeed.models.subscription.subscription import Subscription
 
 
 def insert_like_paper(args):
@@ -46,6 +48,23 @@ def insert_like_paper(args):
         paper_id=paper_id,
         user_id=request_user.id,
     )
+    paper_like = PaperLike(
+        paper_id=paper_id,
+        user_id=request_user.id
+    )
+    paper_like.save()
+
+    req_user = User.object.get(id=request_user.id)
+    paper = Paper.object.get(id=paper_id)
+    req_user_followers = UserFollow.object.filter(followed_user=request_user.id)
+
+    for follower in req_user_followers:
+        Subscription.objects.create(
+            actor=req_user,
+            verb="liked",
+            recipient=follower,
+            action_object=paper,
+        )
 
     like_counts = __get_paper_like_count([paper_id], 'paper_id')
     return {constants.LIKES: like_counts[paper_id] if paper_id in like_counts else 0}

@@ -1,21 +1,22 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
 from papersfeed import constants
-from papersfeed.utils.base_utils import get_results_from_queryset, is_parameter_exists, ApiError
-from papersfeed.models.users.user import User
+from papersfeed.utils.base_utils import get_results_from_queryset, is_parameter_exists
+from papersfeed.models.subscription.subscription import Subscription
 
-def get_subscriptions(args):
+def select_subscriptions(args):
     """Get Subscriptions of the current User"""
-    request_user = args[constants.USER] if constants.USER in args else None
+    is_parameter_exists([
+        constants.ID
+    ], args)
+    request_user_id = args[constants.ID]
     page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
-    user = User.objects.get(pk=request_user.id)
 
     # Notification QuerySet
-    queryset = user.subscriptions.unread().filter(~Q(actor_object_id=request_user.id))
+    queryset = Subscription.object.filter(Q(recipient_user_id=request_user_id))
 
     subscriptions = get_results_from_queryset(queryset, 10, page_number)
     subscriptions = __pack_subscriptions(subscriptions)
@@ -28,35 +29,82 @@ def __pack_subscriptions(subscriptions):
 
     for subscription in subscriptions:
         try:
-            target = {
-                constants.TYPE: str(notification.target_content_type),
-                constants.ID: notification.target.id,
-                constants.STRING: str(notification.target)
-            }
-        except AttributeError: # when the target is removed
-            target = {}
+            action_object_type = str(subscription.action_object_content_type)
+            action_object_id = subscription.action_object.id
+            if action_object_type == 'paper':
+                paper_authors = 
+                paper_keywords = 
+                paper_review_count = 
+                paper_like_count = 
 
-        try:
-            action_object = {
-                constants.TYPE: str(notification.action_object_content_type),
-                constants.ID: notification.action_object.id,
-                constants.STRING: str(notification.action_object)
-            }
-        except AttributeError: # when the action_object is removed
+                action_object = {
+                    constants.ID: action_object_id,
+                    constants.TITLE: subscription.action_object.title,
+                    constants.AUTHORS: paper_authors,
+                    constants.KEYWORDS: paper_keywords,
+                    constants.LIKED: subscription.action_object.is_liked
+                    constants.COUNT: {
+                        constants.REVIEWS: paper_review_count,
+                        constants.LIKES: paper_like_count,
+                    }
+                }
+            elif action_object_type == 'collection':
+                collection_user_count = 
+                collection_paper_count = 
+                collection_like_count = 
+                collection_reply_count = 
+
+                action_object = {
+                    constants.ID: action_object_id,
+                    constants.TITLE: subscription.action_object.title,
+                    constants.LIKED: subscription.action_object.is_liked,
+                    constants.COUNT: {
+                        constants.USERS: collection_user_count,
+                        constants.PAPERS: collection_paper_count,
+                        constants.LIKES: collection_like_count,
+                        constants.REPLIES: collection_reply_count,
+                    }
+                }
+            elif action_object_type == 'review':
+                review_user = 
+                review_like_count = 
+                review_reply_count = 
+
+                action_object = {
+                    constants.ID: action_object_id,
+                    constants.TITLE: subscription.action_object.title,
+                    constants.USER: review_user,
+                    constants.LIKED: subscription.action_object.is_liked,
+                    constants.COUNT: {
+                        constants.LIKES: review_like_count,
+                        constants.REPLIES: review_reply_count,
+                    }
+                }
+            else:
+                raise AttributeError
+        except AttributeError: # the action_object can be null or removed
             action_object = {}
 
-        packed_notification = {
-            constants.ID: notification.id,
-            constants.ACTOR: {
-                constants.ID: notification.actor.id,
-                constants.USERNAME: notification.actor.username
-            },
-            constants.VERB: notification.verb,
-            constants.TARGET: target,
-            constants.ACTION_OBJECT: action_object,
-            constants.TIMESINCE: notification.timesince(),
-        }
+        try:
+            target = {
+                constants.TYPE: str(subscription.target_content_type),
+                constants.ID: subscription.target.id,
+                constants.STRING: str(subscription.target)
+            }
+        except AttributeError: # the target can be null or removed
+            target = {}
 
-        packed.append(packed_notification)
+        packed_subscription = {
+            constants.ID: subscription.id,
+            constants.ACTOR: {
+                constants.ID: subscription.actor.id,
+                constants.USERNAME: subscription.actor.username
+            },
+            constants.VERB: subscription.verb,
+            constants.ACTION_OBJECT: action_object,
+            constants.TARGET: target,
+            constants.ACTION_HAPPEND_TIME: subscription.timestamp
+        }
+        packed.append(packed_subscription)
 
     return packed
