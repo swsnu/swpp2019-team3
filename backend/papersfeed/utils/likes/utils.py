@@ -22,7 +22,7 @@ from papersfeed.models.replies.reply_review import ReplyReview
 from papersfeed.models.replies.reply_like import ReplyLike
 from papersfeed.utils.replies.utils import __get_reply_like_count
 from papersfeed.models.users.user import User
-from papersfeed.models.users.user_action import UserAction
+from papersfeed.models.users.user_action import UserAction, USER_ACTION_TYPE
 from papersfeed.models.collections.collection_user import CollectionUser
 
 
@@ -53,15 +53,15 @@ def insert_like_paper(args):
         obj = UserAction.objects.get(
             user_id=request_user.id,
             paper_id=paper_id,
-            type='like'
+            type=USER_ACTION_TYPE[1]
             )
-        setattr(obj, 'count', obj.count + 1)
+        obj.count = obj.count + 1
         obj.save()
     except ObjectDoesNotExist:
         UserAction.objects.create(
             user_id=request_user.id,
             paper_id=paper_id,
-            type='like',
+            type=USER_ACTION_TYPE[1],
             count=1,
         )
 
@@ -92,9 +92,9 @@ def remove_like_paper(args):
     obj = UserAction.objects.get(
         user_id=request_user.id,
         paper_id=paper_id,
-        type='like'
+        type=USER_ACTION_TYPE[1]
         )
-    setattr(obj, 'count', obj.count - 1)
+    obj.count = obj.count - 1
     obj.save()
 
     like_counts = __get_paper_like_count([paper_id], 'paper_id')

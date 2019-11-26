@@ -105,3 +105,6 @@ CITY = 'city'
 # Reply
 REPLY = 'reply'
 REPLIES = 'replies'
+
+#Recommendation
+ACTIONS = 'actions'

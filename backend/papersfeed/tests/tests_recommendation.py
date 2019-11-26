@@ -90,9 +90,9 @@ class RecommnedationTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(response.content, {"actions": [
-            {"UserId": user_id, "ItemId": paper_id, "Type": "review", "Count": 1},
-            {"UserId": user_id, "ItemId": paper_id, "Type": "like", "Count": 1},
-            {"UserId": user_id, "ItemId": paper_id, "Type": "collection", "Count": 1}
+            {"UserId": user_id, "ItemId": paper_id, "Type": "make_review", "Count": 1},
+            {"UserId": user_id, "ItemId": paper_id, "Type": "like_paper", "Count": 1},
+            {"UserId": user_id, "ItemId": paper_id, "Type": "add_to_collection", "Count": 1}
             ]})
 
     def post_user_recommendation(self):

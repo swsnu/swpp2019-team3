@@ -328,7 +328,7 @@ def get_user_followed(args):
 
 def get_user_action(args):
     """Get User Actions"""
-    return {"actions": recommendation_utils.select_user_actions(args)}
+    return {constants.ACTIONS: recommendation_utils.select_user_actions(args)}
 
 def post_user_recommendation(args):
     """Post User Recommendation"""

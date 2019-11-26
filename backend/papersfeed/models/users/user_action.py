@@ -6,10 +6,10 @@ from papersfeed.models.base_models import BaseModel
 from papersfeed.models.users.user import User
 from papersfeed.models.papers.paper import Paper
 
-ACTION_TYPE = [
-    'collection',
-    'like',
-    'review',
+USER_ACTION_TYPE = [
+    'add_to_collection',
+    'like_paper',
+    'make_review',
 ]
 
 class UserAction(BaseModel):
@@ -22,7 +22,7 @@ class UserAction(BaseModel):
                               related_name="user_action_paper")
 
     # type of the action
-    type = EnumField(choices=ACTION_TYPE)
+    type = EnumField(choices=USER_ACTION_TYPE)
 
     # number of the actions happened today
     count = models.IntegerField()

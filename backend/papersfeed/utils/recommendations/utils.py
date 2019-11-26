@@ -1,7 +1,7 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
-from django.db.models import OuterRef, Subquery, F
+from django.db.models import OuterRef, Subquery, F, Q
 
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.users.user import User
@@ -23,9 +23,7 @@ def select_user_actions(_):
 
     new_actions = list(new_actions)
 
-    for action in UserAction.objects.all():
-        setattr(action, 'count', 0)
-        action.save()
+    UserAction.objects.filter(~Q(count=3)).update(count=0)
 
     return new_actions
 

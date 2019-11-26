@@ -12,7 +12,7 @@ from papersfeed.models.reviews.review import Review
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.reviews.review_like import ReviewLike
 from papersfeed.models.replies.reply_review import ReplyReview
-from papersfeed.models.users.user_action import UserAction
+from papersfeed.models.users.user_action import UserAction, USER_ACTION_TYPE
 
 
 def select_review(args):
@@ -78,15 +78,15 @@ def insert_review(args):
         obj = UserAction.objects.get(
             user_id=request_user.id,
             paper_id=paper_id,
-            type='review'
+            type=USER_ACTION_TYPE[2]
         )
-        setattr(obj, 'count', obj.count + 1)
+        obj.count = obj.count + 1
         obj.save()
     except ObjectDoesNotExist:
         UserAction.objects.create(
             user_id=request_user.id,
             paper_id=paper_id,
-            type='review',
+            type=USER_ACTION_TYPE[2],
             count=1,
         )
 
@@ -175,9 +175,9 @@ def remove_review(args):
     obj = UserAction.objects.get(
         user_id=request_user.id,
         paper_id=paper_id,
-        type='review'
+        type=USER_ACTION_TYPE[2]
     )
-    setattr(obj, 'count', obj.count - 1)
+    obj.count = obj.count - 1
     obj.save()
 
 

@@ -11,7 +11,7 @@ from papersfeed.models.collections.collection_like import CollectionLike
 from papersfeed.models.collections.collection_user import CollectionUser, COLLECTION_USER_TYPE
 from papersfeed.models.collections.collection_paper import CollectionPaper
 from papersfeed.models.replies.reply_collection import ReplyCollection
-from papersfeed.models.users.user_action import UserAction
+from papersfeed.models.users.user_action import UserAction, USER_ACTION_TYPE
 # from papersfeed.models.users.user import User
 
 
@@ -304,9 +304,9 @@ def __remove_paper_from_collections(paper_id, collection_ids, request_user):
         obj = UserAction.objects.get(
             user_id=request_user.id,
             paper_id=paper_id,
-            type='collection'
+            type=USER_ACTION_TYPE[0],
             )
-        setattr(obj, 'count', obj.count - 1)
+        obj.count = obj.count - 1
         obj.save()
 
 def __add_paper_to_collections(paper_id, collection_ids, request_user):
@@ -321,15 +321,15 @@ def __add_paper_to_collections(paper_id, collection_ids, request_user):
         obj = UserAction.objects.get(
             user_id=request_user.id,
             paper_id=paper_id,
-            type='collection'
+            type=USER_ACTION_TYPE[0]
         )
-        setattr(obj, 'count', obj.count + 1)
+        obj.count = obj.count + 1
         obj.save()
     except ObjectDoesNotExist:
         UserAction.objects.create(
             user_id=request_user.id,
             paper_id=paper_id,
-            type='collection',
+            type=USER_ACTION_TYPE[0],
             count=1,
         )
 
