@@ -18,6 +18,16 @@ const mockPromise = new Promise((resolve, reject) => { resolve(); });
 /* eslint-enable no-unused-vars */
 const flushPromises = () => new Promise(setImmediate);
 
+jest.mock("../../User/UserEntry/UserEntry", () => jest.fn((props) => (
+    <input
+      className="entryItem"
+      id="check"
+      type="checkbox"
+      checked={props.isChecked}
+      onChange={props.checkhandler}
+    />
+)));
+
 describe("InviteToCollectionModal test", () => {
     let stubInitialState;
     let inviteToCollectionModal;
@@ -153,7 +163,7 @@ describe("InviteToCollectionModal test", () => {
         });
         component.update();
 
-        const wrapper = component.find(".UserEntry").hostNodes();
+        const wrapper = component.find(".entryItem");
         expect(wrapper.length).toBe(3);
     });
 
@@ -179,11 +189,15 @@ describe("InviteToCollectionModal test", () => {
                     description: "zxcv",
                 },
             ],
-            checkedUserIdList: [1],
         });
         component.update();
 
-        const wrapper = component.find("#inviteButton").hostNodes();
+        let wrapper = component.find("#check").at(0); // test1
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("change", { target: { checked: true } });
+        expect(instance.state.checkedUserIdList).toEqual([1]);
+
+        wrapper = component.find("#inviteButton").hostNodes();
         wrapper.simulate("click");
         expect(spyAddNewMemers).toHaveBeenCalledTimes(1);
     });
