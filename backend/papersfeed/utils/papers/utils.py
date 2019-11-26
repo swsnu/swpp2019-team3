@@ -22,7 +22,7 @@ from papersfeed.models.papers.publisher import Publisher
 from papersfeed.models.reviews.review import Review
 from papersfeed.models.collections.collection_paper import CollectionPaper
 
-ARXIV_COUNT = 20 # pagination count for arXiv requests
+SEARCH_COUNT = 20 # pagination count for searching papers
 
 MAX_REQ_SIZE = 500000 # maxCharactersPerRequest of Text Analytics API is 524288
 MAX_DOC_SIZE = 5120 # size limit of one document is 5120 (request consists of multiple documents)
@@ -82,7 +82,6 @@ def select_paper_collection(args):
     return papers, page_number, is_finished
 
 
-# pylint: disable=too-many-locals
 def select_paper_search(args):
     """Select Paper Search"""
     is_parameter_exists([
@@ -98,48 +97,59 @@ def select_paper_search(args):
     # Page Number
     page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
 
-    # Papers Queryset
-    queryset = Paper.objects.filter(Q(title__icontains=keyword) | Q(abstract__icontains=keyword)) \
-        .values_list('id', flat=True)
+    paper_ids = []
+    # exploit arXiv
+    try:
+        start = SEARCH_COUNT * (page_number-1)
+        print("[arXiv API] searching ({}~{})".format(start, start+SEARCH_COUNT-1))
+        arxiv_url = "http://export.arxiv.org/api/query"
+        query = "?search_query=" + urllib.parse.quote(keyword) \
+            + "&start=" + str(start) + "&max_results=" + str(SEARCH_COUNT)
+        response = requests.get(arxiv_url + query)
 
-    # Paper Ids
-    paper_ids = get_results_from_queryset(queryset, 20, page_number)
+        if response.status_code == 200:
+            response_xml = response.text
+            response_dict = xmltodict.parse(response_xml)['feed']
+            if 'entry' in response_dict and response_dict['entry']:
+                paper_ids = __parse_and_save_arxiv_info(response_dict)
+            else: # if 'entry' doesn't exist or it's the end of results
+                print("[arXiv API] entries don't exist")
+        else:
+            print("[arXiv API] error code {}".format(response.status_code))
+    except requests.exceptions.RequestException as exception:
+        print(exception)
 
     # if there is no result in our DB
-    if paper_ids.object_list.count() == 0:
-        # exploit arXiv
-        try:
-            start = 0
-            while True:
-                print("[arXiv API] searching ({}~{})".format(start, start+ARXIV_COUNT-1))
-                arxiv_url = "http://export.arxiv.org/api/query"
-                query = "?search_query=" + urllib.parse.quote(keyword) \
-                    + "&start=" + str(start) + "&max_results=" + str(ARXIV_COUNT)
-                response = requests.get(arxiv_url + query)
+    if not paper_ids:
+        print("[naive-search] Searching in PapersFeed DB")
 
-                if response.status_code == 200:
-                    response_xml = response.text
-                    response_dict = xmltodict.parse(response_xml)['feed']
-                    if 'entry' in response_dict and response_dict['entry']:
-                        paper_ids = __parse_and_save_arxiv_info(response_dict)
-                    else: # if 'entry' doesn't exist or it's the end of results
-                        print("[arXiv API] more entries don't exist")
-                        break
-                else:
-                    print("[arXiv API] error code {}".format(response.status_code))
-                    break
-                start += ARXIV_COUNT # continue pagination
-        except requests.exceptions.RequestException as exception:
-            print(exception)
+        # Papers Queryset
+        queryset = Paper.objects.filter(Q(title__icontains=keyword) | Q(abstract__icontains=keyword)) \
+            .values_list('id', 'abstract')
 
-    # Filter Query
-    filter_query = Q(id__in=paper_ids)
+        # Check if the papers have keywords. If not, try extracting keywords this time
+        paper_ids = []
+        abstracts = {}
+        for paper_id, abstract in queryset:
+            paper_ids.append(paper_id)
+
+            if not PaperKeyword.objects.filter(paper_id=paper_id).exists():
+                abstracts[paper_id] = abstract
+
+        if abstracts:
+            __extract_keywords_from_abstract(abstracts)
+
+        # Paper Ids
+        paper_ids = get_results_from_queryset(paper_ids, SEARCH_COUNT, page_number)
+
+    # need to maintain the order
+    preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(paper_ids)])
 
     # Papers
-    papers, _, is_finished = __get_papers(filter_query, request_user, 20)
+    papers, _, is_finished = __get_papers(Q(id__in=paper_ids), request_user, SEARCH_COUNT, preserved)
 
     return papers, page_number, is_finished
-# pylint: enable=too-many-locals
+
 
 def select_paper_like(args):
     """Select Paper Like"""
@@ -567,7 +577,12 @@ def __parse_and_save_arxiv_info(feed):
         # find papers with the title in DB
         dup_ids = Paper.objects.filter(title=entry['title']).values_list('id', flat=True)
         if dup_ids.count() > 0: # if duplicate papers exist
-            paper_ids.extend(dup_ids) # just return their ids
+            paper_ids.append(dup_ids[0]) # just return the first id
+
+            # check it has keywords
+            keywords_exist = PaperKeyword.objects.filter(paper_id=dup_ids[0]).exists()
+            if not keywords_exist: # if not exist, try extracting keywords this time
+                abstracts[dup_ids[0]] = entry['summary']
             continue
 
         download_url = ""
