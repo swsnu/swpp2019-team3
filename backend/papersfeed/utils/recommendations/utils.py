@@ -1,22 +1,14 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
-import json
-
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, Exists, OuterRef, Count, Case, When, Subquery, F
-
 from datetime import datetime, timedelta
+from django.db.models import OuterRef, Subquery, F
 
-from papersfeed import constants
-from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
-from papersfeed.utils.users import utils as users_utils
-from papersfeed.utils.papers import utils as papers_utils
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.users.user import User
 from papersfeed.models.users.user_action import UserAction
 from papersfeed.models.users.user_recommendation import UserRecommendation
 
-def select_user_actions(args):
+def select_user_actions(_):
     """Select user actions"""
     new_actions = UserAction.objects.filter(
         modification_date__gt=(datetime.now() + timedelta(days=-1))
@@ -34,7 +26,7 @@ def select_user_actions(args):
     for action in UserAction.objects.all():
         setattr(action, 'count', 0)
         action.save()
-    
+
     return new_actions
 
 def insert_user_recommendation(args):
@@ -42,19 +34,19 @@ def insert_user_recommendation(args):
 
     for data in args['data']:
         user_id = data['user']
-        papers = data['papers'][1:-1].split(',')
+        papers = data['papers']
 
-        for i in range(len(papers)):
+        for i, paper_id in enumerate(papers):
 
             # Create recommendation
             UserRecommendation.objects.create(
                 user_id=user_id,
-                paper_id=int(papers[i]),
+                paper_id=paper_id,
                 rank=i+1,
             )
 
     UserRecommendation.objects.filter(
-    modification_date__lt=(datetime.now() + timedelta(hours=-2))
+        modification_date__lt=(datetime.now() + timedelta(hours=-2))
     ).delete()
 
 def __get_user_id(outer_ref):

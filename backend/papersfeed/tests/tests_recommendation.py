@@ -6,11 +6,7 @@ from django.test import TestCase, Client
 from papersfeed import constants
 from papersfeed.models.users.user import User
 from papersfeed.models.papers.paper import Paper
-from papersfeed.models.users.user_action import UserAction
-from papersfeed.models.users.user_recommendation import UserRecommendation
 from papersfeed.models.collections.collection import Collection
-from papersfeed.models.reviews.review import Review
-from papersfeed.models.papers.paper_like import PaperLike
 
 class RecommnedationTestCase(TestCase):
     """user test case"""
@@ -42,6 +38,7 @@ class RecommnedationTestCase(TestCase):
         )
 
     def test_get_user_action(self):
+        """Get USER action"""
 
         client = Client()
 
@@ -75,30 +72,32 @@ class RecommnedationTestCase(TestCase):
 
         # Like Paper
         client.post('/api/like/paper',
-                            data=json.dumps({
-                                constants.ID: paper_id,
-                            }),
-                            content_type='application/json')
+                    data=json.dumps({
+                        constants.ID: paper_id,
+                    }),
+                    content_type='application/json')
 
         # Make Review For Paper
         client.post('/api/review',
-                               data=json.dumps({
-                                   constants.ID: paper_id,
-                                   constants.TITLE: "Test Review Title",
-                                   constants.TEXT: 'Test Review Text'
-                               }),
-                               content_type='application/json')
+                    data=json.dumps({
+                        constants.ID: paper_id,
+                        constants.TITLE: "Test Review Title",
+                        constants.TEXT: 'Test Review Text'
+                    }),
+                    content_type='application/json')
 
         response = client.get('/api/user/action')
 
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(response.content, {"actions": [
             {"UserId": user_id, "ItemId": paper_id, "Type": "review", "Count": 1},
-            {"UserId": user_id, "ItemId": paper_id, "Type": "like", "Count": 1}, 
+            {"UserId": user_id, "ItemId": paper_id, "Type": "like", "Count": 1},
             {"UserId": user_id, "ItemId": paper_id, "Type": "collection", "Count": 1}
             ]})
 
     def post_user_recommendation(self):
+        """Post user recommendation"""
+
         client = Client()
 
         # Sign In
@@ -110,9 +109,9 @@ class RecommnedationTestCase(TestCase):
                    content_type='application/json')
 
         response = client.post('/api/user/recommendation',
-                    json.dumps(
-                        {"data": [{"user": 1, "papers": "[1,2,3]"}]}
-                        ),
-                        content_type='application/json')
-        
+                               json.dumps(
+                                   {"data": [{"user": 1, "papers": [1, 2, 3]}]}
+                               ),
+                               content_type='application/json')
+
         self.assertEqual(response.status_code, 201)

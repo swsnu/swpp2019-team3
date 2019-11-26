@@ -51,7 +51,7 @@ def insert_like_paper(args):
     # Create action for recommendation
     try:
         obj = UserAction.objects.get(
-            user_id=request_user.id, 
+            user_id=request_user.id,
             paper_id=paper_id,
             type='like'
             )
@@ -90,7 +90,7 @@ def remove_like_paper(args):
 
     # Update action count for recommendation
     obj = UserAction.objects.get(
-        user_id=request_user.id, 
+        user_id=request_user.id,
         paper_id=paper_id,
         type='like'
         )

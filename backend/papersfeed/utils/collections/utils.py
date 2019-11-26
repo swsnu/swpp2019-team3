@@ -300,16 +300,16 @@ def __remove_paper_from_collections(paper_id, collection_ids, request_user):
         ).delete()
 
     # Update action count for recommendation
-    for collection_id in collection_ids:
+    for _ in range(len(collection_ids)):
         obj = UserAction.objects.get(
-            user_id=request_user.id, 
+            user_id=request_user.id,
             paper_id=paper_id,
             type='collection'
             )
         setattr(obj, 'count', obj.count - 1)
         obj.save()
 
-def __add_paper_to_collections(paper_id, collection_ids,request_user):
+def __add_paper_to_collections(paper_id, collection_ids, request_user):
     """Add Paper To Collections"""
     for collection_id in collection_ids:
         CollectionPaper.objects.update_or_create(
@@ -319,7 +319,7 @@ def __add_paper_to_collections(paper_id, collection_ids,request_user):
     # Create action for recommendation
     try:
         obj = UserAction.objects.get(
-            user_id=request_user.id, 
+            user_id=request_user.id,
             paper_id=paper_id,
             type='collection'
         )

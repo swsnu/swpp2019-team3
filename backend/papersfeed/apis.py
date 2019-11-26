@@ -336,5 +336,4 @@ def post_user_recommendation(args):
 
 def get_paper_search_ml(args):
     """Get Paper Search ML"""
-    return {constants.PAPERS: papers_utils.select_paper_search_ml(args)} 
-
+    return {constants.PAPERS: papers_utils.select_paper_search_ml(args)}

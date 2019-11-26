@@ -76,7 +76,7 @@ def insert_review(args):
     # Create action for recommendation
     try:
         obj = UserAction.objects.get(
-            user_id=request_user.id, 
+            user_id=request_user.id,
             paper_id=paper_id,
             type='review'
         )
@@ -163,17 +163,17 @@ def remove_review(args):
         review = Review.objects.get(id=review_id)
     except ObjectDoesNotExist:
         raise ApiError(constants.NOT_EXIST_OBJECT)
-    
+
     # Auth
     if review.user_id != request_user.id:
         raise ApiError(constants.AUTH_ERROR)
-    
+
     paper_id = review.paper_id
 
     review.delete()
 
     obj = UserAction.objects.get(
-        user_id=request_user.id, 
+        user_id=request_user.id,
         paper_id=paper_id,
         type='review'
     )

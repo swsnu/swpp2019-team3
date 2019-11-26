@@ -16,14 +16,14 @@ class UserAction(BaseModel):
     """User Follow"""
     # person who makes the action
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None,
-                                       related_name='user_action_user')
+                             related_name='user_action_user')
     # related paper
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE, default=None,
-                                        related_name="user_action_paper")
+                              related_name="user_action_paper")
 
     # type of the action
     type = EnumField(choices=ACTION_TYPE)
-    
+
     # number of the actions happened today
     count = models.IntegerField()
 
