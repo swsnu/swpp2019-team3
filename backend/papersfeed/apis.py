@@ -10,6 +10,7 @@ from papersfeed.utils.likes import utils as likes_utils
 from papersfeed.utils.replies import utils as replies_utils
 from papersfeed.utils.notifications import utils as notification_utils
 from papersfeed.utils.subscriptions import utils as subscription_utils
+from papersfeed.utils.recommendations import utils as recommendation_utils
 
 from . import constants
 
@@ -326,10 +327,21 @@ def get_user_followed(args):
             constants.PAGE_NUMBER: page_number,
             constants.IS_FINISHED: is_finished}
 
-
 def get_subscrpition(args):
     """Get Subscription"""
     subscriptions, page_number, is_finished = subscription_utils.get_subscriptions(args)
     return {constants.SUBSCRIPTIONS: subscriptions,
             constants.PAGE_NUMBER: page_number,
             constants.IS_FINISHED: is_finished}
+
+def get_user_action(args):
+    """Get User Actions"""
+    return {constants.ACTIONS: recommendation_utils.select_user_actions(args)}
+
+def post_user_recommendation(args):
+    """Post User Recommendation"""
+    return recommendation_utils.insert_user_recommendation(args)
+
+def get_paper_search_ml(args):
+    """Get Paper Search ML"""
+    return {constants.PAPERS: papers_utils.select_paper_search_ml(args)}

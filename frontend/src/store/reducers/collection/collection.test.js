@@ -25,12 +25,11 @@ const stubInitialState = {
     },
     selected: {
         status: collectionStatus.NONE,
+        collection: {},
         error: null,
-        collection: {
-            user_counts: 5,
-        },
         papers: [],
         members: [],
+        memberCount: 0,
         replies: [],
     },
     like: {
@@ -202,10 +201,10 @@ describe("Collection reducer", () => {
     it("should return add_collection_member", () => {
         const newState = reducer(stubInitialState, {
             type: collectionConstants.ADD_COLLECTION_MEMBER,
-            count: 2,
+            target: { users: 7 },
         });
         expect(newState.selected.status).toBe(collectionStatus.SUCCESS);
-        expect(newState.selected.collection.user_counts).toBe(7);
+        expect(newState.selected.memberCount).toBe(7);
     });
 
     it("should return add_collection_member_failure_not_authorized", () => {
@@ -229,10 +228,10 @@ describe("Collection reducer", () => {
     it("should return del_collection_member", () => {
         const newState = reducer(stubInitialState, {
             type: collectionConstants.DEL_COLLECTION_MEMBER,
-            count: 2,
+            target: { users: 3 },
         });
         expect(newState.selected.status).toBe(collectionStatus.SUCCESS);
-        expect(newState.selected.collection.user_counts).toBe(3);
+        expect(newState.selected.memberCount).toBe(3);
     });
 
     it("should return del_collection_member_failure_not_authorized", () => {

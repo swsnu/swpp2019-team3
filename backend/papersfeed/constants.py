@@ -26,6 +26,8 @@ LIKES = 'likes'
 TYPE = 'type'
 PAGE_NUMBER = 'page_number'
 IS_FINISHED = 'is_finished'
+CREATION_DATE = 'creation_date'
+MODIFICATION_DATE = 'modification_date'
 
 # User
 USER = 'user'
@@ -39,6 +41,7 @@ IS_FOLLOWING = 'is_following'
 IS_FOLLOWED = 'is_followed'
 FOLLOWER = 'follower'
 FOLLOWING = 'following'
+COLLECTION_USER_TYPE = 'collection_user_type'
 
 # Notification
 NOTIFICATION = 'notification'
@@ -110,3 +113,6 @@ CITY = 'city'
 # Reply
 REPLY = 'reply'
 REPLIES = 'replies'
+
+#Recommendation
+ACTIONS = 'actions'

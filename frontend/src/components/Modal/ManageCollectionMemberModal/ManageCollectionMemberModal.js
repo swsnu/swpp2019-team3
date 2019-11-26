@@ -16,8 +16,25 @@ class ManageCollectionMemberModal extends Component {
             isModalOpen: false,
             removeMode: false,
             checkedUserIdList: [],
+            members: [],
         };
+
+        this.clickOpenHandler = this.clickOpenHandler.bind(this);
+        this.clickCloseHandler = this.clickCloseHandler.bind(this);
+        this.clickKickOffCancelHandler = this.clickKickOffCancelHandler.bind(this);
+        this.clickKickOffEnableHandler = this.clickKickOffEnableHandler.bind(this);
+        this.checkHandler = this.checkHandler.bind(this);
     }
+
+    /* eslint-disable react/no-did-update-set-state */
+    componentDidUpdate(prevProps) {
+        if (this.props.members !== prevProps.members) {
+            this.setState({
+                members: this.props.members,
+            });
+        }
+    }
+    /* eslint-enable react/no-did-update-set-state */
 
     // opening and closing modal
     clickOpenHandler = () => {
@@ -41,11 +58,6 @@ class ManageCollectionMemberModal extends Component {
         });
     }
 
-    clickKickOffConfirmHandler = () => {
-        // FIXME : 400 bad request
-        // this.props.onDeleteMembers(this.props.thisCollection.id, this.state.checkedUserIdList);
-    }
-
     clickKickOffCancelHandler = () => {
         this.setState({
             removeMode: false,
@@ -67,42 +79,42 @@ class ManageCollectionMemberModal extends Component {
         }
     }
 
-    confirmDisableCond = () => {
-        if (this.props.me) {
-            return this.state.checkedUserIdList.length === 0
-                || this.state.checkedUserIdList.includes(this.props.me.id);
-        }
-        return true;
-    }
-
     render() {
         let memberList = (<div />);
-        if (this.props.members.length > 0) {
-            memberList = this.props.members.map((user) => (
-                <UserEntry
-                  key={user.id}
-                  id={user.id}
-                  userName={user.username}
-                  userDesc={user.descrpition}
-                  isChecked={this.state.checkedUserIdList.includes(user.id)}
-                  checkhandler={() => this.checkHandler(user)}
-                  showCheck={this.state.removeMode}
-                />
-            ));
+        if (this.props.me && this.state.members.length > 0) {
+            memberList = this.state.members
+                .filter((user) => (!this.state.removeMode || user.id !== this.props.me.id))
+                .map((user) => (
+                    <UserEntry
+                      key={user.id}
+                      id={user.id}
+                      userName={user.username}
+                      userDesc={user.descrpition}
+                      isChecked={this.state.checkedUserIdList.includes(user.id)}
+                      checkhandler={() => this.checkHandler(user)}
+                      showCheck={this.state.removeMode}
+                    />
+                ));
         }
 
         const kickOffSupporter = this.state.removeMode
             ? (
                 <div id="kickOffButtons">
                     <WarningModal
-                      history={this.props.history}
                       openButtonText="Confirm"
                       whatToWarnText={`Kick off following users from "${this.props.thisCollection.title}" \n asdf`}
-                      whatActionWillBeDone={this.clickKickOffConfirmHandler}
-                      whereToGoAfterConfirm={`/collection_id=${this.props.thisCollection.id}`}
-                      moveAfterDone={false}
-                      disableCondition={this.confirmDisableCond()}
-                      disableMessage="Select users except you"
+                      whatActionWillBeDone={() => this.props.onDeleteMembers(
+                          this.props.thisCollection.id,
+                          this.state.checkedUserIdList,
+                      )}
+                      whatActionWillFollow={
+                          () => {
+                              this.props.onGetMembers(this.props.thisCollection.id);
+                              this.setState({ checkedUserIdList: [] });
+                          }
+                      }
+                      disableCondition={this.state.checkedUserIdList.length === 0}
+                      disableMessage="Select users"
                     />
                     <Button id="kickOffCancelButton" onClick={this.clickKickOffCancelHandler}>
                         Cancel
@@ -113,11 +125,8 @@ class ManageCollectionMemberModal extends Component {
                 <Button
                   id="kickOffEnableButton"
                   onClick={this.clickKickOffEnableHandler}
-                  disabled
-                  // FIXME : delete these comments and above 'disabled'
-                  // after 'bad request issue' for 'deleteMembers' action function is solved
                 >
-                    Kick Off ...
+                    Kick Off...
                 </Button>
             );
 
@@ -133,7 +142,10 @@ class ManageCollectionMemberModal extends Component {
                         <h5 id="createHeaderText">Manage members of {this.props.thisCollection.title}</h5>
                     </Modal.Header>
                     <Modal.Body>
-                        <InviteToCollectionModal openButtonName="Invite New Users" />
+                        <InviteToCollectionModal
+                          openButtonName="Invite New Users"
+                          members={this.props.members}
+                        />
                         <div id="membersListDiv">
                             {memberList}
                         </div>
@@ -160,23 +172,25 @@ const mapDispatchToProps = (dispatch) => ({
     onDeleteMembers: (collectionId, memberIdList) => dispatch(
         collectionActions.deleteMembers(collectionId, memberIdList),
     ),
+    onGetMembers: (collectionId) => dispatch(
+        collectionActions.getCollectionMembers(collectionId),
+    ),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageCollectionMemberModal);
 
 ManageCollectionMemberModal.propTypes = {
-    history: PropTypes.objectOf(PropTypes.any),
     me: PropTypes.objectOf(PropTypes.any),
     thisCollection: PropTypes.objectOf(PropTypes.any),
     members: PropTypes.arrayOf(PropTypes.any),
-    // eslint-disable-next-line react/no-unused-prop-types
     onDeleteMembers: PropTypes.func,
+    onGetMembers: PropTypes.func,
 };
 
 ManageCollectionMemberModal.defaultProps = {
-    history: {},
     me: {},
     thisCollection: {},
     members: [],
     onDeleteMembers: () => {},
+    onGetMembers: () => {},
 };

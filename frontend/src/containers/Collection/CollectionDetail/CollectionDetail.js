@@ -17,17 +17,16 @@ class CollectionDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // getCollectionStatus: collectionStatus.NONE,
             userCount: 0,
             likeCount: 0,
-            // eslint-disable-next-line react/no-unused-state
             paperCount: 0,
+            replyCount: 0,
             newReplyContent: "",
             isLiked: false,
-            // members: [],
             replies: [],
             papers: [],
             thisCollection: {},
+            owner: {},
         };
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
         this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
@@ -46,8 +45,19 @@ class CollectionDetail extends Component {
                         thisCollection: this.props.selectedCollection,
                         isLiked: this.props.selectedCollection.liked,
                         likeCount: this.props.selectedCollection.count.likes,
+                        userCount: this.props.selectedCollection.count.users,
+                        replyCount: this.props.selectedCollection.count.replies,
+                        paperCount: this.props.selectedCollection.count.papers,
                     });
                 }
+            });
+        this.props.onGetMembers(this.props.location.pathname.split("=")[1])
+            .then(() => {
+                this.props.members.forEach((x) => {
+                    if (x.collection_user_type === "owner") {
+                        this.setState({ owner: x });
+                    }
+                });
             });
         this.props.onGetCollectionPapers({ id: Number(this.props.location.pathname.split("=")[1]) })
             .then(() => {
@@ -60,6 +70,16 @@ class CollectionDetail extends Component {
                 });
             }).catch(() => {});
     }
+
+    /* eslint-disable react/no-did-update-set-state */
+    componentDidUpdate(prevProps) {
+        if (this.props.memberCount !== prevProps.memberCount) {
+            this.setState({
+                userCount: this.props.memberCount,
+            });
+        }
+    }
+    /* eslint-enable react/no-did-update-set-state */
 
     // clickRemovePaperButtonHandler(collection_id: number, paper_id: number)
     // : Call onRemoveCollectionPaper of CollectionDetail to remove the paper from the collection.
@@ -148,6 +168,35 @@ class CollectionDetail extends Component {
             />
         ));
 
+        let inviteModal = null;
+        if (this.props.me && this.props.members.map((x) => x.id).includes(this.props.me.id)) {
+            inviteModal = (
+                <InviteToCollectionModal
+                  openButtonName="Invite to ..."
+                  members={this.props.members}
+                />
+            );
+        }
+        let manageButton = null;
+        if (this.props.me && this.state.owner.id === this.props.me.id) {
+            manageButton = (
+                <Button
+                  id="manageButton"
+                  href={`/collection_id=${this.props.selectedCollection.id}/manage`}
+                >Manage
+                </Button>
+            );
+        }
+
+        let creationDate = "";
+        let modificationDate = "";
+        if (Object.keys(this.props.selectedCollection).length > 0) {
+            /* eslint-disable prefer-destructuring */
+            creationDate = this.props.selectedCollection.creation_date.split("T")[0];
+            modificationDate = this.props.selectedCollection.modification_date.split("T")[0];
+            /* eslint-enable prefer-destructuring */
+        }
+
         return (
             <div className="CollectionDetail">
                 <div className="CollectionDetailContent">
@@ -170,30 +219,28 @@ class CollectionDetail extends Component {
                                     <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>
                                     {this.state.likeCount}
                                 </Button>
-                                <InviteToCollectionModal openButtonName="Invite to ..." />
-                                <Link to={`/collection_id=${this.props.selectedCollection.id}/manage`}>
-                                    <Button id="manageButton">Manage</Button>
-                                </Link>
+                                {inviteModal}
+                                {manageButton}
                                 {this.state.thisCollection.amIMember ? editButton : <div />}
                             </div>
                         </div>
                         <div id="collectionDescription">
                             <div id="date">
-                                <div id="creationDate">Created: {this.state.thisCollection.creationDate}</div>
-                                <div id="lastUpdateDate">Last Update: {this.state.thisCollection.lastUpdateDate}</div>
+                                <div id="creationDate">Created: {creationDate}</div>
+                                <div id="lastUpdateDate">Last Update: {modificationDate}</div>
                             </div>
                             <p id="descriptionBox">{this.state.thisCollection.text}</p>
                         </div>
                     </div>
                     <div className="itemList">
                         <Tabs defaultActiveKey="paperTab" id="itemTabs">
-                            <Tab eventKey="paperTab" title="Papers">
+                            <Tab eventKey="paperTab" title={`Papers(${this.state.paperCount})`}>
                                 <div id="paperCards">
                                     <div id="paperCardsLeft">{paperCardsLeft}</div>
                                     <div id="paperCardsRight">{paperCardsRight}</div>
                                 </div>
                             </Tab>
-                            <Tab className="reply-tab" eventKey="replyTab" title="Replies">
+                            <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${this.state.replyCount})`}>
                                 <div id="replies">
                                     <div id="createNewReply">
                                         <textarea
@@ -234,6 +281,8 @@ const mapStateToProps = (state) => ({
     unlikeCollectionStatus: state.collection.unlike.status,
     afterUnlikeCount: state.collection.unlike.count,
     replyList: state.reply.list,
+    members: state.collection.selected.members,
+    memberCount: state.collection.selected.memberCount,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -241,14 +290,17 @@ const mapDispatchToProps = (dispatch) => ({
     onGetCollectionPapers: (collectionId) => dispatch(
         collectionActions.getCollectionPapers(collectionId),
     ),
+    onGetReplies: (collectionId) => dispatch(
+        replyActions.getRepliesByCollection(collectionId),
+    ),
+    onGetMembers: (collectionId) => dispatch(
+        collectionActions.getCollectionMembers(collectionId),
+    ),
     onLikeCollection: (collectionId) => dispatch(
         collectionActions.likeCollection(collectionId),
     ),
     onUnlikeCollection: (collectionId) => dispatch(
         collectionActions.unlikeCollection(collectionId),
-    ),
-    onGetReplies: (collectionId) => dispatch(
-        replyActions.getRepliesByCollection(collectionId),
     ),
     onMakeNewReply: (reply) => dispatch(
         replyActions.makeNewReplyCollection(reply),
@@ -271,12 +323,15 @@ CollectionDetail.propTypes = {
     onLikeCollection: PropTypes.func,
     onUnlikeCollection: PropTypes.func,
     onGetReplies: PropTypes.func,
+    onGetMembers: PropTypes.func,
     onMakeNewReply: PropTypes.func,
     replyList: PropTypes.objectOf(PropTypes.any),
+    members: PropTypes.arrayOf(PropTypes.any),
+    memberCount: PropTypes.number,
 };
 
 CollectionDetail.defaultProps = {
-    me: null,
+    me: {},
     history: null,
     location: null,
     onGetCollection: null,
@@ -289,6 +344,9 @@ CollectionDetail.defaultProps = {
     onLikeCollection: () => {},
     onUnlikeCollection: () => {},
     onGetReplies: () => {},
+    onGetMembers: () => {},
     onMakeNewReply: () => {},
     replyList: {},
+    members: [],
+    memberCount: 0,
 };

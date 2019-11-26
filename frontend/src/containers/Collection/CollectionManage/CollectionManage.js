@@ -14,8 +14,6 @@ class CollectionManage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            initName: "",
-            initDescription: "",
             collectionName: "",
             collectionDescription: "",
         };
@@ -29,14 +27,23 @@ class CollectionManage extends Component {
                     this.props.history.push("/main");
                 } else {
                     this.setState({
-                        initName: this.props.selectedCollection.title,
                         collectionName: this.props.selectedCollection.title,
-                        initDescription: this.props.selectedCollection.text,
                         collectionDescription: this.props.selectedCollection.text,
                     });
                 }
-            });
-        this.props.onGetMembers(collectionId);
+            })
+            .catch(() => {});
+        this.props.onGetMembers(collectionId)
+            .then(() => {
+                this.props.members.forEach((x) => {
+                    if (x.collection_user_type === "owner") {
+                        if (this.props.me.id !== x.id) {
+                            this.props.history.goBack();
+                        }
+                    }
+                });
+            })
+            .catch(() => {});
     }
 
     updateCollectionHandler = () => {
@@ -44,19 +51,29 @@ class CollectionManage extends Component {
             id: this.props.selectedCollection.id,
             title: this.state.collectionName,
             text: this.state.collectionDescription,
-        });
-        // message or popup that says "collection is updated" may need to be implemented
+        })
+            .then(() => {
+                this.props.onGetCollection({ id: this.props.selectedCollection.id });
+                // message or popup that says "collection is updated" may need to be implemented
+            })
+            .catch(() => {});
     }
 
     render() {
+        let beforeName = null;
+        let beforeDescription = null;
+        if (this.props.selectedCollection) {
+            beforeName = this.props.selectedCollection.title;
+            beforeDescription = this.props.selectedCollection.text;
+        }
+
         return (
             <div className="CollectionManage">
                 <div className="EditCollectionInfo">
                     <div className="EditCollectionName">
                         <h3 id="editNameTag">Collection Name</h3>
-                        <textarea
+                        <input
                           id="editName"
-                          rows="1"
                           type="text"
                           value={this.state.collectionName}
                           onChange={(event) => this.setState({
@@ -81,8 +98,8 @@ class CollectionManage extends Component {
                           id="UpdateCollectionButton"
                           onClick={this.updateCollectionHandler}
                           disabled={this.state.collectionName === ""
-                            || (this.state.initName === this.state.collectionName
-                                && this.state.initDescription === this.state.collectionDescription)}
+                            || (beforeName === this.state.collectionName
+                                && beforeDescription === this.state.collectionDescription)}
                         >Update Collection
                         </Button>
                         <Link to={`/collection_id=${this.props.selectedCollection.id}`}>
@@ -105,7 +122,7 @@ class CollectionManage extends Component {
                             to the other member of this collection.
                             WARNING: This action cannot be undone.
                         </h5>
-                        <TransferOwnershipModal />
+                        <TransferOwnershipModal history={this.props.history} />
                     </div>
                     <div className="DeleteCollection">
                         <h5 id="deleteCollectionText">Delete this collection.
@@ -117,7 +134,7 @@ class CollectionManage extends Component {
                           whatActionWillBeDone={() => this.props.onDeleteCollection(
                               this.props.selectedCollection.id,
                           )}
-                          whereToGoAfterConfirm="/collections"
+                          whatActionWillFollow={() => this.props.history.replace("/collections")}
                           history={this.props.history}
                         />
                     </div>
@@ -128,8 +145,10 @@ class CollectionManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    me: state.auth.me,
     collectionStatus: state.collection.selected.status,
     selectedCollection: state.collection.selected.collection,
+    members: state.collection.selected.members,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -146,11 +165,13 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionManage);
 
 CollectionManage.propTypes = {
+    me: PropTypes.objectOf(PropTypes.any),
     history: PropTypes.objectOf(PropTypes.any),
     location: PropTypes.objectOf(PropTypes.any),
 
     selectedCollection: PropTypes.objectOf(PropTypes.any),
     collectionStatus: PropTypes.string,
+    members: PropTypes.arrayOf(PropTypes.any),
 
     onGetCollection: PropTypes.func,
     onUpdateCollectionInfo: PropTypes.func,
@@ -159,11 +180,13 @@ CollectionManage.propTypes = {
 };
 
 CollectionManage.defaultProps = {
+    me: {},
     history: null,
     location: null,
 
     selectedCollection: {},
     collectionStatus: collectionStatus.NONE,
+    members: [],
 
     onGetCollection: () => {},
     onUpdateCollectionInfo: () => {},

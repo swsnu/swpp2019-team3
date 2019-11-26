@@ -241,7 +241,7 @@ describe("userActions", () => {
             .mockImplementation(() => new Promise((_, reject) => {
                 const result = {
                     response: {
-                        status: 400,
+                        status: 422,
                         data: {},
                     },
                 };
@@ -296,7 +296,7 @@ describe("userActions", () => {
             .mockImplementation(() => new Promise((_, reject) => {
                 const result = {
                     response: {
-                        status: 400, // status code may need to be changed
+                        status: 422,
                         data: {},
                     },
                 };

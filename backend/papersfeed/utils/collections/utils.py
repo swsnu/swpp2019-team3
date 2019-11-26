@@ -11,8 +11,7 @@ from papersfeed.models.collections.collection_like import CollectionLike
 from papersfeed.models.collections.collection_user import CollectionUser, COLLECTION_USER_TYPE
 from papersfeed.models.collections.collection_paper import CollectionPaper
 from papersfeed.models.replies.reply_collection import ReplyCollection
-# from papersfeed.models.users.user import User
-
+from papersfeed.models.users.user_action import UserAction, USER_ACTION_TYPE
 
 def insert_collection(args):
     """Insert Collection"""
@@ -262,10 +261,10 @@ def update_paper_collection(args):
     containing_collection_ids = __get_collections_contains_paper(paper_id, request_user)
 
     # Add To Collections
-    __add_paper_to_collections(paper_id, list(set(collection_ids) - set(containing_collection_ids)))
+    __add_paper_to_collections(paper_id, list(set(collection_ids) - set(containing_collection_ids)), request_user)
 
     # Remove From Collections
-    __remove_paper_from_collections(paper_id, list(set(containing_collection_ids) - set(collection_ids)))
+    __remove_paper_from_collections(paper_id, list(set(containing_collection_ids) - set(collection_ids)), request_user)
 
 
 def get_collections(filter_query, request_user, count, paper_id=None):
@@ -291,19 +290,45 @@ def __get_collections_contains_paper(paper_id, request_user):
     return [collection.id for collection in collections]
 
 
-def __remove_paper_from_collections(paper_id, collection_ids):
+def __remove_paper_from_collections(paper_id, collection_ids, request_user):
     """Remove Paper From Collections"""
     if collection_ids:
         CollectionPaper.objects.filter(
             collection_id__in=collection_ids, paper_id=paper_id
         ).delete()
 
+    # Update action count for recommendation
+    for _ in range(len(collection_ids)):
+        obj = UserAction.objects.get(
+            user_id=request_user.id,
+            paper_id=paper_id,
+            type=USER_ACTION_TYPE[0],
+            )
+        obj.count = obj.count - 1
+        obj.save()
 
-def __add_paper_to_collections(paper_id, collection_ids):
+def __add_paper_to_collections(paper_id, collection_ids, request_user):
     """Add Paper To Collections"""
     for collection_id in collection_ids:
         CollectionPaper.objects.update_or_create(
             collection_id=collection_id, paper_id=paper_id, defaults={}
+        )
+
+    # Create action for recommendation
+    try:
+        obj = UserAction.objects.get(
+            user_id=request_user.id,
+            paper_id=paper_id,
+            type=USER_ACTION_TYPE[0]
+        )
+        obj.count = obj.count + 1
+        obj.save()
+    except ObjectDoesNotExist:
+        UserAction.objects.create(
+            user_id=request_user.id,
+            paper_id=paper_id,
+            type=USER_ACTION_TYPE[0],
+            count=1,
         )
 
 
@@ -321,12 +346,12 @@ def __get_collections(filter_query, request_user, count, paper_id=None, order_by
 
     is_finished = len(collections) < count if count and pagination_value != 0 else True
 
-    collections = __pack_collections(collections, request_user)
+    collections = __pack_collections(collections, request_user, paper_id=paper_id)
 
     return collections, pagination_value, is_finished
 
 
-def __pack_collections(collections, request_user):  # pylint: disable=unused-argument
+def __pack_collections(collections, request_user, paper_id=None):  # pylint: disable=unused-argument
     """Pack Collections"""
     packed = []
 
@@ -352,14 +377,18 @@ def __pack_collections(collections, request_user):  # pylint: disable=unused-arg
             constants.TITLE: collection.title,
             constants.TEXT: collection.text,
             constants.LIKED: collection.is_liked,
-            constants.CONTAINS_PAPER: collection.contains_paper,
             constants.COUNT: {
                 constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0,
                 constants.PAPERS: paper_counts[collection_id] if collection_id in paper_counts else 0,
                 constants.LIKES: like_counts[collection_id] if collection_id in like_counts else 0,
                 constants.REPLIES: reply_counts[collection_id] if collection_id in reply_counts else 0
-            }
+            },
+            constants.CREATION_DATE: collection.creation_date,
+            constants.MODIFICATION_DATE: collection.modification_date
         }
+
+        if paper_id:
+            packed_collection[constants.CONTAINS_PAPER] = collection.contains_paper
 
         packed.append(packed_collection)
 

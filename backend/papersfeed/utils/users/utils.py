@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import uuid
 import hashlib
+import json
 
 from django.db import IntegrityError, transaction
 from django.core.exceptions import ObjectDoesNotExist
@@ -394,7 +395,7 @@ def select_user_collection(args):
     member_ids = list(set(member_ids))
 
     # Get Members
-    members, _, is_finished = __get_users(Q(id__in=member_ids), request_user, 10)
+    members, _, is_finished = __get_users(Q(id__in=member_ids), request_user, 10, collection_id=collection_id)
 
     return members, page_number, is_finished
 
@@ -413,11 +414,6 @@ def insert_user_collection(args):
     # Check Collection Id
     if not Collection.objects.filter(id=collection_id).exists():
         raise ApiError(constants.NOT_EXIST_OBJECT)
-
-    # if request_user is not owner, then raise AUTH_ERROR
-    collection_user = CollectionUser.objects.get(collection_id=collection_id, user_id=request_user.id)
-    if collection_user.type != COLLECTION_USER_TYPE[0]:
-        raise ApiError(constants.AUTH_ERROR)
 
     # Self Add
     if request_user.id in user_ids:
@@ -472,14 +468,13 @@ def update_user_collection(args):
 
 
 def remove_user_collection(args):
-    """Remove the User(s) from the Collection"""
+    """Remove the Users from the Collection"""
     is_parameter_exists([
         constants.ID, constants.USER_IDS
     ], args)
 
     collection_id = int(args[constants.ID])
-    # user_id = args[constants.USER_ID]
-    user_ids = args[constants.USER_IDS]
+    user_ids = json.loads(args[constants.USER_IDS])
 
     request_user = args[constants.USER]
 
@@ -497,24 +492,15 @@ def remove_user_collection(args):
     # or deleting the collection would be a solution
     if request_user.id in user_ids:
         raise ApiError(constants.UNPROCESSABLE_ENTITY)
-    # original codes
-    # user_counts = __get_collection_user_count([collection_id], 'collection_id')
-    # user_count = user_counts[collection_id] if collection_id in user_counts else 0
 
-    # # if there are more than two members, owner can't just leave
-    # if user_count > 1 and user_id == request_user.id:
-    #     raise ApiError(constants.UNPROCESSABLE_ENTITY)
-
-    # FIXME : there may better way to delete multiple users
-    for user_id in user_ids:
-        CollectionUser.objects.filter(user_id=user_id, collection_id=collection_id).delete()
+    CollectionUser.objects.filter(user_id__in=user_ids, collection_id=collection_id).delete()
 
     # Get the number of Members(including owner) Of Collections
     user_counts = __get_collection_user_count([collection_id], 'collection_id')
     return {constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0}
 
 
-def __get_users(filter_query, request_user, count):
+def __get_users(filter_query, request_user, count, collection_id=None):
     """Get Users By Query"""
     queryset = User.objects.filter(
         filter_query
@@ -529,12 +515,12 @@ def __get_users(filter_query, request_user, count):
 
     is_finished = len(users) < count if count and pagination_value != 0 else True
 
-    users = __pack_users(users, request_user)
+    users = __pack_users(users, request_user, collection_id=collection_id)
 
     return users, pagination_value, is_finished
 
 
-def __pack_users(users, request_user):
+def __pack_users(users, request_user, collection_id=None):
     """Pack User Info"""
     packed = []
 
@@ -564,6 +550,11 @@ def __pack_users(users, request_user):
             # 내 정보가 아니면 follow 관계 여부 추가
             packed_user[constants.IS_FOLLOWED] = user.is_followed
             packed_user[constants.IS_FOLLOWING] = user.is_following
+
+        if collection_id:
+            packed_user[constants.COLLECTION_USER_TYPE] = CollectionUser.objects.get(
+                user_id=user_id, collection_id=collection_id
+            ).type
 
         packed.append(packed_user)
 
