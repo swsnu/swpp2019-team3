@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Tabs, Tab } from "react-bootstrap";
+import { Tabs, Tab, Button } from "react-bootstrap";
 
 import { PaperCard, CollectionCard, UserCard } from "../../components";
 import { paperStatus } from "../../constants/constants";
@@ -12,6 +12,7 @@ class SearchResult extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            searchWord: "",
             papers: [],
             collections: [],
             users: [],
@@ -25,6 +26,7 @@ class SearchResult extends Component {
 
     componentDidMount() {
         const searchWord = this.props.location.pathname.split("=")[1];
+        this.setState({ searchWord });
         this.props.onSearchPaper({ text: searchWord })
             .then(() => {
                 this.setState({
@@ -41,6 +43,21 @@ class SearchResult extends Component {
                 this.setState({ users: this.props.searchedUsers });
             });
     }
+
+    clickPaperMoreHandler = () => {
+        this.setState({ searchPaperStatus: paperStatus.WAITING });
+        this.props.onSearchPaper({
+            text: this.state.searchWord,
+            page_number: this.props.paperPageNum + 1,
+        })
+            .then(() => {
+                const { papers } = this.state;
+                this.setState({
+                    papers: papers.concat(this.props.searchedPapers),
+                    searchPaperStatus: paperStatus.NONE,
+                });
+            });
+    };
 
     paperCardsMaker = (paper) => (
         <PaperCard
@@ -132,6 +149,23 @@ class SearchResult extends Component {
             userMessage = null;
         }
 
+        let paperMoreButton = null;
+        if (this.state.searchPaperStatus !== paperStatus.WAITING
+            && !this.props.paperFinished) {
+            paperMoreButton = (
+                <Button
+                  id="paper-more-button"
+                  onClick={this.clickPaperMoreHandler}
+                >View More
+                </Button>
+            );
+        } else if (this.state.searchPaperStatus === paperStatus.WAITING
+            && this.state.papers.length > 0) {
+            paperMoreButton = (
+                <h3 id="paper-more-waiting-message">please wait...</h3>
+            );
+        }
+
         return (
             <div className="search-result">
                 <div className="item-list">
@@ -142,6 +176,7 @@ class SearchResult extends Component {
                                 <div id="paper-cards-left">{paperCardsLeft}</div>
                                 <div id="paper-cards-right">{paperCardsRight}</div>
                             </div>
+                            {paperMoreButton}
                         </Tab>
                         <Tab className="collection-tab" eventKey="collection-tab" title="Collection">
                             <div id="collection-cards">
@@ -165,12 +200,14 @@ class SearchResult extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    searchPaperStatus: state.paper.searchPaperStatus,
+    searchPaperStatus: state.paper.search.status,
     searchCollectionStatus: state.collection.list.status,
     searchUserStatus: state.user.status,
-    searchedPapers: state.paper.searchedPapers,
+    searchedPapers: state.paper.search.papers,
     searchedCollections: state.collection.list.list,
     searchedUsers: state.user.searchedUsers,
+    paperPageNum: state.paper.search.pageNum,
+    paperFinished: state.paper.search.finished,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -190,6 +227,8 @@ SearchResult.propTypes = {
     searchedPapers: PropTypes.arrayOf(PropTypes.any),
     searchedCollections: PropTypes.arrayOf(PropTypes.any),
     searchedUsers: PropTypes.arrayOf(PropTypes.any),
+    paperPageNum: PropTypes.number,
+    paperFinished: PropTypes.bool,
 };
 
 SearchResult.defaultProps = {
@@ -201,4 +240,6 @@ SearchResult.defaultProps = {
     searchedPapers: [],
     searchedCollections: [],
     searchedUsers: [],
+    paperPageNum: 0,
+    paperFinished: true,
 };

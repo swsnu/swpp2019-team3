@@ -95,7 +95,7 @@ def select_paper_search(args):
     keyword = args[constants.TEXT]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     paper_ids = []
     # exploit arXiv
