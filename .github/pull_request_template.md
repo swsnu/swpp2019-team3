@@ -24,6 +24,6 @@ This pull request...
 
 My codes...
 - [ ] include enough tests for added and changed parts
-- [ ] passe all the new and existing tests
+- [ ] pass all the new and existing tests
 - [ ] include appropriate comments
 - [ ] don't introduce unnecessary warnings
