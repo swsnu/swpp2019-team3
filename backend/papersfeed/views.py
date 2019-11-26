@@ -61,7 +61,7 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
             args[constants.REQUEST] = request
 
             # Session Check
-            if api_function not in ['get_session', 'post_user']:
+            if api_function not in ['get_session', 'post_user', 'get_paper_search_ml', 'get_user_action', 'post_user_recommendation']:
                 __check_session(args, request)
 
             # Functions 실행

@@ -330,7 +330,7 @@ def get_user_action(args):
     """Get User Actions"""
     return {"actions": recommendation_utils.select_user_actions(args)}
 
-def post_user_recommendaton(args):
+def post_user_recommendation(args):
     """Post User Recommendation"""
     return recommendation_utils.insert_user_recommendation(args)
 
