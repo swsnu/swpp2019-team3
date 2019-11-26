@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import urllib
+import json
 from pprint import pprint
 import requests
 import xmltodict
@@ -146,9 +147,74 @@ def select_paper_search(args):
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(paper_ids)])
 
     # Papers
-    papers, _, is_finished = __get_papers(Q(id__in=paper_ids), request_user, SEARCH_COUNT, preserved)
+    papers, _, is_finished = __get_papers(Q(id__in=paper_ids), request_user, SEARCH_COUNT, order_by=preserved)
 
     return papers, page_number, is_finished
+
+
+def select_paper_search_ml(args):
+    """Select Paper Search for ML(dummy data)"""
+    is_parameter_exists([
+        constants.TITLES
+    ], args)
+
+    # Search Titles
+    titles = json.loads(args[constants.TITLES])
+
+    paper_ids = []
+
+    # this dict is for extracting keywords from papers which already exists in DB but have no keywords
+    abstracts = {}
+
+    for title in titles:
+        # Papers Queryset(id, abstract)
+        queryset = Paper.objects.filter(Q(title__icontains=title)).values_list('id', 'abstract')
+
+        # if there is no result in our DB
+        if queryset.count() == 0:
+            # exploit arXiv
+            try:
+                start = 0
+                print("[arXiv API - ml] searching ({}~{})".format(start, start + 1))
+                arxiv_url = "http://export.arxiv.org/api/query"
+                query = "?search_query=" + urllib.parse.quote(title) \
+                    + "&start=" + str(start) + "&max_results=" + str(1)
+                response = requests.get(arxiv_url + query)
+
+                if response.status_code == 200:
+                    response_xml = response.text
+                    response_dict = xmltodict.parse(response_xml)['feed']
+                    if 'entry' in response_dict and response_dict['entry']:
+                        # this process includes extracting keywords from abstracts
+                        paper_ids.append(__parse_and_save_arxiv_info(response_dict)[0])
+                    else: # if 'entry' doesn't exist
+                        print("[arXiv API - ml] more entries don't exist")
+                        paper_ids.append(-1)
+                else:
+                    print("[arXiv API - ml] error code {}".format(response.status_code))
+                    paper_ids.append(-1)
+            except requests.exceptions.RequestException as exception:
+                print(exception)
+                paper_ids.append(-1)
+
+        # if the paper exists in our DB
+        else:
+            # (id, abstract) of the paper
+            paper_id, abstract = queryset.first()
+            paper_ids.append(paper_id)
+
+            # Check if the paper has keywords. If not, try extracting keywords this time
+            if not PaperKeyword.objects.filter(paper_id=paper_id).exists():
+                abstracts[paper_id] = abstract
+
+    # after getting all results from arXiv and checking keywords existence
+    if abstracts:
+        __extract_keywords_from_abstract(abstracts)
+
+    # Papers
+    papers = __get_papers_ml(paper_ids, titles)
+
+    return papers
 
 
 def select_paper_like(args):
@@ -242,6 +308,37 @@ def __pack_papers(papers, request_user):  # pylint: disable=unused-argument
                 constants.LIKES: like_counts[paper_id] if paper_id in like_counts else 0
             }
         }
+
+        packed.append(packed_paper)
+
+    return packed
+
+
+def __get_papers_ml(paper_ids, search_words):
+    """Get Papers By Query for ML(dummy data)"""
+    packed = []
+
+    for i, paper_id in enumerate(paper_ids):
+        if paper_id != -1:
+            # Paper
+            paper = Paper.objects.get(id=paper_id)
+
+            # Paper Keywords
+            keywords = __get_keywords_paper(Q(paper_id=paper_id))
+
+            packed_paper = {
+                constants.ID: paper.id,
+                constants.TITLE: paper.title,
+                constants.KEYWORDS: keywords[paper.id] if paper.id in keywords else [],
+                constants.SEARCH_WORD: search_words[i]
+            }
+        else:
+            packed_paper = {
+                constants.ID: -1,
+                constants.TITLE: "",
+                constants.KEYWORDS: [],
+                constants.SEARCH_WORD: search_words[i]
+            }
 
         packed.append(packed_paper)
 

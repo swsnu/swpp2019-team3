@@ -32,6 +32,12 @@ describe("<SearchResult />", () => {
             paper: {
                 getPaperStatus: paperStatus.NONE,
                 selectedPaper: {},
+                search: {
+                    status: paperStatus.NONE,
+                    papers: [],
+                    pageNum: 0,
+                    finished: true,
+                },
             },
             auth: {},
             collection: {

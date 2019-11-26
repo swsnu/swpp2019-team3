@@ -11,7 +11,7 @@ from papersfeed.models.collections.collection_like import CollectionLike
 from papersfeed.models.collections.collection_user import CollectionUser, COLLECTION_USER_TYPE
 from papersfeed.models.collections.collection_paper import CollectionPaper
 from papersfeed.models.replies.reply_collection import ReplyCollection
-
+from papersfeed.models.users.user_action import UserAction, USER_ACTION_TYPE
 
 def insert_collection(args):
     """Insert Collection"""
@@ -261,10 +261,10 @@ def update_paper_collection(args):
     containing_collection_ids = __get_collections_contains_paper(paper_id, request_user)
 
     # Add To Collections
-    __add_paper_to_collections(paper_id, list(set(collection_ids) - set(containing_collection_ids)))
+    __add_paper_to_collections(paper_id, list(set(collection_ids) - set(containing_collection_ids)), request_user)
 
     # Remove From Collections
-    __remove_paper_from_collections(paper_id, list(set(containing_collection_ids) - set(collection_ids)))
+    __remove_paper_from_collections(paper_id, list(set(containing_collection_ids) - set(collection_ids)), request_user)
 
 
 def get_collections(filter_query, request_user, count, paper_id=None):
@@ -290,19 +290,45 @@ def __get_collections_contains_paper(paper_id, request_user):
     return [collection.id for collection in collections]
 
 
-def __remove_paper_from_collections(paper_id, collection_ids):
+def __remove_paper_from_collections(paper_id, collection_ids, request_user):
     """Remove Paper From Collections"""
     if collection_ids:
         CollectionPaper.objects.filter(
             collection_id__in=collection_ids, paper_id=paper_id
         ).delete()
 
+    # Update action count for recommendation
+    for _ in range(len(collection_ids)):
+        obj = UserAction.objects.get(
+            user_id=request_user.id,
+            paper_id=paper_id,
+            type=USER_ACTION_TYPE[0],
+            )
+        obj.count = obj.count - 1
+        obj.save()
 
-def __add_paper_to_collections(paper_id, collection_ids):
+def __add_paper_to_collections(paper_id, collection_ids, request_user):
     """Add Paper To Collections"""
     for collection_id in collection_ids:
         CollectionPaper.objects.update_or_create(
             collection_id=collection_id, paper_id=paper_id, defaults={}
+        )
+
+    # Create action for recommendation
+    try:
+        obj = UserAction.objects.get(
+            user_id=request_user.id,
+            paper_id=paper_id,
+            type=USER_ACTION_TYPE[0]
+        )
+        obj.count = obj.count + 1
+        obj.save()
+    except ObjectDoesNotExist:
+        UserAction.objects.create(
+            user_id=request_user.id,
+            paper_id=paper_id,
+            type=USER_ACTION_TYPE[0],
+            count=1,
         )
 
 

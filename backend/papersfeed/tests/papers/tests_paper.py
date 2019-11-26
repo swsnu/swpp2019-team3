@@ -293,10 +293,30 @@ class PaperTestCase(TestCase):
         self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
         self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
+        # Search with Keyword 'AI'
+        response = client.get('/api/paper/search',
+                              data={
+                                  constants.TEXT: 'AI'
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
+
+        # Search with Keyword 'Computer'
+        response = client.get('/api/paper/search',
+                              data={
+                                  constants.TEXT: 'Computer'
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
+
     @patch('requests.post')
     @patch('requests.get')
     def test_paper_search_arxiv(self, mock_get, mock_post):
-        """Search Paper (arXiv)"""
+        """Search Paper (arXiv) & Search Paper for ML(dummy data)"""
         client = Client()
 
         # Sign In
@@ -348,6 +368,17 @@ class PaperTestCase(TestCase):
         self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
         self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
         self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
+
+        """Search Paper for ML(dummy data)""" # pylint: disable=pointless-string-statement
+        # Search with Keyword 'afdaf' which doesn't exist in DB (send requests to arXiv)
+        response = client.get('/api/paper/search/ml',
+                              data={
+                                  constants.TITLES: json.dumps(['afdaf'])
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        # there was one result from arXiv, so our search API's response should have one paper result, too
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
 
 # pylint: disable=too-few-public-methods
 class MockResponse:

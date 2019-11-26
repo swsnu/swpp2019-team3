@@ -28,6 +28,7 @@ PAGE_NUMBER = 'page_number'
 IS_FINISHED = 'is_finished'
 CREATION_DATE = 'creation_date'
 MODIFICATION_DATE = 'modification_date'
+SEARCH_WORD = 'search_word'
 
 # User
 USER = 'user'
@@ -65,6 +66,7 @@ CONTAINS_PAPER = 'contains_paper'
 PAPER = 'paper'
 PAPERS = 'papers'
 LANGUAGE = 'language'
+TITLES = 'titles'
 ABSTRACT = 'abstract'
 ISSN = 'ISSN'
 EISSN = 'eISSN'
@@ -108,3 +110,6 @@ CITY = 'city'
 # Reply
 REPLY = 'reply'
 REPLIES = 'replies'
+
+#Recommendation
+ACTIONS = 'actions'
