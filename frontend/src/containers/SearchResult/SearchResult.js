@@ -154,7 +154,7 @@ class SearchResult extends Component {
             && !this.props.paperFinished) {
             paperMoreButton = (
                 <Button
-                  id="paper-more-button"
+                  className="paper-more-button"
                   onClick={this.clickPaperMoreHandler}
                 >View More
                 </Button>
