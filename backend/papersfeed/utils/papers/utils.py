@@ -329,10 +329,10 @@ def __get_papers_ml(paper_ids, search_words):
 
             # Paper Keywords
             keywords = __get_keywords_paper(Q(paper_id=paper_id))
-
             packed_paper = {
                 constants.ID: paper.id,
                 constants.TITLE: paper.title,
+                constants.ABSTRACT: paper.abstract,
                 constants.KEYWORDS: keywords[paper.id] if paper.id in keywords else [],
                 constants.SEARCH_WORD: search_words[i]
             }
@@ -340,6 +340,7 @@ def __get_papers_ml(paper_ids, search_words):
             packed_paper = {
                 constants.ID: -1,
                 constants.TITLE: "",
+                constants.ABSTRACT: "",
                 constants.KEYWORDS: [],
                 constants.SEARCH_WORD: search_words[i]
             }
@@ -393,6 +394,9 @@ def __get_authors_paper(filter_query):
 
     return result
 
+def get_keywords_paper(filter_query):
+    """get keywords paper"""
+    return __get_keywords_paper(filter_query)
 
 def __get_keywords_paper(filter_query):
     """Get Keywords Of Paper"""

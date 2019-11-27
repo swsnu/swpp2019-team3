@@ -34,7 +34,7 @@ class RecommnedationTestCase(TestCase):
             eISSN="1",
             DOI="1",
             creation_date="2019-11-13",
-            modification_date="2019-11-13"
+            modification_date="2019-11-13",
         )
 
     def test_get_user_action(self):
@@ -90,9 +90,12 @@ class RecommnedationTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(response.content, {"actions": [
-            {"UserId": user_id, "ItemId": paper_id, "Type": "make_review", "Count": 1},
-            {"UserId": user_id, "ItemId": paper_id, "Type": "like_paper", "Count": 1},
-            {"UserId": user_id, "ItemId": paper_id, "Type": "add_to_collection", "Count": 1}
+            {"UserId": user_id, "ItemId": paper_id, "Keywords": [],
+             "Abstract": "abstract1", "Type": "make_review", "Count": 1},
+            {"UserId": user_id, "ItemId": paper_id, "Keywords": [],
+             "Abstract": "abstract1", "Type": "like_paper", "Count": 1},
+            {"UserId": user_id, "ItemId": paper_id, "Keywords": [],
+             "Abstract": "abstract1", "Type": "add_to_collection", "Count": 1}
             ]})
 
     def post_user_recommendation(self):
