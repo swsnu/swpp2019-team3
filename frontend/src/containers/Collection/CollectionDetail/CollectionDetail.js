@@ -139,12 +139,6 @@ class CollectionDetail extends Component {
     }
 
     render() {
-        const editButton = (
-            <Link id="editButtonLink" to={`/collection_id=${this.state.id}/edit/`}>
-                <Button id="editButton">Edit</Button>
-            </Link>
-        );
-
         const paperCardsLeft = this.state.papers
             .filter((x) => this.state.papers.indexOf(x) % 2 === 0)
             .map((paper) => this.paperCardMaker(paper));
@@ -210,10 +204,10 @@ class CollectionDetail extends Component {
                                 <h5 id="likeCount">{this.state.likeCount}</h5>
                                 <h5 id="likeText">Likes</h5>
                             </div>
-                            <div id="memberStat">
+                            <Link id="memberStat" to={`${this.props.location.pathname}/members`}>
                                 <h5 id="memberCount">{this.state.userCount}</h5>
                                 <h5 id="memberText">Members</h5>
-                            </div>
+                            </Link>
                             <div id="collectionButtons">
                                 <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}>
                                     <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>
@@ -221,10 +215,10 @@ class CollectionDetail extends Component {
                                 </Button>
                                 {inviteModal}
                                 {manageButton}
-                                {this.state.thisCollection.amIMember ? editButton : <div />}
                             </div>
                         </div>
                         <div id="collectionDescription">
+                            <div id="owner">Owner: {this.state.owner.username}</div>
                             <div id="date">
                                 <div id="creationDate">Created: {creationDate}</div>
                                 <div id="lastUpdateDate">Last Update: {modificationDate}</div>
