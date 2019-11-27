@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
 from django.db.models import OuterRef, Subquery, F, Q
-# 
+
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.users.user import User
 from papersfeed.models.users.user_action import UserAction
