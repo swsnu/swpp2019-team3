@@ -266,6 +266,10 @@ def select_user_following(args):
     # Page Number
     page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
 
+    # Check User Id
+    if not User.objects.filter(id=requested_user_id).exists():
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
     # Following QuerySet
     queryset = UserFollow.objects.filter(following_user=requested_user_id).values_list('followed_user', flat=True)
 
@@ -295,6 +299,10 @@ def select_user_followed(args):
 
     # Page Number
     page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Check User Id
+    if not User.objects.filter(id=requested_user_id).exists():
+        raise ApiError(constants.NOT_EXIST_OBJECT)
 
     # Follower QuerySet
     queryset = UserFollow.objects.filter(followed_user=requested_user_id).values_list('following_user', flat=True)
@@ -383,6 +391,10 @@ def select_user_collection(args):
 
     # Page Number
     page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # Check Collection Id
+    if not Collection.objects.filter(id=collection_id).exists():
+        raise ApiError(constants.NOT_EXIST_OBJECT)
 
     # Members QuerySet
     queryset = CollectionUser.objects.filter(collection_id=collection_id)

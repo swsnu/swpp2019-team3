@@ -104,13 +104,22 @@ const reducer = (state = initialState, action) => {
                 error: action.target,
             },
         };
-    case collectionConstants.GET_COLLECTION_MEMBERS:
+    case collectionConstants.GET_COLLECTION_MEMBERS_SUCCESS:
         return {
             ...state,
             selected: {
                 ...state.selected,
                 status: collectionStatus.SUCCESS,
                 members: action.target,
+            },
+        };
+    case collectionConstants.GET_COLLECTION_MEMBERS_FAILURE:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.FAILURE,
+                error: action.target,
             },
         };
     case collectionConstants.SET_OWNER:

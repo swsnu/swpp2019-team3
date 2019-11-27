@@ -1,15 +1,18 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 import { UserCard } from "../../../components";
-import { userActions } from "../../../store/actions";
+import { userActions, collectionActions } from "../../../store/actions";
+import { userStatus, collectionStatus } from "../../../constants/constants";
 import "./UserList.css";
 
 class UserList extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            id: this.props.match.params.id,
             users: [],
         };
 
@@ -17,15 +20,29 @@ class UserList extends Component {
     }
 
     componentDidMount() {
-        if (this.props.location.pathname.split("=")[1].split("/")[1] === "followings") {
-            this.props.onFollowingUser({ id: this.props.location.pathname.split("=")[1].split("/")[0] })
+        if (this.props.mode === "followings") {
+            this.props.onFollowingUser({ id: this.state.id })
                 .then(() => {
+                    if (this.props.userStatus === userStatus.USER_NOT_EXIST) {
+                        this.props.history.push("/main");
+                    }
                     this.setState({ users: this.props.followingUsers });
                 });
-        } else if (this.props.location.pathname.split("=")[1].split("/")[1] === "followers") {
-            this.props.onFollowerUser({ id: this.props.location.pathname.split("=")[1].split("/")[0] })
+        } else if (this.props.mode === "followers") {
+            this.props.onFollowerUser({ id: this.state.id })
                 .then(() => {
+                    if (this.props.userStatus === userStatus.USER_NOT_EXIST) {
+                        this.props.history.push("/main");
+                    }
                     this.setState({ users: this.props.followerUsers });
+                });
+        } else if (this.props.mode === "members") {
+            this.props.onGetMembers(this.state.id)
+                .then(() => {
+                    if (this.props.getMembersStatus === collectionStatus.FAILURE) {
+                        this.props.history.push("/main");
+                    }
+                    this.setState({ users: this.props.members });
                 });
         }
     }
@@ -76,27 +93,44 @@ const mapStateToProps = (state) => ({
     userStatus: state.user.status,
     followerUsers: state.user.selectedFollowers,
     followingUsers: state.user.selectedFollowings,
+    getMembersStatus: state.collection.selected.status,
+    members: state.collection.selected.members,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onFollowerUser: (userId) => dispatch(userActions.getFollowersByUserId(userId)),
     onFollowingUser: (userId) => dispatch(userActions.getFollowingsByUserId(userId)),
+    onGetMembers: (collectionId) => dispatch(
+        collectionActions.getCollectionMembers(collectionId),
+    ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserList);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(UserList));
 
 UserList.propTypes = {
-    location: PropTypes.objectOf(PropTypes.any),
+    history: PropTypes.objectOf(PropTypes.any),
+    match: PropTypes.objectOf(PropTypes.any),
+    mode: PropTypes.string,
     followerUsers: PropTypes.arrayOf(PropTypes.any),
     onFollowerUser: PropTypes.func,
     followingUsers: PropTypes.arrayOf(PropTypes.any),
     onFollowingUser: PropTypes.func,
+    members: PropTypes.arrayOf(PropTypes.any),
+    onGetMembers: PropTypes.func,
+    userStatus: PropTypes.string,
+    getMembersStatus: PropTypes.string,
 };
 
 UserList.defaultProps = {
-    location: null,
+    history: null,
+    match: null,
+    mode: "",
     followerUsers: [],
     onFollowerUser: () => {},
     followingUsers: [],
     onFollowingUser: () => {},
+    members: [],
+    onGetMembers: () => {},
+    userStatus: userStatus.NONE,
+    getMembersStatus: collectionStatus.NONE,
 };

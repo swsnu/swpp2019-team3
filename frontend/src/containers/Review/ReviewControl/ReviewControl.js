@@ -26,6 +26,7 @@ class ReviewControl extends Component {
     }
 
     componentDidMount() {
+        console.log(this.props);
         if (this.props.mode === 0) {
             this.props.onGetPaper({ id: this.props.match.params.paper_id })
                 .then(() => {
