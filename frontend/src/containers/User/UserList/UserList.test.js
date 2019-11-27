@@ -10,6 +10,7 @@ import { userStatus, collectionStatus } from "../../../constants/constants";
 import { userActions, collectionActions } from "../../../store/actions";
 import { getMockStore, mockPromise, flushPromises } from "../../../test-utils/mocks";
 
+
 const makeUserList = (initialState, mode) => (
     <Provider store={getMockStore(initialState)}>
         <ConnectedRouter history={createBrowserHistory()}>

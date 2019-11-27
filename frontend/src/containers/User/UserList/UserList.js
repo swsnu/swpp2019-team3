@@ -28,7 +28,6 @@ class UserList extends Component {
             this.props.onFollowingUser({ id: this.state.id })
                 .then(() => {
                     if (this.props.userStatus === userStatus.USER_NOT_EXIST) {
-                        console.log("1");
                         this.props.history.push("/main");
                     }
                     if (this._isMounted) {
