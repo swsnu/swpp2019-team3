@@ -5,7 +5,7 @@ import { createBrowserHistory } from "history";
 import ReviewDetail from "./ReviewDetail";
 import { reviewActions, replyActions } from "../../../store/actions";
 import { reviewStatus, getMeStatus } from "../../../constants/constants";
-import { getMockStore } from "../../../test-utils/mocks";
+import { getMockStore, mockPromise } from "../../../test-utils/mocks";
 
 
 const history = createBrowserHistory();
@@ -21,8 +21,6 @@ const makeReviewDetail = (initialState, props = {}) => (
     </Provider>
 );
 /* eslint-enable react/jsx-props-no-spreading */
-
-const mockPromise = new Promise((resolve) => { resolve(); });
 
 describe("<ReviewDetail />", () => {
     let stubInitialState;

@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 
 import UserList from "./UserList";
 import { userActions } from "../../../store/actions";
-import { getMockStore } from "../../../test-utils/mocks";
+import { getMockStore, mockPromise } from "../../../test-utils/mocks";
 
 const mockHistory = { push: jest.fn() };
 const makeFollowingList = (initialState) => (
@@ -22,9 +22,6 @@ const makeWrongList = (initialState) => (
         <UserList history={mockHistory} location={{ pathname: "/profile_id=1/wrong" }} />
     </Provider>
 );
-/* eslint-disable no-unused-vars */
-const mockPromise = new Promise((resolve, reject) => { resolve(); });
-/* eslint-enable no-unused-vars */
 
 describe("<UserList />", () => {
     let stubInitialState;

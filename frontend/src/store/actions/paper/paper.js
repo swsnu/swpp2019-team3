@@ -56,9 +56,9 @@ export const unlikePaper = (paperId) => (dispatch) => axios.delete("/api/like/pa
     .catch((err) => dispatch(unlikePaperFailure(err)));
 
 
-const searchPaperSuccess = (papers) => ({
+const searchPaperSuccess = (data) => ({
     type: paperConstants.SEARCH_PAPER_SUCCESS,
-    target: papers.papers,
+    target: { papers: data.papers, pageNum: data.page_number, finished: data.is_finished },
 });
 
 const searchPaperFailure = (error) => ({

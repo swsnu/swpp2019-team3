@@ -101,6 +101,11 @@
     color: #DC143C;
 }
 
+#paper-more-waiting-message {
+    font-size: 150%;
+    color: #DC143C;
+}
+
 #collection-message {
     font-size: 150%;
     color: #DC143C;
