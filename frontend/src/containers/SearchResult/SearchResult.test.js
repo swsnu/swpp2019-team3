@@ -7,7 +7,7 @@ import { paperActions, collectionActions, userActions } from "../../store/action
 import {
     paperStatus, collectionStatus,
 } from "../../constants/constants";
-import { getMockStore } from "../../test-utils/mocks";
+import { getMockStore, mockPromise, flushPromises } from "../../test-utils/mocks";
 
 
 const mockHistory = { push: jest.fn() };
@@ -16,9 +16,6 @@ const makeSearchResult = (initialState) => (
         <SearchResult history={mockHistory} location={{ pathname: "/search=abc" }} />
     </Provider>
 );
-/* eslint-disable no-unused-vars */
-const mockPromise = new Promise((resolve, reject) => { resolve(); });
-/* eslint-enable no-unused-vars */
 
 describe("<SearchResult />", () => {
     let stubInitialState;
@@ -32,6 +29,12 @@ describe("<SearchResult />", () => {
             paper: {
                 getPaperStatus: paperStatus.NONE,
                 selectedPaper: {},
+                search: {
+                    status: paperStatus.NONE,
+                    papers: [],
+                    pageNum: 0,
+                    finished: true,
+                },
             },
             auth: {},
             collection: {
@@ -180,5 +183,31 @@ describe("<SearchResult />", () => {
         expect(component.find("UserCard").length).toBe(2);
         expect(wrapperLeft.children().length).toBe(1);
         expect(wrapperRight.children().length).toBe(1);
+    });
+
+    it("should show more if paper-more-button clicked", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            paper: {
+                getPaperStatus: paperStatus.NONE,
+                selectedPaper: {},
+                search: {
+                    status: paperStatus.NONE,
+                    papers: [],
+                    pageNum: 1,
+                    finished: false,
+                },
+            },
+        };
+        const component = mount(makeSearchResult(stubInitialState));
+
+        await flushPromises();
+        component.update();
+
+        const wrapper = component.find(".paper-more-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        await flushPromises();
     });
 });

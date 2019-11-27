@@ -20,8 +20,12 @@ describe("Paper reducer", () => {
         expect(newState).toEqual({
             getPaperStatus: paperStatus.NONE,
             likePaperStatus: paperStatus.NONE,
-            searchPaperStatus: paperStatus.NONE,
-            searchedPapers: [],
+            search: {
+                status: paperStatus.NONE,
+                papers: [],
+                pageNum: 0,
+                finished: true,
+            },
             likeCount: 0,
             unlikePaperStatus: paperStatus.NONE,
             unlikeCount: 0,
@@ -87,7 +91,7 @@ describe("Paper reducer", () => {
             type: paperConstants.SEARCH_PAPER_SUCCESS,
             target: [],
         });
-        expect(newState.searchPaperStatus).toEqual(paperStatus.SUCCESS);
+        expect(newState.search.status).toEqual(paperStatus.SUCCESS);
     });
 
     it("should handle searchPaper failure", () => {
@@ -95,7 +99,7 @@ describe("Paper reducer", () => {
             type: paperConstants.SEARCH_PAPER_FAILURE,
             target: stubError,
         });
-        expect(newState.searchPaperStatus).toEqual(paperStatus.FAILURE);
+        expect(newState.search.status).toEqual(paperStatus.FAILURE);
     });
 
     it("should handle getPaperLike success", () => {
