@@ -81,12 +81,12 @@ export const getCollectionPapers = (collectionId) => (dispatch) => axios.get("/a
     .catch((err) => { (dispatch(getCollectionPapersFailure(err))); });
 
 const getCollectionMembersSuccess = (members) => ({
-    type: collectionConstants.GET_COLLECTION_MEMBERS,
+    type: collectionConstants.GET_COLLECTION_MEMBERS_SUCCESS,
     target: members.users,
 });
 
 const getCollectionMembersFailure = (error) => ({
-    type: null,
+    type: collectionConstants.GET_COLLECTION_MEMBERS_FAILURE,
     target: error,
 });
 
@@ -94,12 +94,6 @@ export const getCollectionMembers = (collectionID) => (dispatch) => axios.get("/
     .then((res) => { dispatch(getCollectionMembersSuccess(res.data)); })
     .catch((err) => { dispatch(getCollectionMembersFailure(err)); });
 
-// getCollectionReplies - no matching /api
-/* export const getCollectionReplies = (collectionID) => (dispatch)
-=> axios.get(`/reply/collection/${collectionID}`)
-    .then((res) => dispatch({
-        type: actionTypes.GET_COLLECTION_REPLIES, replies: res.data,
-    })); */
 
 const setOwnerSuccess = () => ({
     type: collectionConstants.SET_OWNER,

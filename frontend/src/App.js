@@ -58,12 +58,49 @@ function App(props) {
                             <Route path="/history" exact component={History} />
                             <Route path="/paper_id=:paper_id" exact component={PaperDetail} />
                             <Route path="/profile_id=:profile_id" exact component={ProfileDetail} />
+                            <Route
+                              path="/profile_id=:id/followers"
+                              exact
+                              render={() => (
+                                  <div>
+                                      <UserList
+                                        mode="followers"
+                                        match={props.match}
+                                        history={props.history}
+                                      />
+                                  </div>
+                              )}
+                            />
+                            <Route
+                              path="/profile_id=:id/followings"
+                              exact
+                              render={() => (
+                                  <div>
+                                      <UserList
+                                        mode="followings"
+                                        match={props.match}
+                                        history={props.history}
+                                      />
+                                  </div>
+                              )}
+                            />
                             <Route path="/account_setting" exact component={AccountSetting} />
                             <Route path="/collections" exact component={CollectionList} />
                             <Route path="/collection_id=:collection_id" exact component={CollectionDetail} />
+                            <Route
+                              path="/collection_id=:id/members"
+                              exact
+                              render={() => (
+                                  <div>
+                                      <UserList
+                                        mode="members"
+                                        match={props.match}
+                                        history={props.history}
+                                      />
+                                  </div>
+                              )}
+                            />
                             <Route path="/collection_id=:collection_id/manage" exact component={CollectionManage} />
-                            <Route path="/profile_id=:profile_id/followers" exact component={UserList} />
-                            <Route path="/profile_id=:profile_id/followings" exact component={UserList} />
                         </Switch>
                     </>
                 </Switch>

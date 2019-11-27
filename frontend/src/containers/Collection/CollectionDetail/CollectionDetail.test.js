@@ -200,27 +200,6 @@ describe("CollectionDetail Test", () => {
         expect(instance.state.newReplyContent).toBe("Hello");
     });
 
-    it("shows edit button only if I am the member", () => {
-        const component = mount(collectionDetail);
-        component.find("CollectionDetail").instance().setState({
-            thisCollection: {
-                papers: [], members: [], replies: [], amIMember: true,
-            },
-        });
-        component.update();
-        let wrapper = component.find("#editButtonLink").hostNodes();
-        expect(wrapper.length).toBe(1);
-
-        component.find("CollectionDetail").instance().setState({
-            thisCollection: {
-                papers: [], replies: [], members: [], amIMember: false,
-            },
-        });
-        component.update();
-        wrapper = component.find("#editButtonLink").hostNodes();
-        expect(wrapper.length).toBe(0);
-    });
-
     it("should show paper cards well", () => {
         const component = mount(collectionDetail);
         const instance = component.find("CollectionDetail").instance();

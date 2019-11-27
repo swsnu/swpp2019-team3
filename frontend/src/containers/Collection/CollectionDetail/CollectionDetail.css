@@ -48,11 +48,20 @@
     border: 2px solid  rgb(255, 120, 120);
 }
 
+.CollectionInfo #collectionDescription #owner {
+    margin-left: 1%;
+    margin-right: 5%;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
 .CollectionInfo #collectionDescription #date {
     margin-left: 1%;
     margin-right: 5%;
     display: flex;
     justify-content: space-between;
+    font-weight: 200;
     font-style: italic;
 }
 

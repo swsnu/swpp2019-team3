@@ -126,13 +126,22 @@ describe("Collection reducer", () => {
         expect(newState.selected.papers).toBe(stubCollection);
     });
 
-    it("should return get_collection_members", () => {
+    it("should handle get_collection_members_success", () => {
         const newState = reducer(stubInitialState, {
-            type: collectionConstants.GET_COLLECTION_MEMBERS,
+            type: collectionConstants.GET_COLLECTION_MEMBERS_SUCCESS,
             target: stubMembers,
         });
         expect(newState.selected.status).toBe(collectionStatus.SUCCESS);
         expect(newState.selected.members).toBe(stubMembers);
+    });
+
+    it("should handle get_collection_members_failure", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.GET_COLLECTION_MEMBERS_FAILURE,
+            target: stubError,
+        });
+        expect(newState.selected.status).toBe(collectionStatus.FAILURE);
+        expect(newState.selected.error).toBe(stubError);
     });
 
     it("should return set_owner", () => {

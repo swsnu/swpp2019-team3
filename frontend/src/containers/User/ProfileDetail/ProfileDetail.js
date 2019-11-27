@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import { CollectionCard, ReviewCard } from "../../../components";
+import { userStatus } from "../../../constants/constants";
 import { collectionActions, reviewActions, userActions } from "../../../store/actions";
 
 import "./ProfileDetail.css";
@@ -32,6 +33,11 @@ class ProfileDetail extends Component {
     componentDidMount() {
         this.props.onGetUser({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
+                if (this.props.userStatus === userStatus.USER_NOT_EXIST) {
+                    this.props.history.push("/main");
+                    return;
+                }
+
                 this.setState({ doIFollow: this.props.thisUser.is_following });
                 if (this.props.thisUser.count) {
                     this.setState({
@@ -209,6 +215,7 @@ const mapStateToProps = (state) => ({
     thisUser: state.user.selectedUser,
     afterFollowCount: state.user.followCount,
     afterUnfollowCount: state.user.unfollowCount,
+    userStatus: state.user.status,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -222,6 +229,7 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileDetail);
 
 ProfileDetail.propTypes = {
+    history: PropTypes.objectOf(PropTypes.any),
     location: PropTypes.objectOf(PropTypes.any),
     me: PropTypes.objectOf(PropTypes.any),
     thisUser: PropTypes.objectOf(PropTypes.any),
@@ -234,9 +242,11 @@ ProfileDetail.propTypes = {
     onUnFollow: PropTypes.func,
     afterFollowCount: PropTypes.number,
     afterUnfollowCount: PropTypes.number,
+    userStatus: PropTypes.string,
 };
 
 ProfileDetail.defaultProps = {
+    history: null,
     location: null,
     me: null,
     thisUser: {},
@@ -249,4 +259,5 @@ ProfileDetail.defaultProps = {
     onUnFollow: () => {},
     afterFollowCount: 0,
     afterUnfollowCount: 0,
+    userStatus: userStatus.NONE,
 };
