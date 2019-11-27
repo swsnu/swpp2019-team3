@@ -8,7 +8,10 @@ import { userActions, collectionActions } from "../../../store/actions";
 import { userStatus, collectionStatus } from "../../../constants/constants";
 import "./UserList.css";
 
+/* eslint-disable no-underscore-dangle */
 class UserList extends Component {
+    _isMounted=false;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -20,13 +23,17 @@ class UserList extends Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         if (this.props.mode === "followings") {
             this.props.onFollowingUser({ id: this.state.id })
                 .then(() => {
                     if (this.props.userStatus === userStatus.USER_NOT_EXIST) {
+                        console.log("1");
                         this.props.history.push("/main");
                     }
-                    this.setState({ users: this.props.followingUsers });
+                    if (this._isMounted) {
+                        this.setState({ users: this.props.followingUsers });
+                    }
                 });
         } else if (this.props.mode === "followers") {
             this.props.onFollowerUser({ id: this.state.id })
@@ -34,7 +41,9 @@ class UserList extends Component {
                     if (this.props.userStatus === userStatus.USER_NOT_EXIST) {
                         this.props.history.push("/main");
                     }
-                    this.setState({ users: this.props.followerUsers });
+                    if (this._isMounted) {
+                        this.setState({ users: this.props.followerUsers });
+                    }
                 });
         } else if (this.props.mode === "members") {
             this.props.onGetMembers(this.state.id)
@@ -42,9 +51,15 @@ class UserList extends Component {
                     if (this.props.getMembersStatus === collectionStatus.FAILURE) {
                         this.props.history.push("/main");
                     }
-                    this.setState({ users: this.props.members });
+                    if (this._isMounted) {
+                        this.setState({ users: this.props.members });
+                    }
                 });
         }
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     userCardsMaker = (user) => (

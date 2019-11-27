@@ -218,6 +218,7 @@ class CollectionDetail extends Component {
                             </div>
                         </div>
                         <div id="collectionDescription">
+                            <div id="owner">Owner: {this.state.owner.username}</div>
                             <div id="date">
                                 <div id="creationDate">Created: {creationDate}</div>
                                 <div id="lastUpdateDate">Last Update: {modificationDate}</div>
