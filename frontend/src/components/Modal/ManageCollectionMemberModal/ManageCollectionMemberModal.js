@@ -102,7 +102,7 @@ class ManageCollectionMemberModal extends Component {
                 <div id="kickOffButtons">
                     <WarningModal
                       openButtonText="Confirm"
-                      whatToWarnText={`Kick off following users from "${this.props.thisCollection.title}" \n asdf`}
+                      whatToWarnText={`Kick off the users from "${this.props.thisCollection.title}"`}
                       whatActionWillBeDone={() => this.props.onDeleteMembers(
                           this.props.thisCollection.id,
                           this.state.checkedUserIdList,
