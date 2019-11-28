@@ -6,10 +6,10 @@
 }
 
 .review-control .review-control-page .board{
-    width: 80%;
-    margin-top: 5%;
-    margin-left: 5%;
-    margin-right: 10%;
+    width: 90%;
+    margin-top: 3%;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 5%;
     background: white;
     display: flex;
@@ -25,7 +25,7 @@
 }
 
 .review-control .review-control-page .board .paper-spec{
-    width: 80%;
+    width: 100%;
     background: white;
     display: flex;
     justify-content: flex-start;

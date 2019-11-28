@@ -156,6 +156,8 @@ class SearchResult extends Component {
                 <Button
                   className="paper-more-button"
                   onClick={this.clickPaperMoreHandler}
+                  size="lg"
+                  block
                 >View More
                 </Button>
             );
@@ -170,7 +172,7 @@ class SearchResult extends Component {
             <div className="search-result">
                 <div className="item-list">
                     <Tabs defaultActiveKey="paper-tab" className="item-tabs">
-                        <Tab className="paper-tab" eventKey="paper-tab" title="Paper">
+                        <Tab className="paper-tab" eventKey="paper-tab" title={`Paper(${this.state.papers.length})`}>
                             <div id="paper-cards">
                                 <h3 id="paper-message">{paperMessage}</h3>
                                 <div id="paper-cards-left">{paperCardsLeft}</div>
@@ -178,14 +180,14 @@ class SearchResult extends Component {
                             </div>
                             {paperMoreButton}
                         </Tab>
-                        <Tab className="collection-tab" eventKey="collection-tab" title="Collection">
+                        <Tab className="collection-tab" eventKey="collection-tab" title={`Collection(${this.state.collections.length})`}>
                             <div id="collection-cards">
                                 <h3 id="collection-message">{collectionMessage}</h3>
                                 <div id="collection-cards-left">{collectionCardsLeft}</div>
                                 <div id="collection-cards-right">{collectionCardsRight}</div>
                             </div>
                         </Tab>
-                        <Tab className="user-tab" eventKey="user-tab" title="People">
+                        <Tab className="user-tab" eventKey="user-tab" title={`People(${this.state.users.length})`}>
                             <div id="user-cards">
                                 <h3 id="user-message">{userMessage}</h3>
                                 <div id="user-cards-left">{userCardsLeft}</div>

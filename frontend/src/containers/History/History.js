@@ -54,7 +54,7 @@ class History extends Component {
           authors={card.authors}
           keywords={card.keywords}
           likeCount={card.count.likes}
-          reviewCount={card.reviewCount}
+          reviewCount={card.count.reviews}
           isLiked={card.liked}
           addButtonExists
           headerExists={false}
@@ -71,7 +71,7 @@ class History extends Component {
           user={card.user.username}
           date={card.date}
           likeCount={card.likeCount}
-          replyCount={card.replyCount}
+          replyCount={card.count.replies}
           headerExists={false}
         />
     )

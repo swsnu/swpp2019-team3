@@ -51,6 +51,7 @@ class ReviewDetail extends Component {
                     thisReview: this.props.selectedReview,
                     isLiked: this.props.selectedReview.liked,
                     likeCount: this.props.selectedReview.count.likes,
+                    replyCount: this.props.selectedReview.count.replies,
                     author: this.props.selectedReview.user,
                     paperId: this.props.selectedReview.paper.id,
                     newReply: "",

@@ -105,7 +105,7 @@ class CollectionDetail extends Component {
           authors={paper.authors}
           keywords={paper.keywords}
           likeCount={paper.count.likes}
-          reviewCount={paper.reviewCount}
+          reviewCount={paper.count.reviews}
           isLiked={paper.liked}
           headerExists={false}
         />

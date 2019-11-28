@@ -14,6 +14,7 @@ class PaperSpec extends Component {
         this.state = {
             isLiked: false,
             likeCount: 0,
+            truncateAbstractKeywords: true,
         };
         this.processKeywords = this.processKeywords.bind(this);
         this.clickPaperSpecUnlikeHandler = this.clickPaperSpecUnlikeHandler.bind(this);
@@ -34,16 +35,23 @@ class PaperSpec extends Component {
     }
     /* eslint-enable react/no-did-update-set-state */
 
-    processKeywords = (type) => {
-        const keywords = this.props.keywords.filter(
-            (keyword) => keyword.type === type,
-        ).sort(
-            (a, b) => a.id - b.id,
-        ).map(
-            (keyword) => keyword.name,
-        );
-        return keywords.join(", ");
-    }
+    processKeywords = (type) => this.props.keywords.filter(
+        (keyword) => keyword.type === type,
+    ).sort(
+        (a, b) => a.id - b.id,
+    ).map(
+        (keyword) => (
+            <Button
+              key={keyword.id}
+              id={keyword.name}
+              className="keyword-tag"
+              href={`/search=${keyword.name}`}
+              variant="outline-secondary"
+              size="sm"
+            ># {keyword.name}
+            </Button>
+        ),
+    )
 
     // handle click 'Like' button
     clickPaperSpecLikeHandler() {
@@ -73,7 +81,43 @@ class PaperSpec extends Component {
         let abstractKeywords = "";
         if (this.props.keywords.length > 0) {
             authorKeywords = this.processKeywords("author");
-            abstractKeywords = this.processKeywords("abstract");
+            if (this.state.truncateAbstractKeywords) {
+                let moreButton = null;
+                if (this.props.keywords.length > 10) {
+                    moreButton = (
+                        <Button
+                          className="keyword-more-button"
+                          onClick={() => this.setState({ truncateAbstractKeywords: false })}
+                          variant="light"
+                          size="sm"
+                        >
+                        ...
+                        </Button>
+                    );
+                }
+                abstractKeywords = (
+                    <div id="abstract-keywords-content">{
+                        this.processKeywords("abstract").slice(0, 10)
+                    }
+                    {moreButton}
+                    </div>
+                );
+            } else {
+                abstractKeywords = (
+                    <div id="abstract-keywords-content">{
+                        this.processKeywords("abstract")
+                    }
+                    <Button
+                      className="keyword-less-button"
+                      onClick={() => this.setState({ truncateAbstractKeywords: true })}
+                      variant="light"
+                      size="sm"
+                    >
+                        {"<"}
+                    </Button>
+                    </div>
+                );
+            }
         }
 
         let authorNames = "";
@@ -88,6 +132,7 @@ class PaperSpec extends Component {
                     <h3 id="date">{this.props.date}</h3>
                     <Button
                       className="url-button"
+                      variant="info"
                       onClick={() => window.open(this.props.link)}
                       disabled={this.props.link.length === 0}
                     >URL
@@ -99,7 +144,7 @@ class PaperSpec extends Component {
                     </div>
                     <div className="abstract-keywords">
                         Extracted from Abstract
-                        <h3 id="abstract-keywords-content">{abstractKeywords}</h3>
+                        {abstractKeywords}
                     </div>
                 </div>
                 <div className="buttons">
