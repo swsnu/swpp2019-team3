@@ -3,51 +3,10 @@ import { mount } from "enzyme";
 import { Provider } from "react-redux";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
 import AddPaperModal from "./AddPaperModal";
-import { getMockStore, mockComponent } from "../../../test-utils/mocks";
+import {
+    getMockStore, mockComponent, mockPromise, flushPromises,
+} from "../../../test-utils/mocks";
 import { collectionActions } from "../../../store/actions";
-
-
-const stubInitialState = {
-    paper: {
-    },
-    auth: {
-        signinStatus: signinStatus.SUCCESS,
-        me: { id: 1 },
-    },
-    collection: {
-        make: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        list: {
-            status: collectionStatus.NONE,
-            list: [],
-            error: null,
-        },
-        edit: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        delete: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        selected: {
-            status: collectionStatus.NONE,
-            error: null,
-            collection: {},
-            papers: [],
-            members: [],
-            replies: [],
-        },
-    },
-    user: {},
-    review: {},
-    reply: {},
-};
 
 const mockHistory = { push: jest.fn() };
 const makeAddPaperModal = (initialState) => (
@@ -68,15 +27,56 @@ jest.mock("../../Collection/CollectionEntry/CollectionEntry", () => jest.fn((pro
     />
 )));
 
-const mockPromise = new Promise((resolve) => { resolve(); });
-
 describe("<AddPaperModal />", () => {
+    let stubInitialState;
     let addPaperModal;
     let spyGetCollections;
     let spyAddPaper;
     let spyMakeNewCollection;
 
     beforeEach(() => {
+        stubInitialState = {
+            paper: {
+            },
+            auth: {
+                signinStatus: signinStatus.SUCCESS,
+                me: { id: 1 },
+            },
+            collection: {
+                make: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                list: {
+                    status: collectionStatus.NONE,
+                    list: [],
+                    error: null,
+                },
+                edit: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                delete: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                selected: {
+                    status: collectionStatus.NONE,
+                    error: null,
+                    collection: {},
+                    papers: [],
+                    members: [],
+                    replies: [],
+                },
+            },
+            user: {},
+            review: {},
+            reply: {},
+        };
+
         addPaperModal = makeAddPaperModal(stubInitialState);
         spyGetCollections = jest.spyOn(collectionActions, "getCollectionsByUserId")
             .mockImplementation(() => () => mockPromise);
@@ -200,17 +200,46 @@ describe("<AddPaperModal />", () => {
         expect(addPaperModalInstance.state.checkedCollections).toStrictEqual([]);
     });
 
-    it("should handle add paper to collection", () => {
-        const component = mount(addPaperModal);
+    it("should handle add paper to collection", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                make: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                list: {
+                    status: collectionStatus.NONE,
+                    list: [],
+                    error: null,
+                },
+                edit: {
+                    status: collectionStatus.SUCCESS,
+                    collection: {},
+                    error: null,
+                },
+                delete: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                selected: {
+                    status: collectionStatus.NONE,
+                    error: null,
+                    collection: {},
+                    papers: [],
+                    members: [],
+                    replies: [],
+                },
+            },
+        };
+        const component = mount(makeAddPaperModal(stubInitialState));
         const addPaperModalInstance = component.find("AddPaperModal").instance();
 
         addPaperModalInstance.setState({
             collectionName: "",
             checkedCollections: [1, 2],
-        });
-
-        component.setProps({
-            addPaperCollectionStatus: collectionStatus.SUCCESS,
         });
 
         component.update();
@@ -222,11 +251,11 @@ describe("<AddPaperModal />", () => {
         addButton.simulate("click");
 
         expect(spyAddPaper).toHaveBeenCalledTimes(1);
-        // Fix me: it should be success
-        expect(addPaperModalInstance.state.addPaperCollectionStatus).toBe(collectionStatus.NONE);
+        await flushPromises();
+        expect(addPaperModalInstance.state.addPaperCollectionStatus).toBe(collectionStatus.SUCCESS);
     });
 
-    it("should not handle add paper to collection", () => {
+    it("should not handle add paper to collection", async () => {
         const component = mount(addPaperModal);
         const addPaperModalInstance = component.find("AddPaperModal").instance();
 
@@ -243,21 +272,50 @@ describe("<AddPaperModal />", () => {
         addButton.simulate("click");
 
         expect(spyAddPaper).toHaveBeenCalledTimes(1);
-        // Fix me: it should be failure
-        expect(addPaperModalInstance.state.addPaperCollectionStatus).toBe(collectionStatus.NONE);
+        await flushPromises();
+        expect(addPaperModalInstance.state.addPaperCollectionStatus).toBe(collectionStatus.FAILURE);
     });
 
-    it("should handle make a new colelction and add paper to collection", () => {
-        const component = mount(addPaperModal);
+    it("should handle make a new colelction and add paper to collection", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                make: {
+                    status: collectionStatus.SUCCESS,
+                    collection: {},
+                    error: null,
+                },
+                list: {
+                    status: collectionStatus.NONE,
+                    list: [{ id: 1 }, { id: 2 }, { id: 3 }],
+                    error: null,
+                },
+                edit: {
+                    status: collectionStatus.SUCCESS,
+                    collection: {},
+                    error: null,
+                },
+                delete: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                selected: {
+                    status: collectionStatus.NONE,
+                    error: null,
+                    collection: {},
+                    papers: [],
+                    members: [],
+                    replies: [],
+                },
+            },
+        };
+        const component = mount(makeAddPaperModal(stubInitialState));
         const addPaperModalInstance = component.find("AddPaperModal").instance();
 
         addPaperModalInstance.setState({
             collectionName: "collection_3",
             checkedCollections: [1, 2],
-        });
-
-        component.setProps({
-            addPaperCollectionStatus: collectionStatus.SUCCESS,
         });
 
         component.update();
@@ -269,63 +327,14 @@ describe("<AddPaperModal />", () => {
         addButton.simulate("click");
 
         expect(spyMakeNewCollection).toHaveBeenCalledTimes(1);
-        expect(spyAddPaper).toHaveBeenCalledTimes(0); // Fix me: it should be 1
-        // Fix me: it should be success
-        expect(addPaperModalInstance.state.addPaperCollectionStatus).toBe(collectionStatus.NONE);
-    });
-
-    it("should handle make a new colelction and add paper to collection", () => {
-        const component = mount(addPaperModal);
-        const addPaperModalInstance = component.find("AddPaperModal").instance();
-
-        addPaperModalInstance.setState({
-            collectionName: "collection_3",
-            checkedCollections: [1, 2],
-        });
-
-        component.setProps({
-            addPaperCollectionStatus: collectionStatus.SUCCESS,
-        });
-
+        await flushPromises();
         component.update();
+        expect(addPaperModalInstance.state.makeNewCollectionStatus).toBe(collectionStatus.SUCCESS);
 
-        const openButton = component.find(".addpaper-open-button").hostNodes();
-        openButton.simulate("click");
-
-        const addButton = component.find(".add-button").hostNodes();
-        addButton.simulate("click");
-
-        expect(spyMakeNewCollection).toHaveBeenCalledTimes(1);
-        expect(spyAddPaper).toHaveBeenCalledTimes(0); // Fix me: it should be 1
-        // Fix me: it should be failure
-        expect(addPaperModalInstance.state.addPaperCollectionStatus).toBe(collectionStatus.NONE);
-    });
-
-    it("should handle make a new colelction and add paper to collection", () => {
-        const component = mount(addPaperModal);
-        const addPaperModalInstance = component.find("AddPaperModal").instance();
-
-        addPaperModalInstance.setState({
-            collectionName: "collection_3",
-            checkedCollections: [1, 2],
-        });
-
-        component.setProps({
-            addPaperCollectionStatus: collectionStatus.SUCCESS,
-        });
-
+        expect(spyAddPaper).toHaveBeenCalledTimes(1);
+        await flushPromises();
         component.update();
-
-        const openButton = component.find(".addpaper-open-button").hostNodes();
-        openButton.simulate("click");
-
-        const addButton = component.find(".add-button").hostNodes();
-        addButton.simulate("click");
-
-        expect(spyMakeNewCollection).toHaveBeenCalledTimes(1); // Fix me: it should be 1
-        expect(spyAddPaper).toHaveBeenCalledTimes(0); // Fix me: it should be 1
-        // Fix me: it should be success
-        expect(addPaperModalInstance.state.addPaperCollectionStatus).toBe(collectionStatus.NONE);
+        expect(addPaperModalInstance.state.collections.length).toBe(3);
     });
 
     it("should handle when nothing changed", () => {

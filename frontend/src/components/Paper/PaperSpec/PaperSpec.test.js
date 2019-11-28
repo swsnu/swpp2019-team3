@@ -3,7 +3,7 @@ import { mount } from "enzyme";
 import { Provider } from "react-redux";
 
 import PaperSpec from "./PaperSpec";
-import { getMockStore, mockComponent } from "../../../test-utils/mocks";
+import { getMockStore, mockComponent, mockPromise } from "../../../test-utils/mocks";
 import { paperActions } from "../../../store/actions";
 
 
@@ -18,8 +18,6 @@ const makePaperSpec = (initialState, props = {}) => (
 /* eslint-enable react/jsx-props-no-spreading */
 
 jest.mock("../../Modal/AddPaperModal/AddPaperModal", () => jest.fn(() => (mockComponent("AddPaperModal")())));
-
-const mockPromise = new Promise((resolve) => { resolve(); });
 
 describe("<PaperSpec />", () => {
     let stubInitialState;
@@ -92,18 +90,57 @@ describe("<PaperSpec />", () => {
         expect(spyOpen).toHaveBeenCalledTimes(1);
     });
 
-    it("if keywords are given, join them and set keywords appropriately", () => {
+    it("if keywords are given, set keywords appropriately", () => {
         paperSpec = makePaperSpec(stubInitialState, {
             keywords: [
-                { name: "A", type: "author" },
-                { name: "B", type: "abstract" },
-                { name: "C", type: "author" }],
+                { id: 1, name: "A", type: "author" },
+                { id: 2, name: "B", type: "abstract" },
+                { id: 3, name: "C", type: "author" }],
         });
         const component = mount(paperSpec);
 
-        let wrapper = component.find("#author-keywords-content");
-        expect(wrapper.text()).toEqual("A, C");
+        let wrapper = component.find(".keyword-more-button").hostNodes();
+        expect(wrapper.length).toBe(0);
+        wrapper = component.find("#author-keywords-content");
+        expect(wrapper.text()).toEqual("# A# C");
         wrapper = component.find("#abstract-keywords-content");
-        expect(wrapper.text()).toEqual("B");
+        expect(wrapper.text()).toEqual("# B");
+    });
+
+    it("if many extracted keywords are given, show keyword-more-button and handle it", () => {
+        paperSpec = makePaperSpec(stubInitialState, {
+            keywords: [
+                { id: 1, name: "A", type: "abstract" },
+                { id: 2, name: "B", type: "abstract" },
+                { id: 3, name: "C", type: "abstract" },
+                { id: 4, name: "C", type: "abstract" },
+                { id: 5, name: "C", type: "abstract" },
+                { id: 6, name: "C", type: "abstract" },
+                { id: 7, name: "C", type: "abstract" },
+                { id: 8, name: "C", type: "abstract" },
+                { id: 9, name: "C", type: "abstract" },
+                { id: 10, name: "C", type: "abstract" },
+                { id: 11, name: "C", type: "abstract" },
+            ],
+        });
+        const component = mount(paperSpec);
+
+        let wrapper = component.find(".keyword-more-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+        let keywords = component.find(".keyword-tag").hostNodes();
+        expect(keywords.length).toBe(10);
+
+        // if keyword-more-button is clicked, show all keywords
+        wrapper.simulate("click");
+        keywords = component.find(".keyword-tag").hostNodes();
+        expect(keywords.length).toBe(11);
+
+        // if keyword-less-button is clicked, show keywords <= 10
+        wrapper = component.find(".keyword-less-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+
+        wrapper.simulate("click");
+        keywords = component.find(".keyword-tag").hostNodes();
+        expect(keywords.length).toBe(10);
     });
 });

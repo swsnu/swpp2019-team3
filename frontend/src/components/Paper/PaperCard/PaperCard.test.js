@@ -103,23 +103,23 @@ describe("<PaperCard />", () => {
     it("if keywords are given, join them and set keywords appropriately", () => {
         paperCard = makePaperCard(stubInitialState, {
             keywords: [
-                { name: "A", type: "author" },
-                { name: "B", type: "abstract" },
-                { name: "C", type: "author" }],
+                { id: 1, name: "A", type: "author" },
+                { id: 2, name: "B", type: "abstract" },
+                { id: 3, name: "C", type: "author" }],
         });
         const component = mount(paperCard);
-        const paperCardInstance = component.find(PaperCard.WrappedComponent).instance();
-        expect(paperCardInstance.state.keywords).toBe("A, C");
+        const wrapper = component.find(".keywords").hostNodes();
+        expect(wrapper.text()).toBe("# A# C");
     });
 
     it("if authorKeywords don't exist, show abstractKeywords", () => {
         paperCard = makePaperCard(stubInitialState, {
             keywords: [
-                { name: "B", type: "abstract" },
+                { id: 1, name: "B", type: "abstract" },
             ],
         });
         const component = mount(paperCard);
-        const paperCardInstance = component.find(PaperCard.WrappedComponent).instance();
-        expect(paperCardInstance.state.keywords).toBe("B");
+        const wrapper = component.find(".keywords").hostNodes();
+        expect(wrapper.text()).toBe("# B");
     });
 });
