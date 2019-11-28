@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import IntroModal from "./IntroModal";
 import { authActions } from "../../../store/actions";
 import { signupStatus, signinStatus } from "../../../constants/constants";
-import { getMockStore } from "../../../test-utils/mocks";
+import { getMockStore, mockPromise } from "../../../test-utils/mocks";
 
 let stubInitialState = {
     collection: {},
@@ -24,9 +24,6 @@ const makeIntroModal = (initialState) => (
         <IntroModal history={mockHistory} />
     </Provider>
 );
-/* eslint-disable no-unused-vars */
-const mockPromise = new Promise((resolve, reject) => { resolve(); });
-/* eslint-enable no-unused-vars */
 
 describe("<IntroModal />", () => {
     let introModal;
