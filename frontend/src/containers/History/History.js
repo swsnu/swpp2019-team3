@@ -70,7 +70,8 @@ class History extends Component {
           title={card.title}
           user={card.user.username}
           date={card.date}
-          likeCount={card.likeCount}
+          isLiked={card.liked}
+          likeCount={card.count.likes}
           replyCount={card.count.replies}
           headerExists={false}
         />
