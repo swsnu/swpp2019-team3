@@ -33,6 +33,8 @@
 
 .userInfo .userDescAndButton #userDescription {
     align-self: flex-start;
+    white-space: pre-wrap;
+    text-align: left;
     margin-left: 20px;
 }
 

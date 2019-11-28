@@ -14,12 +14,12 @@
     align-items: center;
 }
 
-.modal-header #header-buttons {
-    /* display: flex;
-    justify-content: space-around; */
-    /* padding-left: 5px; */
-    /* background: red; */
-}
+/*.modal-header #header-buttons {
+    display: flex;
+    justify-content: space-around;
+    padding-left: 5px;
+    background: red;
+}*/
 
 #update-message {
     font-size: 100%;

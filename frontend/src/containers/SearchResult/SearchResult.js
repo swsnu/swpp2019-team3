@@ -68,7 +68,7 @@ class SearchResult extends Component {
           authors={paper.authors}
           keywords={paper.keywords}
           likeCount={paper.count.likes}
-          reviewCount={paper.reviewCount}
+          reviewCount={paper.count.reviews}
           isLiked={paper.liked}
           addButtonExists
           headerExists={false}
@@ -84,7 +84,7 @@ class SearchResult extends Component {
           title={collection.title}
           memberCount={collection.count.users}
           paperCount={collection.count.papers}
-          replyCount={collection.replyCount}
+          replyCount={collection.count.replies}
           likeCount={collection.count.likes}
           isLiked={collection.liked}
           headerExists={false}

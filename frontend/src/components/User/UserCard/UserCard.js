@@ -39,6 +39,20 @@ class UserCard extends Component {
     }
 
     render() {
+        let followButton = (
+            <Button
+              className="follow-button"
+              variant="secondary"
+              onClick={this.state.doIFollow
+                  ? this.clickUnfollowHandler : this.clickFollowHandler}
+            >
+                {this.state.doIFollow ? "unfollow" : "follow"}
+            </Button>
+        );
+        if (this.props.me.id === this.props.id) {
+            followButton = null;
+        }
+
         return (
             <div className="wrapper">
                 <Card className="user">
@@ -46,22 +60,25 @@ class UserCard extends Component {
                         <div className="title">
                             <Card.Link href={`/profile_id=${this.props.id}`} className="text">{this.props.username}</Card.Link>
                         </div>
-                        <Card.Text>{this.props.email}</Card.Text>
-                        <Card.Text>{this.props.description}</Card.Text>
+                        <Card.Text id="email">{this.props.email}</Card.Text>
+                        <Card.Text id="description">{this.props.description}</Card.Text>
+                        {followButton}
                     </Card.Body>
                     <Card.Footer className="footer">
                         <Button
-                          className="follow-button"
+                          className="follower-count"
                           variant="light"
-                          onClick={this.state.doIFollow
-                              ? this.clickUnfollowHandler : this.clickFollowHandler}
-                          disabled={this.props.me.id === this.props.id}
+                          href={`/profile_id=${this.props.id}/followers`}
                         >
                             follower: {this.state.followerCount}
                         </Button>
-                        <div className="following-count" variant="light">
+                        <Button
+                          className="following-count"
+                          variant="light"
+                          href={`/profile_id=${this.props.id}/followings`}
+                        >
                             following: {this.props.followingCount}
-                        </div>
+                        </Button>
                     </Card.Footer>
                 </Card>
             </div>
