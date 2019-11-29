@@ -28,6 +28,7 @@ PAGE_NUMBER = 'page_number'
 IS_FINISHED = 'is_finished'
 CREATION_DATE = 'creation_date'
 MODIFICATION_DATE = 'modification_date'
+CONTENT = 'content'
 
 # User
 USER = 'user'
@@ -55,7 +56,7 @@ STRING = 'string'
 
 # Subsciption
 SUBSCRIPTION = 'subscription'
-SUBSCRIPTIONS = 'subscription'
+SUBSCRIPTIONS = 'subscriptions'
 ACTION_HAPPEND_TIME = 'action_happend_time'
 
 # Collection
