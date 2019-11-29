@@ -13,17 +13,18 @@
     font-size: 150%;
     font-style: oblique;
     padding: 1%;
-    margin-right: 10%;
+    margin-right: 5%;
 }
 
 .header .search {
+    width: 50%;
     display: flex;
     align-items: flex-start;
 }
 
 .header .search .search-input {
     /* margin-left:18%; */
-    width: 500px;
+    width: 100%;
     background:rgb(242,243,247);
 }
 
@@ -31,15 +32,30 @@
     margin-left: auto;
     display: flex;
     flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right: 3%;
+}
+
+.header .buttons .dropdown-notification {
+    display: inline-block;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.header .buttons .dropdown-account {
+    display: inline-block;
+    flex-direction: row;
+    justify-content: space-around;
 }
 
 .header .buttons .notification-button {
-    margin-right: 20px;
+    margin-right: 5%;
  }
 
  .header .buttons .notification-menu {
     height: 200px;
-    width: 200%;
+    width: 250%;
     overflow-y: scroll;
 }
 
@@ -64,7 +80,7 @@
 }
 
 .header .buttons .myaccount-button {
-   margin-right: 20px;
+    margin-left: 5%;
 }
 
 .header .buttons .myaccount-menu {

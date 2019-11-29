@@ -15,7 +15,6 @@ class UserList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: this.props.match.params.id,
             users: [],
         };
 
@@ -25,7 +24,7 @@ class UserList extends Component {
     componentDidMount() {
         this._isMounted = true;
         if (this.props.mode === "followings") {
-            this.props.onFollowingUser({ id: this.state.id })
+            this.props.onFollowingUser({ id: this.props.match.params.id })
                 .then(() => {
                     if (this.props.userStatus === userStatus.USER_NOT_EXIST) {
                         this.props.history.push("/main");
@@ -35,7 +34,7 @@ class UserList extends Component {
                     }
                 });
         } else if (this.props.mode === "followers") {
-            this.props.onFollowerUser({ id: this.state.id })
+            this.props.onFollowerUser({ id: this.props.match.params.id })
                 .then(() => {
                     if (this.props.userStatus === userStatus.USER_NOT_EXIST) {
                         this.props.history.push("/main");
@@ -45,7 +44,7 @@ class UserList extends Component {
                     }
                 });
         } else if (this.props.mode === "members") {
-            this.props.onGetMembers(this.state.id)
+            this.props.onGetMembers(this.props.match.params.id)
                 .then(() => {
                     if (this.props.getMembersStatus === collectionStatus.FAILURE) {
                         this.props.history.push("/main");
