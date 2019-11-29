@@ -81,7 +81,10 @@ class PaperCard extends Component {
     render() {
         let header = null;
         if (this.props.headerExists) {
-            header = <Card.Header>{`${this.props.user} ${this.props.source} this paper.`}</Card.Header>;
+            if (this.props.paperSource) {
+                header = <Card.Header>{`from ${this.props.paperSource}`}</Card.Header>;
+            }
+            // header = <Card.Header>{`${this.props.user} ${this.props.source} this paper.`}</Card.Header>;
         }
         let addButton = null;
         if (this.props.addButtonExists) {
@@ -145,6 +148,7 @@ PaperCard.propTypes = {
     likeCount: PropTypes.number,
     reviewCount: PropTypes.number,
     isLiked: PropTypes.bool,
+    paperSource: PropTypes.string,
     headerExists: PropTypes.bool,
     addButtonExists: PropTypes.bool,
     afterLikeCount: PropTypes.number,
@@ -165,6 +169,7 @@ PaperCard.defaultProps = {
     likeCount: 0,
     reviewCount: 0,
     isLiked: false,
+    paperSource: "",
     headerExists: true,
     addButtonExists: false,
     afterLikeCount: 0,

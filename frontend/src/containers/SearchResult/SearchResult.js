@@ -13,7 +13,7 @@ class SearchResult extends Component {
         super(props);
         this.state = {
             searchWord: "",
-            papers: [],
+            papers: null,
             collections: [],
             users: [],
             searchPaperStatus: paperStatus.WAITING,
@@ -30,7 +30,10 @@ class SearchResult extends Component {
         this.props.onSearchPaper({ text: searchWord })
             .then(() => {
                 this.setState({
-                    papers: this.props.searchedPapers,
+                    papers: {
+                        arxiv: this.props.searchedPapers.filter((x) => x.source === "arxiv"),
+                        crossref: this.props.searchedPapers.filter((x) => x.source === "crossref"),
+                    },
                     searchPaperStatus: paperStatus.NONE,
                 });
             });
@@ -105,8 +108,8 @@ class SearchResult extends Component {
     )
 
     render() {
-        let paperCardsLeft = null;
-        let paperCardsRight = null;
+        let paperCardsLeft = [];
+        let paperCardsRight = [];
         let collectionCardsLeft = null;
         let collectionCardsRight = null;
         let userCardsLeft = null;
@@ -119,13 +122,33 @@ class SearchResult extends Component {
             paperMessage = "no papers";
         }
 
-        if (this.state.papers.length > 0) {
-            paperCardsLeft = this.state.papers
-                .filter((x) => x.source === "arxiv")
-                .map((paper) => this.paperCardsMaker(paper));
-            paperCardsRight = this.state.papers
-                .filter((x) => x.source === "crossref")
-                .map((paper) => this.paperCardsMaker(paper));
+        if (this.state.papers) {
+            let i = 0;
+            let leftPushed = false;
+            while (i < this.state.papers.arxiv.length || i < this.state.papers.crossref.length) {
+                if (i < this.state.papers.arxiv.length && i < this.state.papers.crossref.length) {
+                    paperCardsLeft.push(this.state.papers.arxiv[i]);
+                    paperCardsRight.push(this.state.papers.crossref[i]);
+                    leftPushed = false;
+                } else if (i < this.state.papers.arxiv.length) {
+                    if (leftPushed) {
+                        paperCardsRight.push(this.state.papers.arxiv[i]);
+                    } else {
+                        paperCardsLeft.push(this.state.papers.arxiv[i]);
+                    }
+                    leftPushed = !leftPushed;
+                } else {
+                    if (leftPushed) {
+                        paperCardsRight.push(this.state.papers.crossref[i]);
+                    } else {
+                        paperCardsLeft.push(this.state.papers.crossref[i]);
+                    }
+                    leftPushed = !leftPushed;
+                }
+                i += 1;
+            }
+            paperCardsLeft = paperCardsLeft.map((paper) => this.paperCardsMaker(paper));
+            paperCardsRight = paperCardsRight.map((paper) => this.paperCardsMaker(paper));
             paperMessage = null;
         }
 
@@ -162,7 +185,7 @@ class SearchResult extends Component {
                 </Button>
             );
         } else if (this.state.searchPaperStatus === paperStatus.WAITING
-            && this.state.papers.length > 0) {
+            && this.state.papers) {
             paperMoreButton = (
                 <h3 id="paper-more-waiting-message">please wait...</h3>
             );
@@ -172,7 +195,7 @@ class SearchResult extends Component {
             <div className="search-result">
                 <div className="item-list">
                     <Tabs defaultActiveKey="paper-tab" className="item-tabs">
-                        <Tab className="paper-tab" eventKey="paper-tab" title={`Paper(${this.state.papers.length})`}>
+                        <Tab className="paper-tab" eventKey="paper-tab" title={`Paper(${paperCardsLeft.length + paperCardsRight.length})`}>
                             <div id="paper-cards">
                                 <h3 id="paper-message">{paperMessage}</h3>
                                 <div id="paper-cards-left">{paperCardsLeft}</div>
