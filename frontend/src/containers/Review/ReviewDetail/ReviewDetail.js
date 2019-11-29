@@ -159,6 +159,7 @@ class ReviewDetail extends Component {
                                     {this.props.me && this.state.author.id === this.props.me.id ? (
                                         <Button className="delete-button" onClick={this.clickDeleteButtonHandler}>Delete</Button>
                                     ) : null}
+                                    <Button className="paper-button" variant="secondary" href={`/paper_id=${this.state.paperId}`}>Paper</Button>
                                 </div>
                                 <Form className="new-reply">
                                     <Form.Label className="username">{this.state.user.username}</Form.Label>

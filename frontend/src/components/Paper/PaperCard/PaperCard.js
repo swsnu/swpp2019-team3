@@ -41,10 +41,10 @@ class PaperCard extends Component {
         }
     }
 
-    processKeywords = (type) => this.props.keywords.slice(0, 10).filter(
-        (keyword) => keyword.type === type,
-    ).sort(
+    processKeywords = (type) => this.props.keywords.sort(
         (a, b) => a.id - b.id,
+    ).slice(0, 10).filter(
+        (keyword) => keyword.type === type,
     ).map(
         (keyword) => (
             <Button
