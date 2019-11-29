@@ -327,7 +327,7 @@ def get_user_followed(args):
             constants.PAGE_NUMBER: page_number,
             constants.IS_FINISHED: is_finished}
 
-def get_subscrpition(args):
+def get_subscription(args):
     """Get Subscription"""
     subscriptions, page_number, is_finished = subscription_utils.select_subscriptions(args)
     return {constants.SUBSCRIPTIONS: subscriptions,

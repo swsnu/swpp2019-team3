@@ -8,7 +8,6 @@ from papersfeed.utils.base_utils import get_results_from_queryset
 from papersfeed.utils.papers.utils import get_papers
 from papersfeed.utils.collections.utils import get_collections
 from papersfeed.utils.reviews.utils import get_reviews
-
 from papersfeed.models.users.user_follow import UserFollow
 from papersfeed.models.subscription.subscription import Subscription
 
@@ -24,7 +23,7 @@ def select_subscriptions(args):
     followings_queryset = UserFollow.objects.filter(following_user=request_user.id).values_list('followed_user', flat=True)
     # Notification QuerySet
     subscription_queryset = Subscription.objects.filter(Q(actor__in=followings_queryset))
-    print(subscription_queryset)
+
     subscriptions = get_results_from_queryset(subscription_queryset, 10, page_number)
     subscriptions = __pack_subscriptions(subscriptions, request_user)
     is_finished = len(subscriptions) < 10
@@ -37,7 +36,6 @@ def __pack_subscriptions(subscriptions, request_user):
     for subscription in subscriptions:
         try:
             action_object_type = str(subscription.action_object_content_type)
-            print(action_object_type)
             if action_object_type == 'paper':
                 paper = get_papers(Q(id=subscription.action_object.id), request_user, 1)[0]
                 action_object = {
