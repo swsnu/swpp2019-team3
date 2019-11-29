@@ -12,9 +12,7 @@ class PaperDetail extends Component {
         super(props);
         this.state = {
             likeCount: 0,
-            /* eslint-disable react/no-unused-state */
             reviewCount: 0,
-            /* eslint-enable react/no-unused-state */
             authors: [],
             keywords: [],
             date: "",
@@ -33,9 +31,7 @@ class PaperDetail extends Component {
                 }
                 if (this.props.selectedPaper.count) {
                     this.setState({ likeCount: this.props.selectedPaper.count.likes });
-                    /* eslint-disable react/no-unused-state */
                     this.setState({ reviewCount: this.props.selectedPaper.count.reviews });
-                    /* eslint-enable react/no-unused-state */
                 }
                 if (this.props.selectedPaper.authors) {
                     this.setState({ authors: this.props.selectedPaper.authors });
@@ -108,7 +104,7 @@ class PaperDetail extends Component {
                           authors={this.state.authors}
                           keywords={this.state.keywords}
                           likeCount={this.state.likeCount}
-                          reviewCount={this.state.reviews.length}
+                          reviewCount={this.state.reviewCount}
                           isLiked={this.props.selectedPaper.liked}
                           link={link}
                           addButtonExists

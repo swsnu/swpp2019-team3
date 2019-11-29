@@ -8,7 +8,7 @@ import { paperActions } from "../../store/actions";
 import {
     paperStatus, collectionStatus, reviewStatus, signinStatus,
 } from "../../constants/constants";
-import { getMockStore } from "../../test-utils/mocks";
+import { getMockStore, mockPromise, flushPromises } from "../../test-utils/mocks";
 
 
 const mockHistory = { push: jest.fn() };
@@ -17,9 +17,6 @@ const makePaperDetail = (initialState) => (
         <PaperDetail history={mockHistory} location={{ pathname: "/paper_id=1" }} />
     </Provider>
 );
-/* eslint-disable no-unused-vars */
-const mockPromise = new Promise((resolve, reject) => { resolve(); });
-/* eslint-enable no-unused-vars */
 
 describe("<PaperDetail />", () => {
     let stubInitialState;
@@ -97,7 +94,7 @@ describe("<PaperDetail />", () => {
         expect(spyGetPaper).toBeCalledTimes(1);
     });
 
-    it("should handle when count is ready", () => {
+    it("should handle when count is ready", async () => {
         stubInitialState = {
             ...stubInitialState,
             paper: {
@@ -107,13 +104,12 @@ describe("<PaperDetail />", () => {
         };
         const component = mount(makePaperDetail(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
-        expect(instance.state.likeCount).toBe(0);
-        // FIXME: actually, it should be '3'!
-        expect(instance.state.reviewCount).toBe(0);
-        // FIXME: actually, it should be '5'!
+        await flushPromises();
+        expect(instance.state.likeCount).toBe(3);
+        expect(instance.state.reviewCount).toBe(5);
     });
 
-    it("should handle when selectedPaper is ready", () => {
+    it("should handle when selectedPaper is ready", async () => {
         stubInitialState = {
             ...stubInitialState,
             paper: {
@@ -124,8 +120,8 @@ describe("<PaperDetail />", () => {
                         { first_name: "B_f", last_name: "B_l" },
                     ],
                     keywords: [
-                        { name: "author-defined keyword", type: "author" },
-                        { name: "extracted keyword", type: "abstract" },
+                        { id: 1, name: "author-defined keyword", type: "author" },
+                        { id: 2, name: "extracted keyword", type: "abstract" },
                     ],
                     publication: { date: "2019-11-06" },
                 },
@@ -133,11 +129,14 @@ describe("<PaperDetail />", () => {
         };
         const component = mount(makePaperDetail(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
-        expect(instance.state.authors).toEqual([]);
-        // FIXME: actually, it should be 'A_f A_l, B_f B_l'!
+        await flushPromises();
+        expect(instance.state.authors).toEqual([
+            { first_name: "A_f", last_name: "A_l" },
+            { first_name: "B_f", last_name: "B_l" },
+        ]);
     });
 
-    it("should handle when publication is ready", () => {
+    it("should handle when publication is ready", async () => {
         stubInitialState = {
             ...stubInitialState,
             paper: {
@@ -150,12 +149,12 @@ describe("<PaperDetail />", () => {
         };
         const component = mount(makePaperDetail(stubInitialState));
         const instance = component.find(PaperDetail.WrappedComponent).instance();
-        expect(instance.state.date).toBe("");
-        // FIXME: actually, it should be '2019-11-06'!
+        await flushPromises();
+        expect(instance.state.date).toBe("2019-11-06");
     });
 
 
-    it("should handle when getPaper failed", () => {
+    it("should handle when getPaper failed", async () => {
         stubInitialState = {
             ...stubInitialState,
             paper: {
@@ -198,8 +197,9 @@ describe("<PaperDetail />", () => {
             },
             user: {},
         };
-        expect(mockHistory.push).toHaveBeenCalledTimes(0);
-        // FIXME: actually, it should be '1'!
+        mount(makePaperDetail(stubInitialState));
+        await flushPromises();
+        expect(mockHistory.push).toHaveBeenCalledTimes(1);
     });
 
     it("should make reviewCardsLeft and reviewCardsRight well", () => {

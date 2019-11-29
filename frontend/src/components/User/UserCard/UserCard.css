@@ -15,6 +15,10 @@
     padding-bottom: 10%;
 }
 
+.user .body #description {
+    white-space: pre-wrap;
+}
+
 .user .body .title .text{
     color: black;
     font-weight: bold;
@@ -27,15 +31,18 @@
 }
 
 .user .follow-button{
-    width: 30%;
+    float: right;
+}
+
+.user .follower-count{
+    width: 40%;
     display: flex;
     font-weight: bold;
 }
 
 .user .following-count{
-    margin-top: 2%;
     margin-left: 10%;
-    width: 30%;
+    width: 40%;
     display: flex;
     font-weight: bold;
 }

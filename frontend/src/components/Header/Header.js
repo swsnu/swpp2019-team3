@@ -123,13 +123,12 @@ class Header extends Component {
         return (
             <div>
                 <Navbar className="header">
-                    <Nav.Link className="logo" href="/main">Papersfeed</Nav.Link>
+                    <Nav.Link className="logo" href="/main">PapersFeed</Nav.Link>
                     <Form inline className="search">
                         <Form.Control
                           className="search-input"
-                          type="text"
+                          type="search"
                           placeholder="Search (by clicking 'Search' button)"
-                          bsPrefix="search-input"
                           value={this.state.searchWord}
                           onChange={this.handleChange}
                           onKeyPress={this.keyPressHandler}

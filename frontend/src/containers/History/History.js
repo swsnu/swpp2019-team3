@@ -54,7 +54,7 @@ class History extends Component {
           authors={card.authors}
           keywords={card.keywords}
           likeCount={card.count.likes}
-          reviewCount={card.reviewCount}
+          reviewCount={card.count.reviews}
           isLiked={card.liked}
           addButtonExists
           headerExists={false}
@@ -64,15 +64,14 @@ class History extends Component {
     reviewCardMaker = (card) => (
         <ReviewCard
           key={card.id}
-          paperId={card.paperId}
-          author={card.author}
+          author={card.user.username}
           id={card.id}
           title={card.title}
           user={card.user.username}
           date={card.date}
           isLiked={card.liked}
           likeCount={card.count.likes}
-          replyCount={card.replyCount}
+          replyCount={card.count.replies}
           headerExists={false}
         />
     )
@@ -85,7 +84,7 @@ class History extends Component {
           title={card.title}
           memberCount={card.count.users}
           paperCount={card.count.papers}
-          replyCount={card.replyCount}
+          replyCount={card.count.replies}
           likeCount={card.count.likes}
           isLiked={card.liked}
           headerExists={false}
