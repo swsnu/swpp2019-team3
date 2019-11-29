@@ -31,6 +31,9 @@ class Paper(BaseModel):
     # Download URL
     download_url = models.URLField()
 
+    # Source
+    source = models.CharField(max_length=50)
+
     # References
     references = models.ManyToManyField("self", through='Reference', symmetrical=False)
 

@@ -70,8 +70,8 @@ class SearchResult extends Component {
           likeCount={paper.count.likes}
           reviewCount={paper.count.reviews}
           isLiked={paper.liked}
+          paperSource={paper.source}
           addButtonExists
-          headerExists={false}
           history={this.props.history}
         />
     );
@@ -121,10 +121,10 @@ class SearchResult extends Component {
 
         if (this.state.papers.length > 0) {
             paperCardsLeft = this.state.papers
-                .filter((x) => this.state.papers.indexOf(x) % 2 === 0)
+                .filter((x) => x.source === "arxiv")
                 .map((paper) => this.paperCardsMaker(paper));
             paperCardsRight = this.state.papers
-                .filter((x) => this.state.papers.indexOf(x) % 2 === 1)
+                .filter((x) => x.source === "crossref")
                 .map((paper) => this.paperCardsMaker(paper));
             paperMessage = null;
         }

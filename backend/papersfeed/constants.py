@@ -73,6 +73,7 @@ EISSN = 'eISSN'
 DOI = 'DOI'
 FILE_URL = 'file_url'
 DOWNLOAD_URL = 'download_url'
+SOURCE = 'source'
 
 # Author
 AUTHOR = 'author'
