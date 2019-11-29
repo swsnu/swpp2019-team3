@@ -5,8 +5,6 @@
     /* width: 100px;
     height: 60px; */
     /* margin-bottom: 50%; */
-    width: 80px;
-    height: 40px;
     white-space: nowrap;
 }
 
@@ -16,12 +14,12 @@
     align-items: center;
 }
 
-.modal-header #header-buttons {
-    /* display: flex;
-    justify-content: space-around; */
-    /* padding-left: 5px; */
-    /* background: red; */
-}
+/*.modal-header #header-buttons {
+    display: flex;
+    justify-content: space-around;
+    padding-left: 5px;
+    background: red;
+}*/
 
 #update-message {
     font-size: 100%;
@@ -30,6 +28,7 @@
 }
 
 .cancel-button {
+    margin-left: 5%;
     padding-left: 10px;
 }
 

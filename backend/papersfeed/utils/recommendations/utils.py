@@ -7,6 +7,7 @@ from papersfeed.models.papers.paper import Paper
 from papersfeed.models.users.user import User
 from papersfeed.models.users.user_action import UserAction
 from papersfeed.models.users.user_recommendation import UserRecommendation
+from papersfeed.utils.papers import utils as paper_utils
 
 def select_user_actions(_):
     """Select user actions"""
@@ -20,6 +21,12 @@ def select_user_actions(_):
     ).values(
         'UserId', 'ItemId', 'Type', 'Count'
     )
+
+    for action in new_actions:
+        paper_id = action['ItemId']
+        keywords = paper_utils.get_keywords_paper(Q(paper_id=paper_id))
+        action['Keywords'] = keywords[paper_id] if paper_id in keywords else []
+        action['Abstract'] = Paper.objects.get(id=paper_id).abstract
 
     new_actions = list(new_actions)
 

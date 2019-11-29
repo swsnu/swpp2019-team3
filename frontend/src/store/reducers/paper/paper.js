@@ -8,8 +8,12 @@ const initialState = {
     unlikePaperStatus: paperStatus.NONE,
     unlikeCount: 0,
     selectedPaper: {},
-    searchPaperStatus: paperStatus.NONE,
-    searchedPapers: [],
+    search: {
+        status: paperStatus.NONE,
+        papers: [],
+        pageNum: 0,
+        finished: true,
+    },
     getLikedPapersStatus: paperStatus.NONE,
     likedPapers: [],
 };
@@ -33,9 +37,25 @@ const reducer = (state = initialState, action) => {
     case paperConstants.UNLIKE_PAPER_FAILURE:
         return { ...state, unlikePaperStatus: paperStatus.FAILURE };
     case paperConstants.SEARCH_PAPER_SUCCESS:
-        return { ...state, searchPaperStatus: paperStatus.SUCCESS, searchedPapers: action.target };
+        return {
+            ...state,
+            search: {
+                status: paperStatus.SUCCESS,
+                papers: action.target.papers,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
+            },
+        };
     case paperConstants.SEARCH_PAPER_FAILURE:
-        return { ...state, searchPaperStatus: paperStatus.FAILURE };
+        return {
+            ...state,
+            search: {
+                status: paperStatus.FAILURE,
+                papers: [],
+                pageNum: 0,
+                finished: false,
+            },
+        };
     case paperConstants.GET_PAPER_LIKE_SUCCESS:
         return { ...state, getLikedPapersStatus: paperStatus.SUCCESS, likedPapers: action.target };
     case paperConstants.GET_PAPER_LIKE_FAILURE:

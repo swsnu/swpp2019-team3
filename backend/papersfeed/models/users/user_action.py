@@ -13,7 +13,7 @@ USER_ACTION_TYPE = [
 ]
 
 class UserAction(BaseModel):
-    """User Follow"""
+    """User Action"""
     # person who makes the action
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None,
                              related_name='user_action_user')

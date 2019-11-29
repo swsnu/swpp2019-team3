@@ -8,7 +8,7 @@ import { createBrowserHistory } from "history";
 import ProfileDetail from "./ProfileDetail";
 import { userActions } from "../../../store/actions/index";
 import { collectionStatus, reviewStatus } from "../../../constants/constants";
-import { getMockStore } from "../../../test-utils/mocks";
+import { getMockStore, mockPromise } from "../../../test-utils/mocks";
 
 const makeStubState = (myId, targetId, follow) => (
     {
@@ -112,9 +112,6 @@ describe("<ProfileDetail />", () => {
     });
 
     it("should handle follow feature", () => {
-        /* eslint-disable no-unused-vars */
-        const mockPromise = new Promise((resolve, reject) => { resolve(); });
-        /* eslint-enable no-unused-vars */
         const spyFollow = jest.spyOn(userActions, "addUserFollowing")
             .mockImplementation(() => () => mockPromise);
 
@@ -129,9 +126,6 @@ describe("<ProfileDetail />", () => {
     });
 
     it("should handle unfollow feature", () => {
-        /* eslint-disable no-unused-vars */
-        const mockPromise = new Promise((resolve, reject) => { resolve(); });
-        /* eslint-enable no-unused-vars */
         const spyUnFollow = jest.spyOn(userActions, "removeUserFollowing")
             .mockImplementation(() => () => mockPromise);
 

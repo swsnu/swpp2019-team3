@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Tabs, Tab } from "react-bootstrap";
+import { Tabs, Tab, Button } from "react-bootstrap";
 
 import { PaperCard, CollectionCard, UserCard } from "../../components";
 import { paperStatus } from "../../constants/constants";
@@ -12,6 +12,7 @@ class SearchResult extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            searchWord: "",
             papers: [],
             collections: [],
             users: [],
@@ -25,6 +26,7 @@ class SearchResult extends Component {
 
     componentDidMount() {
         const searchWord = this.props.location.pathname.split("=")[1];
+        this.setState({ searchWord });
         this.props.onSearchPaper({ text: searchWord })
             .then(() => {
                 this.setState({
@@ -42,6 +44,21 @@ class SearchResult extends Component {
             });
     }
 
+    clickPaperMoreHandler = () => {
+        this.setState({ searchPaperStatus: paperStatus.WAITING });
+        this.props.onSearchPaper({
+            text: this.state.searchWord,
+            page_number: this.props.paperPageNum + 1,
+        })
+            .then(() => {
+                const { papers } = this.state;
+                this.setState({
+                    papers: papers.concat(this.props.searchedPapers),
+                    searchPaperStatus: paperStatus.NONE,
+                });
+            });
+    };
+
     paperCardsMaker = (paper) => (
         <PaperCard
           key={paper.id}
@@ -51,7 +68,7 @@ class SearchResult extends Component {
           authors={paper.authors}
           keywords={paper.keywords}
           likeCount={paper.count.likes}
-          reviewCount={paper.reviewCount}
+          reviewCount={paper.count.reviews}
           isLiked={paper.liked}
           addButtonExists
           headerExists={false}
@@ -67,7 +84,7 @@ class SearchResult extends Component {
           title={collection.title}
           memberCount={collection.count.users}
           paperCount={collection.count.papers}
-          replyCount={collection.replyCount}
+          replyCount={collection.count.replies}
           likeCount={collection.count.likes}
           isLiked={collection.liked}
           headerExists={false}
@@ -132,25 +149,45 @@ class SearchResult extends Component {
             userMessage = null;
         }
 
+        let paperMoreButton = null;
+        if (this.state.searchPaperStatus !== paperStatus.WAITING
+            && !this.props.paperFinished) {
+            paperMoreButton = (
+                <Button
+                  className="paper-more-button"
+                  onClick={this.clickPaperMoreHandler}
+                  size="lg"
+                  block
+                >View More
+                </Button>
+            );
+        } else if (this.state.searchPaperStatus === paperStatus.WAITING
+            && this.state.papers.length > 0) {
+            paperMoreButton = (
+                <h3 id="paper-more-waiting-message">please wait...</h3>
+            );
+        }
+
         return (
             <div className="search-result">
                 <div className="item-list">
                     <Tabs defaultActiveKey="paper-tab" className="item-tabs">
-                        <Tab className="paper-tab" eventKey="paper-tab" title="Paper">
+                        <Tab className="paper-tab" eventKey="paper-tab" title={`Paper(${this.state.papers.length})`}>
                             <div id="paper-cards">
                                 <h3 id="paper-message">{paperMessage}</h3>
                                 <div id="paper-cards-left">{paperCardsLeft}</div>
                                 <div id="paper-cards-right">{paperCardsRight}</div>
                             </div>
+                            {paperMoreButton}
                         </Tab>
-                        <Tab className="collection-tab" eventKey="collection-tab" title="Collection">
+                        <Tab className="collection-tab" eventKey="collection-tab" title={`Collection(${this.state.collections.length})`}>
                             <div id="collection-cards">
                                 <h3 id="collection-message">{collectionMessage}</h3>
                                 <div id="collection-cards-left">{collectionCardsLeft}</div>
                                 <div id="collection-cards-right">{collectionCardsRight}</div>
                             </div>
                         </Tab>
-                        <Tab className="user-tab" eventKey="user-tab" title="People">
+                        <Tab className="user-tab" eventKey="user-tab" title={`People(${this.state.users.length})`}>
                             <div id="user-cards">
                                 <h3 id="user-message">{userMessage}</h3>
                                 <div id="user-cards-left">{userCardsLeft}</div>
@@ -165,12 +202,14 @@ class SearchResult extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    searchPaperStatus: state.paper.searchPaperStatus,
+    searchPaperStatus: state.paper.search.status,
     searchCollectionStatus: state.collection.list.status,
     searchUserStatus: state.user.status,
-    searchedPapers: state.paper.searchedPapers,
+    searchedPapers: state.paper.search.papers,
     searchedCollections: state.collection.list.list,
     searchedUsers: state.user.searchedUsers,
+    paperPageNum: state.paper.search.pageNum,
+    paperFinished: state.paper.search.finished,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -190,6 +229,8 @@ SearchResult.propTypes = {
     searchedPapers: PropTypes.arrayOf(PropTypes.any),
     searchedCollections: PropTypes.arrayOf(PropTypes.any),
     searchedUsers: PropTypes.arrayOf(PropTypes.any),
+    paperPageNum: PropTypes.number,
+    paperFinished: PropTypes.bool,
 };
 
 SearchResult.defaultProps = {
@@ -201,4 +242,6 @@ SearchResult.defaultProps = {
     searchedPapers: [],
     searchedCollections: [],
     searchedUsers: [],
+    paperPageNum: 0,
+    paperFinished: true,
 };

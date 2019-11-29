@@ -200,7 +200,7 @@ class IntroModal extends Component {
                     <Modal.Body>
                         <FormControl
                           className="email-input"
-                          type="text"
+                          type="email"
                           placeholder="email"
                           value={this.state.email}
                           onChange={(e) => this.setState({ email: e.target.value })}

@@ -38,7 +38,7 @@ matrix:
     - mysql
     env:
     - COVERALLS_PARALLEL=true
-    - TEXT_ANALYTICS_SUBSCRIPTION_KEY=69818e6d4d50412c99124a8210b52cec
+    - TEXT_ANALYTICS_SUBSCRIPTION_KEY=secret
     - TEXT_ANALYTICS_ENDPOINT=https://koreacentral.api.cognitive.microsoft.com/
     addons:
       sonarcloud:

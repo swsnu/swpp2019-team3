@@ -29,7 +29,7 @@ class CollectionList extends Component {
           title={collection.title}
           memberCount={collection.count.users}
           paperCount={collection.count.papers}
-          replyCount={collection.replyCount}
+          replyCount={collection.count.replies}
           likeCount={collection.count.likes}
           isLiked={collection.liked}
           headerExists={false}

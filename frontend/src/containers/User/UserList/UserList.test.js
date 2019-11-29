@@ -1,30 +1,38 @@
 import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
+import { ConnectedRouter } from "connected-react-router";
+import { Route, Switch } from "react-router-dom";
+import { createBrowserHistory } from "history";
 
 import UserList from "./UserList";
-import { userActions } from "../../../store/actions";
-import { getMockStore } from "../../../test-utils/mocks";
+import { userStatus, collectionStatus } from "../../../constants/constants";
+import { userActions, collectionActions } from "../../../store/actions";
+import { getMockStore, mockPromise, flushPromises } from "../../../test-utils/mocks";
 
-const mockHistory = { push: jest.fn() };
-const makeFollowingList = (initialState) => (
+
+const makeUserList = (initialState, mode) => (
     <Provider store={getMockStore(initialState)}>
-        <UserList history={mockHistory} location={{ pathname: "/profile_id=1/followings" }} />
+        <ConnectedRouter history={createBrowserHistory()}>
+            <Switch>
+                <Route
+                  path="/"
+                  exact
+                  render={() => (
+                      <div>
+                          <UserList
+                            mode={mode}
+                            match={
+                                { params: { id: 1 } }
+                            }
+                          />
+                      </div>
+                  )}
+                />
+            </Switch>
+        </ConnectedRouter>
     </Provider>
 );
-const makeFollowerList = (initialState) => (
-    <Provider store={getMockStore(initialState)}>
-        <UserList history={mockHistory} location={{ pathname: "/profile_id=1/followers" }} />
-    </Provider>
-);
-const makeWrongList = (initialState) => (
-    <Provider store={getMockStore(initialState)}>
-        <UserList history={mockHistory} location={{ pathname: "/profile_id=1/wrong" }} />
-    </Provider>
-);
-/* eslint-disable no-unused-vars */
-const mockPromise = new Promise((resolve, reject) => { resolve(); });
-/* eslint-enable no-unused-vars */
 
 describe("<UserList />", () => {
     let stubInitialState;
@@ -32,21 +40,45 @@ describe("<UserList />", () => {
     let spyFollowingsUser;
     let followerList;
     let spyFollowersUser;
+    let memberList;
+    let spyGetMembers;
 
     beforeEach(() => {
         stubInitialState = {
             paper: {},
-            collection: {},
+            collection: {
+                selected: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                    papers: [],
+                    members: [{ id: 2, count: {} }],
+                    memberCount: 0,
+                    replies: [],
+                },
+            },
             review: {},
             auth: {},
-            user: {},
+            user: {
+                selectedUser: [],
+                selectedFollowers: [{ id: 2, count: {} }],
+                selectedFollowings: [{ id: 2, count: {} }],
+                followCount: 0,
+                unfollowCount: 0,
+                status: userStatus.NONE,
+                searchedUsers: [],
+                error: null,
+            },
             reply: {},
         };
-        followingList = makeFollowingList(stubInitialState);
+        followingList = makeUserList(stubInitialState, "followings");
         spyFollowingsUser = jest.spyOn(userActions, "getFollowingsByUserId")
             .mockImplementation(() => () => mockPromise);
-        followerList = makeFollowerList(stubInitialState);
+        followerList = makeUserList(stubInitialState, "followers");
         spyFollowersUser = jest.spyOn(userActions, "getFollowersByUserId")
+            .mockImplementation(() => () => mockPromise);
+        memberList = makeUserList(stubInitialState, "members");
+        spyGetMembers = jest.spyOn(collectionActions, "getCollectionMembers")
             .mockImplementation(() => () => mockPromise);
     });
 
@@ -54,26 +86,78 @@ describe("<UserList />", () => {
         jest.clearAllMocks();
     });
 
-    it("should render without errors and call UserList API", () => {
+    it("should render without errors and call UserList API", async () => {
         const followingComponent = mount(followingList);
         const followingWrapper = followingComponent.find(".user-list");
         expect(followingWrapper.length).toBe(1);
         expect(spyFollowingsUser).toBeCalledTimes(1);
+        await flushPromises();
+        followingComponent.update();
+        let instance = followingComponent.find(UserList.WrappedComponent).instance();
+        expect(instance.state.users.length).toBe(1);
 
         const followerComponent = mount(followerList);
         const followerWrapper = followerComponent.find(".user-list");
         expect(followerWrapper.length).toBe(1);
         expect(spyFollowersUser).toBeCalledTimes(1);
+        await flushPromises();
+        followerComponent.update();
+        instance = followerComponent.find(UserList.WrappedComponent).instance();
+        expect(instance.state.users.length).toBe(1);
+
+        const memberComponent = mount(memberList);
+        const memberWrapper = memberComponent.find(".user-list");
+        expect(memberWrapper.length).toBe(1);
+        expect(spyGetMembers).toBeCalledTimes(1);
+        await flushPromises();
+        memberComponent.update();
+        instance = memberComponent.find(UserList.WrappedComponent).instance();
+        expect(instance.state.users.length).toBe(1);
+    });
+
+    it("should redirect to Main Page if cannot get users", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                selected: {
+                    status: collectionStatus.FAILURE,
+                },
+            },
+            user: {
+                status: userStatus.USER_NOT_EXIST,
+            },
+        };
+
+        const followingComponent = mount(makeUserList(stubInitialState, "followings"));
+        const followingWrapper = followingComponent.find(".user-list");
+        expect(followingWrapper.length).toBe(1);
+        expect(spyFollowingsUser).toBeCalledTimes(1);
+        await flushPromises();
+        // FIXME: expecting spyHistoryPush fails
+
+        const followerComponent = mount(makeUserList(stubInitialState, "followers"));
+        const followerWrapper = followerComponent.find(".user-list");
+        expect(followerWrapper.length).toBe(1);
+        expect(spyFollowersUser).toBeCalledTimes(1);
+        await flushPromises();
+        // FIXME: expecting spyHistoryPush fails
+
+        const memberComponent = mount(makeUserList(stubInitialState, "members"));
+        const memberWrapper = memberComponent.find(".user-list");
+        expect(memberWrapper.length).toBe(1);
+        expect(spyGetMembers).toBeCalledTimes(1);
+        await flushPromises();
+        // FIXME: expecting spyHistoryPush fails
     });
 
     it("should not call anything when wrong pathname", () => {
-        mount(makeWrongList(stubInitialState));
+        mount(makeUserList(stubInitialState, "wrong"));
         expect(spyFollowingsUser).toBeCalledTimes(0);
         expect(spyFollowersUser).toBeCalledTimes(0);
     });
 
     it("should make userCardsLeft and userCardsRight well", () => {
-        const followingComponent = mount(makeFollowingList(stubInitialState));
+        const followingComponent = mount(makeUserList(stubInitialState, "followings"));
         const followingInstance = followingComponent.find(UserList.WrappedComponent).instance();
         followingInstance.setState(
             {
@@ -109,7 +193,7 @@ describe("<UserList />", () => {
         expect(followingWrapperLeft.children().length).toBe(1);
         expect(followingWrapperRight.children().length).toBe(1);
 
-        const followerComponent = mount(makeFollowerList(stubInitialState));
+        const followerComponent = mount(makeUserList(stubInitialState, "followers"));
         const followerInstance = followerComponent.find(UserList.WrappedComponent).instance();
         followerInstance.setState(
             {

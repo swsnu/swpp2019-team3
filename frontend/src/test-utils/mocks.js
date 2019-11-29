@@ -50,3 +50,6 @@ export const mockPromise = new Promise((resolve, reject) => { resolve(); });
 /* eslint-enable no-unused-vars */
 
 export const flushPromises = () => new Promise(setImmediate);
+
+export const spyHistoryPush = jest.spyOn(history, "push")
+    .mockImplementation(() => () => mockPromise);

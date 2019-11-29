@@ -4,73 +4,9 @@ import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
 
-
 import { getMockStore } from "../../../test-utils/mocks";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
 import TransferOwnershipModal from "./TransferOwnershipModal";
-
-const stubInitialState = {
-    paper: {
-    },
-    auth: {
-        signinStatus: signinStatus.SUCCESS,
-        me: {
-            id: 1,
-            username: "test1",
-            description: "asdf",
-        },
-    },
-    collection: {
-        make: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        list: {
-            status: collectionStatus.NONE,
-            list: [],
-            error: null,
-        },
-        edit: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        delete: {
-            status: collectionStatus.NONE,
-            collection: {},
-            error: null,
-        },
-        selected: {
-            status: collectionStatus.NONE,
-            error: null,
-            collection: {},
-            papers: [],
-            members: [
-                {
-                    id: 1,
-                    username: "test1",
-                    description: "asdf",
-                },
-                {
-                    id: 2,
-                    username: "test2",
-                    description: "qwer",
-                },
-                {
-                    id: 3,
-                    username: "test3",
-                    description: "zxcv",
-                },
-            ],
-            memberCount: 3,
-            replies: [],
-        },
-    },
-    user: {},
-    review: {},
-    reply: {},
-};
 
 const makeTransferModal = (initialState) => (
     <Provider store={getMockStore(initialState)}>
@@ -98,8 +34,72 @@ jest.mock("../../User/UserEntry/UserEntry", () => jest.fn((props) => (
 )));
 
 describe("TransferOwnershipModal test", () => {
+    let stubInitialState;
     let transferModal;
+
     beforeEach(() => {
+        stubInitialState = {
+            paper: {
+            },
+            auth: {
+                signinStatus: signinStatus.SUCCESS,
+                me: {
+                    id: 1,
+                    username: "test1",
+                    description: "asdf",
+                },
+            },
+            collection: {
+                make: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                list: {
+                    status: collectionStatus.NONE,
+                    list: [],
+                    error: null,
+                },
+                edit: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                delete: {
+                    status: collectionStatus.NONE,
+                    collection: {},
+                    error: null,
+                },
+                selected: {
+                    status: collectionStatus.NONE,
+                    error: null,
+                    collection: {},
+                    papers: [],
+                    members: [
+                        {
+                            id: 1,
+                            username: "test1",
+                            description: "asdf",
+                        },
+                        {
+                            id: 2,
+                            username: "test2",
+                            description: "qwer",
+                        },
+                        {
+                            id: 3,
+                            username: "test3",
+                            description: "zxcv",
+                        },
+                    ],
+                    memberCount: 3,
+                    replies: [],
+                },
+            },
+            user: {},
+            review: {},
+            reply: {},
+        };
         transferModal = makeTransferModal(stubInitialState);
     });
 

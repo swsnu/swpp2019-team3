@@ -32,11 +32,10 @@ class Header extends Component {
             .catch(() => {});
     }
 
-    keyPressHandler = () => {
-        // FIXME: For now, there is an issue that if users press enter, search APIs are called twice
-        // if (this.state.searchWord && e.charCode === 13) {
-        //    this.props.history.push(`/search=${this.state.searchWord}`);
-        // }
+    keyPressHandler = (e) => {
+        if (this.state.searchWord && e.charCode === 13) {
+            this.props.history.push(`/search=${this.state.searchWord}`);
+        }
     };
 
     // for search input change
@@ -123,13 +122,12 @@ class Header extends Component {
         return (
             <div>
                 <Navbar className="header">
-                    <Nav.Link className="logo" href="/main">Papersfeed</Nav.Link>
-                    <Form inline className="search">
+                    <Nav.Link className="logo" href="/main">PapersFeed</Nav.Link>
+                    <div className="search"> {/* if 'Form', 'enter' triggers calls twice} */}
                         <Form.Control
                           className="search-input"
                           type="text"
-                          placeholder="Search (by clicking 'Search' button)"
-                          bsPrefix="search-input"
+                          placeholder="Search"
                           value={this.state.searchWord}
                           onChange={this.handleChange}
                           onKeyPress={this.keyPressHandler}
@@ -140,15 +138,15 @@ class Header extends Component {
                           disabled={!this.state.searchWord}
                         >Search
                         </Button>
-                    </Form>
+                    </div>
                     <div className="buttons">
-                        <Dropdown>
+                        <Dropdown className="dropdown-notification">
                             <Dropdown.Toggle title="notification" className="notification-button">{notificationLabel}</Dropdown.Toggle>
                             <Dropdown.Menu className="notification-menu">
                                 {notifications}
                             </Dropdown.Menu>
                         </Dropdown>
-                        <Dropdown>
+                        <Dropdown className="dropdown-account">
                             <Dropdown.Toggle title="myaccount" className="myaccount-button">My Account</Dropdown.Toggle>
                             <Dropdown.Menu className="myaccount-menu">
                                 <Dropdown.Header className="username-header">{username}</Dropdown.Header>

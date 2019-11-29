@@ -145,7 +145,7 @@ class Reply extends Component {
                         <Modal.Body>
                             <FormControl
                               className="edit-input"
-                              type="text"
+                              as="textarea"
                               placeholder={this.state.content}
                               bsPrefix="edit-input"
                               value={this.state.tempContent}

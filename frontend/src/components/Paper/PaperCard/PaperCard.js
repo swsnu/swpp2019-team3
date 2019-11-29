@@ -41,16 +41,24 @@ class PaperCard extends Component {
         }
     }
 
-    processKeywords = (type) => {
-        const keywords = this.props.keywords.filter(
-            (keyword) => keyword.type === type,
-        ).sort(
-            (a, b) => a.id - b.id,
-        ).map(
-            (keyword) => keyword.name,
-        );
-        return keywords.slice(0, 10).join(", ");
-    }
+    processKeywords = (type) => this.props.keywords.sort(
+        (a, b) => a.id - b.id,
+    ).slice(0, 10).filter(
+        (keyword) => keyword.type === type,
+    ).map(
+        (keyword) => (
+            <Button
+              key={keyword.id}
+              id={keyword.name}
+              className="keyword-tag"
+              href={`/search=${keyword.name}`}
+              variant="outline-secondary"
+              size="sm"
+            ># {keyword.name}
+            </Button>
+        ),
+    );
+
 
     // handle click 'Like' button
     clickPaperCardLikeHandler() {
