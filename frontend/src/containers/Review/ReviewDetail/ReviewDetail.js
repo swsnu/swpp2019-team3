@@ -14,7 +14,8 @@ class ReviewDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            thisReview: {},
+            thisReview: {
+            },
             replies: [],
             isLiked: false,
             likeCount: 0,
@@ -28,6 +29,8 @@ class ReviewDetail extends Component {
             },
             newReply: "",
             paperId: 0,
+            creationDate: "",
+            modificationDate: "",
         };
 
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
@@ -53,6 +56,8 @@ class ReviewDetail extends Component {
                     author: this.props.selectedReview.user,
                     paperId: this.props.selectedReview.paper.id,
                     newReply: "",
+                    creationDate: this.props.selectedReview.creation_date.split("T")[0],
+                    modificationDate: this.props.selectedReview.modification_date.split("T")[0],
                 });
             }).catch(() => {});
 
@@ -132,6 +137,7 @@ class ReviewDetail extends Component {
               isLiked={reply.liked}
               onChange={this.handleReplies}
               userId={this.props.me.id}
+              date={reply.modification_date}
               type="review"
             />
         ));
@@ -146,6 +152,10 @@ class ReviewDetail extends Component {
                             <div className="review">
                                 <div className="author">
                                     <Card.Link href={`/profile_id=${this.state.author.id}`} className="text">{this.state.author.username}</Card.Link>
+                                </div>
+                                <div id="date">
+                                    <div id="creationDate">Created: {this.state.creationDate}</div>
+                                    <div id="lastUpdateDate">Last Update: {this.state.modificationDate}</div>
                                 </div>
                                 <Card.Title className="title">{this.state.thisReview.title}</Card.Title>
                                 <Card.Text className="content">{this.state.thisReview.text}</Card.Text>
