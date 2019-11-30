@@ -87,6 +87,7 @@ def select_paper_collection(args):
     return papers, page_number, is_finished
 
 
+# pylint: disable=too-many-locals
 def select_paper_search(args):
     """Select Paper Search"""
     is_parameter_exists([
@@ -164,12 +165,10 @@ def select_paper_search(args):
         # is_finished (tentative)
         is_finished = False
 
-    # need to maintain the order
-    preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(result_ids)])
-
     # Papers - Sometimes, there can be duplicated ids in result_ids. Thus, len(papers) < len(result_ids) is possible.
-    papers, _, is_finished = __get_papers_search(result_ids, request_user, paper_ids, external, is_finished, preserved)
+    papers, _, is_finished = __get_papers_search(result_ids, request_user, paper_ids, external, is_finished)
     return papers, page_number, is_finished
+# pylint: enable=too-many-locals
 
 
 def __exploit_arxiv(search_word, page_number):
@@ -189,8 +188,8 @@ def __exploit_arxiv(search_word, page_number):
             response_dict = xmltodict.parse(response_xml)['feed']
             if 'entry' in response_dict and response_dict['entry']:
                 return __parse_and_save_arxiv_info(response_dict) # paper_ids, is_finished
-            else: # if 'entry' doesn't exist or it's the end of results
-                logging.warning("[arXiv API] entries don't exist")
+            # if 'entry' doesn't exist or it's the end of results
+            logging.warning("[arXiv API] entries don't exist")
         else:
             logging.warning("[arXiv API] error code %d", response.status_code)
     except requests.exceptions.RequestException as exception:
@@ -214,8 +213,7 @@ def __exploit_crossref(search_word, page_number):
             response_json = response.json()
             if 'items' in response_json['message'] and response_json['message']['items']:
                 return __parse_and_save_crossref_info(response_json['message']) # paper_ids, is_finished
-            else:
-                logging.warning("[Crossref API] items don't exist")
+            logging.warning("[Crossref API] items don't exist")
         else:
             logging.warning("[Crossref API] error code %d", response.status_code)
     except requests.exceptions.RequestException as exception:
@@ -338,13 +336,16 @@ def __get_papers(filter_query, request_user, count, order_by='-pk'):
     return papers, pagination_value, is_finished
 
 
-def __get_papers_search(result_ids, request_user, source_to_id, external, is_finished, order_by='-pk'):
+def __get_papers_search(result_ids, request_user, source_to_id, external, is_finished):
     """Get Papers By Query"""
+    # need to maintain the order
+    preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(result_ids)])
+
     queryset = Paper.objects.filter(
         Q(id__in=result_ids)
     ).annotate(
         is_liked=__is_paper_liked('id', request_user)
-    ).order_by(order_by)
+    ).order_by(preserved)
 
     if external:
         # if external, give all ready search results
@@ -771,6 +772,7 @@ def __get_paper_review_count(paper_ids, group_by_field):
     return {review_paper[group_by_field]: review_paper['count'] for review_paper in review_papers}
 
 
+# pylint: disable=too-many-locals
 def __parse_and_save_arxiv_info(feed):
     paper_ids = []
     abstracts = {} # key: primary key of paper, value: abstract of the paper
@@ -823,6 +825,7 @@ def __parse_and_save_arxiv_info(feed):
     __extract_keywords_from_abstract(abstracts)
 
     return paper_ids, is_finished
+# pylint: enable=too-many-locals
 
 
 def __parse_and_save_crossref_info(message):

@@ -84,7 +84,6 @@ class PaperCard extends Component {
             if (this.props.paperSource) {
                 header = <Card.Header>{`from ${this.props.paperSource}`}</Card.Header>;
             }
-            // header = <Card.Header>{`${this.props.user} ${this.props.source} this paper.`}</Card.Header>;
         }
         let addButton = null;
         if (this.props.addButtonExists) {
@@ -138,9 +137,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(PaperCard);
 
 PaperCard.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
-    source: PropTypes.string,
     id: PropTypes.number,
-    user: PropTypes.string,
     title: PropTypes.string,
     date: PropTypes.string,
     authors: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
@@ -159,9 +156,7 @@ PaperCard.propTypes = {
 
 PaperCard.defaultProps = {
     history: null,
-    source: "",
     id: 0,
-    user: "",
     title: "",
     date: "",
     authors: [],
