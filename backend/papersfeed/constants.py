@@ -28,6 +28,7 @@ PAGE_NUMBER = 'page_number'
 IS_FINISHED = 'is_finished'
 CREATION_DATE = 'creation_date'
 MODIFICATION_DATE = 'modification_date'
+CONTENT = 'content'
 SEARCH_WORD = 'search_word'
 
 # User
@@ -53,6 +54,10 @@ TARGET = 'target'
 ACTION_OBJECT = 'action_object'
 TIMESINCE = 'timesince'
 STRING = 'string'
+
+# Subsciption
+SUBSCRIPTION = 'subscription'
+SUBSCRIPTIONS = 'subscriptions'
 
 # Collection
 COLLECTION = 'collection'

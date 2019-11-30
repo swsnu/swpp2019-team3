@@ -12,6 +12,8 @@ from papersfeed.models.collections.collection_user import CollectionUser, COLLEC
 from papersfeed.models.collections.collection_paper import CollectionPaper
 from papersfeed.models.replies.reply_collection import ReplyCollection
 from papersfeed.models.users.user_action import UserAction, USER_ACTION_TYPE
+from papersfeed.models.users.user import User
+from papersfeed.models.subscription.subscription import Subscription
 
 def insert_collection(args):
     """Insert Collection"""
@@ -39,6 +41,14 @@ def insert_collection(args):
 
     # Create New Collection
     collection = Collection.objects.create(title=title, text=text)
+
+    # store an action for subscription feed
+    req_user = User.objects.get(id=request_user.id)
+    Subscription.objects.create(
+        actor=req_user,
+        verb="created",
+        action_object=collection,
+    )
 
     # Add User To Collection
     CollectionUser.objects.create(collection_id=collection.id, user_id=user_id, type=COLLECTION_USER_TYPE[0])

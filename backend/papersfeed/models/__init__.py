@@ -34,3 +34,6 @@ from papersfeed.models.reviews.review_like import ReviewLike
 # Users
 from papersfeed.models.users.user import User
 from papersfeed.models.users.user_follow import UserFollow
+
+# Subscription
+from papersfeed.models.subscription.subscription import Subscription

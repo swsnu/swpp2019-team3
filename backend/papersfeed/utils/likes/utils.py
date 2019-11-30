@@ -16,14 +16,15 @@ from papersfeed.models.reviews.review_like import ReviewLike
 from papersfeed.utils.collections.utils import __get_collection_like_count
 from papersfeed.models.collections.collection import Collection
 from papersfeed.models.collections.collection_like import CollectionLike
+from papersfeed.models.collections.collection_user import CollectionUser
 from papersfeed.models.replies.reply import Reply
 from papersfeed.models.replies.reply_collection import ReplyCollection
 from papersfeed.models.replies.reply_review import ReplyReview
 from papersfeed.models.replies.reply_like import ReplyLike
 from papersfeed.utils.replies.utils import __get_reply_like_count
 from papersfeed.models.users.user import User
+from papersfeed.models.subscription.subscription import Subscription
 from papersfeed.models.users.user_action import UserAction, USER_ACTION_TYPE
-from papersfeed.models.collections.collection_user import CollectionUser
 
 
 def insert_like_paper(args):
@@ -46,6 +47,15 @@ def insert_like_paper(args):
     PaperLike.objects.create(
         paper_id=paper_id,
         user_id=request_user.id,
+    )
+
+    # store an action for subscription feed
+    req_user = User.objects.get(id=request_user.id)
+    paper = Paper.objects.get(id=paper_id)
+    Subscription.objects.create(
+        actor=req_user,
+        verb="liked",
+        action_object=paper,
     )
 
     # Create action for recommendation
@@ -126,6 +136,14 @@ def insert_like_review(args):
 
     review = Review.objects.get(id=review_id)
     review_author = User.objects.get(id=review.user_id)
+
+    # store an action for subscription feed
+    req_user = User.objects.get(id=request_user.id)
+    Subscription.objects.create(
+        actor=req_user,
+        verb="liked",
+        action_object=review,
+    )
 
     notify.send(
         request_user,
