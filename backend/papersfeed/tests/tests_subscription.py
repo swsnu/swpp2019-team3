@@ -144,11 +144,10 @@ class SubscriptionTestCase(TestCase):
 
         user1_id = User.objects.get(email='user1@snu.ac.kr').id
 
-        # there should be one subscription item
         subscriptions = json.loads(response.content)['subscriptions']
-        likes_paper = subscriptions[0]
+        likes_paper = subscriptions[2]
         created_collection = subscriptions[1]
-        likes_review = subscriptions[2]
+        likes_review = subscriptions[0]
         # test for likes_paper
         self.assertEqual(likes_paper['actor'], {
             constants.ID: user1_id,
@@ -175,3 +174,7 @@ class SubscriptionTestCase(TestCase):
         self.assertEqual(likes_review['verb'], 'liked')
         # review = Review.objects.get(id=review_id)
         # self.assertEqual(likes_review['action_object'], review)
+
+        # FIXME: Each of 'paper', 'collection', and 'review' is the result of
+        # 'get_papers', 'get_collections' and 'get_reviews'.
+        # Please give a hand for make them be tested.

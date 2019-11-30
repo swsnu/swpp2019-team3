@@ -21,12 +21,13 @@ def select_subscriptions(args):
     # get the list of users that this user is following
     # pylint: disable=line-too-long
     followings_queryset = UserFollow.objects.filter(following_user=request_user.id).values_list('followed_user', flat=True)
+    # pylint: enable=line-too-long
     # Notification QuerySet
     subscription_queryset = Subscription.objects.filter(Q(actor__in=followings_queryset))
 
-    subscriptions = get_results_from_queryset(subscription_queryset, 10, page_number)
+    subscriptions = get_results_from_queryset(subscription_queryset, 20, page_number)
     subscriptions = __pack_subscriptions(subscriptions, request_user)
-    is_finished = len(subscriptions) < 10
+    is_finished = len(subscriptions) < 20
 
     return subscriptions, page_number, is_finished
 
@@ -77,55 +78,7 @@ def __pack_subscriptions(subscriptions, request_user):
             constants.VERB: subscription.verb,
             constants.ACTION_OBJECT: action_object,
             constants.TARGET: target,
-            constants.ACTION_HAPPEND_TIME: subscription.timestamp
+            constants.CREATION_DATE: subscription.creation_date,
         }
         packed.append(packed_subscription)
-
     return packed
-
-# # paper action_object helper functions
-# def __get_paper_authors(paper_id):
-#     """Get Authors of a Paper"""
-#     pass
-
-# def __get_paper_keywords(paper_id):
-#     """Get Keywords of a Paper"""
-#     pass
-
-# def __get_paper_review_count(paper_id):
-#     """Get Number of Reviews of a Paper"""
-#     return Review.objects.filter(paper_id=paper_id).count()
-
-# def __get_paper_like_count(paper_id):
-#     """Get Number of Likes of a Paper"""
-#     return PaperLike.objects.filter(paper_id=paper_id).count()
-
-# # collection action_object helper functions
-# def __get_collection_like_count(collection_id):
-#     """Get Number of Likes of a Collection"""
-#     return CollectionLike.objects.filter(collection_id=collection_id).count()
-
-# def __get_collection_user_count(collection_id):
-#     """Get Number of Users in a Collection"""
-#     return CollectionUser.objects.filter(collection_id=collection_id).count()
-
-# def __get_collection_paper_count(collection_id):
-#     """Get Number of Papers in a Collection"""
-#     return CollectionPaper.objects.filter(collection_id=collection_id).count()
-
-# def __get_collection_reply_count(collection_id):
-#     """Get Number of Replies of a Collection"""
-#     return ReplyCollection.objects.filter(collection_id=collection_id).count()
-
-# # review action_object helper functions
-# def __get_review_user(user_id):
-#     """Get a user"""
-#     return User.object.get(id=user_id)
-
-# def __get_review_like_count(review_id):
-#     """Get Number of Likes of a Review"""
-#     return ReviewLike.objects.filter(review_id=review_id).count()
-
-# def __get_review_reply_count(review_id):
-#     """Get Number of Replies of a Review"""
-#     return ReplyReview.objects.filter(review_id=review_id).count()

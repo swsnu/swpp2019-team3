@@ -58,7 +58,6 @@ STRING = 'string'
 # Subsciption
 SUBSCRIPTION = 'subscription'
 SUBSCRIPTIONS = 'subscriptions'
-ACTION_HAPPEND_TIME = 'action_happend_time'
 
 # Collection
 COLLECTION = 'collection'

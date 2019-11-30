@@ -2,9 +2,10 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from papersfeed.models.base_models import BaseModel
 from papersfeed.models.users.user import User
 
-class Subscription(models.Model):
+class Subscription(BaseModel):
     """Subscription"""
     # decribes an action occured by a user
     # (actor) (verb) this (action_object) on (target)
@@ -40,10 +41,7 @@ class Subscription(models.Model):
     target_object_id = models.CharField(max_length=255, blank=True, null=True)
     target = GenericForeignKey('target_content_type', 'target_object_id')
 
-    # recording subscription item's created time
-    timestamp = models.DateTimeField(auto_now=True)
-
     class Meta:
         """Table Meta"""
         db_table = 'swpp_subscription'  # Table 이름
-        ordering = ('-timestamp',)      # recent subscription recode will come first
+        ordering = ('-creation_date',)  # recent subscription recode will come first
