@@ -26,8 +26,6 @@ from papersfeed.models.papers.publisher import Publisher
 from papersfeed.models.reviews.review import Review
 from papersfeed.models.collections.collection_paper import CollectionPaper
 
-logging.getLogger().setLevel(logging.INFO)
-
 SEARCH_COUNT = 20 # pagination count for searching papers
 TIMEOUT = 2
 
@@ -130,12 +128,14 @@ def select_paper_search(args):
     if paper_ids['arxiv'] and paper_ids['crossref']:
         result_ids = paper_ids['arxiv'] + paper_ids['crossref']
         is_finished = is_finished_dict['arxiv'] and is_finished_dict['crossref']
+
     # if only there are results of Crossref (len <= SEARCH_COUNT)
-    elif not paper_ids['arxiv']:
+    elif not paper_ids['arxiv'] and paper_ids['crossref']:
         result_ids = paper_ids['crossref']
         is_finished = is_finished_dict['crossref']
+
     # if only there are results of arXiv (len <= SEARCH_COUNT)
-    elif not paper_ids['crossref']:
+    elif not paper_ids['crossref'] and paper_ids['arxiv']:
         result_ids = paper_ids['arxiv']
         is_finished = is_finished_dict['arxiv']
 
@@ -258,7 +258,7 @@ def select_paper_search_ml(args):
                     response_dict = xmltodict.parse(response_xml)['feed']
                     if 'entry' in response_dict and response_dict['entry']:
                         # this process includes extracting keywords from abstracts
-                        paper_ids.append(__parse_and_save_arxiv_info(response_dict)[0])
+                        paper_ids.append(__parse_and_save_arxiv_info(response_dict)[0][0])
                     else: # if 'entry' doesn't exist
                         logging.warning("[arXiv API - ml] more entries don't exist")
                         paper_ids.append(-1)

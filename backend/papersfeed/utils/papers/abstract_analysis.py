@@ -6,8 +6,6 @@ import logging
 import argparse
 import requests
 
-logging.getLogger().setLevel(logging.INFO)
-
 
 def get_key_phrases(documents):
     """get key phrases using Azure Text Analytics API"""
