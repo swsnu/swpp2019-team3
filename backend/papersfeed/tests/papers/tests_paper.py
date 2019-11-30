@@ -390,6 +390,7 @@ class PaperTestCase(TestCase):
         )
 
         # NOTE: for now, actually this API is not called
+        # because the same paper is already saved in DB on 'test_paper_search_arxiv'
         mock_post.return_value = make_stub_keyphrases_response("papersfeed/tests/papers/stub_key_phrases.json", 200)
 
         # Search with Keyword 'afdaf' which doesn't exist in DB (send requests to arXiv)

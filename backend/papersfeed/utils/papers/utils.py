@@ -837,7 +837,7 @@ def __parse_and_save_crossref_info(message):
         if 'title' not in item or 'author' not in item:
             continue
 
-        # FIXME: Sometimes, results have 'subtitle'. Should we handle it?
+        # NOTE: Sometimes, results have 'subtitle'. Should we handle it?
         title = item['title'][0]
 
         # find papers with the title in DB
