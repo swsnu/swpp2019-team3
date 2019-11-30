@@ -129,7 +129,7 @@ class Reply extends Component {
             <div className="reply-component">
                 <div className="reply">
                     <div className="author">
-                        <Nav.Link to={`/profile_id=${this.props.authorId}`}>{this.props.author}</Nav.Link>
+                        <Nav.Link href={`/profile_id=${this.props.authorId}`}>{this.props.author}</Nav.Link>
                     </div>
                     <div className="date">{this.state.date}</div>
                     <div className="content">{this.props.content}</div>
