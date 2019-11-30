@@ -323,7 +323,7 @@ class PaperTestCase(TestCase):
 
     @patch('requests.post')
     @patch('requests.get')
-    def test_paper_search_arxiv(self, mock_get, mock_post):
+    def test_paper_search_external(self, mock_get, mock_post):
         """Search Paper from external sources & Search Paper for ML(dummy data)"""
         client = Client()
 

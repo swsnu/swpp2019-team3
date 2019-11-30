@@ -104,7 +104,7 @@ describe("<SearchResult />", () => {
         expect(spySearchUser).toBeCalledTimes(1);
     });
 
-    it("should make paperCards well", async () => {
+    it("should make paperCards well (1)", async () => {
         stubInitialState = {
             ...stubInitialState,
             paper: {
@@ -126,15 +126,74 @@ describe("<SearchResult />", () => {
                 },
             },
         };
-        const component = mount(makeSearchResult(stubInitialState));
+        let component = mount(makeSearchResult(stubInitialState));
         await flushPromises();
         component.update();
 
-        const wrapperLeft = component.find("#paper-cards-left");
-        const wrapperRight = component.find("#paper-cards-right");
+        let wrapperLeft = component.find("#paper-cards-left");
+        let wrapperRight = component.find("#paper-cards-right");
         expect(component.find("PaperCard").length).toBe(3);
         expect(wrapperLeft.children().length).toBe(2);
         expect(wrapperRight.children().length).toBe(1);
+
+        component = mount(makeSearchResult(stubInitialState));
+        const instance = component.find(SearchResult.WrappedComponent).instance();
+        instance.setState({ paperCardsLeftPushed: true });
+        component.update();
+        await flushPromises();
+        component.update();
+
+        wrapperLeft = component.find("#paper-cards-left");
+        wrapperRight = component.find("#paper-cards-right");
+        expect(component.find("PaperCard").length).toBe(3);
+        expect(wrapperLeft.children().length).toBe(1);
+        expect(wrapperRight.children().length).toBe(2);
+    });
+
+    it("should make paperCards well (2)", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            paper: {
+                getPaperStatus: paperStatus.NONE,
+                selectedPaper: [],
+                search: {
+                    status: paperStatus.NONE,
+                    papers: [{
+                        id: 1, title: "a", abstract: "b", count: {}, source: "arxiv",
+                    },
+                    {
+                        id: 2, title: "a", abstract: "b", count: {}, source: "crossref",
+                    },
+                    {
+                        id: 3, title: "a", abstract: "b", count: {}, source: "crossref",
+                    }],
+                    pageNum: 0,
+                    finished: true,
+                },
+            },
+        };
+        let component = mount(makeSearchResult(stubInitialState));
+        await flushPromises();
+        component.update();
+
+        let wrapperLeft = component.find("#paper-cards-left");
+        let wrapperRight = component.find("#paper-cards-right");
+        expect(component.find("PaperCard").length).toBe(3);
+        expect(wrapperLeft.children().length).toBe(2);
+        expect(wrapperRight.children().length).toBe(1);
+
+        component = mount(makeSearchResult(stubInitialState));
+        const instance = component.find(SearchResult.WrappedComponent).instance();
+        instance.setState({ paperCardsLeftPushed: true });
+        component.update();
+        await flushPromises();
+        component.update();
+
+        wrapperLeft = component.find("#paper-cards-left");
+        wrapperRight = component.find("#paper-cards-right");
+        expect(component.find("PaperCard").length).toBe(3);
+        expect(wrapperLeft.children().length).toBe(1);
+        expect(wrapperRight.children().length).toBe(2);
     });
 
     it("should make collectionCards and reviewCards well", () => {
