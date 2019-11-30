@@ -18,11 +18,28 @@ class UserList extends Component {
             users: [],
         };
 
+        this.getUsersTrigger = this.getUsersTrigger.bind(this);
         this.userCardsMaker = this.userCardsMaker.bind(this);
     }
 
     componentDidMount() {
         this._isMounted = true;
+        if (this.props.match.params) {
+            this.getUsersTrigger();
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.match.params !== prevProps.match.params) {
+            this.getUsersTrigger();
+        }
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
+    getUsersTrigger = () => {
         if (this.props.mode === "followings") {
             this.props.onFollowingUser({ id: this.props.match.params.id })
                 .then(() => {
@@ -54,10 +71,6 @@ class UserList extends Component {
                     }
                 });
         }
-    }
-
-    componentWillUnmount() {
-        this._isMounted = false;
     }
 
     userCardsMaker = (user) => (
