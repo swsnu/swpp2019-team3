@@ -20,7 +20,6 @@ class CollectionDetail extends Component {
             userCount: 0,
             likeCount: 0,
             paperCount: 0,
-            replyCount: 0,
             newReplyContent: "",
             isLiked: false,
             replies: [],
@@ -46,7 +45,6 @@ class CollectionDetail extends Component {
                         isLiked: this.props.selectedCollection.liked,
                         likeCount: this.props.selectedCollection.count.likes,
                         userCount: this.props.selectedCollection.count.users,
-                        replyCount: this.props.selectedCollection.count.replies,
                         paperCount: this.props.selectedCollection.count.papers,
                     });
                 }
@@ -105,7 +103,7 @@ class CollectionDetail extends Component {
           authors={paper.authors}
           keywords={paper.keywords}
           likeCount={paper.count.likes}
-          reviewCount={paper.reviewCount}
+          reviewCount={paper.count.reviews}
           isLiked={paper.liked}
           headerExists={false}
         />
@@ -234,7 +232,7 @@ class CollectionDetail extends Component {
                                     <div id="paperCardsRight">{paperCardsRight}</div>
                                 </div>
                             </Tab>
-                            <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${this.state.replyCount})`}>
+                            <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${this.state.replies.length})`}>
                                 <div id="replies">
                                     <div id="createNewReply">
                                         <textarea

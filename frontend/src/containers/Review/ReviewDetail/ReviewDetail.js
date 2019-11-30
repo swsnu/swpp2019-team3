@@ -16,7 +16,6 @@ class ReviewDetail extends Component {
         this.state = {
             thisReview: {},
             replies: [],
-            replyCount: 0,
             isLiked: false,
             likeCount: 0,
             author: {
@@ -152,7 +151,7 @@ class ReviewDetail extends Component {
                             <div className="reply">
                                 <div className="review-extra">
                                     <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
-                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="60%" width="60%" /></div>{this.state.replyCount}</Button>
+                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="60%" width="60%" /></div>{this.state.replies.length}</Button>
                                     {this.props.me && this.state.author.id === this.props.me.id
                                         ? <Button className="edit-button" onClick={this.clickEditButtonHandler}>Edit</Button>
 
@@ -160,10 +159,11 @@ class ReviewDetail extends Component {
                                     {this.props.me && this.state.author.id === this.props.me.id ? (
                                         <Button className="delete-button" onClick={this.clickDeleteButtonHandler}>Delete</Button>
                                     ) : null}
+                                    <Button className="paper-button" variant="secondary" href={`/paper_id=${this.state.paperId}`}>Paper</Button>
                                 </div>
                                 <Form className="new-reply">
                                     <Form.Label className="username">{this.state.user.username}</Form.Label>
-                                    <Form.Control className="reply-input" type="text" bsPrefix="reply-input" value={this.state.newReply} onChange={this.handleChange} />
+                                    <Form.Control className="reply-input" as="textarea" bsPrefix="reply-input" value={this.state.newReply} onChange={this.handleChange} />
                                     <Button className="new-reply-button" onClick={this.clickReplyAddButtonHandler} disabled={this.state.newReply.length === 0}>Add</Button>
                                 </Form>
                                 <div className="replies">

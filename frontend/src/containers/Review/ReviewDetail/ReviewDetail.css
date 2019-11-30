@@ -7,13 +7,15 @@
 }
 
 .review-detail .board .review-reply {
-    width: 100%;
-    margin-top: 5%;
-    margin-left: 5%;
-    margin-right: 10%;
+    width: 90%;
+    margin-top: 3%;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 5%;
     display: flex;
     justify-content: flex-start;
+    border-radius: 0.5em;
+    border-width: 0;
 }
 
 .review-detail .board .review-reply .head {

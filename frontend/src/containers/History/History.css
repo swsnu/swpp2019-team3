@@ -16,7 +16,7 @@
 }
 
 .item-list .paper-cards {
-    width: 80%;
+    width: 100%;
     height: 100%;
     margin: 15px;
     
@@ -43,7 +43,7 @@
 }
 
 .item-list .collection-cards {
-    width: 80%;
+    width: 100%;
     height: 100%;
     margin: 15px;
     
@@ -70,7 +70,7 @@
 }
 
 .item-list .review-cards {
-    width: 80%;
+    width: 100%;
     height: 100%;
     margin: 15px;
     

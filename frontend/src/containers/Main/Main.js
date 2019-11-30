@@ -25,9 +25,10 @@ class Main extends Component {
                   id={feed.id}
                   title={feed.title}
                   user={feed.user}
-                  replyCount={feed.replyCount}
-                  paperCount={feed.paperCount}
-                  likeCount={feed.likeCount}
+                  memberCount={feed.count.users}
+                  replyCount={feed.count.replies}
+                  paperCount={feed.count.papers}
+                  likeCount={feed.count.likes}
                 />
             );
         }
@@ -36,14 +37,14 @@ class Main extends Component {
                 <ReviewCard
                   source={feed.source}
                   paperId={feed.paperId}
-                  author={feed.author}
+                  author={feed.user.username}
                   key={feed.id}
                   id={feed.id}
                   title={feed.title}
                   user={feed.user}
                   date={feed.date}
-                  likeCount={feed.likeCount}
-                  replyCount={feed.replyCount}
+                  likeCount={feed.count.likes}
+                  replyCount={feed.count.replies}
                 />
             );
         }
@@ -58,8 +59,8 @@ class Main extends Component {
                   authors={feed.authors}
                   date={feed.date}
                   keywords={feed.keywords}
-                  likeCount={feed.likeCount}
-                  reviewCount={feed.reviewCount}
+                  likeCount={feed.count.likes}
+                  reviewCount={feed.count.reviews}
                   addButtonExists
                   history={this.props.history}
                 />

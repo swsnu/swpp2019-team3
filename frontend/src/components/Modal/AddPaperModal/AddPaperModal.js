@@ -185,13 +185,13 @@ class AddPaperModal extends Component {
                 >
                     <Modal.Header className="modal-header">
                         <div className="header-content">
-                            <div id="add-paper-to-my-collections">Add this Paper to My Collections</div>
+                            <div id="add-paper-to-my-collections">Add this Paper to Collections</div>
                             <div id="header-buttons">
                                 <Button
                                   className="add-button"
                                   onClick={this.clickAddButtonHandler}
                                   disabled={false}
-                                >Add
+                                >Update
                                 </Button>
                                 <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
                             </div>

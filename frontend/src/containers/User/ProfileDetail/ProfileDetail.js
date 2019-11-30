@@ -188,13 +188,13 @@ class ProfileDetail extends Component {
                     </div>
                     <div className="itemTabSection">
                         <Tabs defaultActiveKey="collectionTab" id="itemTabs">
-                            <Tab eventKey="collectionTab" title="Collections">
+                            <Tab eventKey="collectionTab" title={`Collection(${this.state.collections.length})`}>
                                 <div id="collectionCards">
                                     <div id="collectionCardsLeft">{collectionCardsLeft}</div>
                                     <div id="collectionCardsRight">{collectionCardsRight}</div>
                                 </div>
                             </Tab>
-                            <Tab eventKey="reviewTab" title="Reviews">
+                            <Tab eventKey="reviewTab" title={`Review(${this.state.reviews.length})`}>
                                 <div id="reviewCards">
                                     <div id="reviewCardsLeft">{reviewCardsLeft}</div>
                                     <div id="reviewCardsRight">{reviewCardsRight}</div>

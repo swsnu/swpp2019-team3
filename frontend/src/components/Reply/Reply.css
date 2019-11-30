@@ -2,6 +2,10 @@
     background: white;
 }
 
+.content {
+    white-space: pre-wrap;
+}
+
 .reply-component .reply{
     width: 100%;
     text-align: left;
@@ -20,7 +24,6 @@
     margin-top: 2%;
     display: flex;
     justify-content: flex-end;
-    
     margin-bottom: 1%;
 }
 
