@@ -7,7 +7,6 @@ from papersfeed import constants
 from papersfeed.models.users.user import User
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.reviews.review import Review
-# from papersfeed.models.collections.collection import Collection
 
 
 class SubscriptionTestCase(TestCase):
