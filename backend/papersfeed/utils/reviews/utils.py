@@ -331,7 +331,9 @@ def __pack_reviews(reviews, request_user):
             constants.COUNT: {
                 constants.LIKES: like_counts[review_id] if review_id in like_counts else 0,
                 constants.REPLIES: reply_counts[review_id] if review_id in reply_counts else 0
-            }
+            },
+            constants.CREATION_DATE: review.creation_date,
+            constants.MODIFICATION_DATE: review.modification_date
         }
 
         packed.append(packed_review)
