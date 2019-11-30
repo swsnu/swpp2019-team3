@@ -105,19 +105,18 @@ class SubscriptionTestCase(TestCase):
                         constants.ID: paper_id,
                     }),
                     content_type='application/json')
-        # User1 created collection1
-        client.post('/api/collection',
-                    json.dumps({
-                        constants.TITLE: 'SWPP Papers Test',
-                        constants.TEXT: 'papers for swpp 2019 class Test'
-                    }),
-                    content_type='application/json')
-
         # User1 Likes review1
         review_id = Review.objects.filter(title='review1').first().id
         client.post('/api/like/review',
                     data=json.dumps({
                         constants.ID: review_id,
+                    }),
+                    content_type='application/json')
+        # User1 created collection1
+        client.post('/api/collection',
+                    json.dumps({
+                        constants.TITLE: 'SWPP Papers Test',
+                        constants.TEXT: 'papers for swpp 2019 class Test'
                     }),
                     content_type='application/json')
 
@@ -144,9 +143,10 @@ class SubscriptionTestCase(TestCase):
         user1_id = User.objects.get(email='user1@snu.ac.kr').id
 
         subscriptions = json.loads(response.content)['subscriptions']
+        # more recent action comes first
+        created_collection = subscriptions[0]
+        likes_review = subscriptions[1]
         likes_paper = subscriptions[2]
-        created_collection = subscriptions[1]
-        likes_review = subscriptions[0]
         # test for likes_paper
         self.assertEqual(likes_paper['actor'], {
             constants.ID: user1_id,
