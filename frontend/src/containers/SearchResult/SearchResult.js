@@ -13,37 +13,76 @@ class SearchResult extends Component {
         super(props);
         this.state = {
             searchWord: "",
-            papers: null,
+            paperHeadMessage: "please wait...",
+            paperIds: [],
+            paperCardsLeft: [],
+            paperCardsRight: [],
+            paperCardsLeftPushed: false,
             collections: [],
             users: [],
             searchPaperStatus: paperStatus.WAITING,
         };
 
+        this.searchTrigger = this.searchTrigger.bind(this);
+        this.clickPaperMoreHandler = this.clickPaperMoreHandler.bind(this);
         this.paperCardsMaker = this.paperCardsMaker.bind(this);
+        this.paperCardsDistributor = this.paperCardsDistributor.bind(this);
         this.collectionCardsMaker = this.collectionCardsMaker.bind(this);
         this.userCardsMaker = this.userCardsMaker.bind(this);
     }
 
     componentDidMount() {
+        this.searchTrigger();
+    }
+
+    // when users search another keyword on SearchResult
+    /* eslint-disable react/no-did-update-set-state */
+    componentDidUpdate(prevProps) {
+        if (this.props.location !== prevProps.location) {
+            this.setState({
+                searchPaperStatus: paperStatus.WAITING,
+                paperHeadMessage: "please wait...",
+                paperIds: [],
+                paperCardsLeft: [],
+                paperCardsRight: [],
+                paperCardsLeftPushed: false,
+            });
+            this.searchTrigger();
+        }
+    }
+    /* eslint-enable react/no-did-update-set-state */
+
+    searchTrigger = () => {
         const searchWord = this.props.location.pathname.split("=")[1];
         this.setState({ searchWord });
         this.props.onSearchPaper({ text: searchWord })
             .then(() => {
-                this.setState({
-                    papers: {
-                        arxiv: this.props.searchedPapers.filter((x) => x.source === "arxiv"),
-                        crossref: this.props.searchedPapers.filter((x) => x.source === "crossref"),
-                    },
-                    searchPaperStatus: paperStatus.NONE,
-                });
+                // if searchWord is changed while waiting promise, don't update state
+                if (this.state.searchWord === searchWord) {
+                    this.setState({
+                        searchPaperStatus: paperStatus.NONE,
+                    });
+                    if (this.props.searchedPapers.length > 0) {
+                        this.setState({ paperHeadMessage: null });
+                    } else {
+                        this.setState({ paperHeadMessage: "no papers" });
+                    }
+                    this.paperCardsDistributor(this.props.searchedPapers);
+                }
             });
         this.props.onSearchCollection({ text: searchWord })
             .then(() => {
-                this.setState({ collections: this.props.searchedCollections });
+                // if searchWord is changed while waiting promise, don't update state
+                if (this.state.searchWord === searchWord) {
+                    this.setState({ collections: this.props.searchedCollections });
+                }
             });
         this.props.onSearchUser({ text: searchWord })
             .then(() => {
-                this.setState({ users: this.props.searchedUsers });
+                // if searchWord is changed while waiting promise, don't update state
+                if (this.state.searchWord === searchWord) {
+                    this.setState({ users: this.props.searchedUsers });
+                }
             });
     }
 
@@ -54,11 +93,10 @@ class SearchResult extends Component {
             page_number: this.props.paperPageNum + 1,
         })
             .then(() => {
-                const { papers } = this.state;
                 this.setState({
-                    papers: papers.concat(this.props.searchedPapers),
                     searchPaperStatus: paperStatus.NONE,
                 });
+                this.paperCardsDistributor(this.props.searchedPapers);
             });
     };
 
@@ -78,6 +116,59 @@ class SearchResult extends Component {
           history={this.props.history}
         />
     );
+
+    paperCardsDistributor = (searchedPapers) => {
+        const { paperIds } = this.state;
+        const { paperCardsLeft } = this.state;
+        const { paperCardsRight } = this.state;
+
+        const arxiv = searchedPapers.filter((x) => x.source === "arxiv"
+        && !paperIds.includes(x.id));
+        const crossref = searchedPapers.filter((x) => x.source === "crossref"
+        && !paperIds.includes(x.id));
+
+        let i = 0;
+        /* eslint-disable react/no-access-state-in-setstate */
+        let leftPushed = this.state.paperCardsLeftPushed;
+        /* eslint-enable react/no-access-state-in-setstate */
+
+        while (i < arxiv.length || i < crossref.length) {
+            if (i < arxiv.length && i < crossref.length) {
+                if (leftPushed) {
+                    paperCardsRight.push(arxiv[i]);
+                    paperCardsLeft.push(crossref[i]);
+                } else {
+                    paperCardsLeft.push(arxiv[i]);
+                    paperCardsRight.push(crossref[i]);
+                }
+                paperIds.push(arxiv[i].id);
+                paperIds.push(crossref[i].id);
+            } else if (i < arxiv.length) {
+                if (leftPushed) {
+                    paperCardsRight.push(arxiv[i]);
+                } else {
+                    paperCardsLeft.push(arxiv[i]);
+                }
+                paperIds.push(arxiv[i].id);
+                leftPushed = !leftPushed;
+            } else {
+                if (leftPushed) {
+                    paperCardsRight.push(crossref[i]);
+                } else {
+                    paperCardsLeft.push(crossref[i]);
+                }
+                paperIds.push(crossref[i].id);
+                leftPushed = !leftPushed;
+            }
+            i += 1;
+        }
+        this.setState({
+            paperIds,
+            paperCardsLeft,
+            paperCardsRight,
+            paperCardsLeftPushed: leftPushed,
+        });
+    }
 
     collectionCardsMaker = (collection) => (
         <CollectionCard
@@ -108,49 +199,20 @@ class SearchResult extends Component {
     )
 
     render() {
-        let paperCardsLeft = [];
-        let paperCardsRight = [];
+        const paperEmpty = this.state.paperCardsLeft.length === 0
+            && this.state.paperCardsRight.length === 0;
+        const paperCardsLeft = this.state.paperCardsLeft.map(
+            (paper) => this.paperCardsMaker(paper),
+        );
+        const paperCardsRight = this.state.paperCardsRight.map(
+            (paper) => this.paperCardsMaker(paper),
+        );
         let collectionCardsLeft = null;
         let collectionCardsRight = null;
         let userCardsLeft = null;
         let userCardsRight = null;
-        let paperMessage = "please wait...";
         let collectionMessage = "no collections";
         let userMessage = "no users";
-
-        if (this.state.searchPaperStatus === paperStatus.NONE) {
-            paperMessage = "no papers";
-        }
-
-        if (this.state.papers) {
-            let i = 0;
-            let leftPushed = false;
-            while (i < this.state.papers.arxiv.length || i < this.state.papers.crossref.length) {
-                if (i < this.state.papers.arxiv.length && i < this.state.papers.crossref.length) {
-                    paperCardsLeft.push(this.state.papers.arxiv[i]);
-                    paperCardsRight.push(this.state.papers.crossref[i]);
-                    leftPushed = false;
-                } else if (i < this.state.papers.arxiv.length) {
-                    if (leftPushed) {
-                        paperCardsRight.push(this.state.papers.arxiv[i]);
-                    } else {
-                        paperCardsLeft.push(this.state.papers.arxiv[i]);
-                    }
-                    leftPushed = !leftPushed;
-                } else {
-                    if (leftPushed) {
-                        paperCardsRight.push(this.state.papers.crossref[i]);
-                    } else {
-                        paperCardsLeft.push(this.state.papers.crossref[i]);
-                    }
-                    leftPushed = !leftPushed;
-                }
-                i += 1;
-            }
-            paperCardsLeft = paperCardsLeft.map((paper) => this.paperCardsMaker(paper));
-            paperCardsRight = paperCardsRight.map((paper) => this.paperCardsMaker(paper));
-            paperMessage = null;
-        }
 
         if (this.state.collections.length > 0) {
             collectionCardsLeft = this.state.collections
@@ -185,7 +247,7 @@ class SearchResult extends Component {
                 </Button>
             );
         } else if (this.state.searchPaperStatus === paperStatus.WAITING
-            && this.state.papers) {
+            && !paperEmpty) {
             paperMoreButton = (
                 <h3 id="paper-more-waiting-message">please wait...</h3>
             );
@@ -197,7 +259,7 @@ class SearchResult extends Component {
                     <Tabs defaultActiveKey="paper-tab" className="item-tabs">
                         <Tab className="paper-tab" eventKey="paper-tab" title={`Paper(${paperCardsLeft.length + paperCardsRight.length})`}>
                             <div id="paper-cards">
-                                <h3 id="paper-message">{paperMessage}</h3>
+                                <h3 id="paper-message">{this.state.paperHeadMessage}</h3>
                                 <div id="paper-cards-left">{paperCardsLeft}</div>
                                 <div id="paper-cards-right">{paperCardsRight}</div>
                             </div>

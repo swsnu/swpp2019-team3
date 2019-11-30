@@ -10,7 +10,6 @@ from pprint import pformat
 import requests
 import xmltodict
 from django.db.models import Q, Exists, OuterRef, Count, Case, When
-from celery import shared_task
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
@@ -196,7 +195,7 @@ def __exploit_arxiv(search_word, page_number):
             logging.warning("[arXiv API] error code %d", response.status_code)
     except requests.exceptions.RequestException as exception:
         logging.warning(exception)
-    return [], False
+    return [], True
 
 
 def __exploit_crossref(search_word, page_number):
@@ -221,7 +220,7 @@ def __exploit_crossref(search_word, page_number):
             logging.warning("[Crossref API] error code %d", response.status_code)
     except requests.exceptions.RequestException as exception:
         logging.warning(exception)
-    return [], False
+    return [], True
 
 
 # pylint: disable=too-many-locals
