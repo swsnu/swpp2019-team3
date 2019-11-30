@@ -351,26 +351,7 @@ class PaperTestCase(TestCase):
             )
         ]
 
-        stub_json = json.loads(open("papersfeed/tests/papers/stub_key_phrases.json", 'r').read())
-        # just for getting a clue about the id of paper which will be added in this test
-        Paper.objects.create(
-            title="test",
-            language="English",
-            abstract="AI",
-            ISSN="1",
-            eISSN="1",
-            DOI="1",
-            creation_date="2019-11-13",
-            modification_date="2019-11-13"
-        )
-        paper_id = Paper.objects.filter(title='test').first().id
-        # manipulate the id of static stub_key_phrases
-        stub_json['documents'][0]['id'] = str(paper_id + 1)
-
-        mock_post.return_value = MockResponse(
-            json_data=stub_json,
-            status_code=200
-        )
+        mock_post.return_value = make_stub_keyphrases_response("papersfeed/tests/papers/stub_key_phrases.json", 200)
 
         # Search with Keyword 'blahblah' (first, send requests to arXiv)
         response = client.get('/api/paper/search',
@@ -409,27 +390,7 @@ class PaperTestCase(TestCase):
         )
 
         # NOTE: for now, actually this API is not called
-        # because the same paper is already saved in DB on 'test_paper_search_arxiv'
-        stub_json = json.loads(open("papersfeed/tests/papers/stub_key_phrases.json", 'r').read())
-        # just for getting a clue about the id of paper which will be added in this test
-        Paper.objects.create(
-            title="test",
-            language="English",
-            abstract="AI",
-            ISSN="1",
-            eISSN="1",
-            DOI="1",
-            creation_date="2019-11-13",
-            modification_date="2019-11-13"
-        )
-        paper_id = Paper.objects.filter(title='test').first().id
-        # manipulate the id of static stub_key_phrases
-        stub_json['documents'][0]['id'] = str(paper_id + 1)
-
-        mock_post.return_value = MockResponse(
-            json_data=stub_json,
-            status_code=200
-        )
+        mock_post.return_value = make_stub_keyphrases_response("papersfeed/tests/papers/stub_key_phrases.json", 200)
 
         # Search with Keyword 'afdaf' which doesn't exist in DB (send requests to arXiv)
         response = client.get('/api/paper/search/ml',
@@ -451,3 +412,19 @@ class MockResponse:
     def json(self):
         """json()"""
         return self.json_data
+
+def make_stub_keyphrases_response(json_file, status_code):
+    """Make Stub Text Analytics API Response"""
+    stub_json = json.loads(open(json_file, 'r').read())
+
+    # just for getting a clue about the id of paper which will be added in this test
+    Paper.objects.create(
+        title="unused_paper",
+        language="unused_paper",
+        abstract="unused_paper",
+    )
+    paper_id = Paper.objects.filter(title='unused_paper').first().id
+    # manipulate the id of static stub_key_phrases
+    stub_json['documents'][0]['id'] = str(paper_id + 1)
+
+    return MockResponse(json_data=stub_json, status_code=status_code)
