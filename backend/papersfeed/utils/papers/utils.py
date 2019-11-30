@@ -6,7 +6,7 @@ import time
 import urllib
 import json
 import logging
-from pprint import pprint
+from pprint import pformat
 import requests
 import xmltodict
 from django.db.models import Q, Exists, OuterRef, Count, Case, When
@@ -30,6 +30,7 @@ from papersfeed.models.collections.collection_paper import CollectionPaper
 logging.getLogger().setLevel(logging.INFO)
 
 SEARCH_COUNT = 20 # pagination count for searching papers
+TIMEOUT = 2
 
 MAX_REQ_SIZE = 500000 # maxCharactersPerRequest of Text Analytics API is 524288
 MAX_DOC_SIZE = 5120 # size limit of one document is 5120 (request consists of multiple documents)
@@ -168,7 +169,7 @@ def select_paper_search(args):
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(result_ids)])
 
     # Papers - Sometimes, there can be duplicated ids in result_ids. Thus, len(papers) < len(result_ids) is possible.
-    papers, _, is_finished = __get_papers_search(result_ids, request_user, external, is_finished, order_by=preserved)
+    papers, _, is_finished = __get_papers_search(result_ids, request_user, paper_ids, external, is_finished, preserved)
     return papers, page_number, is_finished
 
 
@@ -181,7 +182,7 @@ def __exploit_arxiv(search_word, page_number):
         query = "?search_query=" + urllib.parse.quote(search_word) \
             + "&start=" + str(start) + "&max_results=" + str(SEARCH_COUNT)
         start_time = time.time()
-        response = requests.get(arxiv_url + query)
+        response = requests.get(arxiv_url + query, timeout=TIMEOUT)
         logging.info("[arXiv API] response latency: %s", time.time() - start_time)
 
         if response.status_code == 200:
@@ -207,12 +208,12 @@ def __exploit_crossref(search_word, page_number):
         query = "?query=" + urllib.parse.quote(search_word) \
             + "&rows=" + str(SEARCH_COUNT) + "&offset=" + str(start)
         start_time = time.time()
-        response = requests.get(crossref_url + query)
+        response = requests.get(crossref_url + query, timeout=TIMEOUT)
         logging.info("[Crossref API] response latency: %s", time.time() - start_time)
 
         if response.status_code == 200:
             response_json = response.json()
-            if 'message' in response_json and 'items' in response_json['message']:
+            if 'items' in response_json['message'] and response_json['message']['items']:
                 return __parse_and_save_crossref_info(response_json['message']) # paper_ids, is_finished
             else:
                 logging.warning("[Crossref API] items don't exist")
@@ -247,7 +248,7 @@ def select_paper_search_ml(args):
             # exploit arXiv
             try:
                 start = 0
-                print("[arXiv API - ml] searching ({}~{})".format(start, start + 1))
+                logging.info("[arXiv API - ml] searching (%d~%d)", start, start + 1)
                 arxiv_url = "http://export.arxiv.org/api/query"
                 query = "?search_query=" + urllib.parse.quote(title) \
                     + "&start=" + str(start) + "&max_results=" + str(1)
@@ -260,13 +261,13 @@ def select_paper_search_ml(args):
                         # this process includes extracting keywords from abstracts
                         paper_ids.append(__parse_and_save_arxiv_info(response_dict)[0])
                     else: # if 'entry' doesn't exist
-                        print("[arXiv API - ml] more entries don't exist")
+                        logging.warning("[arXiv API - ml] more entries don't exist")
                         paper_ids.append(-1)
                 else:
-                    print("[arXiv API - ml] error code {}".format(response.status_code))
+                    logging.warning("[arXiv API - ml] error code %d", response.status_code)
                     paper_ids.append(-1)
             except requests.exceptions.RequestException as exception:
-                print(exception)
+                logging.warning(exception)
                 paper_ids.append(-1)
 
         # if the paper exists in our DB
@@ -338,7 +339,7 @@ def __get_papers(filter_query, request_user, count, order_by='-pk'):
     return papers, pagination_value, is_finished
 
 
-def __get_papers_search(result_ids, request_user, external, is_finished, order_by='-pk'):
+def __get_papers_search(result_ids, request_user, source_to_id, external, is_finished, order_by='-pk'):
     """Get Papers By Query"""
     queryset = Paper.objects.filter(
         Q(id__in=result_ids)
@@ -355,12 +356,12 @@ def __get_papers_search(result_ids, request_user, external, is_finished, order_b
 
     pagination_value = papers[len(papers) - 1].id if papers else 0
 
-    papers = __pack_papers(papers, request_user)
+    papers = __pack_papers(papers, request_user, source_to_id=source_to_id)
 
     return papers, pagination_value, is_finished
 
 
-def __pack_papers(papers, request_user):  # pylint: disable=unused-argument
+def __pack_papers(papers, request_user, source_to_id=None):  # pylint: disable=unused-argument
     """Pack Papers"""
     packed = []
 
@@ -402,8 +403,13 @@ def __pack_papers(papers, request_user):  # pylint: disable=unused-argument
                 constants.REVIEWS: review_counts[paper_id] if paper_id in review_counts else 0,
                 constants.LIKES: like_counts[paper_id] if paper_id in like_counts else 0
             },
-            constants.SOURCE: paper.source
         }
+
+        if source_to_id:
+            for source, paper_ids in source_to_id.items():
+                if paper_id in paper_ids:
+                    packed_paper[constants.SOURCE] = source
+                    break
 
         packed.append(packed_paper)
 
@@ -798,7 +804,6 @@ def __parse_and_save_arxiv_info(feed):
             DOI=entry['arxiv:doi']['#text'][:40] if "arxiv:doi" in entry and "#text" in entry['arxiv:doi'] else "",
             file_url=entry['id'],
             download_url=download_url,
-            source="arxiv"
         )
         new_paper.save()
         paper_ids.append(new_paper.id)
@@ -827,7 +832,7 @@ def __parse_and_save_crossref_info(message):
 
     is_finished = len(message['items']) < SEARCH_COUNT
     for item in message['items']:
-        if 'title' not in item:
+        if 'title' not in item or 'author' not in item:
             continue
 
         # FIXME: Sometimes, results have 'subtitle'. Should we handle it?
@@ -865,7 +870,6 @@ def __parse_and_save_crossref_info(message):
             DOI=item['DOI'][:40] if 'DOI' in item else "",
             ISSN=item['ISSN'][0] if 'ISSN' in item else "",
             file_url=item['URL'] if 'URL' in item else "",
-            source="crossref"
         )
         new_paper.save()
         paper_ids.append(new_paper.id)
@@ -875,13 +879,12 @@ def __parse_and_save_crossref_info(message):
             abstracts[new_paper.id] = abstract
 
         # save information of the authors
-        if 'author' in item:
-            author_rank = 1
-            for author in item['author']:
-                first_name = author['given'] if 'given' in author else ""
-                last_name = author['family'] if 'family' in author else ""
-                __process_author(first_name, last_name, author_rank, new_paper.id)
-                author_rank += 1
+        author_rank = 1
+        for author in item['author']:
+            first_name = author['given'] if 'given' in author else ""
+            last_name = author['family'] if 'family' in author else ""
+            __process_author(first_name, last_name, author_rank, new_paper.id)
+            author_rank += 1
 
     __extract_keywords_from_abstract(abstracts)
 
@@ -939,8 +942,8 @@ def __process_key_phrases(key_phrases):
 
     # print errors if exist
     if key_phrases['errors']:
-        print("[Text Analytics API] there were errors")
-        pprint(key_phrases['errors'])
+        logging.warning("[Text Analytics API] there were errors")
+        logging.warning(pformat(key_phrases['errors']))
 
     # save information of mapping keyword to paper (abstract)
     if key_phrases['documents']:
