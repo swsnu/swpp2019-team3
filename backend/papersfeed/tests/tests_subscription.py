@@ -177,4 +177,4 @@ class SubscriptionTestCase(TestCase):
 
         # FIXME: Each of 'paper', 'collection', and 'review' is the result of
         # 'get_papers', 'get_collections' and 'get_reviews'.
-        # Please give a hand for make them be tested.
+        # Please give a hand for the problem.
