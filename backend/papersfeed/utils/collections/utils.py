@@ -222,7 +222,7 @@ def select_collection_like(args):
     request_user = args[constants.USER]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Collections Queryset
 

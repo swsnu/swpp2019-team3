@@ -11,6 +11,8 @@ const initialState = {
         status: reviewStatus.NONE,
         list: [],
         error: null,
+        pageNum: 0,
+        finished: true,
     },
     edit: {
         status: reviewStatus.NONE,
@@ -203,7 +205,9 @@ const ReviewReducer = (state = initialState, action) => {
             list: {
                 ...state.list,
                 status: reviewStatus.SUCCESS,
-                list: action.target,
+                list: action.target.reviews,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
             },
         };
     case reviewConstants.GET_REVIEW_LIKE_FAILURE:
@@ -213,6 +217,8 @@ const ReviewReducer = (state = initialState, action) => {
                 ...state.list,
                 status: reviewStatus.FAILURE,
                 error: action.target,
+                pageNum: 0,
+                finished: false,
             },
         };
     default:

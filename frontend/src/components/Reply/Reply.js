@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
-    Modal, FormControl, Button,
+    Modal, FormControl, Button, Nav,
 } from "react-bootstrap";
-
 import "./Reply.css";
 import SVG from "../svg";
 
@@ -18,6 +17,7 @@ class Reply extends Component {
             isLiked: false,
             likeCount: 0,
             isModalOpen: false,
+            date: "",
         };
         this.clickReplyEditButtonHandler = this.clickReplyEditButtonHandler.bind(this);
         this.clickReplyDeleteButtonHandler = this.clickReplyDeleteButtonHandler.bind(this);
@@ -33,6 +33,7 @@ class Reply extends Component {
         this.setState({
             isLiked: this.props.isLiked,
             likeCount: this.props.likeCount,
+            date: this.props.date.split("T")[0],
         });
     }
 
@@ -127,7 +128,10 @@ class Reply extends Component {
         return (
             <div className="reply-component">
                 <div className="reply">
-                    <div className="author">{this.props.author}</div>
+                    <div className="author">
+                        <Nav.Link to={`/profile_id=${this.props.authorId}`}>{this.props.author}</Nav.Link>
+                    </div>
+                    <div className="date">{this.state.date}</div>
                     <div className="content">{this.props.content}</div>
                     <div className="buttons">
                         <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickReplyUnlikeButtonHandler : this.clickReplyLikeButtonHandler}>
@@ -215,6 +219,7 @@ Reply.propTypes = {
     onEditReplyReview: PropTypes.func,
     onDeleteReplyCollection: PropTypes.func,
     onDeleteReplyReview: PropTypes.func,
+    date: PropTypes.string,
 };
 
 Reply.defaultProps = {
@@ -235,6 +240,7 @@ Reply.defaultProps = {
     onEditReplyReview: () => {},
     onDeleteReplyCollection: () => {},
     onDeleteReplyReview: () => {},
+    date: "",
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Reply);

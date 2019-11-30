@@ -8,7 +8,7 @@ import { paperActions, collectionActions, reviewActions } from "../../store/acti
 import {
     paperStatus, collectionStatus, reviewStatus,
 } from "../../constants/constants";
-import { getMockStore } from "../../test-utils/mocks";
+import { getMockStore, mockPromise, flushPromises } from "../../test-utils/mocks";
 
 
 const mockHistory = { push: jest.fn() };
@@ -17,8 +17,6 @@ const makeHistory = (initialState, props = {}) => (
         <History history={mockHistory} {...props} />
     </Provider>
 );
-
-const mockPromise = new Promise((resolve) => { resolve(); });
 
 describe("<History />", () => {
     let stubInitialState;
@@ -30,8 +28,12 @@ describe("<History />", () => {
     beforeEach(() => {
         stubInitialState = {
             paper: {
-                getPaperLikeStatus: paperStatus.NONE,
-                likedPaper: {},
+                getLikedPapers: {
+                    status: paperStatus.NONE,
+                    list: [],
+                    pageNum: 0,
+                    finished: true,
+                },
             },
             auth: {},
             collection: {
@@ -44,6 +46,8 @@ describe("<History />", () => {
                     status: collectionStatus.NONE,
                     list: [],
                     error: null,
+                    pageNum: 0,
+                    finished: true,
                 },
                 edit: {
                     status: collectionStatus.NONE,
@@ -85,6 +89,8 @@ describe("<History />", () => {
                     status: reviewStatus.NONE,
                     list: [],
                     error: null,
+                    pageNum: 0,
+                    finished: true,
                 },
                 edit: {
                     status: reviewStatus.NONE,
@@ -217,5 +223,59 @@ describe("<History />", () => {
         expect(component.find("ReviewCard").length).toBe(2);
         expect(wrapperLeft.children().length).toBe(1);
         expect(wrapperRight.children().length).toBe(1);
+    });
+
+    it("should show more if more-buttons clicked", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            paper: {
+                getLikedPapers: {
+                    status: paperStatus.NONE,
+                    list: [],
+                    pageNum: 1,
+                    finished: false,
+                },
+            },
+            collection: {
+                list: {
+                    status: collectionStatus.NONE,
+                    list: [],
+                    error: null,
+                    pageNum: 1,
+                    finished: false,
+                },
+            },
+            review: {
+                list: {
+                    status: reviewStatus.NONE,
+                    list: [],
+                    error: null,
+                    pageNum: 1,
+                    finished: false,
+                },
+            },
+        };
+        const component = mount(makeHistory(stubInitialState));
+
+        await flushPromises();
+        component.update();
+
+        let wrapper = component.find(".paper-more-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        await flushPromises();
+
+        wrapper = component.find(".review-more-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        await flushPromises();
+
+        wrapper = component.find(".collection-more-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        await flushPromises();
     });
 });
