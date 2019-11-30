@@ -144,7 +144,9 @@ class ReviewDetail extends Component {
                         <div className="head">REVIEW</div>
                         <Card.Body>
                             <div className="review">
-                                <Card.Text className="author">{this.state.author.username}</Card.Text>
+                                <div className="author">
+                                    <Card.Link href={`/profile_id=${this.state.author.id}`} className="text">{this.state.author.username}</Card.Link>
+                                </div>
                                 <Card.Title className="title">{this.state.thisReview.title}</Card.Title>
                                 <Card.Text className="content">{this.state.thisReview.text}</Card.Text>
                             </div>

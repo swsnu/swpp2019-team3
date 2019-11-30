@@ -293,9 +293,13 @@ export const searchCollection = (searchWord) => (dispatch) => axios.get("/api/co
 
 
 // Get Collection Like
-const getCollectionLikeSuccess = (collections) => ({
+const getCollectionLikeSuccess = (data) => ({
     type: collectionConstants.GET_COLLECTION_LIKE_SUCCESS,
-    target: collections.collections,
+    target: {
+        collections: data.collections,
+        pageNum: data.page_number,
+        finished: data.is_finished,
+    },
 });
 
 const getCollectionLikeFailure = (error) => ({
@@ -303,6 +307,6 @@ const getCollectionLikeFailure = (error) => ({
     target: error,
 });
 
-export const getCollectionLike = () => (dispatch) => axios.get("/api/collection/like")
+export const getCollectionLike = (pageNum) => (dispatch) => axios.get("/api/collection/like", { params: pageNum })
     .then((res) => dispatch(getCollectionLikeSuccess(res.data)))
     .catch((err) => dispatch(getCollectionLikeFailure(err)));

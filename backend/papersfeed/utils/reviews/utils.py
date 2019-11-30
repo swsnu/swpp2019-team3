@@ -240,7 +240,7 @@ def select_review_like(args):
     request_user = args[constants.USER]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Reviews Queryset
     queryset = ReviewLike.objects.filter(Q(user_id=request_user.id)).order_by(

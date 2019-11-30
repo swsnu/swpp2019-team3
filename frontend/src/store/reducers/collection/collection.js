@@ -12,6 +12,8 @@ const initialState = {
         status: collectionStatus.NONE,
         list: [],
         error: null,
+        pageNum: 0,
+        finished: true,
     },
     edit: {
         status: collectionStatus.NONE,
@@ -321,7 +323,9 @@ const reducer = (state = initialState, action) => {
             list: {
                 ...state.list,
                 status: collectionStatus.SUCCESS,
-                list: action.target,
+                list: action.target.collections,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
             },
         };
     case collectionConstants.GET_COLLECTION_LIKE_FAILURE:
@@ -331,6 +335,8 @@ const reducer = (state = initialState, action) => {
                 ...state.list,
                 status: collectionStatus.FAILURE,
                 error: action.target,
+                pageNum: 0,
+                finished: false,
             },
         };
     default:

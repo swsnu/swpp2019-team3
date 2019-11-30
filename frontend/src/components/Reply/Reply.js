@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
-    Modal, FormControl, Button,
+    Modal, FormControl, Button, Nav,
 } from "react-bootstrap";
-
 import "./Reply.css";
 import SVG from "../svg";
 
@@ -127,7 +126,9 @@ class Reply extends Component {
         return (
             <div className="reply-component">
                 <div className="reply">
-                    <div className="author">{this.props.author}</div>
+                    <div className="author">
+                        <Nav.Link to={`/profile_id=${this.props.authorId}`}>{this.props.author}</Nav.Link>
+                    </div>
                     <div className="content">{this.props.content}</div>
                     <div className="buttons">
                         <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickReplyUnlikeButtonHandler : this.clickReplyLikeButtonHandler}>

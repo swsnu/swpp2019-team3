@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Tabs, Tab } from "react-bootstrap";
+import { Tabs, Tab, Button } from "react-bootstrap";
 
 import { PaperCard, ReviewCard, CollectionCard } from "../../components";
 import { paperActions, reviewActions, collectionActions } from "../../store/actions";
@@ -26,24 +26,60 @@ class History extends Component {
         this.props.onGetPaperLike()
             .then(() => {
                 this.setState({
-                    papers: this.props.paperList,
+                    papers: this.props.paperList.list,
                 });
             }).catch(() => {});
 
         this.props.onGetReviewLike()
             .then(() => {
                 this.setState({
-                    reviews: this.props.reviewList,
+                    reviews: this.props.reviewList.list,
                 });
             }).catch(() => {});
 
         this.props.onGetCollectionLike()
             .then(() => {
                 this.setState({
-                    collections: this.props.collectionList,
+                    collections: this.props.collectionList.list,
                 });
             }).catch(() => {});
     }
+
+    clickPaperMoreHandler = () => {
+        this.props.onGetPaperLike({
+            page_number: this.props.paperList.pageNum + 1,
+        })
+            .then(() => {
+                const { papers } = this.state;
+                this.setState({
+                    papers: papers.concat(this.props.paperList.list),
+                });
+            });
+    };
+
+    clickCollectionMoreHandler = () => {
+        this.props.onGetCollectionLike({
+            page_number: this.props.collectionList.pageNum + 1,
+        })
+            .then(() => {
+                const { collections } = this.state;
+                this.setState({
+                    collections: collections.concat(this.props.collectionList.list),
+                });
+            });
+    };
+
+    clickReviewMoreHandler = () => {
+        this.props.onGetReviewLike({
+            page_number: this.props.reviewList.pageNum + 1,
+        })
+            .then(() => {
+                const { reviews } = this.state;
+                this.setState({
+                    reviews: reviews.concat(this.props.reviewList.list),
+                });
+            });
+    };
 
     paperCardMaker = (card) => (
         <PaperCard
@@ -65,6 +101,7 @@ class History extends Component {
         <ReviewCard
           key={card.id}
           author={card.user.username}
+          author_id={card.user.id}
           id={card.id}
           title={card.title}
           user={card.user.username}
@@ -102,7 +139,7 @@ class History extends Component {
         let reviewMessage = "no reviews you liked";
         let collectionMessage = "no collections you liked";
 
-        if (this.state.papers.length > 0) {
+        if (this.state.papers != null && this.state.papers.length > 0) {
             paperCardLeft = this.state.papers
                 .filter((x) => this.state.papers.indexOf(x) % 2 === 0)
                 .map((paper) => this.paperCardMaker(paper));
@@ -112,7 +149,7 @@ class History extends Component {
             paperMessage = null;
         }
 
-        if (this.state.reviews.length > 0) {
+        if (this.state.papers != null && this.state.reviews.length > 0) {
             reviewCardLeft = this.state.reviews
                 .filter((x) => this.state.reviews.indexOf(x) % 2 === 0)
                 .map((review) => this.reviewCardMaker(review));
@@ -122,7 +159,7 @@ class History extends Component {
             reviewMessage = null;
         }
 
-        if (this.state.collections.length > 0) {
+        if (this.state.papers != null && this.state.collections.length > 0) {
             collectionCardLeft = this.state.collections
                 .filter((x) => this.state.collections.indexOf(x) % 2 === 0)
                 .map((collection) => this.collectionCardMaker(collection));
@@ -131,7 +168,6 @@ class History extends Component {
                 .map((collection) => this.collectionCardMaker(collection));
             collectionMessage = null;
         }
-
         return (
             <div className="history">
                 <div className="item-list">
@@ -142,6 +178,17 @@ class History extends Component {
                                 <div className="paper-cards-left">{paperCardLeft}</div>
                                 <div className="paper-cards-right">{paperCardRight}</div>
                             </div>
+                            { this.props.paperList.finished ? null
+                                : (
+                                    <Button
+                                      className="paper-more-button"
+                                      onClick={this.clickPaperMoreHandler}
+                                      size="lg"
+                                      block
+                                    >
+                View More
+                                    </Button>
+                                )}
                         </Tab>
                         <Tab className="collection-tab" eventKey="collection-tab" title="Collection">
                             <div className="collection-cards">
@@ -149,6 +196,17 @@ class History extends Component {
                                 <div className="collection-cards-left">{collectionCardLeft}</div>
                                 <div className="collection-cards-right">{collectionCardRight}</div>
                             </div>
+                            {this.props.collectionList.finished ? null
+                                : (
+                                    <Button
+                                      className="collection-more-button"
+                                      onClick={this.clickCollectionMoreHandler}
+                                      size="lg"
+                                      block
+                                    >
+                View More
+                                    </Button>
+                                )}
                         </Tab>
                         <Tab className="review-tab" eventKey="review-tab" title="Review">
                             <div className="review-cards">
@@ -156,6 +214,17 @@ class History extends Component {
                                 <div className="review-cards-left">{reviewCardLeft}</div>
                                 <div className="review-cards-right">{reviewCardRight}</div>
                             </div>
+                            { this.props.reviewList.finished ? null
+                                : (
+                                    <Button
+                                      className="review-more-button"
+                                      onClick={this.clickReviewMoreHandler}
+                                      size="lg"
+                                      block
+                                    >
+                View More
+                                    </Button>
+                                ) }
                         </Tab>
                     </Tabs>
                 </div>
@@ -165,31 +234,31 @@ class History extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    reviewList: state.review.list.list,
-    paperList: state.paper.likedPapers,
-    collectionList: state.collection.list.list,
+    reviewList: state.review.list,
+    paperList: state.paper.getLikedPapers,
+    collectionList: state.collection.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onGetReviewLike: () => dispatch(reviewActions.getReviewLike()),
-    onGetPaperLike: () => dispatch(paperActions.getPaperLike()),
-    onGetCollectionLike: () => dispatch(collectionActions.getCollectionLike()),
+    onGetReviewLike: (pageNum) => dispatch(reviewActions.getReviewLike(pageNum)),
+    onGetPaperLike: (pageNum) => dispatch(paperActions.getPaperLike(pageNum)),
+    onGetCollectionLike: (pageNum) => dispatch(collectionActions.getCollectionLike(pageNum)),
 
 });
 
 History.propTypes = {
-    reviewList: PropTypes.arrayOf(PropTypes.any),
-    paperList: PropTypes.arrayOf(PropTypes.any),
-    collectionList: PropTypes.arrayOf(PropTypes.any),
+    reviewList: PropTypes.objectOf(PropTypes.any),
+    paperList: PropTypes.objectOf(PropTypes.any),
+    collectionList: PropTypes.objectOf(PropTypes.any),
     onGetReviewLike: PropTypes.func,
     onGetPaperLike: PropTypes.func,
     onGetCollectionLike: PropTypes.func,
 };
 
 History.defaultProps = {
-    reviewList: [],
-    paperList: [],
-    collectionList: [],
+    reviewList: {},
+    paperList: {},
+    collectionList: {},
     onGetReviewLike: () => {},
     onGetPaperLike: () => {},
     onGetCollectionLike: () => {},
