@@ -130,7 +130,8 @@ class ProfileDetail extends Component {
             >Unfollow
             </Button>
         );
-            // only one button will be displayed among "edit", "follow", and "unfollow" buttons
+
+        // only one button will be displayed among "edit", "follow", and "unfollow" buttons
         let buttonDisplayed;
         if (this.props.me && this.props.me.id === this.props.thisUser.id) {
             buttonDisplayed = settingButton;

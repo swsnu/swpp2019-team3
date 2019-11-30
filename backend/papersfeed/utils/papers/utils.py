@@ -1,9 +1,12 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
 
+import concurrent.futures
+import time
 import urllib
 import json
-from pprint import pprint
+import logging
+from pprint import pformat
 import requests
 import xmltodict
 from django.db.models import Q, Exists, OuterRef, Count, Case, When
@@ -24,6 +27,7 @@ from papersfeed.models.reviews.review import Review
 from papersfeed.models.collections.collection_paper import CollectionPaper
 
 SEARCH_COUNT = 20 # pagination count for searching papers
+TIMEOUT = 2
 
 MAX_REQ_SIZE = 500000 # maxCharactersPerRequest of Text Analytics API is 524288
 MAX_DOC_SIZE = 5120 # size limit of one document is 5120 (request consists of multiple documents)
@@ -99,41 +103,56 @@ def select_paper_search(args):
     # Page Number
     page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
-    paper_ids = []
-    # exploit arXiv
-    try:
-        start = SEARCH_COUNT * (page_number-1)
-        print("[arXiv API] searching ({}~{})".format(start, start+SEARCH_COUNT-1))
-        arxiv_url = "http://export.arxiv.org/api/query"
-        query = "?search_query=" + urllib.parse.quote(keyword) \
-            + "&start=" + str(start) + "&max_results=" + str(SEARCH_COUNT)
-        response = requests.get(arxiv_url + query)
+    paper_ids = {
+        'papersfeed': [], # only used when all external search fails
+        'arxiv': [],
+        'crossref': [],
+    }
+    is_finished_dict = {
+        'arxiv': False,
+        'crossref': False,
+    }
 
-        if response.status_code == 200:
-            response_xml = response.text
-            response_dict = xmltodict.parse(response_xml)['feed']
-            if 'entry' in response_dict and response_dict['entry']:
-                paper_ids = __parse_and_save_arxiv_info(response_dict)
-            else: # if 'entry' doesn't exist or it's the end of results
-                print("[arXiv API] entries don't exist")
-        else:
-            print("[arXiv API] error code {}".format(response.status_code))
-    except requests.exceptions.RequestException as exception:
-        print(exception)
+    future_to_source = {}
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        future_to_source[executor.submit(__exploit_arxiv, keyword, page_number)] = 'arxiv'
+        future_to_source[executor.submit(__exploit_crossref, keyword, page_number)] = 'crossref'
+        for future in concurrent.futures.as_completed(future_to_source):
+            source = future_to_source[future]
+            try:
+                paper_ids[source], is_finished_dict[source] = future.result()
+            except Exception as exc: # pylint: disable=broad-except
+                logging.warning("[%s] generated an exception: %s", source, exc)
 
-    # if cannot get any results from arXiv
-    if not paper_ids:
-        print("[naive-search] Searching in PapersFeed DB")
+    external = True
+    # if there are both results (len <= SEARCH_RESULT * 2)
+    if paper_ids['arxiv'] and paper_ids['crossref']:
+        result_ids = paper_ids['arxiv'] + paper_ids['crossref']
+        is_finished = is_finished_dict['arxiv'] and is_finished_dict['crossref']
+
+    # if only there are results of Crossref (len <= SEARCH_COUNT)
+    elif not paper_ids['arxiv'] and paper_ids['crossref']:
+        result_ids = paper_ids['crossref']
+        is_finished = is_finished_dict['crossref']
+
+    # if only there are results of arXiv (len <= SEARCH_COUNT)
+    elif not paper_ids['crossref'] and paper_ids['arxiv']:
+        result_ids = paper_ids['arxiv']
+        is_finished = is_finished_dict['arxiv']
+
+    # if cannot get any results from external sources
+    else:
+        external = False
+        logging.info("[naive-search] Searching in PapersFeed DB")
 
         # Papers Queryset
         queryset = Paper.objects.filter(Q(title__icontains=keyword) | Q(abstract__icontains=keyword)) \
             .values_list('id', 'abstract')
 
         # Check if the papers have keywords. If not, try extracting keywords this time
-        paper_ids = []
         abstracts = {}
         for paper_id, abstract in queryset:
-            paper_ids.append(paper_id)
+            paper_ids['papersfeed'].append(paper_id)
 
             if not PaperKeyword.objects.filter(paper_id=paper_id).exists():
                 abstracts[paper_id] = abstract
@@ -142,16 +161,64 @@ def select_paper_search(args):
             __extract_keywords_from_abstract(abstracts)
 
         # Paper Ids
-        paper_ids = get_results_from_queryset(paper_ids, SEARCH_COUNT, page_number)
+        result_ids = get_results_from_queryset(paper_ids['papersfeed'], SEARCH_COUNT, page_number)
+        # is_finished (tentative)
+        is_finished = False
 
-    # need to maintain the order
-    preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(paper_ids)])
-
-    # Papers
-    papers, _, is_finished = __get_papers(Q(id__in=paper_ids), request_user, SEARCH_COUNT, order_by=preserved)
-
+    # Papers - Sometimes, there can be duplicated ids in result_ids. Thus, len(papers) < len(result_ids) is possible.
+    papers, _, is_finished = __get_papers_search(result_ids, request_user, paper_ids, external, is_finished)
     return papers, page_number, is_finished
 # pylint: enable=too-many-locals
+
+
+def __exploit_arxiv(search_word, page_number):
+    """Exploit arXiv"""
+    try:
+        start = SEARCH_COUNT * (page_number-1)
+        logging.info("[arXiv API] searching (%d~%d)", start, start+SEARCH_COUNT-1)
+        arxiv_url = "http://export.arxiv.org/api/query"
+        query = "?search_query=" + urllib.parse.quote(search_word) \
+            + "&start=" + str(start) + "&max_results=" + str(SEARCH_COUNT)
+        start_time = time.time()
+        response = requests.get(arxiv_url + query, timeout=TIMEOUT)
+        logging.info("[arXiv API] response latency: %s", time.time() - start_time)
+
+        if response.status_code == 200:
+            response_xml = response.text
+            response_dict = xmltodict.parse(response_xml)['feed']
+            if 'entry' in response_dict and response_dict['entry']:
+                return __parse_and_save_arxiv_info(response_dict) # paper_ids, is_finished
+            # if 'entry' doesn't exist or it's the end of results
+            logging.warning("[arXiv API] entries don't exist")
+        else:
+            logging.warning("[arXiv API] error code %d", response.status_code)
+    except requests.exceptions.RequestException as exception:
+        logging.warning(exception)
+    return [], True
+
+
+def __exploit_crossref(search_word, page_number):
+    """Exploit Crossref"""
+    try:
+        start = SEARCH_COUNT * (page_number-1)
+        logging.info("[Crossref API] searching (%d~%d)", start, start+SEARCH_COUNT-1)
+        crossref_url = "http://api.crossref.org/works"
+        query = "?query=" + urllib.parse.quote(search_word) \
+            + "&rows=" + str(SEARCH_COUNT) + "&offset=" + str(start)
+        start_time = time.time()
+        response = requests.get(crossref_url + query, timeout=TIMEOUT)
+        logging.info("[Crossref API] response latency: %s", time.time() - start_time)
+
+        if response.status_code == 200:
+            response_json = response.json()
+            if 'items' in response_json['message'] and response_json['message']['items']:
+                return __parse_and_save_crossref_info(response_json['message']) # paper_ids, is_finished
+            logging.warning("[Crossref API] items don't exist")
+        else:
+            logging.warning("[Crossref API] error code %d", response.status_code)
+    except requests.exceptions.RequestException as exception:
+        logging.warning(exception)
+    return [], True
 
 
 # pylint: disable=too-many-locals
@@ -178,7 +245,7 @@ def select_paper_search_ml(args):
             # exploit arXiv
             try:
                 start = 0
-                print("[arXiv API - ml] searching ({}~{})".format(start, start + 1))
+                logging.info("[arXiv API - ml] searching (%d~%d)", start, start + 1)
                 arxiv_url = "http://export.arxiv.org/api/query"
                 query = "?search_query=" + urllib.parse.quote(title) \
                     + "&start=" + str(start) + "&max_results=" + str(1)
@@ -189,15 +256,15 @@ def select_paper_search_ml(args):
                     response_dict = xmltodict.parse(response_xml)['feed']
                     if 'entry' in response_dict and response_dict['entry']:
                         # this process includes extracting keywords from abstracts
-                        paper_ids.append(__parse_and_save_arxiv_info(response_dict)[0])
+                        paper_ids.append(__parse_and_save_arxiv_info(response_dict)[0][0])
                     else: # if 'entry' doesn't exist
-                        print("[arXiv API - ml] more entries don't exist")
+                        logging.warning("[arXiv API - ml] more entries don't exist")
                         paper_ids.append(-1)
                 else:
-                    print("[arXiv API - ml] error code {}".format(response.status_code))
+                    logging.warning("[arXiv API - ml] error code %d", response.status_code)
                     paper_ids.append(-1)
             except requests.exceptions.RequestException as exception:
-                print(exception)
+                logging.warning(exception)
                 paper_ids.append(-1)
 
         # if the paper exists in our DB
@@ -269,7 +336,32 @@ def __get_papers(filter_query, request_user, count, order_by='-pk'):
     return papers, pagination_value, is_finished
 
 
-def __pack_papers(papers, request_user):  # pylint: disable=unused-argument
+def __get_papers_search(result_ids, request_user, source_to_id, external, is_finished):
+    """Get Papers By Query"""
+    # need to maintain the order
+    preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(result_ids)])
+
+    queryset = Paper.objects.filter(
+        Q(id__in=result_ids)
+    ).annotate(
+        is_liked=__is_paper_liked('id', request_user)
+    ).order_by(preserved)
+
+    if external:
+        # if external, give all ready search results
+        papers = queryset
+    else:
+        papers = get_results_from_queryset(queryset, SEARCH_COUNT)
+        is_finished = len(papers) < SEARCH_COUNT if SEARCH_COUNT and papers else True
+
+    pagination_value = papers[len(papers) - 1].id if papers else 0
+
+    papers = __pack_papers(papers, request_user, source_to_id=source_to_id)
+
+    return papers, pagination_value, is_finished
+
+
+def __pack_papers(papers, request_user, source_to_id=None):  # pylint: disable=unused-argument
     """Pack Papers"""
     packed = []
 
@@ -310,8 +402,14 @@ def __pack_papers(papers, request_user):  # pylint: disable=unused-argument
             constants.COUNT: {
                 constants.REVIEWS: review_counts[paper_id] if paper_id in review_counts else 0,
                 constants.LIKES: like_counts[paper_id] if paper_id in like_counts else 0
-            }
+            },
         }
+
+        if source_to_id:
+            for source, paper_ids in source_to_id.items():
+                if paper_id in paper_ids:
+                    packed_paper[constants.SOURCE] = source
+                    break
 
         packed.append(packed_paper)
 
@@ -394,9 +492,11 @@ def __get_authors_paper(filter_query):
 
     return result
 
+
 def get_keywords_paper(filter_query):
     """get keywords paper"""
     return __get_keywords_paper(filter_query)
+
 
 def __get_keywords_paper(filter_query):
     """Get Keywords Of Paper"""
@@ -672,12 +772,13 @@ def __get_paper_review_count(paper_ids, group_by_field):
     return {review_paper[group_by_field]: review_paper['count'] for review_paper in review_papers}
 
 
+# pylint: disable=too-many-locals
 def __parse_and_save_arxiv_info(feed):
     paper_ids = []
-
     abstracts = {} # key: primary key of paper, value: abstract of the paper
 
     entries = feed['entry'] if isinstance(feed['entry'], list) else [feed['entry']]
+    is_finished = len(entries) < SEARCH_COUNT
     for entry in entries:
         # find papers with the title in DB
         dup_ids = Paper.objects.filter(title=entry['title']).values_list('id', flat=True)
@@ -703,7 +804,7 @@ def __parse_and_save_arxiv_info(feed):
             abstract=entry['summary'][:5000],
             DOI=entry['arxiv:doi']['#text'][:40] if "arxiv:doi" in entry and "#text" in entry['arxiv:doi'] else "",
             file_url=entry['id'],
-            download_url=download_url
+            download_url=download_url,
         )
         new_paper.save()
         paper_ids.append(new_paper.id)
@@ -715,20 +816,85 @@ def __parse_and_save_arxiv_info(feed):
         author_rank = 1
         authors = entry['author'] if isinstance(entry['author'], list) else [entry['author']]
         for author in authors:
-            __process_author(author, author_rank, new_paper.id)
+            first_last = author['name'].split(' ')
+            first_name = first_last[0].strip()
+            last_name = first_last[1].strip() if len(first_last) > 1 else ''
+            __process_author(first_name, last_name, author_rank, new_paper.id)
             author_rank += 1
 
     __extract_keywords_from_abstract(abstracts)
 
-    return paper_ids
+    return paper_ids, is_finished
+# pylint: enable=too-many-locals
 
 
-def __process_author(author, author_rank, new_paper_id):
+def __parse_and_save_crossref_info(message):
+    paper_ids = []
+    abstracts = {}
+
+    is_finished = len(message['items']) < SEARCH_COUNT
+    for item in message['items']:
+        if 'title' not in item or 'author' not in item:
+            continue
+
+        # NOTE: Sometimes, results have 'subtitle'. Should we handle it?
+        title = item['title'][0]
+
+        # find papers with the title in DB
+        dup_ids_abstracts = Paper.objects.filter(title=title).values_list('id', 'abstract')
+        if dup_ids_abstracts.count() > 0: # if duplicate papers exist
+            paper_id = dup_ids_abstracts[0][0]
+            abstract = dup_ids_abstracts[0][1]
+
+            paper_ids.append(paper_id) # just return the first id
+
+            # check it has keywords
+            keywords_exist = PaperKeyword.objects.filter(paper_id=paper_id).exists()
+            if not keywords_exist and abstract: # if not exist, try extracting keywords this time
+                abstracts[paper_id] = abstract # if it doesn't have abstract, move on
+            continue
+
+        # many times, abstract doesn't exist
+        abstract = ""
+        if 'abstract' in item:
+            abstract = item['abstract']
+            if abstract.startswith('<p>'):
+                abstract = abstract[3:]
+            if abstract.endswith('</p>'):
+                abstract = abstract[:-4]
+
+        # save information of the paper
+        # it seems that it always doesn't have download_url(which users can directly download)
+        new_paper = Paper(
+            title=title[:400],
+            language="english" if 'language' not in item or item['language'] == "en" else "",
+            abstract=abstract[:5000],
+            DOI=item['DOI'][:40] if 'DOI' in item else "",
+            ISSN=item['ISSN'][0] if 'ISSN' in item else "",
+            file_url=item['URL'] if 'URL' in item else "",
+        )
+        new_paper.save()
+        paper_ids.append(new_paper.id)
+
+        # save the abstract with key of paper for extracting keywords later
+        if abstract: # if it doesn't have abstract, move on
+            abstracts[new_paper.id] = abstract
+
+        # save information of the authors
+        author_rank = 1
+        for author in item['author']:
+            first_name = author['given'] if 'given' in author else ""
+            last_name = author['family'] if 'family' in author else ""
+            __process_author(first_name, last_name, author_rank, new_paper.id)
+            author_rank += 1
+
+    __extract_keywords_from_abstract(abstracts)
+
+    return paper_ids, is_finished
+
+
+def __process_author(first_name, last_name, author_rank, new_paper_id):
     """Create Author and PaperAuthor records"""
-    author_rank += 1
-    first_last = author['name'].split(' ')
-    first_name = first_last[0].strip()
-    last_name = first_last[1].strip() if len(first_last) > 1 else ''
     new_author = Author(
         first_name=first_name,
         last_name=last_name,
@@ -778,8 +944,8 @@ def __process_key_phrases(key_phrases):
 
     # print errors if exist
     if key_phrases['errors']:
-        print("[Text Analytics API] there were errors")
-        pprint(key_phrases['errors'])
+        logging.warning("[Text Analytics API] there were errors")
+        logging.warning(pformat(key_phrases['errors']))
 
     # save information of mapping keyword to paper (abstract)
     if key_phrases['documents']:

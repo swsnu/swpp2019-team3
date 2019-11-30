@@ -2,8 +2,10 @@
     that in https://docs.microsoft.com/ko-kr/azure/cognitive-services/text-analytics/quickstarts/text-analytics-sdk
 """
 import os
+import logging
 import argparse
 import requests
+
 
 def get_key_phrases(documents):
     """get key phrases using Azure Text Analytics API"""
@@ -22,10 +24,10 @@ def get_key_phrases(documents):
 
     headers = {"Ocp-Apim-Subscription-Key": subscription_key}
     response = requests.post(keyphrase_url, headers=headers, json=documents)
-    print("[Text Analytics API] a request for extracting keywords")
+    logging.info("[Text Analytics API] a request for extracting keywords")
 
     if response.status_code != 200:
-        print("[Text Analytics API] error code {}".format(response.status_code))
+        logging.warning("[Text Analytics API] error code %d", response.status_code)
         return None
 
     return response.json()
