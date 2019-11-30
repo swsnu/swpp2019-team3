@@ -19,9 +19,9 @@ def select_subscriptions(args):
     page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
 
     # get the list of users that this user is following
-    # pylint: disable=line-too-long
-    followings_queryset = UserFollow.objects.filter(following_user=request_user.id).values_list('followed_user', flat=True)
-    # pylint: enable=line-too-long
+    followings_queryset = UserFollow.objects.filter(
+        following_user=request_user.id).values_list('followed_user', flat=True)
+
     # Notification QuerySet
     subscription_queryset = Subscription.objects.filter(Q(actor__in=followings_queryset))
 

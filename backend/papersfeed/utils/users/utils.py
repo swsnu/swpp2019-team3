@@ -424,7 +424,9 @@ def insert_user_collection(args):
     request_user = args[constants.USER]
 
     # Check Collection Id
-    if not Collection.objects.filter(id=collection_id).exists():
+    try:
+        collection = Collection.objects.get(id=collection_id)
+    except ObjectDoesNotExist:
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     # Self Add
@@ -438,6 +440,14 @@ def insert_user_collection(args):
             user_id=user_id,
             type=COLLECTION_USER_TYPE[1], # member, not owner
         )
+
+    invited_users = User.objects.filter(Q(id__in=user_ids))
+    notify.send(
+        request_user,
+        recipient=invited_users,
+        verb='invited you to',
+        target=collection
+    )
 
     # Get the number of Members(including owner) Of Collections
     user_counts = __get_collection_user_count([collection_id], 'collection_id')
