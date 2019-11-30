@@ -338,7 +338,9 @@ def __pack_replies(replies, request_user):
             constants.USER: users[user_id] if user_id in users else {},
             constants.COUNT: {
                 constants.LIKES: like_counts[reply_id] if reply_id in like_counts else 0,
-            }
+            },
+            constants.CREATION_DATE: reply.creation_date,
+            constants.MODIFICATION_DATE: reply.modification_date
         }
 
         packed.append(packed_reply)

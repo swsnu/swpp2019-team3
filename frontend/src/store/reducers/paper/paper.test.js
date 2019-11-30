@@ -30,8 +30,12 @@ describe("Paper reducer", () => {
             unlikePaperStatus: paperStatus.NONE,
             unlikeCount: 0,
             selectedPaper: {},
-            getLikedPapersStatus: paperStatus.NONE,
-            likedPapers: [],
+            getLikedPapers: {
+                status: paperStatus.NONE,
+                list: [],
+                pageNum: 0,
+                finished: true,
+            },
         });
     });
 
@@ -107,7 +111,7 @@ describe("Paper reducer", () => {
             type: paperConstants.GET_PAPER_LIKE_SUCCESS,
             target: [],
         });
-        expect(newState.getLikedPapersStatus).toEqual(paperStatus.SUCCESS);
+        expect(newState.getLikedPapers.status).toEqual(paperStatus.SUCCESS);
     });
 
     it("should handle getPaperLike failure", () => {
@@ -115,6 +119,6 @@ describe("Paper reducer", () => {
             type: paperConstants.GET_PAPER_LIKE_FAILURE,
             target: stubError,
         });
-        expect(newState.getLikedPapersStatus).toEqual(paperStatus.FAILURE);
+        expect(newState.getLikedPapers.status).toEqual(paperStatus.FAILURE);
     });
 });

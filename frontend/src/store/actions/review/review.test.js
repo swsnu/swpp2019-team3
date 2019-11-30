@@ -510,9 +510,9 @@ describe("reviewActions", () => {
                 resolve(result);
             }));
 
-        mockStore.dispatch(reviewActions.getReviewLike())
+        mockStore.dispatch(reviewActions.getReviewLike({ page_number: 1 }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/review/like");
+                expect(spy).toHaveBeenCalledWith("/api/review/like", { params: { page_number: 1 } });
                 done();
             });
     });
@@ -529,9 +529,9 @@ describe("reviewActions", () => {
                 reject(error);
             }));
 
-        mockStore.dispatch(reviewActions.getReviewLike())
+        mockStore.dispatch(reviewActions.getReviewLike({ page_number: 1 }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/review/like");
+                expect(spy).toHaveBeenCalledWith("/api/review/like", { params: { page_number: 1 } });
                 done();
             });
     });

@@ -71,9 +71,9 @@ export const searchPaper = (searchWord) => (dispatch) => axios.get("/api/paper/s
     .catch((err) => dispatch(searchPaperFailure(err)));
 
 // Get Ppaer Like
-const getPaperLikeSuccess = (papers) => ({
+const getPaperLikeSuccess = (data) => ({
     type: paperConstants.GET_PAPER_LIKE_SUCCESS,
-    target: papers.papers,
+    target: { papers: data.papers, pageNum: data.page_number, finished: data.is_finished },
 });
 
 const getPaperLikeFailure = (error) => ({
@@ -81,6 +81,6 @@ const getPaperLikeFailure = (error) => ({
     target: error,
 });
 
-export const getPaperLike = () => (dispatch) => axios.get("/api/paper/like")
+export const getPaperLike = (pageNum) => (dispatch) => axios.get("/api/paper/like", { params: pageNum })
     .then((res) => dispatch(getPaperLikeSuccess(res.data)))
     .catch((err) => dispatch(getPaperLikeFailure(err)));

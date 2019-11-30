@@ -795,9 +795,9 @@ describe("collectionActions", () => {
                 resolve(result);
             }));
 
-        mockStore.dispatch(collectionActions.getCollectionLike())
+        mockStore.dispatch(collectionActions.getCollectionLike({ page_number: 1 }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/collection/like");
+                expect(spy).toHaveBeenCalledWith("/api/collection/like", { params: { page_number: 1 } });
                 done();
             });
     });
@@ -814,9 +814,9 @@ describe("collectionActions", () => {
                 reject(error);
             }));
 
-        mockStore.dispatch(collectionActions.getCollectionLike())
+        mockStore.dispatch(collectionActions.getCollectionLike({ page_number: 1 }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/collection/like");
+                expect(spy).toHaveBeenCalledWith("/api/collection/like", { params: { page_number: 1 } });
                 done();
             });
     });

@@ -14,8 +14,12 @@ const initialState = {
         pageNum: 0,
         finished: true,
     },
-    getLikedPapersStatus: paperStatus.NONE,
-    likedPapers: [],
+    getLikedPapers: {
+        status: paperStatus.NONE,
+        list: [],
+        pageNum: 0,
+        finished: true,
+    },
 };
 
 const reducer = (state = initialState, action) => {
@@ -57,9 +61,26 @@ const reducer = (state = initialState, action) => {
             },
         };
     case paperConstants.GET_PAPER_LIKE_SUCCESS:
-        return { ...state, getLikedPapersStatus: paperStatus.SUCCESS, likedPapers: action.target };
+        return {
+            ...state,
+            getLikedPapers: {
+                ...state.getLikedPapers,
+                status: paperStatus.SUCCESS,
+                list: action.target.papers,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
+            },
+        };
     case paperConstants.GET_PAPER_LIKE_FAILURE:
-        return { ...state, getLikedPapersStatus: paperStatus.FAILURE };
+        return {
+            ...state,
+            getLikedPapers: {
+                ...state.getLikedPapers,
+                status: paperStatus.FAILURE,
+                pageNum: 0,
+                finished: true,
+            },
+        };
     default:
         return { ...state };
     }

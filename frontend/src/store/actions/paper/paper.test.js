@@ -221,9 +221,9 @@ describe("paperActions", () => {
                 resolve(result);
             }));
 
-        mockStore.dispatch(paperActions.getPaperLike())
+        mockStore.dispatch(paperActions.getPaperLike({ page_number: 1 }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/paper/like");
+                expect(spy).toHaveBeenCalledWith("/api/paper/like", { params: { page_number: 1 } });
                 done();
             });
     });
@@ -240,9 +240,9 @@ describe("paperActions", () => {
                 reject(error);
             }));
 
-        mockStore.dispatch(paperActions.getPaperLike())
+        mockStore.dispatch(paperActions.getPaperLike({ page_number: 1 }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/paper/like");
+                expect(spy).toHaveBeenCalledWith("/api/paper/like", { params: { page_number: 1 } });
                 done();
             });
     });

@@ -51,7 +51,9 @@ class ReviewCard extends Component {
                             <Card.Link href={`/review_id=${this.props.id}`} className="text">{this.props.title}</Card.Link>
                         </div>
                         <Card.Text>{this.props.date}</Card.Text>
-                        <Card.Text>{this.props.author}</Card.Text>
+                        <div className="author">
+                            <Card.Link href={`/profile_id=${this.props.author_id}`} className="text">{this.props.author}</Card.Link>
+                        </div>
                     </Card.Body>
                     <Card.Footer className="footer">
                         <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickReviewCardUnlikeHandler : this.clickReviewCardLikeHandler}> <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
@@ -83,6 +85,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(ReviewCard);
 
 ReviewCard.propTypes = {
     author: PropTypes.string,
+    author_id: PropTypes.number,
     source: PropTypes.string,
     id: PropTypes.number,
     user: PropTypes.string,
@@ -100,6 +103,7 @@ ReviewCard.propTypes = {
 
 ReviewCard.defaultProps = {
     author: "",
+    author_id: 0,
     source: "",
     id: 0,
     user: "",

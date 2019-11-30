@@ -221,7 +221,7 @@ describe("Review reducer", () => {
     it("should return get_review_like", () => {
         const newState = ReviewReducer(stubInitialState, {
             type: reviewConstants.GET_REVIEW_LIKE_SUCCESS,
-            target: stubReview,
+            target: { reviews: stubReview },
         });
         expect(newState.list.status).toBe(reviewStatus.SUCCESS);
         expect(newState.list.list).toBe(stubReview);

@@ -156,6 +156,7 @@ class CollectionDetail extends Component {
               isLiked={reply.liked}
               onChange={this.handleReplies}
               userId={this.props.me.id}
+              date={reply.modification_date}
               type="collection"
             />
         ));
