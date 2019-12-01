@@ -30,10 +30,14 @@ class Reply extends Component {
     }
 
     componentDidMount() {
+        let date = "";
+        if (this.props.date.split("T")[0] != null && this.props.date.split("T")[1] != null) {
+            date = `${this.props.date.split("T")[0]} ${this.props.date.split("T")[1].substring(0, 5)}`;
+        }
         this.setState({
             isLiked: this.props.isLiked,
             likeCount: this.props.likeCount,
-            date: `${this.props.date.split("T")[0]} ${this.props.date.split("T")[1].substring(0, 5)}`,
+            date,
         });
     }
 
