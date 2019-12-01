@@ -26,9 +26,9 @@ def select_notifications(args):
 
     notifications = get_results_from_queryset(queryset, 10, page_number)
 
-    notifications = __pack_notifications(notifications)
+    is_finished = not notifications.has_next()
 
-    is_finished = len(notifications) < 10
+    notifications = __pack_notifications(notifications)
 
     return notifications, page_number, is_finished
 

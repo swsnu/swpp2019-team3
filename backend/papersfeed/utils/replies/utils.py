@@ -42,9 +42,12 @@ def select_reply_collection(args):
     # Replies
     collection_replies = get_results_from_queryset(queryset, 10, page_number)
 
+    # is_finished
+    is_finished = not collection_replies.has_next()
+
     reply_ids = [collection_reply.reply_id for collection_reply in collection_replies]
 
-    replies, _, is_finished = __get_replies(Q(id__in=reply_ids), request_user, 10)
+    replies, _ = __get_replies(Q(id__in=reply_ids), request_user, 10)
 
     return replies, page_number, is_finished
 
@@ -71,9 +74,12 @@ def select_reply_review(args):
     # Replies
     review_replies = get_results_from_queryset(queryset, 10, page_number)
 
+    # is_finished
+    is_finished = not review_replies.has_next()
+
     reply_ids = [review_reply.reply_id for review_reply in review_replies]
 
-    replies, _, is_finished = __get_replies(Q(id__in=reply_ids), request_user, 10)
+    replies, _ = __get_replies(Q(id__in=reply_ids), request_user, 10)
 
     return replies, page_number, is_finished
 
@@ -129,7 +135,7 @@ def insert_reply_collection(args):
         target=collection
     )
 
-    replies, _, _ = __get_replies(Q(id=reply.id), request_user, None)
+    replies, _ = __get_replies(Q(id=reply.id), request_user, None)
 
     if not replies:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -184,7 +190,7 @@ def insert_reply_review(args):
         target=review
     )
 
-    replies, _, _ = __get_replies(Q(id=reply.id), request_user, None)
+    replies, _ = __get_replies(Q(id=reply.id), request_user, None)
 
     if not replies:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -223,7 +229,7 @@ def update_reply(args):
 
     reply.save()
 
-    replies, _, _ = __get_replies(Q(id=reply.id), request_user, None)
+    replies, _ = __get_replies(Q(id=reply.id), request_user, None)
 
     if not replies:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -267,11 +273,9 @@ def __get_replies(filter_query, request_user, count):
 
     pagination_value = replies[len(replies) - 1].id if replies else 0
 
-    is_finished = len(replies) < count if count and pagination_value != 0 else True
-
     replies = __pack_replies(replies, request_user)
 
-    return replies, pagination_value, is_finished
+    return replies, pagination_value
 
 
 # pylint: disable-msg=too-many-locals
@@ -285,7 +289,7 @@ def __pack_replies(replies, request_user):
 
     # Users
     user_ids = [reply.user_id for reply in replies]
-    users, _, _ = users_utils.get_users(Q(id__in=user_ids), request_user, None)
+    users, _ = users_utils.get_users(Q(id__in=user_ids), request_user, None)
 
     # {user_id: user}
     users = {user[constants.ID]: user for user in users}
@@ -295,7 +299,7 @@ def __pack_replies(replies, request_user):
         reply_id__in=reply_ids
     )
     collection_ids = [reply.collection_id for reply in collection_replies]
-    collections, _, _ = collections_utils.get_collections(Q(id__in=collection_ids), request_user, None)
+    collections, _ = collections_utils.get_collections(Q(id__in=collection_ids), request_user, None)
 
     # {collection_id: collection}
     collections = {collection[constants.ID]: collection for collection in collections}
@@ -305,7 +309,7 @@ def __pack_replies(replies, request_user):
         reply_id__in=reply_ids
     )
     review_ids = [reply.review_id for reply in review_replies]
-    reviews, _, _ = reviews_utils.get_reviews(Q(id__in=review_ids), request_user, None)
+    reviews, _ = reviews_utils.get_reviews(Q(id__in=review_ids), request_user, None)
     # {review_id: review}
     reviews = {review[constants.ID]: review for review in reviews}
 

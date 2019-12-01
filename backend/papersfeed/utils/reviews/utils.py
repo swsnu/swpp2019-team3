@@ -28,7 +28,7 @@ def select_review(args):
     request_user = args[constants.USER]
 
     # Reviews
-    reviews, _, _ = __get_reviews(Q(id=review_id), request_user, None)
+    reviews, _ = __get_reviews(Q(id=review_id), request_user, None)
 
     # Not Exists
     if not reviews:
@@ -90,7 +90,7 @@ def insert_review(args):
             count=1,
         )
 
-    reviews, _, _ = __get_reviews(Q(id=review.id), request_user, None)
+    reviews, _ = __get_reviews(Q(id=review.id), request_user, None)
 
     if not reviews:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -137,7 +137,7 @@ def update_review(args):
 
     review.save()
 
-    reviews, _, _ = __get_reviews(Q(id=review.id), request_user, None)
+    reviews, _ = __get_reviews(Q(id=review.id), request_user, None)
 
     if not reviews:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -202,7 +202,10 @@ def select_review_paper(args):
     # Review Ids
     review_ids = get_results_from_queryset(queryset, 10, page_number)
 
-    reviews, _, is_finished = __get_reviews(Q(id__in=review_ids), request_user, 10)
+    # is_finished
+    is_finished = not review_ids.has_next()
+
+    reviews, _ = __get_reviews(Q(id__in=review_ids), request_user, 10)
 
     return reviews, page_number, is_finished
 
@@ -228,7 +231,10 @@ def select_review_user(args):
     # Review Ids
     review_ids = get_results_from_queryset(queryset, 10, page_number)
 
-    reviews, _, is_finished = __get_reviews(Q(id__in=review_ids), request_user, 10)
+    # is_finished
+    is_finished = not review_ids.has_next()
+
+    reviews, _ = __get_reviews(Q(id__in=review_ids), request_user, 10)
 
     return reviews, page_number, is_finished
 
@@ -249,11 +255,14 @@ def select_review_like(args):
     # Review Ids
     review_ids = get_results_from_queryset(queryset, 10, page_number)
 
+    # is_finished
+    is_finished = not review_ids.has_next()
+
     # need to maintain the order
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(review_ids)])
 
     # Reviews
-    reviews, _, is_finished = __get_reviews(Q(id__in=review_ids), request_user, 10, preserved)
+    reviews, _ = __get_reviews(Q(id__in=review_ids), request_user, 10, preserved)
 
     return reviews, page_number, is_finished
 
@@ -275,11 +284,9 @@ def __get_reviews(filter_query, request_user, count, order_by='-pk'):
 
     pagination_value = reviews[len(reviews) - 1].id if reviews else 0
 
-    is_finished = len(reviews) < count if count and pagination_value != 0 else True
-
     reviews = __pack_reviews(reviews, request_user)
 
-    return reviews, pagination_value, is_finished
+    return reviews, pagination_value
 
 
 # pylint: disable-msg=too-many-locals
@@ -293,14 +300,14 @@ def __pack_reviews(reviews, request_user):
 
     # Users
     user_ids = [review.user_id for review in reviews]
-    users, _, _ = users_utils.get_users(Q(id__in=user_ids), request_user, None)
+    users, _ = users_utils.get_users(Q(id__in=user_ids), request_user, None)
 
     # {user_id: user}
     users = {user[constants.ID]: user for user in users}
 
     # Papers
     paper_ids = [review.paper_id for review in reviews]
-    papers, _, _ = papers_utils.get_papers(Q(id__in=paper_ids), request_user, None)
+    papers, _ = papers_utils.get_papers(Q(id__in=paper_ids), request_user, None)
 
     # {paper_id: paper}
     papers = {paper[constants.ID]: paper for paper in papers}

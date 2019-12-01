@@ -42,7 +42,7 @@ def select_paper(args):
     paper_id = args[constants.ID]
 
     # Papers
-    papers, _, _ = __get_papers(Q(id=paper_id), request_user, None)
+    papers, _ = __get_papers(Q(id=paper_id), request_user, None)
 
     # Does Not Exist
     if not papers:
@@ -76,9 +76,12 @@ def select_paper_collection(args):
     # Papers
     collection_papers = get_results_from_queryset(queryset, 10, page_number)
 
+    # is_finished
+    is_finished = not collection_papers.has_next()
+
     paper_ids = [collection_paper.paper_id for collection_paper in collection_papers]
 
-    papers, _, is_finished = __get_papers(Q(id__in=paper_ids), request_user, 10)
+    papers, _ = __get_papers(Q(id__in=paper_ids), request_user, 10)
 
     return papers, page_number, is_finished
 
@@ -100,6 +103,10 @@ def select_paper_search(args):
     page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     paper_ids = []
+
+    # is_finished
+    is_finished = False
+
     # exploit arXiv
     try:
         start = SEARCH_COUNT * (page_number-1)
@@ -144,11 +151,14 @@ def select_paper_search(args):
         # Paper Ids
         paper_ids = get_results_from_queryset(paper_ids, SEARCH_COUNT, page_number)
 
+        # is_finished
+        is_finished = not paper_ids.has_next()
+
     # need to maintain the order
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(paper_ids)])
 
     # Papers
-    papers, _, is_finished = __get_papers(Q(id__in=paper_ids), request_user, SEARCH_COUNT, order_by=preserved)
+    papers, _ = __get_papers(Q(id__in=paper_ids), request_user, SEARCH_COUNT, order_by=preserved)
 
     return papers, page_number, is_finished
 # pylint: enable=too-many-locals
@@ -237,11 +247,15 @@ def select_paper_like(args):
     # Paper Ids
     paper_ids = get_results_from_queryset(queryset, 10, page_number)
 
+    # is_finished
+    is_finished = not paper_ids.has_next()
+
     # need to maintain the order
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(paper_ids)])
 
     # Papers
-    papers, _, is_finished = __get_papers(Q(id__in=paper_ids), request_user, 10, preserved)
+    papers, _ = __get_papers(Q(id__in=paper_ids), request_user, 10, preserved)
+
     return papers, page_number, is_finished
 
 
@@ -262,11 +276,9 @@ def __get_papers(filter_query, request_user, count, order_by='-pk'):
 
     pagination_value = papers[len(papers) - 1].id if papers else 0
 
-    is_finished = len(papers) < count if count and pagination_value != 0 else True
-
     papers = __pack_papers(papers, request_user)
 
-    return papers, pagination_value, is_finished
+    return papers, pagination_value
 
 
 def __pack_papers(papers, request_user):  # pylint: disable=unused-argument

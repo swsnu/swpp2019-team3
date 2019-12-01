@@ -366,7 +366,6 @@ class PaperTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         # there was one result from arXiv, so our search API's response should have one paper result, too
         self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
-        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
         self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         """Search Paper for ML(dummy data)""" # pylint: disable=pointless-string-statement

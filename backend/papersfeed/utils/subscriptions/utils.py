@@ -26,8 +26,11 @@ def select_subscriptions(args):
     subscription_queryset = Subscription.objects.filter(Q(actor__in=followings_queryset))
 
     subscriptions = get_results_from_queryset(subscription_queryset, 20, page_number)
+
+    # is_finished
+    is_finished = not subscriptions.has_next()
+
     subscriptions = __pack_subscriptions(subscriptions, request_user)
-    is_finished = len(subscriptions) < 20
 
     return subscriptions, page_number, is_finished
 
