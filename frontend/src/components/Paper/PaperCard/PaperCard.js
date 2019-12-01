@@ -81,7 +81,9 @@ class PaperCard extends Component {
     render() {
         let header = null;
         if (this.props.headerExists) {
-            header = <Card.Header>{`${this.props.user} ${this.props.source} this paper.`}</Card.Header>;
+            if (this.props.paperSource) {
+                header = <Card.Header>{`from ${this.props.paperSource}`}</Card.Header>;
+            }
         }
         let addButton = null;
         if (this.props.addButtonExists) {
@@ -135,9 +137,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(PaperCard);
 
 PaperCard.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
-    source: PropTypes.string,
     id: PropTypes.number,
-    user: PropTypes.string,
     title: PropTypes.string,
     date: PropTypes.string,
     authors: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
@@ -145,6 +145,7 @@ PaperCard.propTypes = {
     likeCount: PropTypes.number,
     reviewCount: PropTypes.number,
     isLiked: PropTypes.bool,
+    paperSource: PropTypes.string,
     headerExists: PropTypes.bool,
     addButtonExists: PropTypes.bool,
     afterLikeCount: PropTypes.number,
@@ -155,9 +156,7 @@ PaperCard.propTypes = {
 
 PaperCard.defaultProps = {
     history: null,
-    source: "",
     id: 0,
-    user: "",
     title: "",
     date: "",
     authors: [],
@@ -165,6 +164,7 @@ PaperCard.defaultProps = {
     likeCount: 0,
     reviewCount: 0,
     isLiked: false,
+    paperSource: "",
     headerExists: true,
     addButtonExists: false,
     afterLikeCount: 0,
