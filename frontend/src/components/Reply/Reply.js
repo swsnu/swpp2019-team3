@@ -33,7 +33,7 @@ class Reply extends Component {
         this.setState({
             isLiked: this.props.isLiked,
             likeCount: this.props.likeCount,
-            date: this.props.date.split("T")[0],
+            date: `${this.props.date.split("T")[0]} ${this.props.date.split("T")[1].substring(0, 5)}`,
         });
     }
 

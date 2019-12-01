@@ -89,16 +89,16 @@ class RecommnedationTestCase(TestCase):
         response = client.get('/api/user/action')
 
         self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content, {"actions": [
-            {"UserId": user_id, "ItemId": paper_id, "Keywords": [],
-             "Abstract": "abstract1", "Type": "make_review", "Count": 1},
-            {"UserId": user_id, "ItemId": paper_id, "Keywords": [],
-             "Abstract": "abstract1", "Type": "like_paper", "Count": 1},
-            {"UserId": user_id, "ItemId": paper_id, "Keywords": [],
-             "Abstract": "abstract1", "Type": "add_to_collection", "Count": 1}
-            ]})
+        self.assertListEqual([
+            {"UserId": user_id, "ItemId": paper_id, "Type": "make_review", "Count": 1},
+            {"UserId": user_id, "ItemId": paper_id, "Type": "like_paper", "Count": 1},
+            {"UserId": user_id, "ItemId": paper_id, "Type": "add_to_collection", "Count": 1}
+            ], json.loads(response.content)["actions"])
+        self.assertListEqual([{'UserId': user_id}], json.loads(response.content)["users"])
+        self.assertDictEqual({'ItemId': paper_id, 'Keywords': [], 'Abstract': 'abstract1'},
+                             json.loads(response.content)["papers"][0])
 
-    def post_user_recommendation(self):
+    def test_post_user_recommendation(self):
         """Post user recommendation"""
 
         client = Client()
@@ -111,10 +111,74 @@ class RecommnedationTestCase(TestCase):
                    },
                    content_type='application/json')
 
+        paper_id = Paper.objects.filter(title='paper1').first().id
+        user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+
         response = client.post('/api/user/recommendation',
                                json.dumps(
-                                   {"data": [{"user": 1, "papers": [1, 2, 3]}]}
+                                   {"data": [{"user": user_id, "papers": [paper_id]}]}
                                ),
                                content_type='application/json')
 
         self.assertEqual(response.status_code, 201)
+
+    def test_get_paper_all(self):
+        """Get Paper All"""
+
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        response = client.get('/api/paper/all')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_user_all(self):
+        """Get User All"""
+
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        response = client.get('/api/user/all')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_recommendation(self):
+        "Get Recommnedation"
+
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        paper_id = Paper.objects.filter(title='paper1').first().id
+        user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+
+        response = client.post('/api/user/recommendation',
+                               json.dumps(
+                                   {"data": [{"user": user_id, "papers": [paper_id]}]}
+                               ),
+                               content_type='application/json')
+        self.assertEqual(response.status_code, 201)
+
+        response = client.get('/api/recommendation')
+
+        self.assertEqual(response.status_code, 200)
