@@ -1,0 +1,16 @@
+{
+    "status": "ok",
+    "message-type": "work-list",
+    "message-version": "1.0.0",
+    "message": {
+        "facets": {},
+        "total-results": 7210300,
+        "items": [
+        ],
+        "items-per-page": 1,
+        "query": {
+            "start-index": 0,
+            "search-terms": "Optimal foraging strategies and hunter-gatherer research in anthropology?rows=1?offset=0"
+        }
+    }
+}

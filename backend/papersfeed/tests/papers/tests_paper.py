@@ -246,10 +246,18 @@ class PaperTestCase(TestCase):
 
         # there is no result from external sources, so naive-search in our DB
         stub_xml = open("papersfeed/tests/papers/stub_arxiv_no_entry.xml", 'r')
-        mock_get.return_value = Mock(
-            text=stub_xml.read(),
-            status_code=200
-        )
+        # mock a response from Crossref API (one has a entry)
+        stub_json = json.loads(open("papersfeed/tests/papers/stub_crossref_no_item.json", 'r').read())
+
+        mock_get.side_effect = [
+            Mock(
+                text=stub_xml.read(),
+                status_code=200
+            ), MockResponse(
+                json_data=stub_json,
+                status_code=200
+            )
+        ]
 
         # the result papers have no keywords, but trying extracting keywords fails
         mock_post.return_value = MockResponse(
@@ -315,8 +323,54 @@ class PaperTestCase(TestCase):
 
     @patch('requests.post')
     @patch('requests.get')
-    def test_paper_search_arxiv(self, mock_get, mock_post):
-        """Search Paper (arXiv) & Search Paper for ML(dummy data)"""
+    def test_paper_search_external(self, mock_get, mock_post):
+        """Search Paper from external sources & Search Paper for ML(dummy data)"""
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # mock a response from arXiv API (one has a entry)
+        stub_xml = open("papersfeed/tests/papers/stub_arxiv_entry.xml", 'r')
+
+        # mock a response from Crossref API (one has a entry)
+        stub_json = json.loads(open("papersfeed/tests/papers/stub_crossref_item.json", 'r').read())
+
+        mock_get.side_effect = [
+            Mock(
+                text=stub_xml.read(),
+                status_code=200
+            ), MockResponse(
+                json_data=stub_json,
+                status_code=200
+            )
+        ]
+
+        mock_post.return_value = make_stub_keyphrases_response("papersfeed/tests/papers/stub_key_phrases.json", 200)
+
+        # Search with Keyword 'blahblah' (first, send requests to arXiv)
+        response = client.get('/api/paper/search',
+                              data={
+                                  constants.TEXT: 'blahblah'
+                              },
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        # there was one result from arXiv and one result from Crossref,
+        # so our search API's response should have two paper result, too
+        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 2)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
+
+    @patch('requests.post')
+    @patch('requests.get')
+    def test_paper_search_ml(self, mock_get, mock_post):
+        """Search Paper for ML(dummy data)"""
         client = Client()
 
         # Sign In
@@ -335,40 +389,10 @@ class PaperTestCase(TestCase):
             status_code=200
         )
 
-        stub_json = json.loads(open("papersfeed/tests/papers/stub_key_phrases.json", 'r').read())
-        # just for getting a clue about the id of paper which will be added in this test
-        Paper.objects.create(
-            title="test",
-            language="English",
-            abstract="AI",
-            ISSN="1",
-            eISSN="1",
-            DOI="1",
-            creation_date="2019-11-13",
-            modification_date="2019-11-13"
-        )
-        paper_id = Paper.objects.filter(title='test').first().id
-        # manipulate the id of static stub_key_phrases
-        stub_json['documents'][0]['id'] = str(paper_id + 1)
+        # NOTE: for now, actually this API is not called
+        # because the same paper is already saved in DB on 'test_paper_search_arxiv'
+        mock_post.return_value = make_stub_keyphrases_response("papersfeed/tests/papers/stub_key_phrases.json", 200)
 
-        mock_post.return_value = MockResponse(
-            json_data=stub_json,
-            status_code=200
-        )
-
-        # Search with Keyword 'blahblah' (first, send requests to arXiv)
-        response = client.get('/api/paper/search',
-                              data={
-                                  constants.TEXT: 'blahblah'
-                              },
-                              content_type='application/json')
-
-        self.assertEqual(response.status_code, 200)
-        # there was one result from arXiv, so our search API's response should have one paper result, too
-        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
-        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
-
-        """Search Paper for ML(dummy data)""" # pylint: disable=pointless-string-statement
         # Search with Keyword 'afdaf' which doesn't exist in DB (send requests to arXiv)
         response = client.get('/api/paper/search/ml',
                               data={
@@ -389,3 +413,19 @@ class MockResponse:
     def json(self):
         """json()"""
         return self.json_data
+
+def make_stub_keyphrases_response(json_file, status_code):
+    """Make Stub Text Analytics API Response"""
+    stub_json = json.loads(open(json_file, 'r').read())
+
+    # just for getting a clue about the id of paper which will be added in this test
+    Paper.objects.create(
+        title="unused_paper",
+        language="unused_paper",
+        abstract="unused_paper",
+    )
+    paper_id = Paper.objects.filter(title='unused_paper').first().id
+    # manipulate the id of static stub_key_phrases
+    stub_json['documents'][0]['id'] = str(paper_id + 1)
+
+    return MockResponse(json_data=stub_json, status_code=status_code)
