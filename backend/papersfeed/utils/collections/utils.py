@@ -54,7 +54,7 @@ def insert_collection(args):
 
     collection_id = collection.id
 
-    collections, _, _ = __get_collections(Q(id=collection_id), request_user, None)
+    collections, _ = __get_collections(Q(id=collection_id), request_user, None)
 
     # Does Not Exist
     if not collections:
@@ -104,7 +104,7 @@ def update_collection(args):
 
     collection.save()
 
-    collections, _, _ = __get_collections(Q(id=collection.id), request_user, None)
+    collections, _ = __get_collections(Q(id=collection.id), request_user, None)
 
     if not collections:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -151,7 +151,7 @@ def select_collection(args):
     collection_id = args[constants.ID]
 
     # Collections
-    collections, _, _ = __get_collections(Q(id=collection_id), request_user, None)
+    collections, _ = __get_collections(Q(id=collection_id), request_user, None)
 
     # Does Not Exist
     if not collections:
@@ -183,6 +183,9 @@ def select_collection_user(args):
     # User's Collections
     collection_ids = get_results_from_queryset(queryset, 10, page_number)
 
+    # is_finished
+    is_finished = not collection_ids.has_next()
+
     # Filter Query
     filter_query = Q(id__in=collection_ids)
 
@@ -191,7 +194,7 @@ def select_collection_user(args):
         paper_id = args[constants.PAPER]
 
     # Collections
-    collections, _, is_finished = __get_collections(filter_query, request_user, 10, paper_id=paper_id)
+    collections, _ = __get_collections(filter_query, request_user, 10, paper_id=paper_id)
 
     return collections, page_number, is_finished
 
@@ -218,8 +221,11 @@ def select_collection_search(args):
     # Collection Ids
     collection_ids = get_results_from_queryset(queryset, 10, page_number)
 
+    # is_finished
+    is_finished = not collection_ids.has_next()
+
     # Collections
-    collections, _, is_finished = __get_collections(Q(id__in=collection_ids), request_user, 10)
+    collections, _ = __get_collections(Q(id__in=collection_ids), request_user, 10)
 
     return collections, page_number, is_finished
 
@@ -234,18 +240,20 @@ def select_collection_like(args):
     page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Collections Queryset
-
     queryset = CollectionLike.objects.filter(Q(user_id=request_user.id)).order_by(
         '-creation_date').values_list('collection_id', flat=True)
 
     # Collection Ids
     collection_ids = get_results_from_queryset(queryset, 10, page_number)
 
+    # is_finished
+    is_finished = not collection_ids.has_next()
+
     # need to maintain the order
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(collection_ids)])
 
     # Collections
-    collections, _, is_finished = __get_collections(Q(id__in=collection_ids), request_user, 10, order_by=preserved)
+    collections, _ = __get_collections(Q(id__in=collection_ids), request_user, 10, order_by=preserved)
 
     return collections, page_number, is_finished
 
@@ -353,11 +361,9 @@ def __get_collections(filter_query, request_user, count, paper_id=None, order_by
 
     pagination_value = collections[len(collections) - 1].id if collections else 0
 
-    is_finished = len(collections) < count if count and pagination_value != 0 else True
-
     collections = __pack_collections(collections, request_user, paper_id=paper_id)
 
-    return collections, pagination_value, is_finished
+    return collections, pagination_value
 
 
 def __pack_collections(collections, request_user, paper_id=None):  # pylint: disable=unused-argument

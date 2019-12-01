@@ -44,7 +44,7 @@ def select_session(args):
         # Set Session Id
         request.session[constants.ID] = user.id
 
-    users, _, _ = __get_users(Q(id=user.id), user, None)
+    users, _ = __get_users(Q(id=user.id), user, None)
     if not users:
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
@@ -71,7 +71,7 @@ def select_me(args):
     # User ID
     user_id = request_user.id
 
-    users, _, _ = __get_users(Q(id=user_id), request_user, None)
+    users, _ = __get_users(Q(id=user_id), request_user, None)
 
     if not users:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -118,7 +118,7 @@ def insert_user(args):
     except IntegrityError:
         raise ApiError(constants.USERNAME_ALREADY_EXISTS)
 
-    users, _, _ = __get_users(Q(id=user.id), user, None)
+    users, _ = __get_users(Q(id=user.id), user, None)
 
     if not users:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -177,7 +177,7 @@ def update_user(args):
 
     user.save()
 
-    users, _, _ = __get_users(Q(id=user.id), user, None)
+    users, _ = __get_users(Q(id=user.id), user, None)
 
     if not users:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -216,7 +216,7 @@ def select_user(args):
     # User ID
     user_id = args[constants.ID]
 
-    users, _, _ = __get_users(Q(id=user_id), request_user, None)
+    users, _ = __get_users(Q(id=user_id), request_user, None)
 
     if not users:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -245,8 +245,11 @@ def select_user_search(args):
     # User Ids
     user_ids = get_results_from_queryset(queryset, 10, page_number)
 
+    # is_finished
+    is_finished = not user_ids.has_next()
+
     # Users
-    users, _, is_finished = __get_users(Q(id__in=user_ids), request_user, 10)
+    users, _ = __get_users(Q(id__in=user_ids), request_user, 10)
 
     return users, page_number, is_finished
 
@@ -276,11 +279,14 @@ def select_user_following(args):
     # User Ids
     user_ids = get_results_from_queryset(queryset, 10, page_number)
 
+    # is_finished
+    is_finished = not user_ids.has_next()
+
     # Filter Query
     filter_query = Q(id__in=user_ids)
 
     # Users
-    users, _, is_finished = __get_users(filter_query, request_user, 10)
+    users, _ = __get_users(filter_query, request_user, 10)
 
     return users, page_number, is_finished
 
@@ -310,11 +316,14 @@ def select_user_followed(args):
     # User Ids
     user_ids = get_results_from_queryset(queryset, 10, page_number)
 
+    # is_finished
+    is_finished = not user_ids.has_next()
+
     # Filter Query
     filter_query = Q(id__in=user_ids)
 
     # Users
-    users, _, is_finished = __get_users(filter_query, request_user, 10)
+    users, _ = __get_users(filter_query, request_user, 10)
 
     return users, page_number, is_finished
 
@@ -402,12 +411,15 @@ def select_user_collection(args):
     # Members(including owner) Of Collections
     collection_members = get_results_from_queryset(queryset, 10, page_number)
 
+    # is_finished
+    is_finished = not collection_members.has_next()
+
     # Member Ids
     member_ids = [collection_member.user_id for collection_member in collection_members]
     member_ids = list(set(member_ids))
 
     # Get Members
-    members, _, is_finished = __get_users(Q(id__in=member_ids), request_user, 10, collection_id=collection_id)
+    members, _ = __get_users(Q(id__in=member_ids), request_user, 10, collection_id=collection_id)
 
     return members, page_number, is_finished
 
@@ -535,11 +547,9 @@ def __get_users(filter_query, request_user, count, collection_id=None):
 
     pagination_value = users[len(users) - 1].id if users else 0
 
-    is_finished = len(users) < count if count and pagination_value != 0 else True
-
     users = __pack_users(users, request_user, collection_id=collection_id)
 
-    return users, pagination_value, is_finished
+    return users, pagination_value
 
 
 def __pack_users(users, request_user, collection_id=None):

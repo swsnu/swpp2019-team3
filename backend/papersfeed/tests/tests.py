@@ -186,11 +186,25 @@ class ApiEntryTestCase(TestCase):
         swpp9_user_id = User.objects.filter(email='swpp9@snu.ac.kr').first().id
         swpp10_user_id = User.objects.filter(email='swpp10@snu.ac.kr').first().id
         swpp11_user_id = User.objects.filter(email='swpp11@snu.ac.kr').first().id
-        swpp12_user_id = User.objects.filter(email='swpp12@snu.ac.kr').first().id
+
         UserFollow.objects.create(following_user_id=swpp_user_id, followed_user_id=swpp8_user_id)
         UserFollow.objects.create(following_user_id=swpp_user_id, followed_user_id=swpp9_user_id)
         UserFollow.objects.create(following_user_id=swpp_user_id, followed_user_id=swpp10_user_id)
         UserFollow.objects.create(following_user_id=swpp_user_id, followed_user_id=swpp11_user_id)
+
+        # Test Pagination Edge Case
+        response = client.get('/api/user/following',
+                              data={
+                                  constants.ID: swpp_user_id,
+                                  constants.PAGE_NUMBER: 1
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 10)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
+
+        swpp12_user_id = User.objects.filter(email='swpp12@snu.ac.kr').first().id
         UserFollow.objects.create(following_user_id=swpp_user_id, followed_user_id=swpp12_user_id)
 
         response = client.get('/api/user/following',
