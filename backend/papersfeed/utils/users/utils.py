@@ -267,7 +267,7 @@ def select_user_following(args):
     requested_user_id = args[constants.ID]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Check User Id
     if not User.objects.filter(id=requested_user_id).exists():
@@ -304,7 +304,7 @@ def select_user_followed(args):
     requested_user_id = args[constants.ID]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Check User Id
     if not User.objects.filter(id=requested_user_id).exists():

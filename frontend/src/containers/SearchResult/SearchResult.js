@@ -213,6 +213,7 @@ class SearchResult extends Component {
         let userCardsRight = null;
         let collectionMessage = "no collections";
         let userMessage = "no users";
+        let paperPlus = "";
 
         if (this.state.collections.length > 0) {
             collectionCardsLeft = this.state.collections
@@ -246,6 +247,7 @@ class SearchResult extends Component {
                 >View More
                 </Button>
             );
+            paperPlus = "+";
         } else if (this.state.searchPaperStatus === paperStatus.WAITING
             && !paperEmpty) {
             paperMoreButton = (
@@ -257,7 +259,7 @@ class SearchResult extends Component {
             <div className="search-result">
                 <div className="item-list">
                     <Tabs defaultActiveKey="paper-tab" className="item-tabs">
-                        <Tab className="paper-tab" eventKey="paper-tab" title={`Paper(${paperCardsLeft.length + paperCardsRight.length})`}>
+                        <Tab className="paper-tab" eventKey="paper-tab" title={`Paper(${this.state.paperIds.length + paperPlus})`}>
                             <div id="paper-cards">
                                 <h3 id="paper-message">{this.state.paperHeadMessage}</h3>
                                 <div id="paper-cards-left">{paperCardsLeft}</div>

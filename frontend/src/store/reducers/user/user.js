@@ -3,8 +3,18 @@ import { userStatus } from "../../../constants/constants";
 
 const initialState = {
     selectedUser: {},
-    selectedFollowers: [],
-    selectedFollowings: [],
+    getFollowers: {
+        status: userStatus.NONE,
+        followers: [],
+        pageNum: 0,
+        finished: true,
+    },
+    getFollowings: {
+        status: userStatus.NONE,
+        followings: [],
+        pageNum: 0,
+        finished: true,
+    },
     followCount: 0,
     unfollowCount: 0,
     status: userStatus.NONE,
@@ -29,8 +39,12 @@ const UserReducer = (state = initialState, action) => {
     case userConstants.GET_FOLLOWERS:
         return {
             ...state,
-            selectedFollowers: action.target,
-            status: userStatus.SUCCESS,
+            getFollowers: {
+                status: userStatus.SUCCESS,
+                followers: action.target.followers,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
+            },
         };
     case userConstants.GET_FOLLOWERS_FAILURE_USER_NOT_EXIST:
         return {
@@ -41,8 +55,12 @@ const UserReducer = (state = initialState, action) => {
     case userConstants.GET_FOLLOWINGS:
         return {
             ...state,
-            selectedFollowings: action.target,
-            status: userStatus.SUCCESS,
+            getFollowings: {
+                status: userStatus.SUCCESS,
+                followings: action.target.followings,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
+            },
         };
     case userConstants.GET_FOLLOWINGS_FAILURE_USER_NOT_EXIST:
         return {

@@ -21,9 +21,9 @@ export const getUserByUserId = (userId) => (dispatch) => axios.get("/api/user", 
     .catch((err) => { dispatch(getUserByUserIdFailure(err)); });
 
 // get a list of followers
-const getFollowersByUserIdSuccess = (followers) => ({
+const getFollowersByUserIdSuccess = (data) => ({
     type: userConstants.GET_FOLLOWERS,
-    target: followers.users,
+    target: { followers: data.users, pageNum: data.page_number, finished: data.is_finished },
 });
 
 const getFollowersByUserIdFailure = (error) => {
@@ -40,9 +40,9 @@ export const getFollowersByUserId = (userId) => (dispatch) => axios.get("/api/us
     .catch((err) => { dispatch(getFollowersByUserIdFailure(err)); });
 
 // get a list of followings
-const getFollowingsByUserIdSuccess = (followings) => ({
+const getFollowingsByUserIdSuccess = (data) => ({
     type: userConstants.GET_FOLLOWINGS,
-    target: followings.users,
+    target: { followings: data.users, pageNum: data.page_number, finished: data.is_finished },
 });
 
 const getFollowingsByUserIdFailure = (error) => {
