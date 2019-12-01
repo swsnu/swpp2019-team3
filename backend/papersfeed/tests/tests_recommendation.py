@@ -1,7 +1,7 @@
 """tests_recommendation.py"""
 # -*- coding: utf-8 -*-
 import json
-# 
+#
 from django.test import TestCase, Client
 from papersfeed import constants
 from papersfeed.models.users.user import User
