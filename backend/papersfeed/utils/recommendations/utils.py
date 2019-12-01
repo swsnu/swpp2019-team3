@@ -83,7 +83,7 @@ def select_recommendation(args):
 
     recommendation_queryset = UserRecommendation.objects.filter(user_id=request_user.id)
 
-    recommendations = get_results_from_queryset(recommendation_queryset, 5, page_number)
+    recommendations = get_results_from_queryset(recommendation_queryset, 10, page_number)
 
     is_finished = not recommendations.has_next()
 
