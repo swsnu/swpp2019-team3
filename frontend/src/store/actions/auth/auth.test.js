@@ -2,24 +2,10 @@ import axios from "axios";
 
 import { authActions } from "..";
 import {
-    signupStatus, signinStatus, signoutStatus, getMeStatus,
+    signupStatus, signinStatus, signoutStatus, getMeStatus, notiStatus, getSubscriptionsStatus,
 } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 
-const stubInitialState = {
-    auth: {
-        signupStatus: signupStatus.NONE,
-        signinStatus: signinStatus.NONE,
-        signoutStatus: signoutStatus.NONE,
-        getMeStatus: getMeStatus.NONE,
-    },
-    collection: {},
-    paper: {},
-    user: {},
-    review: {},
-    reply: {},
-};
-const mockStore = getMockStore(stubInitialState);
 
 const stubSigningUpUser = {
     email: "my_email@papersfeed.com",
@@ -33,6 +19,31 @@ const stubSigningInUser = {
 };
 
 describe("authActions", () => {
+    let mockStore = null;
+
+    beforeEach(() => {
+        const stubInitialState = {
+            auth: {
+                signupStatus: signupStatus.NONE,
+                signinStatus: signinStatus.NONE,
+                signoutStatus: signoutStatus.NONE,
+                getMeStatus: getMeStatus.NONE,
+                getNotiStatus: notiStatus.NONE,
+                readNotiStatus: notiStatus.NONE,
+                getSubscriptionsStatus: getSubscriptionsStatus.NONE,
+                notifications: [],
+                subscriptions: [],
+                me: null,
+            },
+            collection: {},
+            paper: {},
+            user: {},
+            review: {},
+            reply: {},
+        };
+        mockStore = getMockStore(stubInitialState);
+    });
+
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -334,6 +345,42 @@ describe("authActions", () => {
         mockStore.dispatch(authActions.readNoti({ id: 1 }))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/notification", { id: 1 });
+                done();
+            });
+    });
+
+    it("getSubscription should call axios.get", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(authActions.getSubscriptions())
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/subscription");
+                done();
+            });
+    });
+
+    it("getSubscription should handle error", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 403,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(authActions.getSubscriptions())
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/subscription");
                 done();
             });
     });

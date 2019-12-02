@@ -50,10 +50,9 @@ def insert_like_paper(args):
     )
 
     # store an action for subscription feed
-    req_user = User.objects.get(id=request_user.id)
     paper = Paper.objects.get(id=paper_id)
     Subscription.objects.create(
-        actor=req_user,
+        actor=request_user,
         verb="liked",
         action_object=paper,
     )
@@ -138,9 +137,8 @@ def insert_like_review(args):
     review_author = User.objects.get(id=review.user_id)
 
     # store an action for subscription feed
-    req_user = User.objects.get(id=request_user.id)
     Subscription.objects.create(
-        actor=req_user,
+        actor=request_user,
         verb="liked",
         action_object=review,
     )

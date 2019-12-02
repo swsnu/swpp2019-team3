@@ -24,7 +24,6 @@ def select_subscriptions(args):
     # pylint: enable=line-too-long
     # Notification QuerySet
     subscription_queryset = Subscription.objects.filter(Q(actor__in=followings_queryset))
-
     subscriptions = get_results_from_queryset(subscription_queryset, 20, page_number)
 
     # is_finished
@@ -44,19 +43,19 @@ def __pack_subscriptions(subscriptions, request_user):
                 paper = get_papers(Q(id=subscription.action_object.id), request_user, 1)[0]
                 action_object = {
                     constants.TYPE: 'paper',
-                    constants.CONTENT: paper,
+                    constants.CONTENT: paper[0],
                 }
             elif action_object_type == 'collection':
                 collection = get_collections(Q(id=subscription.action_object.id), request_user, 1)[0]
                 action_object = {
                     constants.TYPE: 'collection',
-                    constants.CONTENT: collection,
+                    constants.CONTENT: collection[0],
                 }
             elif action_object_type == 'review':
                 review = get_reviews(Q(id=subscription.action_object.id), request_user, 1)[0]
                 action_object = {
                     constants.TYPE: 'review',
-                    constants.CONTENT: review,
+                    constants.CONTENT: review[0],
                 }
             else:
                 raise AttributeError

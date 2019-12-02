@@ -1,0 +1,44 @@
+.SubscriptionFeed {
+    min-height: 1000px;
+    background: rgb(242,243,247);
+    margin-left: 18%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.SubscriptionFeed #SubscriptionText {
+    width: 96%;
+    height: 100%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    font-size: 200%;
+    font-weight: 700;
+}
+
+.SubscriptionFeed #subscriptionCards {
+    width: 90%;
+    height: 100%;
+    margin-left: 5%;
+    margin-right: 10%;
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: row wrap;
+    align-items: flex-start;
+}
+
+.SubscriptionFeed #subscriptionCards #subscriptionCardsLeft {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.SubscriptionFeed #subscriptionCards #subscriptionCardsRight {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}

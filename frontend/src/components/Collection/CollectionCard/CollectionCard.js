@@ -39,7 +39,17 @@ class CollectionCard extends Component {
     render() {
         let header = null;
         if (this.props.headerExists) {
-            header = <Card.Header>{`${this.props.user} ${this.props.source} this collection.`}</Card.Header>;
+            if (this.props.subscription) {
+                header = (
+                    <Card.Header id="headerSubscription">
+                        <Card.Link className="actorLink" href={`/collection_id=${this.props.id}`}>{this.props.actor.username}</Card.Link>
+                        <h5 className="verb">{` ${this.props.verb} this collection.`}</h5>
+                    </Card.Header>
+                );
+            } else {
+                // legacy code: this line may not be needed
+                header = <Card.Header id="header">{`${this.props.user} ${this.props.source} this collection.`}</Card.Header>;
+            }
         }
         return (
             <div className="wrapper">
@@ -100,6 +110,11 @@ CollectionCard.propTypes = {
     afterUnlikeCount: PropTypes.number,
     onLikeCollection: PropTypes.func,
     onUnlikeCollection: PropTypes.func,
+    subscription: PropTypes.bool,
+    actor: PropTypes.objectOf(PropTypes.any),
+    verb: PropTypes.string,
+    // eslint-disable-next-line react/no-unused-prop-types
+    target: PropTypes.objectOf(PropTypes.any),
 };
 
 CollectionCard.defaultProps = {
@@ -117,4 +132,8 @@ CollectionCard.defaultProps = {
     afterUnlikeCount: 0,
     onLikeCollection: () => {},
     onUnlikeCollection: () => {},
+    subscription: false,
+    actor: {},
+    verb: "",
+    target: {},
 };

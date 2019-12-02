@@ -8,6 +8,7 @@ import {
     getMe,
     getNoti,
     readNoti,
+    getSubscriptions,
 } from "./auth/auth";
 
 import {
@@ -114,6 +115,7 @@ export const authActions = {
     getMe,
     getNoti,
     readNoti,
+    getSubscriptions,
 };
 export const paperActions = {
     getPaper,

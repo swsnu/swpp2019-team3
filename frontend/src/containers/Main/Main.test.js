@@ -1,8 +1,7 @@
 import React from "react";
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
 import { Provider } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
-import { Route, Switch } from "react-router-dom";
 import { getMockStore } from "../../test-utils/mocks";
 import Main from "./Main";
 import { collectionStatus, reviewStatus, signinStatus } from "../../constants/constants";
@@ -81,17 +80,7 @@ describe("<Main />", () => {
         main = (
             <Provider store={mockStore}>
                 <ConnectedRouter history={history}>
-                    <Switch>
-                        <Route
-                          path="/"
-                          exact
-                          render={() => (
-                              <div>
-                                  <Main location={{ pathname: "/paper_id=1" }} />
-                              </div>
-                          )}
-                        />
-                    </Switch>
+                    <Main />
                 </ConnectedRouter>
             </Provider>
         );
@@ -102,115 +91,8 @@ describe("<Main />", () => {
     });
 
     it("should render without errors", () => {
-        const component = shallow(<Main />);
+        const component = mount(main);
         const wrapper = component.find(".main");
         expect(wrapper.length).toBe(1);
-    });
-
-    it("should make feedsLeft and feedsRight well", () => {
-        const wrapper = mount(main);
-        const component = wrapper.find("Main");
-        component.instance().setState(
-            {
-                feeds: [{
-                    type: "Collection",
-                    source: "liked",
-                    id: 1,
-                    title: "dfad",
-                    user: "Dfafdaf",
-                    count: {
-                        users: 1, likes: 0, papers: 14, replies: 15,
-                    },
-                }, {
-                    type: "Collection",
-                    source: "liked",
-                    id: 1,
-                    title: "dfad",
-                    user: "Dfafdaf",
-                    count: {
-                        users: 1, likes: 0, papers: 14, replies: 15,
-                    },
-                }, {
-                    type: "Paper",
-                    source: "liked",
-                    id: 2,
-                    title: "dfad",
-                    user: "Dfafdaf",
-                    count: {
-                        likes: 0, reviews: 15,
-                    },
-                }, {
-                    type: "Paper",
-                    source: "liked",
-                    id: 2,
-                    title: "dfad",
-                    user: "Dfafdaf",
-                    count: {
-                        likes: 0, reviews: 15,
-                    },
-                }, {
-                    type: "Review",
-                    source: "liked",
-                    id: 3,
-                    title: "dfad",
-                    user: "Dfafdaf",
-                    count: {
-                        likes: 0, replies: 15,
-                    },
-                }, {
-                    type: "Review",
-                    source: "liked",
-                    id: 3,
-                    title: "dfad",
-                    user: "Dfafdaf",
-                    count: {
-                        likes: 0, replies: 15,
-                    },
-                },
-                ],
-            },
-        );
-
-        wrapper.update();
-        const wrapperLeft = wrapper.find(".left");
-        const wrapperRight = wrapper.find(".right");
-        expect(wrapperLeft.children().length).toBe(3);
-        expect(wrapperRight.children().length).toBe(3);
-    });
-
-    it("should not make feedsLeft and feedsRight if wrong type", () => {
-        const wrapper = mount(main);
-        const component = wrapper.find("Main");
-
-        component.instance().setState(
-            {
-                feeds: [
-                    {
-                        type: "wrong type",
-                        source: "liked",
-                        id: 3,
-                        title: "dfad",
-                        user: "Dfafdaf",
-                        numPapers: 14,
-                        numReplies: 15,
-                    },
-                    {
-                        type: "wrong type",
-                        source: "liked",
-                        id: 4,
-                        title: "dfad",
-                        user: "Dfafdaf",
-                        numPapers: 14,
-                        numReplies: 15,
-                    },
-                ],
-            },
-        );
-
-        wrapper.update();
-        const wrapperLeft = wrapper.find(".left");
-        const wrapperRight = wrapper.find(".right");
-        expect(wrapperLeft.children().length).toBe(0);
-        expect(wrapperRight.children().length).toBe(0);
     });
 });

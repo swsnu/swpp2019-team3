@@ -90,7 +90,25 @@ describe("<ReviewCard />", () => {
     it("if headerExists is false, then header should not exist", () => {
         reviewCard = makeReviewCard(stubInitialState, { headerExists: false });
         const component = mount(reviewCard);
-        const wrapper = component.find(".header");
+        const wrapper = component.find("#header");
         expect(wrapper.length).toBe(0);
+    });
+
+    it("if headerExists && subscription, then subscription header should exist", () => {
+        reviewCard = makeReviewCard(stubInitialState, {
+            headerExists: true, subscription: true, target: {},
+        });
+        const component = mount(reviewCard);
+        const wrapper = component.find("#headerSubscription").hostNodes();
+        expect(wrapper.length).toBe(1);
+    });
+
+    it("if headerExists && subscription && target, then subscription header with target should exist", () => {
+        reviewCard = makeReviewCard(stubInitialState, {
+            headerExists: true, subscription: true, target: { content: { id: 1 } },
+        });
+        const component = mount(reviewCard);
+        const wrapper = component.find("#headerSubscriptionTarget").hostNodes();
+        expect(wrapper.length).toBe(1);
     });
 });

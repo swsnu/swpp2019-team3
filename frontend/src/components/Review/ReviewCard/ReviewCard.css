@@ -7,6 +7,33 @@
     text-align: left;
 }
 
+
+#headerSubscriptionTarget {
+    display: inline-flex;
+    flex-direction: row;
+}
+
+#headerSubscription {
+    display: inline-flex;
+    flex-direction: row;
+}
+
+#headerLine {
+    display: inline-flex;
+    flex-direction: row;
+}
+
+.actorLink {
+    /* This is interval between texts: DO NOT MODIFY IT */
+    margin-right: 5px;
+    font-size: 120%;
+}
+
+.verb {
+    /* This is interval between texts: DO NOT MODIFY IT */
+    margin-right: 5px;
+}
+
 .review .body {
     padding-bottom: 10%;
 }

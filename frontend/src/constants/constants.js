@@ -36,6 +36,13 @@ export const notiStatus = {
     FAILURE: "FAILURE",
 };
 
+export const getSubscriptionsStatus = {
+    NONE: "NONE",
+    WAITING: "WAITING",
+    SUCCESS: "SUCCESS",
+    FAILURE: "FAILURE",
+};
+
 export const paperStatus = {
     NONE: "NONE",
     WAITING: "WAITING",

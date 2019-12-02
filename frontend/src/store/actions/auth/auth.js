@@ -115,3 +115,17 @@ const readNotiFailure = (error) => ({
 export const readNoti = (notificationId) => (dispatch) => axios.put("/api/notification", notificationId)
     .then(() => dispatch(readNotiSuccess()))
     .catch((err) => dispatch(readNotiFailure(err)));
+
+const getSubscriptionsSuccess = (subscriptions) => ({
+    type: authConstants.GET_SUBSCRIPTION_SUCCESS,
+    target: subscriptions.subscriptions,
+});
+
+const getSubscriptionsFailure = (error) => ({
+    type: authConstants.GET_SUBSCRIPTION_FAILURE,
+    target: error,
+});
+
+export const getSubscriptions = () => (dispatch) => axios.get("/api/subscription")
+    .then((res) => dispatch(getSubscriptionsSuccess(res.data)))
+    .catch((err) => dispatch(getSubscriptionsFailure(err)));
