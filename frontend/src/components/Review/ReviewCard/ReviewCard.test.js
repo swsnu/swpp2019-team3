@@ -94,13 +94,6 @@ describe("<ReviewCard />", () => {
         expect(wrapper.length).toBe(0);
     });
 
-    it("if headerExists && paperSource, then header should exist", () => {
-        reviewCard = makeReviewCard(stubInitialState, { headerExists: true, subscription: false, source: "source" });
-        const component = mount(reviewCard);
-        const wrapper = component.find("#header").hostNodes();
-        expect(wrapper.length).toBe(1);
-    });
-
     it("if headerExists && subscription, then subscription header should exist", () => {
         reviewCard = makeReviewCard(stubInitialState, {
             headerExists: true, subscription: true, target: {},

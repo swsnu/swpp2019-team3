@@ -134,7 +134,6 @@ ReviewCard.propTypes = {
 ReviewCard.defaultProps = {
     author: "",
     author_id: 0,
-    source: "",
     id: 0,
     user: "",
     title: "",
