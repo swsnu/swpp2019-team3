@@ -39,7 +39,29 @@ class ReviewCard extends Component {
     render() {
         let header = null;
         if (this.props.headerExists) {
-            header = <Card.Header className="header">{`${this.props.user} ${this.props.source} this review`}</Card.Header>;
+            if (this.props.subscription) {
+                if (Object.keys(this.props.target).length !== 0) {
+                    header = (
+                        <Card.Header id="headerSubscriptionTarget">
+                            <Card.Link href={`/profile_id=${this.props.actor.id}`} className="text">{this.props.actor.username}</Card.Link>
+                            <h5>{` ${this.props.verb} this review on `}</h5>
+                            <Card.Link href={`/paper_id=${this.props.target.content.id}`} className="text">
+                                {`${this.props.target.content.title}.`}
+                            </Card.Link>
+                        </Card.Header>
+                    );
+                } else {
+                    header = (
+                        <Card.Header id="headerSubscription">
+                            <Card.Link href={`/profile_id=${this.props.id}`} className="text">{this.props.actor.username}</Card.Link>
+                            <h5>{` ${this.props.verb} this review.`}</h5>
+                        </Card.Header>
+                    );
+                }
+            } else if (this.props.paperSource) {
+                // legacy code: this line may not be needed
+                header = <Card.Header id="header">{`from ${this.props.paperSource}`}</Card.Header>;
+            }
         }
 
         return (
@@ -86,8 +108,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(ReviewCard);
 ReviewCard.propTypes = {
     author: PropTypes.string,
     author_id: PropTypes.number,
-    source: PropTypes.string,
+    paperSource: PropTypes.string,
     id: PropTypes.number,
+    // eslint-disable-next-line react/no-unused-prop-types
     user: PropTypes.string,
     title: PropTypes.string,
     date: PropTypes.string,
@@ -99,12 +122,16 @@ ReviewCard.propTypes = {
     afterUnlikeCount: PropTypes.number,
     onLikeReview: PropTypes.func,
     onUnlikeReview: PropTypes.func,
+    subscription: PropTypes.bool,
+    actor: PropTypes.objectOf(PropTypes.any),
+    verb: PropTypes.string,
+    target: PropTypes.objectOf(PropTypes.any),
 };
 
 ReviewCard.defaultProps = {
     author: "",
     author_id: 0,
-    source: "",
+    paperSource: "",
     id: 0,
     user: "",
     title: "",
@@ -117,4 +144,8 @@ ReviewCard.defaultProps = {
     afterUnlikeCount: 0,
     onLikeReview: () => {},
     onUnlikeReview: () => {},
+    subscription: false,
+    actor: {},
+    verb: "",
+    target: {},
 };

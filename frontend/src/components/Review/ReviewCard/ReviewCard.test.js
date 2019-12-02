@@ -93,4 +93,29 @@ describe("<ReviewCard />", () => {
         const wrapper = component.find(".header");
         expect(wrapper.length).toBe(0);
     });
+
+    it("if headerExists && paperSource, then header should exist", () => {
+        reviewCard = makeReviewCard(stubInitialState, { headerExists: true, subscription: false, paperSource: "source" });
+        const component = mount(reviewCard);
+        const wrapper = component.find("#header").hostNodes();
+        expect(wrapper.length).toBe(1);
+    });
+
+    it("if headerExists && subscription, then subscription header should exist", () => {
+        reviewCard = makeReviewCard(stubInitialState, {
+            headerExists: true, subscription: true, target: {},
+        });
+        const component = mount(reviewCard);
+        const wrapper = component.find("#headerSubscription").hostNodes();
+        expect(wrapper.length).toBe(1);
+    });
+
+    it("if headerExists && subscription && target, then subscription header with target should exist", () => {
+        reviewCard = makeReviewCard(stubInitialState, {
+            headerExists: true, subscription: true, target: { content: { id: 1 } },
+        });
+        const component = mount(reviewCard);
+        const wrapper = component.find("#headerSubscriptionTarget").hostNodes();
+        expect(wrapper.length).toBe(1);
+    });
 });

@@ -114,6 +114,10 @@ export const authConstants = {
     // ReadNoti
     READ_NOTI_SUCCESS: "READ_NOTI_SUCCESS",
     READ_NOTI_FAILURE: "READ_NOTI_FAILURE",
+
+    // Subscription
+    GET_SUBSCRIPTION_SUCCESS: "GET_SUBSCRIPTION_SUCCESS",
+    GET_SUBSCRIPTION_FAILURE: "GET_SUBSCRIPTION_FAILURE",
 };
 
 export const paperConstants = {
