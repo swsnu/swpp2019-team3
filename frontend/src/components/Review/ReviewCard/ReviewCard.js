@@ -113,8 +113,6 @@ ReviewCard.propTypes = {
     author: PropTypes.string,
     author_id: PropTypes.number,
     id: PropTypes.number,
-    // eslint-disable-next-line react/no-unused-prop-types
-    user: PropTypes.string,
     title: PropTypes.string,
     date: PropTypes.string,
     likeCount: PropTypes.number,
@@ -135,7 +133,6 @@ ReviewCard.defaultProps = {
     author: "",
     author_id: 0,
     id: 0,
-    user: "",
     title: "",
     date: "",
     likeCount: 0,
