@@ -65,9 +65,6 @@ class ReviewCard extends Component {
                         </Card.Header>
                     );
                 }
-            } else if (this.props.source) {
-                // legacy code: this line may not be needed
-                header = <Card.Header id="header" className="Header">{`from ${this.props.source}`}</Card.Header>;
             }
         }
 
@@ -115,7 +112,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(ReviewCard);
 ReviewCard.propTypes = {
     author: PropTypes.string,
     author_id: PropTypes.number,
-    source: PropTypes.string,
     id: PropTypes.number,
     // eslint-disable-next-line react/no-unused-prop-types
     user: PropTypes.string,
