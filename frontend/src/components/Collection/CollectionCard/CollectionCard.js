@@ -42,10 +42,20 @@ class CollectionCard extends Component {
             if (this.props.subscription) {
                 header = (
                     <Card.Header id="headerSubscription">
+<<<<<<< HEAD
                         <Card.Link className="actorLink" href={`/profile_id=${this.props.actor.id}`}>{this.props.actor.username}</Card.Link>
                         <h5 className="verb">{` ${this.props.verb} this collection.`}</h5>
                     </Card.Header>
                 );
+=======
+                        <Card.Link className="actorLink" href={`/collection_id=${this.props.id}`}>{this.props.actor.username}</Card.Link>
+                        <h5 className="verb">{` ${this.props.verb} this collection.`}</h5>
+                    </Card.Header>
+                );
+            } else {
+                // legacy code: this line may not be needed
+                header = <Card.Header id="header">{`${this.props.user} ${this.props.source} this collection.`}</Card.Header>;
+>>>>>>> 3709e7ee72b13380c9fecb8fd0835fc38a5fb714
             }
         }
         return (

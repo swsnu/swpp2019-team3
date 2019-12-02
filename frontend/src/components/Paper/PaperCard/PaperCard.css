@@ -3,6 +3,7 @@
 }
 
 #headerSubscriptionTarget {
+<<<<<<< HEAD
     display: inline-block;
     flex-direction: row;
     justify-content: space-around;
@@ -18,6 +19,31 @@
     display: inline-block;
     flex-direction: row;
     justify-content: space-around;
+=======
+    display: inline-flex;
+    flex-direction: row;
+}
+
+#headerSubscription {
+    display: inline-flex;
+    flex-direction: row;
+}
+
+#headerLine {
+    display: inline-flex;
+    flex-direction: row;
+}
+
+.actorLink {
+    /* This is interval between texts: DO NOT MODIFY IT */
+    margin-right: 5px;
+    font-size: 120%;
+}
+
+.verb {
+    /* This is interval between texts: DO NOT MODIFY IT */
+    margin-right: 5px;
+>>>>>>> 3709e7ee72b13380c9fecb8fd0835fc38a5fb714
 }
 
 .paper {

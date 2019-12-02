@@ -118,7 +118,7 @@ def select_paper_all(args):
 def select_user_all(_):
     """Select User All"""
 
-    users = Paper.objects.all().annotate(
+    users = User.objects.all().annotate(
         UserId=F('id')
     ).values(
         'UserId'
