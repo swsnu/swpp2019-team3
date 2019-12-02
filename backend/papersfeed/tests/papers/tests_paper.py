@@ -386,7 +386,7 @@ class PaperTestCase(TestCase):
 
         mock_get.return_value = Mock(
             text=stub_xml.read(),
-            status_code=200
+            status_code=403
         )
 
         # NOTE: for now, actually this API is not called

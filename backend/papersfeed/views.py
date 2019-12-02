@@ -66,7 +66,9 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
                     'post_user',
                     'get_paper_search_ml',
                     'get_user_action',
-                    'post_user_recommendation'
+                    'post_user_recommendation',
+                    'get_user_all',
+                    'get_paper_all'
                 ]:
                 __check_session(args, request)
 

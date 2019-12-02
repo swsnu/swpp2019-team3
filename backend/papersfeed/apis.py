@@ -336,7 +336,10 @@ def get_subscription(args):
 
 def get_user_action(args):
     """Get User Actions"""
-    return {constants.ACTIONS: recommendation_utils.select_user_actions(args)}
+    papers, users, actions = recommendation_utils.select_user_actions(args)
+    return {constants.PAPERS: papers,
+            constants.USERS: users,
+            constants.ACTIONS: actions}
 
 def post_user_recommendation(args):
     """Post User Recommendation"""
@@ -345,3 +348,21 @@ def post_user_recommendation(args):
 def get_paper_search_ml(args):
     """Get Paper Search ML"""
     return {constants.PAPERS: papers_utils.select_paper_search_ml(args)}
+
+def get_recommendation(args):
+    """Get Recommendations"""
+    recommendations, page_number, is_finished = recommendation_utils.select_recommendation(args)
+    return {constants.RECOMMENDATIONS: recommendations,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
+
+def get_paper_all(args):
+    """Get All Papers"""
+    papers, page_number, is_finished = recommendation_utils.select_paper_all(args)
+    return {constants.PAPERS: papers,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
+
+def get_user_all(args):
+    """Get All Users"""
+    return {constants.USERS: recommendation_utils.select_user_all(args)}
