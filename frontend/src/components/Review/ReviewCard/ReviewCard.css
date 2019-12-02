@@ -7,19 +7,22 @@
     text-align: left;
 }
 
+.CardHeader {
+    display: flex;
+}
 
 #headerSubscriptionTarget {
-    display: inline-flex;
+    display: inline-block;
     flex-direction: row;
 }
 
 #headerSubscription {
-    display: inline-flex;
+    display: inline-block;
     flex-direction: row;
 }
 
 #headerLine {
-    display: inline-flex;
+    display: inline-block;
     flex-direction: row;
 }
 

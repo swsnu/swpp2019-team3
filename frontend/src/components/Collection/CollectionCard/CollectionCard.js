@@ -42,13 +42,10 @@ class CollectionCard extends Component {
             if (this.props.subscription) {
                 header = (
                     <Card.Header id="headerSubscription">
-                        <Card.Link className="actorLink" href={`/collection_id=${this.props.id}`}>{this.props.actor.username}</Card.Link>
+                        <Card.Link className="actorLink" href={`/profile_id=${this.props.actor.id}`}>{this.props.actor.username}</Card.Link>
                         <h5 className="verb">{` ${this.props.verb} this collection.`}</h5>
                     </Card.Header>
                 );
-            } else {
-                // legacy code: this line may not be needed
-                header = <Card.Header id="header">{`${this.props.user} ${this.props.source} this collection.`}</Card.Header>;
             }
         }
         return (
@@ -96,9 +93,7 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionCard);
 
 CollectionCard.propTypes = {
-    source: PropTypes.string,
     id: PropTypes.number,
-    user: PropTypes.string,
     title: PropTypes.string,
     memberCount: PropTypes.number,
     paperCount: PropTypes.number,
@@ -118,9 +113,7 @@ CollectionCard.propTypes = {
 };
 
 CollectionCard.defaultProps = {
-    source: "",
     id: 0,
-    user: "",
     title: "",
     memberCount: 1,
     paperCount: 0,
