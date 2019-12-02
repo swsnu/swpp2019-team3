@@ -7,36 +7,22 @@
     text-align: left;
 }
 
-<<<<<<< HEAD
 .CardHeader {
     display: flex;
 }
 
 #headerSubscriptionTarget {
     display: inline-block;
-=======
-
-#headerSubscriptionTarget {
-    display: inline-flex;
->>>>>>> 3709e7ee72b13380c9fecb8fd0835fc38a5fb714
     flex-direction: row;
 }
 
 #headerSubscription {
-<<<<<<< HEAD
     display: inline-block;
-=======
-    display: inline-flex;
->>>>>>> 3709e7ee72b13380c9fecb8fd0835fc38a5fb714
     flex-direction: row;
 }
 
 #headerLine {
-<<<<<<< HEAD
     display: inline-block;
-=======
-    display: inline-flex;
->>>>>>> 3709e7ee72b13380c9fecb8fd0835fc38a5fb714
     flex-direction: row;
 }
 

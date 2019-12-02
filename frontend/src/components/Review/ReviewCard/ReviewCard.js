@@ -40,7 +40,6 @@ class ReviewCard extends Component {
         let header = null;
         if (this.props.headerExists) {
             if (this.props.subscription) {
-<<<<<<< HEAD
                 const actorLink = (<a className="actorLink" href={`/profile_id=${this.props.actor.id}`}>{this.props.actor.username}</a>);
                 if (Object.keys(this.props.target).length !== 0) {
                     header = (
@@ -50,38 +49,15 @@ class ReviewCard extends Component {
                                 <h5 className="verb">{` ${this.props.verb} this review on `}</h5>
                                 <a href={`/paper_id=${this.props.target.id}`}>{`${this.props.target.title}.`}</a>
                             </div>
-=======
-                const actorLink = (
-                    <Card.Link
-                      className="actorLink"
-                      href={`/profile_id=${this.props.actor.id}`}
-                    >{this.props.actor.username}
-                    </Card.Link>
-                );
-                if (Object.keys(this.props.target).length !== 0) {
-                    header = (
-                        <Card.Header id="headerSubscriptionTarget" className="Header">
-                            {actorLink}
-                            <h5 className="verb">{` ${this.props.verb} this review on `}</h5>
-                            <Card.Link href={`/paper_id=${this.props.target.content.id}`} className="text">
-                                {`${this.props.target.content.title}.`}
-                            </Card.Link>
->>>>>>> 3709e7ee72b13380c9fecb8fd0835fc38a5fb714
                         </Card.Header>
                     );
                 } else {
                     header = (
-<<<<<<< HEAD
                         <Card.Header id="headerSubscription">
                             <div className="CardHeader">
                                 {actorLink}
                                 <h5 className="verb">{` ${this.props.verb} this review.`}</h5>
                             </div>
-=======
-                        <Card.Header id="headerSubscription" className="Header">
-                            {actorLink}
-                            <h5 className="verb">{` ${this.props.verb} this review.`}</h5>
->>>>>>> 3709e7ee72b13380c9fecb8fd0835fc38a5fb714
                         </Card.Header>
                     );
                 }
