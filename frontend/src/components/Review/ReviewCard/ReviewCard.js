@@ -40,11 +40,15 @@ class ReviewCard extends Component {
         let header = null;
         if (this.props.headerExists) {
             if (this.props.subscription) {
+                const headerLine = (
+                    <div><Card.Link href={`/profile_id=${this.props.actor.id}`} className="text">{this.props.actor.username}</Card.Link>
+                        <h5>{` ${this.props.verb} this review on `}</h5>
+                    </div>
+                );
                 if (Object.keys(this.props.target).length !== 0) {
                     header = (
-                        <Card.Header id="headerSubscriptionTarget">
-                            <Card.Link href={`/profile_id=${this.props.actor.id}`} className="text">{this.props.actor.username}</Card.Link>
-                            <h5>{` ${this.props.verb} this review on `}</h5>
+                        <Card.Header id="headerSubscriptionTarget" className="Header">
+                            {headerLine}
                             <Card.Link href={`/paper_id=${this.props.target.content.id}`} className="text">
                                 {`${this.props.target.content.title}.`}
                             </Card.Link>
@@ -52,15 +56,14 @@ class ReviewCard extends Component {
                     );
                 } else {
                     header = (
-                        <Card.Header id="headerSubscription">
-                            <Card.Link href={`/profile_id=${this.props.id}`} className="text">{this.props.actor.username}</Card.Link>
-                            <h5>{` ${this.props.verb} this review.`}</h5>
+                        <Card.Header id="headerSubscription" className="Header">
+                            {headerLine}
                         </Card.Header>
                     );
                 }
             } else if (this.props.paperSource) {
                 // legacy code: this line may not be needed
-                header = <Card.Header id="header">{`from ${this.props.paperSource}`}</Card.Header>;
+                header = <Card.Header id="header" className="Header">{`from ${this.props.paperSource}`}</Card.Header>;
             }
         }
 
