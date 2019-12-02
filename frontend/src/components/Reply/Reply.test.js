@@ -11,7 +11,7 @@ import { getMockStore } from "../../test-utils/mocks";
 
 const mockHistory = { push: jest.fn() };
 
-const makeReply = (initialState, props = {}) => (
+const makeReply = (initialState, props = { date: "dfadfaT09:08:fda" }) => (
     <Provider store={getMockStore(initialState)}>
         <Reply id={1} history={mockHistory} {...props} />
     </Provider>
@@ -70,7 +70,7 @@ describe("<Reply />", () => {
                 },
             },
         };
-        reply = makeReply(stubInitialState);
+        reply = makeReply(stubInitialState, { date: "dfadfaT09:08:fda" });
         spyLikeReply = jest.spyOn(replyActions, "likeReply")
             .mockImplementation(() => () => mockPromise);
         spyUnlikeReply = jest.spyOn(replyActions, "unlikeReply")
@@ -82,7 +82,7 @@ describe("<Reply />", () => {
     });
 
     it("should render without errors", () => {
-        reply = makeReply(stubInitialState, { isLiked: true, likeCount: 1 });
+        reply = makeReply(stubInitialState, { isLiked: true, likeCount: 1, date: "dfadfaT09:08:fda" });
         const component = mount(reply);
         const instance = component.find("Reply").instance();
         const wrapper = component.find(".reply-component");
@@ -115,6 +115,7 @@ describe("<Reply />", () => {
             authorId: 1,
             userId: 1,
             type: "review",
+            date: "dfadfaT09:08:fda",
         });
         const wrapper = mount(reply);
         const instance = wrapper.find("Reply").instance();
@@ -130,6 +131,7 @@ describe("<Reply />", () => {
         reply = makeReply(stubInitialState, {
             authorId: 1,
             userId: 7,
+            date: "dfadfaT09:08:fda",
         });
         const wrapper = mount(reply);
         wrapper.update();
@@ -144,6 +146,7 @@ describe("<Reply />", () => {
             authorId: 1,
             userId: 1,
             type: "review",
+            date: "dfadfaT09:08:fda",
         });
         const spyDeleteReplyReview = jest.spyOn(replyActions, "deleteReplyReview")
             .mockImplementation(() => () => mockPromise);
@@ -158,6 +161,7 @@ describe("<Reply />", () => {
             authorId: 1,
             userId: 1,
             type: "collection",
+            date: "dfadfaT09:08:fda",
         });
         wrapper = mount(reply);
         component = wrapper.find(".buttons .delete-button").hostNodes();
@@ -178,7 +182,7 @@ describe("<Reply />", () => {
     });
 
     it("should handle click confirm button", () => {
-        reply = makeReply(stubInitialState, { type: "review" });
+        reply = makeReply(stubInitialState, { type: "review", date: "dfadfaT09:08:fda" });
         const spyEditReplyReview = jest.spyOn(replyActions, "editReplyReview")
             .mockImplementation(() => () => mockPromise);
         const spyEditReplyCollection = jest.spyOn(replyActions, "editReplyCollection")
@@ -188,7 +192,7 @@ describe("<Reply />", () => {
         instance.clickConfirmButtonHandler();
         expect(spyEditReplyReview).toHaveBeenCalledTimes(1);
 
-        reply = makeReply(stubInitialState, { type: "collection" });
+        reply = makeReply(stubInitialState, { type: "collection", date: "dfadfaT09:08:fda" });
         wrapper = mount(reply);
         instance = wrapper.find("Reply").instance();
         instance.clickConfirmButtonHandler();
