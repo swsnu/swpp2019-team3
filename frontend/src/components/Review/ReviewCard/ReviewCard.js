@@ -40,15 +40,18 @@ class ReviewCard extends Component {
         let header = null;
         if (this.props.headerExists) {
             if (this.props.subscription) {
-                const headerLine = (
-                    <div><Card.Link href={`/profile_id=${this.props.actor.id}`} className="text">{this.props.actor.username}</Card.Link>
-                        <h5>{` ${this.props.verb} this review on `}</h5>
-                    </div>
+                const actorLink = (
+                    <Card.Link
+                      className="actorLink"
+                      href={`/profile_id=${this.props.actor.id}`}
+                    >{this.props.actor.username}
+                    </Card.Link>
                 );
                 if (Object.keys(this.props.target).length !== 0) {
                     header = (
                         <Card.Header id="headerSubscriptionTarget" className="Header">
-                            {headerLine}
+                            {actorLink}
+                            <h5 className="verb">{` ${this.props.verb} this review on `}</h5>
                             <Card.Link href={`/paper_id=${this.props.target.content.id}`} className="text">
                                 {`${this.props.target.content.title}.`}
                             </Card.Link>
@@ -57,7 +60,8 @@ class ReviewCard extends Component {
                 } else {
                     header = (
                         <Card.Header id="headerSubscription" className="Header">
-                            {headerLine}
+                            {actorLink}
+                            <h5 className="verb">{` ${this.props.verb} this review.`}</h5>
                         </Card.Header>
                     );
                 }

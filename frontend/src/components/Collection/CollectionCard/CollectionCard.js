@@ -42,8 +42,8 @@ class CollectionCard extends Component {
             if (this.props.subscription) {
                 header = (
                     <Card.Header id="headerSubscription">
-                        <Card.Link href={`/collection_id=${this.props.id}`} className="text">{this.props.actor.username}</Card.Link>
-                        <h5>{` ${this.props.verb} this collection.`}</h5>
+                        <Card.Link className="actorLink" href={`/collection_id=${this.props.id}`}>{this.props.actor.username}</Card.Link>
+                        <h5 className="verb">{` ${this.props.verb} this collection.`}</h5>
                     </Card.Header>
                 );
             } else {
