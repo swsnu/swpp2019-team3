@@ -107,7 +107,7 @@ class SubscriptionFeed extends Component {
 
         return (
             <div className="SubscriptionFeed">
-                <div id="SubscriptionText">My Subscription Feed</div>
+                {/* <div id="SubscriptionText">My Subscription Feed</div> */}
                 <div id="subscriptionCards">
                     <div id="subscriptionCardsLeft">{cardsLeft}</div>
                     <div id="subscriptionCardsRight">{cardsRight}</div>

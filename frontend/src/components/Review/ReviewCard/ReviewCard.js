@@ -61,9 +61,9 @@ class ReviewCard extends Component {
                         </Card.Header>
                     );
                 }
-            } else if (this.props.paperSource) {
+            } else if (this.props.source) {
                 // legacy code: this line may not be needed
-                header = <Card.Header id="header" className="Header">{`from ${this.props.paperSource}`}</Card.Header>;
+                header = <Card.Header id="header" className="Header">{`from ${this.props.source}`}</Card.Header>;
             }
         }
 
@@ -111,7 +111,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(ReviewCard);
 ReviewCard.propTypes = {
     author: PropTypes.string,
     author_id: PropTypes.number,
-    paperSource: PropTypes.string,
+    source: PropTypes.string,
     id: PropTypes.number,
     // eslint-disable-next-line react/no-unused-prop-types
     user: PropTypes.string,
@@ -134,7 +134,7 @@ ReviewCard.propTypes = {
 ReviewCard.defaultProps = {
     author: "",
     author_id: 0,
-    paperSource: "",
+    source: "",
     id: 0,
     user: "",
     title: "",
