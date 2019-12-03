@@ -205,7 +205,6 @@ describe("SubscriptionFeed test", () => {
                     status: collectionStatus.NONE,
                     collection: {},
                     papers: [],
-                    members: [],
                     replies: [],
                     error: -1,
                 },
@@ -217,8 +216,13 @@ describe("SubscriptionFeed test", () => {
                     status: collectionStatus.NONE,
                     error: -1,
                 },
+                getMembers: {},
             },
-            user: {},
+            user: {
+                getFollowings: {},
+                getFollowers: {},
+                search: {},
+            },
             review: {
                 make: {
                     status: reviewStatus.NONE,

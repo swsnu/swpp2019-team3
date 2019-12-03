@@ -48,6 +48,7 @@ const initialState = {
         members: [],
         pageNum: 0,
         finished: true,
+        error: null,
     },
 };
 
@@ -129,6 +130,7 @@ const reducer = (state = initialState, action) => {
                 members: [],
                 pageNum: 0,
                 finished: false,
+                error: action.target,
             },
         };
     case collectionConstants.SET_OWNER:

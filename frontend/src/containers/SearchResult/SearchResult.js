@@ -288,12 +288,15 @@ class SearchResult extends Component {
                                       className="collection-more-button"
                                       onClick={() => {
                                           this.props.onSearchCollection(
-                                              this.state.searchWord, this.props.collectionPageNum + 1,
+                                              this.state.searchWord,
+                                              this.props.collectionPageNum + 1,
                                           )
                                               .then(() => {
                                                   const { collections } = this.state;
                                                   this.setState({
-                                                      collections: collections.concat(this.props.searchedCollections),
+                                                      collections: collections.concat(
+                                                          this.props.searchedCollections,
+                                                      ),
                                                   });
                                               });
                                       }}

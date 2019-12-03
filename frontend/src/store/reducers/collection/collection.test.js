@@ -48,6 +48,7 @@ const stubInitialState = {
         members: [],
         pageNum: 0,
         finished: true,
+        error: null,
     },
 };
 
@@ -138,7 +139,7 @@ describe("Collection reducer", () => {
             type: collectionConstants.GET_COLLECTION_MEMBERS_SUCCESS,
             target: { members: stubMembers, pageNum: 1, finished: true },
         });
-        expect(newState.selected.status).toBe(collectionStatus.SUCCESS);
+        expect(newState.getMembers.status).toBe(collectionStatus.SUCCESS);
         expect(newState.getMembers.members).toBe(stubMembers);
     });
 
@@ -147,8 +148,8 @@ describe("Collection reducer", () => {
             type: collectionConstants.GET_COLLECTION_MEMBERS_FAILURE,
             target: stubError,
         });
-        expect(newState.selected.status).toBe(collectionStatus.FAILURE);
-        expect(newState.selected.error).toBe(stubError);
+        expect(newState.getMembers.status).toBe(collectionStatus.FAILURE);
+        expect(newState.getMembers.error).toBe(stubError);
     });
 
     it("should return set_owner", () => {

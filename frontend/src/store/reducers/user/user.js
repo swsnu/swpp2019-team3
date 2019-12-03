@@ -8,18 +8,21 @@ const initialState = {
         followers: [],
         pageNum: 0,
         finished: true,
+        error: null,
     },
     getFollowings: {
         status: userStatus.NONE,
         followings: [],
         pageNum: 0,
         finished: true,
+        error: null,
     },
     search: {
         status: userStatus.NONE,
         users: [],
         pageNum: 0,
         finished: true,
+        error: null,
     },
     followCount: 0,
     unfollowCount: 0,
@@ -59,6 +62,7 @@ const UserReducer = (state = initialState, action) => {
                 followers: [],
                 pageNum: 0,
                 finished: false,
+                error: action.target,
             },
         };
     case userConstants.GET_FOLLOWINGS:
@@ -79,6 +83,7 @@ const UserReducer = (state = initialState, action) => {
                 followings: [],
                 pageNum: 0,
                 finished: false,
+                error: action.target,
             },
         };
     case userConstants.ADD_FOLLOWING:
@@ -135,6 +140,7 @@ const UserReducer = (state = initialState, action) => {
                 users: [],
                 pageNum: 0,
                 finished: false,
+                error: action.target,
             },
         };
     default:

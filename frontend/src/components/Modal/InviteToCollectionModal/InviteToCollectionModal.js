@@ -50,7 +50,8 @@ class InviteToCollectionModal extends Component {
                     pageNum: this.props.followingPageNum,
                     finished: this.props.followingFinished,
                 });
-            });
+            })
+            .catch(() => {});
     }
 
     clickSearchHandler = () => {
@@ -77,7 +78,8 @@ class InviteToCollectionModal extends Component {
                     pageNum: this.props.searchUserPageNum,
                     finished: this.props.searchUserFinished,
                 });
-            });
+            })
+            .catch(() => {});
     }
 
     clickCancelHandler = () => {
@@ -107,7 +109,8 @@ class InviteToCollectionModal extends Component {
                 if (this.props.whatActionWillFollow) {
                     this.props.whatActionWillFollow();
                 }
-            });
+            })
+            .catch(() => {});
     }
 
     // handler function for user entry

@@ -34,7 +34,8 @@ class TransferOwnershipModal extends Component {
                     memberPageNum: this.props.memberPageNum,
                     memberFinished: this.props.memberFinished,
                 });
-            });
+            })
+            .catch(() => {});
     }
 
     clickOpenHandler = () => {

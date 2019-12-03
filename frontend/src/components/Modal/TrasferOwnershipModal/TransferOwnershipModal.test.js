@@ -75,6 +75,11 @@ describe("TransferOwnershipModal test", () => {
                     error: null,
                     collection: {},
                     papers: [],
+                    memberCount: 3,
+                    replies: [],
+                },
+                getMembers: {
+                    status: collectionStatus.NONE,
                     members: [
                         {
                             id: 1,
@@ -92,8 +97,9 @@ describe("TransferOwnershipModal test", () => {
                             description: "zxcv",
                         },
                     ],
-                    memberCount: 3,
-                    replies: [],
+                    pageNum: 0,
+                    finished: true,
+                    error: null,
                 },
             },
             user: {},

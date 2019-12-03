@@ -63,7 +63,6 @@ describe("<SearchResult />", () => {
                     error: null,
                     collection: {},
                     papers: [],
-                    members: [],
                     replies: [],
                 },
                 like: {
@@ -76,8 +75,17 @@ describe("<SearchResult />", () => {
                     count: 0,
                     error: null,
                 },
+                getMembers: {
+                    status: collectionStatus.NONE,
+                    members: [],
+                    pageNum: 0,
+                    finished: true,
+                    error: null,
+                },
             },
-            user: {},
+            user: {
+                search: {},
+            },
             review: {},
             reply: {},
         };

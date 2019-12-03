@@ -38,7 +38,8 @@ class ManageCollectionMemberModal extends Component {
                     memberPageNum: this.props.memberPageNum,
                     memberFinished: this.props.memberFinished,
                 });
-            });
+            })
+            .catch(() => {});
     }
 
     refreshMembers = () => {
@@ -51,7 +52,8 @@ class ManageCollectionMemberModal extends Component {
                     memberFinished: this.props.memberFinished,
                     checkedUserIdList: [],
                 });
-            });
+            })
+            .catch(() => {});
     }
 
     // opening and closing modal

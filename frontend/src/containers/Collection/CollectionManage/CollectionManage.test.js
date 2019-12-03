@@ -65,9 +65,9 @@ describe("CollectionManage test", () => {
                             users: 0,
                             papers: 0,
                         },
+                        owned: true,
                     },
                     papers: [],
-                    members: [],
                     replies: [],
                 },
                 like: {
@@ -80,8 +80,19 @@ describe("CollectionManage test", () => {
                     count: 0,
                     error: null,
                 },
+                getMembers: {
+                    status: collectionStatus.NONE,
+                    members: [],
+                    pageNum: 0,
+                    finished: true,
+                    error: null,
+                },
             },
-            user: {},
+            user: {
+                getFollowers: {},
+                getFollowings: {},
+                search: {},
+            },
             review: {},
             reply: {},
         };
@@ -114,7 +125,11 @@ describe("CollectionManage test", () => {
                     collection: {
                         title: "test collection",
                         text: "test description",
+                        owned: true,
                     },
+                },
+                getMembers: {
+                    status: collectionStatus.SUCCESS,
                     members: [
                         {
                             id: 1,
@@ -129,6 +144,9 @@ describe("CollectionManage test", () => {
                             ollection_user_type: "member",
                         },
                     ],
+                    pageNum: 1,
+                    finished: true,
+                    error: null,
                 },
             },
         };
@@ -139,7 +157,7 @@ describe("CollectionManage test", () => {
         expect(spyGetCollection).toHaveBeenCalledTimes(1);
 
         await flushPromises(); // flush onGetCollection
-        await flushPromises(); // flush onGetMembers
+        component.update();
 
         const instance = component.find(CollectionManage.WrappedComponent).instance();
         expect(instance.state.collectionName).toBe("test collection");
