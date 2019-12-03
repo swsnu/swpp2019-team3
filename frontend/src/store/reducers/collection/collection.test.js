@@ -12,6 +12,8 @@ const stubInitialState = {
         status: collectionStatus.NONE,
         list: [],
         error: null,
+        pageNum: 0,
+        finished: true,
     },
     edit: {
         status: collectionStatus.NONE,
@@ -28,7 +30,6 @@ const stubInitialState = {
         collection: {},
         error: null,
         papers: [],
-        members: [],
         memberCount: 0,
         replies: [],
     },
@@ -41,6 +42,12 @@ const stubInitialState = {
         status: collectionStatus.NONE,
         count: 0,
         error: null,
+    },
+    getMembers: {
+        status: collectionStatus.NONE,
+        members: [],
+        pageNum: 0,
+        finished: true,
     },
 };
 
@@ -129,10 +136,10 @@ describe("Collection reducer", () => {
     it("should handle get_collection_members_success", () => {
         const newState = reducer(stubInitialState, {
             type: collectionConstants.GET_COLLECTION_MEMBERS_SUCCESS,
-            target: stubMembers,
+            target: { members: stubMembers, pageNum: 1, finished: true },
         });
         expect(newState.selected.status).toBe(collectionStatus.SUCCESS);
-        expect(newState.selected.members).toBe(stubMembers);
+        expect(newState.getMembers.members).toBe(stubMembers);
     });
 
     it("should handle get_collection_members_failure", () => {

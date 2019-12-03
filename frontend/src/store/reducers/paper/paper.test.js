@@ -89,7 +89,6 @@ describe("Paper reducer", () => {
         expect(newState.unlikePaperStatus).toEqual(paperStatus.FAILURE);
     });
 
-
     it("should handle searchPaper success", () => {
         const newState = reducer(undefined, {
             type: paperConstants.SEARCH_PAPER_SUCCESS,
