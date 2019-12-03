@@ -291,10 +291,10 @@ class SearchResult extends Component {
 const mapStateToProps = (state) => ({
     searchPaperStatus: state.paper.search.status,
     searchCollectionStatus: state.collection.list.status,
-    searchUserStatus: state.user.status,
+    searchUserStatus: state.user.search.status,
     searchedPapers: state.paper.search.papers,
     searchedCollections: state.collection.list.list,
-    searchedUsers: state.user.searchedUsers,
+    searchedUsers: state.user.search.users,
     paperPageNum: state.paper.search.pageNum,
     paperFinished: state.paper.search.finished,
 });

@@ -29,8 +29,8 @@ class ManageCollectionMemberModal extends Component {
         this.checkHandler = this.checkHandler.bind(this);
     }
 
-    getMembersTrigger = () => {
-        this.props.onGetMembers(this.props.thisCollection.id, this.state.memberPageNum + 1)
+    getMembersTrigger = (pageNum, includesMe) => {
+        this.props.onGetMembers(this.props.thisCollection.id, pageNum + 1, includesMe)
             .then(() => {
                 const { members } = this.state;
                 this.setState({
@@ -42,7 +42,8 @@ class ManageCollectionMemberModal extends Component {
     }
 
     refreshMembers = () => {
-        this.props.onGetMembers(this.props.thisCollection.id, 1)
+        // if removeMode, the list of members should NOT include 'me'
+        this.props.onGetMembers(this.props.thisCollection.id, 1, !this.state.removeMode)
             .then(() => {
                 this.setState({
                     members: this.props.members,
@@ -55,7 +56,7 @@ class ManageCollectionMemberModal extends Component {
 
     // opening and closing modal
     clickOpenHandler = () => {
-        this.getMembersTrigger();
+        this.getMembersTrigger(0, true);
         this.setState({
             isModalOpen: true,
         });
@@ -76,14 +77,22 @@ class ManageCollectionMemberModal extends Component {
     clickKickOffEnableHandler = () => {
         this.setState({
             removeMode: true,
+            members: [],
+            memberPageNum: 0,
+            memberFinished: true,
         });
+        this.getMembersTrigger(0, false);
     }
 
     clickKickOffCancelHandler = () => {
         this.setState({
             removeMode: false,
             checkedUserIdList: [],
+            members: [],
+            memberPageNum: 0,
+            memberFinished: true,
         });
+        this.getMembersTrigger(0, true);
     }
 
     // handler function for user entry
@@ -169,7 +178,17 @@ class ManageCollectionMemberModal extends Component {
                                 : (
                                     <Button
                                       className="user-more-button"
-                                      onClick={this.getMembersTrigger}
+                                      onClick={() => {
+                                          if (this.state.removeMode) {
+                                              this.getMembersTrigger(
+                                                  this.state.memberPageNum, false,
+                                              );
+                                          } else {
+                                              this.getMembersTrigger(
+                                                  this.state.memberPageNum, true,
+                                              );
+                                          }
+                                      }}
                                       block
                                     >
                             View More
@@ -201,8 +220,8 @@ const mapDispatchToProps = (dispatch) => ({
     onDeleteMembers: (collectionId, memberIdList) => dispatch(
         collectionActions.deleteMembers(collectionId, memberIdList),
     ),
-    onGetMembers: (collectionId, pageNum) => dispatch(
-        collectionActions.getCollectionMembers(collectionId, pageNum),
+    onGetMembers: (collectionId, pageNum, includesMe) => dispatch(
+        collectionActions.getCollectionMembers(collectionId, pageNum, includesMe),
     ),
 });
 

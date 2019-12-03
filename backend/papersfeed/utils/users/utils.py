@@ -398,6 +398,9 @@ def select_user_collection(args):
 
     request_user = args[constants.USER]
 
+    # Decide if results include request_user if she or he is one of members
+    includes_me = True if constants.INCLUDES_ME not in args else json.loads(args[constants.INCLUDES_ME])
+
     # Page Number
     page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
@@ -406,7 +409,12 @@ def select_user_collection(args):
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     # Members QuerySet
-    queryset = CollectionUser.objects.filter(collection_id=collection_id)
+    if includes_me:
+        query = Q(collection_id=collection_id)
+    else:
+        query = Q(collection_id=collection_id) & ~Q(user_id=request_user.id)
+
+    queryset = CollectionUser.objects.filter(query)
 
     # Members(including owner) Of Collections
     collection_members = get_results_from_queryset(queryset, 10, page_number)
@@ -547,7 +555,7 @@ def select_user_following_collection(args):
     request_user = args[constants.USER]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # QuerySet
     queryset = UserFollow.objects.annotate(
@@ -588,7 +596,7 @@ def select_user_search_collection(args):
     keyword = args[constants.TEXT]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # User Queryset
     queryset = User.objects.annotate(

@@ -90,7 +90,7 @@ const getCollectionMembersFailure = (error) => ({
     target: error,
 });
 
-export const getCollectionMembers = (collectionID, pageNum = 1) => (dispatch) => axios.get("/api/user/collection", { params: { id: collectionID, page_number: pageNum } })
+export const getCollectionMembers = (collectionID, pageNum, includesMe = true) => (dispatch) => axios.get("/api/user/collection", { params: { id: collectionID, page_number: pageNum, includes_me: includesMe } })
     .then((res) => { dispatch(getCollectionMembersSuccess(res.data)); })
     .catch((err) => { dispatch(getCollectionMembersFailure(err)); });
 

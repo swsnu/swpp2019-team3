@@ -25,8 +25,8 @@ class TransferOwnershipModal extends Component {
         this.checkHandler = this.checkHandler.bind(this);
     }
 
-    getMembersTrigger = () => {
-        this.props.onGetMembers(this.props.thisCollection.id, this.state.memberPageNum + 1)
+    getMembersTrigger = (pageNum) => {
+        this.props.onGetMembers(this.props.thisCollection.id, pageNum + 1, false)
             .then(() => {
                 const { members } = this.state;
                 this.setState({
@@ -38,7 +38,7 @@ class TransferOwnershipModal extends Component {
     }
 
     clickOpenHandler = () => {
-        this.getMembersTrigger();
+        this.getMembersTrigger(0);
         this.setState({ isModalOpen: true });
     }
 
@@ -91,6 +91,16 @@ class TransferOwnershipModal extends Component {
                     </Modal.Header>
                     <Modal.Body>
                         {memberList}
+                        { this.state.memberFinished ? null
+                            : (
+                                <Button
+                                  className="user-more-button"
+                                  onClick={() => this.getMembersTrigger(this.state.memberPageNum)}
+                                  block
+                                >
+                            View More
+                                </Button>
+                            )}
                     </Modal.Body>
                     <Modal.Footer>
                         <WarningModal
@@ -120,14 +130,16 @@ const mapStateToProps = (state) => ({
     me: state.auth.me,
     thisCollection: state.collection.selected.collection,
     members: state.collection.getMembers.members,
+    memberPageNum: state.collection.getMembers.pageNum,
+    memberFinished: state.collection.getMembers.finished,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onTransferOwnership: (collectionId, targetUserId) => dispatch(
         collectionActions.setOwner(collectionId, targetUserId),
     ),
-    onGetMembers: (collectionId, pageNum) => dispatch(
-        collectionActions.getCollectionMembers(collectionId, pageNum),
+    onGetMembers: (collectionId, pageNum, includesMe) => dispatch(
+        collectionActions.getCollectionMembers(collectionId, pageNum, includesMe),
     ),
 });
 

@@ -424,8 +424,8 @@ def __is_collection_owned(outer_ref, request_user):
     """Check If Collection is Owned by User"""
     return Exists(
         CollectionUser.objects.filter(collection_id=OuterRef(outer_ref),
-                                   type=COLLECTION_USER_TYPE[0],
-                                   user_id=request_user.id if request_user else None)
+                                      type=COLLECTION_USER_TYPE[0],
+                                      user_id=request_user.id if request_user else None)
     )
 
 

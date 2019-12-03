@@ -15,10 +15,15 @@ const initialState = {
         pageNum: 0,
         finished: true,
     },
+    search: {
+        status: userStatus.NONE,
+        users: [],
+        pageNum: 0,
+        finished: true,
+    },
     followCount: 0,
     unfollowCount: 0,
     status: userStatus.NONE,
-    searchedUsers: [],
     error: null,
 };
 
@@ -113,9 +118,25 @@ const UserReducer = (state = initialState, action) => {
             error: action.target,
         };
     case userConstants.SEARCH_USER_SUCCESS:
-        return { ...state, status: userStatus.SUCCESS, searchedUsers: action.target };
+        return {
+            ...state,
+            search: {
+                status: userStatus.SUCCESS,
+                users: action.target.users,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
+            },
+        };
     case userConstants.SEARCH_USER_FAILURE:
-        return { ...state, status: userStatus.FAILURE };
+        return {
+            ...state,
+            search: {
+                status: userStatus.FAILURE,
+                users: [],
+                pageNum: 0,
+                finished: false,
+            },
+        };
     default:
         return { ...state };
     }

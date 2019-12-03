@@ -155,7 +155,6 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionManage);
 
 CollectionManage.propTypes = {
-    me: PropTypes.objectOf(PropTypes.any),
     history: PropTypes.objectOf(PropTypes.any),
     location: PropTypes.objectOf(PropTypes.any),
 
@@ -168,7 +167,6 @@ CollectionManage.propTypes = {
 };
 
 CollectionManage.defaultProps = {
-    me: {},
     history: null,
     location: null,
 

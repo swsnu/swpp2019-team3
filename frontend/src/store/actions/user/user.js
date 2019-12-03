@@ -40,12 +40,12 @@ export const getFollowersByUserId = (userId) => (dispatch) => axios.get("/api/us
     .catch((err) => { dispatch(getFollowersByUserIdFailure(err)); });
 
 // get a list of followings
-const getFollowingsByUserIdSuccess = (data) => ({
+const getFollowingsSuccess = (data) => ({
     type: userConstants.GET_FOLLOWINGS,
     target: { followings: data.users, pageNum: data.page_number, finished: data.is_finished },
 });
 
-const getFollowingsByUserIdFailure = (error) => {
+const getFollowingsFailure = (error) => {
     const actionType = error.response.status === 404
         ? userConstants.GET_FOLLOWINGS_FAILURE_USER_NOT_EXIST : null;
     return {
@@ -55,8 +55,15 @@ const getFollowingsByUserIdFailure = (error) => {
 };
 
 export const getFollowingsByUserId = (userId) => (dispatch) => axios.get("/api/user/following", { params: userId })
-    .then((res) => { dispatch(getFollowingsByUserIdSuccess(res.data)); })
-    .catch((err) => { dispatch(getFollowingsByUserIdFailure(err)); });
+    .then((res) => { dispatch(getFollowingsSuccess(res.data)); })
+    .catch((err) => { dispatch(getFollowingsFailure(err)); });
+
+
+// get a list of followings not in the certain collection
+export const getFollowingsNotInCollection = (userId, collectionId, pageNum) => (dispatch) => axios.get("/api/user/following/collection", { params: { user: userId, collection_id: collectionId, page_number: pageNum } })
+    .then((res) => { dispatch(getFollowingsSuccess(res.data)); })
+    .catch((err) => { dispatch(getFollowingsFailure(err)); });
+
 
 // follow a user
 const addUserFollowingSuccess = (count) => ({
@@ -118,9 +125,9 @@ export const editUserInfo = (newUserInfo) => (dispatch) => axios.put("/api/user"
     .catch((err) => { dispatch(editUserInfoFailure(err)); });
 
 
-const searchUserSuccess = (users) => ({
+const searchUserSuccess = (data) => ({
     type: userConstants.SEARCH_USER_SUCCESS,
-    target: users.users,
+    target: { users: data.users, pageNum: data.page_number, finished: data.is_finished },
 });
 
 const searchUserFailure = (error) => ({
@@ -128,6 +135,12 @@ const searchUserFailure = (error) => ({
     target: error,
 });
 
-export const searchUser = (searchWord) => (dispatch) => axios.get("/api/user/search", { params: searchWord })
+export const searchUser = (searchWord, pageNum) => (dispatch) => axios.get("/api/user/search", { params: { text: searchWord, page_number: pageNum } })
     .then((res) => dispatch(searchUserSuccess(res.data)))
     .catch((err) => dispatch(searchUserFailure(err)));
+
+
+// get a list of searched users not in the certain collection
+export const searchUserNotInCollection = (searchWord, collectionId, pageNum) => (dispatch) => axios.get("/api/user/search/collection", { params: { text: searchWord, collection_id: collectionId, page_number: pageNum } })
+    .then((res) => { dispatch(searchUserSuccess(res.data)); })
+    .catch((err) => { dispatch(searchUserFailure(err)); });

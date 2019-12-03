@@ -12,13 +12,15 @@ class InviteToCollectionModal extends Component {
         this.state = {
             searchKeyWord: "",
             isModalOpen: false,
-            memberIds: [],
             users: [],
             checkedUserIdList: [],
-            followingPageNum: 0,
-            followingFinished: true,
+            pageNum: 0,
+            finished: true,
+            showFollowings: true,
         };
 
+        this.getFollowingsTrigger = this.getFollowingsTrigger.bind(this);
+        this.searchUsersTrigger = this.searchUsersTrigger.bind(this);
         this.clickOpenHandler = this.clickOpenHandler.bind(this);
         this.clickCancelHandler = this.clickCancelHandler.bind(this);
         this.clickSearchHandler = this.clickSearchHandler.bind(this);
@@ -30,25 +32,50 @@ class InviteToCollectionModal extends Component {
     // handler functions for buttons
     clickOpenHandler = () => {
         this.setState({
-            memberIds: this.props.members.map((x) => x.id),
             isModalOpen: true,
         });
-        this.getFollowingsTrigger();
+        this.getFollowingsTrigger(0);
     }
 
-    getFollowingsTrigger = () => {
-        this.props.onGetFollowings({
-            id: this.props.me.id,
-            page_number: this.state.followingPageNum + 1,
-        })
+    getFollowingsTrigger = (pageNum) => {
+        this.props.onGetFollowingsNotInCollection(
+            this.props.me.id,
+            this.props.thisCollection.id,
+            pageNum + 1,
+        )
             .then(() => {
-                const { memberIds } = this.state;
                 const { users } = this.state;
                 this.setState({
-                    users: users.concat(this.props.myFollowings
-                        .filter((x) => !memberIds.includes(x.id))),
-                    followingPageNum: this.props.followingPageNum,
-                    followingFinished: this.props.followingFinished,
+                    users: users.concat(this.props.myFollowings),
+                    pageNum: this.props.followingPageNum,
+                    finished: this.props.followingFinished,
+                });
+            });
+    }
+
+    clickSearchHandler = () => {
+        this.setState({
+            users: [],
+            checkedUserIdList: [],
+            pageNum: 0,
+            finished: true,
+            showFollowings: false,
+        });
+        this.searchUsersTrigger(0);
+    }
+
+    searchUsersTrigger = (pageNum) => {
+        this.props.onSearchUsersNotInCollection(
+            this.state.searchKeyWord,
+            this.props.thisCollection.id,
+            pageNum + 1,
+        )
+            .then(() => {
+                const { users } = this.state;
+                this.setState({
+                    users: users.concat(this.props.searchedUsers),
+                    pageNum: this.props.searchUserPageNum,
+                    finished: this.props.searchUserFinished,
                 });
             });
     }
@@ -59,21 +86,10 @@ class InviteToCollectionModal extends Component {
             isModalOpen: false,
             users: [],
             checkedUserIdList: [],
-            followingPageNum: 0,
-            followingFinished: true,
+            pageNum: 0,
+            finished: true,
+            showFollowings: true,
         });
-    }
-
-    clickSearchHandler = () => {
-        this.setState({ checkedUserIdList: [] });
-        this.props.onSearchUsers({ text: this.state.searchKeyWord })
-            .then(() => {
-                const { memberIds } = this.state;
-                this.setState({
-                    users: this.props.searchedUsers
-                        .filter((x) => !memberIds.includes(x.id)),
-                });
-            });
     }
 
     clickInviteUsersHandler = () => {
@@ -84,8 +100,9 @@ class InviteToCollectionModal extends Component {
                     isModalOpen: false,
                     users: [],
                     checkedUserIdList: [],
-                    followingPageNum: 0,
-                    followingFinished: true,
+                    pageNum: 0,
+                    finished: true,
+                    showFollowings: true,
                 });
                 if (this.props.whatActionWillFollow) {
                     this.props.whatActionWillFollow();
@@ -171,11 +188,17 @@ class InviteToCollectionModal extends Component {
                             <Form.Group controlId="A" id="userList">
                                 {userEntries}
                             </Form.Group>
-                            { this.state.followingFinished ? null
+                            { this.state.finished ? null
                                 : (
                                     <Button
                                       className="user-more-button"
-                                      onClick={this.getFollowingsTrigger}
+                                      onClick={() => {
+                                          if (this.state.showFollowings) {
+                                              this.getFollowingsTrigger(this.state.pageNum);
+                                          } else {
+                                              this.searchUsersTrigger(this.state.pageNum);
+                                          }
+                                      }}
                                       block
                                     >
                             View More
@@ -194,18 +217,21 @@ const mapStateToProps = (state) => ({
     myFollowings: state.user.getFollowings.followings,
     followingPageNum: state.user.getFollowings.pageNum,
     followingFinished: state.user.getFollowings.finished,
-    searchedUsers: state.user.searchedUsers,
+    searchedUsers: state.user.search.users,
+    searchUserPageNum: state.user.search.pageNum,
+    searchUserFinished: state.user.search.finished,
     me: state.auth.me,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onGetFollowings: (userId) => dispatch(userActions.getFollowingsByUserId(userId)),
-    onSearchUsers: (keyword) => dispatch(userActions.searchUser(keyword)),
+    onGetFollowingsNotInCollection: (userId, collectionId, pageNum) => dispatch(
+        userActions.getFollowingsNotInCollection(userId, collectionId, pageNum),
+    ),
+    onSearchUsersNotInCollection: (keyword, collectionId, pageNum) => dispatch(
+        userActions.searchUserNotInCollection(keyword, collectionId, pageNum),
+    ),
     onInviteUsers: (collectionId, userIdList) => dispatch(
         collectionActions.addNewMembers(collectionId, userIdList),
-    ),
-    onGetMembers: (collectionId) => dispatch(
-        collectionActions.getCollectionMembers(collectionId),
     ),
 });
 
@@ -216,17 +242,17 @@ InviteToCollectionModal.propTypes = {
     openButtonName: PropTypes.string,
 
     thisCollection: PropTypes.objectOf(PropTypes.any),
-    members: PropTypes.arrayOf(PropTypes.any),
     myFollowings: PropTypes.arrayOf(PropTypes.any),
     searchedUsers: PropTypes.arrayOf(PropTypes.any),
     me: PropTypes.objectOf(PropTypes.any),
 
-    onGetFollowings: PropTypes.func,
+    onGetFollowingsNotInCollection: PropTypes.func,
     followingPageNum: PropTypes.number,
     followingFinished: PropTypes.bool,
-    onSearchUsers: PropTypes.func,
+    onSearchUsersNotInCollection: PropTypes.func,
+    searchUserPageNum: PropTypes.number,
+    searchUserFinished: PropTypes.bool,
     onInviteUsers: PropTypes.func,
-    onGetMembers: PropTypes.func,
 
     whatActionWillFollow: PropTypes.func,
 };
@@ -235,17 +261,17 @@ InviteToCollectionModal.defaultProps = {
     openButtonName: "",
 
     thisCollection: {},
-    members: [],
     myFollowings: [],
     followingPageNum: 0,
     followingFinished: true,
     searchedUsers: [],
+    searchUserPageNum: 0,
+    searchUserFinished: true,
     me: null,
 
-    onGetFollowings: () => {},
-    onSearchUsers: () => {},
+    onGetFollowingsNotInCollection: () => {},
+    onSearchUsersNotInCollection: () => {},
     onInviteUsers: () => {},
-    onGetMembers: () => {},
 
     whatActionWillFollow: () => {},
 };
