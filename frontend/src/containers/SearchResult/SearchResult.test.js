@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import SearchResult from "./SearchResult";
 import { paperActions, collectionActions, userActions } from "../../store/actions";
 import {
-    paperStatus, collectionStatus,
+    paperStatus, collectionStatus, userStatus,
 } from "../../constants/constants";
 import { getMockStore, mockPromise, flushPromises } from "../../test-utils/mocks";
 
@@ -46,6 +46,8 @@ describe("<SearchResult />", () => {
                 list: {
                     status: collectionStatus.NONE,
                     list: [],
+                    pageNum: 0,
+                    finished: true,
                     error: null,
                 },
                 edit: {
@@ -84,7 +86,13 @@ describe("<SearchResult />", () => {
                 },
             },
             user: {
-                search: {},
+                search: {
+                    status: userStatus.NONE,
+                    users: [],
+                    pageNum: 0,
+                    finished: true,
+                    error: null,
+                },
             },
             review: {},
             reply: {},
@@ -282,6 +290,7 @@ describe("<SearchResult />", () => {
         };
         const component = mount(makeSearchResult(stubInitialState));
 
+        expect(spySearchPaper).toBeCalledTimes(1);
         await flushPromises();
         component.update();
 
@@ -289,6 +298,59 @@ describe("<SearchResult />", () => {
         expect(wrapper.length).toBe(1);
         wrapper.simulate("click");
 
+        expect(spySearchPaper).toBeCalledTimes(2);
+        await flushPromises();
+    });
+
+    it("should show more if collection-more-button clicked", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                list: {
+                    status: collectionStatus.SUCCESS,
+                    list: [],
+                    pageNum: 1,
+                    finished: false,
+                },
+            },
+        };
+        const component = mount(makeSearchResult(stubInitialState));
+
+        expect(spySearchCollection).toBeCalledTimes(1);
+        await flushPromises();
+        component.update();
+
+        const wrapper = component.find(".collection-more-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        expect(spySearchCollection).toBeCalledTimes(2);
+        await flushPromises();
+    });
+
+    it("should show more if user-more-button clicked", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            user: {
+                search: {
+                    status: userStatus.SUCCESS,
+                    users: [],
+                    pageNum: 1,
+                    finished: false,
+                },
+            },
+        };
+        const component = mount(makeSearchResult(stubInitialState));
+
+        expect(spySearchUser).toBeCalledTimes(1);
+        await flushPromises();
+        component.update();
+
+        const wrapper = component.find(".user-more-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        expect(spySearchUser).toBeCalledTimes(2);
         await flushPromises();
     });
 });

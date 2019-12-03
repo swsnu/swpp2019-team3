@@ -255,6 +255,25 @@ describe("userActions", () => {
             });
     });
 
+    it("'getFollowingsNotInCollection' should handle error", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(userActions.getFollowingsNotInCollection(stubUser.id, 1, 1))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/following/collection", { params: { user: 1, collection_id: 1, page_number: 1 } });
+                done();
+            });
+    });
+
     it("'addUserFollowing' should call axios.post", (done) => {
         const spy = jest.spyOn(axios, "post")
             .mockImplementation(() => new Promise((resolve) => {
@@ -510,6 +529,25 @@ describe("userActions", () => {
                     data: stubUser,
                 };
                 resolve(result);
+            }));
+
+        mockStore.dispatch(userActions.searchUserNotInCollection("a", 1, 1))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/search/collection", { params: { text: "a", collection_id: 1, page_number: 1 } });
+                done();
+            });
+    });
+
+    it("'searchUserNotInCollection' should handle error", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 440,
+                        data: {},
+                    },
+                };
+                reject(result);
             }));
 
         mockStore.dispatch(userActions.searchUserNotInCollection("a", 1, 1))

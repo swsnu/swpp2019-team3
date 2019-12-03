@@ -185,7 +185,6 @@ describe("CollectionManage test", () => {
         expect(spySetTitleAndDescription).toHaveBeenCalledTimes(1);
     });
 
-    // more tests should be implemented
     it("should call deleteCollection when deleting", async () => {
         const component = mount(collectionManage);
         let wrapper = component.find(".WarningModal #modalOpenButton").hostNodes();
@@ -199,5 +198,24 @@ describe("CollectionManage test", () => {
         await flushPromises();
 
         expect(spyDeleteCollection).toHaveBeenCalledTimes(1);
+    });
+
+    it("should redirect to Main Page when the user is not the owner", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                ...stubInitialState.collection,
+                selected: {
+                    status: collectionStatus.SUCCESS,
+                    collection: {
+                        owned: false,
+                    },
+                },
+            },
+        };
+        mount(makeCollectionManage(stubInitialState));
+        await flushPromises();
+
+        // FIXME: how to check if goBack() of history(created by createBrowserHistory()) is called?
     });
 });
