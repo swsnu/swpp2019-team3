@@ -502,6 +502,13 @@ def get_keywords_paper(filter_query):
     """get keywords paper"""
     return __get_keywords_paper(filter_query)
 
+def pack_keywords(keywords):
+    """pack keywords"""
+    return __pack_keywords(keywords)
+
+def get_paper_like_count(paper_ids, group_by_field):
+    """get paper like count"""
+    return __get_paper_like_count(paper_ids, group_by_field)
 
 def __get_keywords_paper(filter_query):
     """Get Keywords Of Paper"""

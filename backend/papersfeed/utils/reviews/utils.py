@@ -271,6 +271,9 @@ def get_reviews(filter_query, request_user, count):
     """Get Reviews"""
     return __get_reviews(filter_query, request_user, count)
 
+def get_review_like_count(review_ids, group_by_field):
+    """Get Review like Count"""
+    return __get_review_like_count(review_ids, group_by_field)
 
 def __get_reviews(filter_query, request_user, count, order_by='-pk'):
     """Get Reviews By Query"""
