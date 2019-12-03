@@ -44,4 +44,4 @@ class Subscription(BaseModel):
     class Meta:
         """Table Meta"""
         db_table = 'swpp_subscription'  # Table 이름
-        ordering = ('-creation_date',)  # recent subscription recode will come first
+        ordering = ('-modification_date',)  # recent subscription recode will come first

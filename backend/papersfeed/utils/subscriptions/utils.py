@@ -64,7 +64,7 @@ def __pack_subscriptions(subscriptions, request_user):
 
         try:
             target_type = str(subscription.target_content_type)
-            if target_type == 'paper' or target_type == 'collection' or target_type == 'review':
+            if target_type in ('paper', 'collection', 'review'):
                 target = {
                     constants.TYPE: str(subscription.target_content_type),
                     constants.ID: subscription.target.id,
