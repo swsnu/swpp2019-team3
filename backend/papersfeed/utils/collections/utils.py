@@ -6,7 +6,7 @@ from django.db.models import Q, Exists, OuterRef, Count, Case, When
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
-from papersfeed.models.collections.collection import Collection
+from papersfeed.models.collections.collection import Collection, COLLECTION_SHARE_TYPE
 from papersfeed.models.collections.collection_like import CollectionLike
 from papersfeed.models.collections.collection_user import CollectionUser, COLLECTION_USER_TYPE
 from papersfeed.models.collections.collection_paper import CollectionPaper
@@ -102,6 +102,55 @@ def update_collection(args):
     # Update Text
     if text:
         collection.text = text
+
+    collection.save()
+
+    collections, _ = __get_collections(Q(id=collection.id), request_user, None)
+
+    if not collections:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    return collections[0]
+
+
+def update_collection_type(args):
+    """Update Collection Type"""
+    is_parameter_exists([
+        constants.ID,
+        constants.TYPE
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Collection Share Type
+    type = args[constants.TYPE]
+
+    # Collection Id
+    collection_id = args[constants.ID]
+
+    # Revoke ownership from request_user
+    try:
+        collection_user = CollectionUser.objects.get(collection_id=collection_id, user_id=request_user.id)
+    except ObjectDoesNotExist:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    # if request_user is not owner, then raise AUTH_ERROR
+    if collection_user.type != COLLECTION_USER_TYPE[0]:
+        raise ApiError(constants.AUTH_ERROR)
+
+    # Get Collection
+    try:
+        collection = Collection.objects.get(id=collection_id)
+    except ObjectDoesNotExist:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    if type == COLLECTION_SHARE_TYPE[0]:
+        collection.type = COLLECTION_SHARE_TYPE[0]
+    elif type == COLLECTION_SHARE_TYPE[1]:
+        collection.type = COLLECTION_SHARE_TYPE[1]
+    else:
+        raise ApiError(constants.PARAMETER_ERROR)
 
     collection.save()
 
@@ -400,7 +449,8 @@ def __pack_collections(collections, request_user, paper_id=None):  # pylint: dis
                 constants.REPLIES: reply_counts[collection_id] if collection_id in reply_counts else 0
             },
             constants.CREATION_DATE: collection.creation_date,
-            constants.MODIFICATION_DATE: collection.modification_date
+            constants.MODIFICATION_DATE: collection.modification_date,
+            constants.TYPE: collection.type
         }
 
         if paper_id:

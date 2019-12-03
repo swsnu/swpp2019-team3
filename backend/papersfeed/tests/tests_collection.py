@@ -112,6 +112,51 @@ class CollectionTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_edit_collection_type(self):
+        """ EDIT COLLECTION TYPE """
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        collection_id = Collection.objects.filter(title='SWPP Papers').first().id
+
+        # Put Collection with Type: Wrong Type
+        response = client.put('/api/collection/type',
+                              data=json.dumps({
+                                  constants.ID: collection_id,
+                                  constants.TYPE: 'privatee'
+                              }),
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+        # Put Collection with Type: Private Type
+        response = client.put('/api/collection/type',
+                              data=json.dumps({
+                                  constants.ID: collection_id,
+                                  constants.TYPE: 'private'
+                              }),
+                              content_type='application/json')
+        collection = json.loads(response.content)[constants.COLLECTION]
+        self.assertEqual(collection[constants.TYPE], 'private')
+        self.assertEqual(response.status_code, 200)
+
+        # Put Collection with Type: Public Type
+        response = client.put('/api/collection/type',
+                              data=json.dumps({
+                                  constants.ID: collection_id,
+                                  constants.TYPE: 'public'
+                              }),
+                              content_type='application/json')
+        collection = json.loads(response.content)[constants.COLLECTION]
+        self.assertEqual(collection[constants.TYPE], 'public')
+        self.assertEqual(response.status_code, 200)
+
     def test_get_collections_of_user(self):
         """ GET USER'S COLLECTIONS """
         client = Client()
