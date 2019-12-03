@@ -14,6 +14,9 @@ class TransferOwnershipModal extends Component {
             isModalOpen: false,
             selectedUserId: -1,
             selectedUserName: "",
+            members: [],
+            memberPageNum: 0,
+            memberFinished: true,
         };
 
 
@@ -22,7 +25,20 @@ class TransferOwnershipModal extends Component {
         this.checkHandler = this.checkHandler.bind(this);
     }
 
+    getMembersTrigger = () => {
+        this.props.onGetMembers(this.props.thisCollection.id, this.state.memberPageNum + 1)
+            .then(() => {
+                const { members } = this.state;
+                this.setState({
+                    members: members.concat(this.props.members),
+                    memberPageNum: this.props.memberPageNum,
+                    memberFinished: this.props.memberFinished,
+                });
+            });
+    }
+
     clickOpenHandler = () => {
+        this.getMembersTrigger();
         this.setState({ isModalOpen: true });
     }
 
@@ -31,6 +47,9 @@ class TransferOwnershipModal extends Component {
             isModalOpen: false,
             selectedUserId: -1,
             selectedUserName: "",
+            members: [],
+            memberPageNum: 0,
+            memberFinished: true,
         });
     }
 
@@ -43,8 +62,8 @@ class TransferOwnershipModal extends Component {
 
     render() {
         let memberList = (<div />);
-        if (this.props.me && this.props.members.length > 0) {
-            memberList = this.props.members
+        if (this.props.me && this.state.members.length > 0) {
+            memberList = this.state.members
                 .filter((user) => user.id !== this.props.me.id)
                 .map((user) => (
                     <UserEntry
@@ -100,12 +119,15 @@ class TransferOwnershipModal extends Component {
 const mapStateToProps = (state) => ({
     me: state.auth.me,
     thisCollection: state.collection.selected.collection,
-    members: state.collection.selected.members,
+    members: state.collection.getMembers.members,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onTransferOwnership: (collectionId, targetUserId) => dispatch(
         collectionActions.setOwner(collectionId, targetUserId),
+    ),
+    onGetMembers: (collectionId, pageNum) => dispatch(
+        collectionActions.getCollectionMembers(collectionId, pageNum),
     ),
 });
 
@@ -120,6 +142,9 @@ TransferOwnershipModal.propTypes = {
     members: PropTypes.arrayOf(PropTypes.any),
 
     onTransferOwnership: PropTypes.func,
+    onGetMembers: PropTypes.func,
+    memberPageNum: PropTypes.number,
+    memberFinished: PropTypes.bool,
 };
 
 TransferOwnershipModal.defaultProps = {
@@ -130,4 +155,7 @@ TransferOwnershipModal.defaultProps = {
     members: [],
 
     onTransferOwnership: () => {},
+    onGetMembers: () => {},
+    memberPageNum: 0,
+    memberFinished: true,
 };

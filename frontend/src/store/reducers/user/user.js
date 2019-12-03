@@ -49,8 +49,12 @@ const UserReducer = (state = initialState, action) => {
     case userConstants.GET_FOLLOWERS_FAILURE_USER_NOT_EXIST:
         return {
             ...state,
-            status: userStatus.USER_NOT_EXIST,
-            error: action.target,
+            getFollowers: {
+                status: userStatus.USER_NOT_EXIST,
+                followers: [],
+                pageNum: 0,
+                finished: false,
+            },
         };
     case userConstants.GET_FOLLOWINGS:
         return {
@@ -65,8 +69,12 @@ const UserReducer = (state = initialState, action) => {
     case userConstants.GET_FOLLOWINGS_FAILURE_USER_NOT_EXIST:
         return {
             ...state,
-            status: userStatus.USER_NOT_EXIST,
-            error: action.target,
+            getFollowings: {
+                status: userStatus.USER_NOT_EXIST,
+                followings: [],
+                pageNum: 0,
+                finished: false,
+            },
         };
     case userConstants.ADD_FOLLOWING:
         return {

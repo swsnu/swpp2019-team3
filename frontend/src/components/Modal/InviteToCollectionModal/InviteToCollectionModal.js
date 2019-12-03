@@ -82,9 +82,14 @@ class InviteToCollectionModal extends Component {
                 this.setState({
                     searchKeyWord: "",
                     isModalOpen: false,
+                    users: [],
                     checkedUserIdList: [],
+                    followingPageNum: 0,
+                    followingFinished: true,
                 });
-                this.props.onGetMembers(this.props.thisCollection.id);
+                if (this.props.whatActionWillFollow) {
+                    this.props.whatActionWillFollow();
+                }
             });
     }
 
@@ -222,6 +227,8 @@ InviteToCollectionModal.propTypes = {
     onSearchUsers: PropTypes.func,
     onInviteUsers: PropTypes.func,
     onGetMembers: PropTypes.func,
+
+    whatActionWillFollow: PropTypes.func,
 };
 
 InviteToCollectionModal.defaultProps = {
@@ -239,4 +246,6 @@ InviteToCollectionModal.defaultProps = {
     onSearchUsers: () => {},
     onInviteUsers: () => {},
     onGetMembers: () => {},
+
+    whatActionWillFollow: () => {},
 };

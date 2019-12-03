@@ -21,7 +21,6 @@ class UserList extends Component {
             finished: true,
         };
 
-        this.clickUserMoreHandler = this.clickUserMoreHandler.bind(this);
         this.getUsersTrigger = this.getUsersTrigger.bind(this);
         this.userCardsMaker = this.userCardsMaker.bind(this);
     }
@@ -42,10 +41,6 @@ class UserList extends Component {
     componentWillUnmount() {
         this._isMounted = false;
     }
-
-    clickUserMoreHandler = () => {
-        this.getUsersTrigger(this.state.pageNum);
-    };
 
     getUsersTrigger = (pageNum) => {
         const { users } = this.state;
@@ -84,7 +79,11 @@ class UserList extends Component {
                         this.props.history.push("/main");
                     }
                     if (this._isMounted) {
-                        this.setState({ users: this.props.members });
+                        this.setState({
+                            users: users.concat(this.props.members),
+                            pageNum: this.props.memberPageNum,
+                            finished: this.props.memberFinished,
+                        });
                     }
                 });
         }
@@ -130,7 +129,7 @@ class UserList extends Component {
                         : (
                             <Button
                               className="user-more-button"
-                              onClick={this.clickUserMoreHandler}
+                              onClick={() => this.getUsersTrigger(this.state.pageNum)}
                               size="lg"
                               block
                             >
@@ -152,15 +151,17 @@ const mapStateToProps = (state) => ({
     followingUsers: state.user.getFollowings.followings,
     followingPageNum: state.user.getFollowings.pageNum,
     followingFinished: state.user.getFollowings.finished,
-    getMembersStatus: state.collection.selected.status,
-    members: state.collection.selected.members,
+    getMembersStatus: state.collection.getMembers.status,
+    members: state.collection.getMembers.members,
+    memberPageNum: state.collection.getMembers.pageNum,
+    memberFinished: state.collection.getMembers.finished,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onFollowerUser: (userId) => dispatch(userActions.getFollowersByUserId(userId)),
     onFollowingUser: (userId) => dispatch(userActions.getFollowingsByUserId(userId)),
-    onGetMembers: (collectionId) => dispatch(
-        collectionActions.getCollectionMembers(collectionId),
+    onGetMembers: (collectionId, pageNum) => dispatch(
+        collectionActions.getCollectionMembers(collectionId, pageNum),
     ),
 });
 
@@ -183,6 +184,8 @@ UserList.propTypes = {
     followingPageNum: PropTypes.number,
     followingFinished: PropTypes.bool,
     getMembersStatus: PropTypes.string,
+    memberPageNum: PropTypes.number,
+    memberFinished: PropTypes.bool,
 };
 
 UserList.defaultProps = {
@@ -202,4 +205,6 @@ UserList.defaultProps = {
     followingPageNum: 0,
     followingFinished: true,
     getMembersStatus: collectionStatus.NONE,
+    memberPageNum: 0,
+    memberFinished: true,
 };

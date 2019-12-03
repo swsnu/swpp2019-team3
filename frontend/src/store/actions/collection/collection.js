@@ -80,9 +80,9 @@ export const getCollectionPapers = (collectionId) => (dispatch) => axios.get("/a
     .then((res) => { dispatch(getCollectionPapersSuccess(res.data)); })
     .catch((err) => { (dispatch(getCollectionPapersFailure(err))); });
 
-const getCollectionMembersSuccess = (members) => ({
+const getCollectionMembersSuccess = (data) => ({
     type: collectionConstants.GET_COLLECTION_MEMBERS_SUCCESS,
-    target: members.users,
+    target: { members: data.users, pageNum: data.page_number, finished: data.is_finished },
 });
 
 const getCollectionMembersFailure = (error) => ({

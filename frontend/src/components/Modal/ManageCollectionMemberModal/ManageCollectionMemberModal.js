@@ -17,8 +17,11 @@ class ManageCollectionMemberModal extends Component {
             removeMode: false,
             checkedUserIdList: [],
             members: [],
+            memberPageNum: 0,
+            memberFinished: true,
         };
 
+        this.getMembersTrigger = this.getMembersTrigger.bind(this);
         this.clickOpenHandler = this.clickOpenHandler.bind(this);
         this.clickCloseHandler = this.clickCloseHandler.bind(this);
         this.clickKickOffCancelHandler = this.clickKickOffCancelHandler.bind(this);
@@ -26,18 +29,33 @@ class ManageCollectionMemberModal extends Component {
         this.checkHandler = this.checkHandler.bind(this);
     }
 
-    /* eslint-disable react/no-did-update-set-state */
-    componentDidUpdate(prevProps) {
-        if (this.props.members !== prevProps.members) {
-            this.setState({
-                members: this.props.members,
+    getMembersTrigger = () => {
+        this.props.onGetMembers(this.props.thisCollection.id, this.state.memberPageNum + 1)
+            .then(() => {
+                const { members } = this.state;
+                this.setState({
+                    members: members.concat(this.props.members),
+                    memberPageNum: this.props.memberPageNum,
+                    memberFinished: this.props.memberFinished,
+                });
             });
-        }
     }
-    /* eslint-enable react/no-did-update-set-state */
+
+    refreshMembers = () => {
+        this.props.onGetMembers(this.props.thisCollection.id, 1)
+            .then(() => {
+                this.setState({
+                    members: this.props.members,
+                    memberPageNum: this.props.memberPageNum,
+                    memberFinished: this.props.memberFinished,
+                    checkedUserIdList: [],
+                });
+            });
+    }
 
     // opening and closing modal
     clickOpenHandler = () => {
+        this.getMembersTrigger();
         this.setState({
             isModalOpen: true,
         });
@@ -48,6 +66,9 @@ class ManageCollectionMemberModal extends Component {
             isModalOpen: false,
             removeMode: false,
             checkedUserIdList: [],
+            members: [],
+            memberPageNum: 0,
+            memberFinished: true,
         });
     }
 
@@ -107,12 +128,7 @@ class ManageCollectionMemberModal extends Component {
                           this.props.thisCollection.id,
                           this.state.checkedUserIdList,
                       )}
-                      whatActionWillFollow={
-                          () => {
-                              this.props.onGetMembers(this.props.thisCollection.id);
-                              this.setState({ checkedUserIdList: [] });
-                          }
-                      }
+                      whatActionWillFollow={this.refreshMembers}
                       disableCondition={this.state.checkedUserIdList.length === 0}
                       disableMessage="Select users"
                     />
@@ -144,10 +160,21 @@ class ManageCollectionMemberModal extends Component {
                     <Modal.Body>
                         <InviteToCollectionModal
                           openButtonName="Invite New Users"
-                          members={this.props.members}
+                          members={this.state.members}
+                          whatActionWillFollow={this.refreshMembers}
                         />
                         <div id="membersListDiv">
                             {memberList}
+                            { this.state.memberFinished ? null
+                                : (
+                                    <Button
+                                      className="user-more-button"
+                                      onClick={this.getMembersTrigger}
+                                      block
+                                    >
+                            View More
+                                    </Button>
+                                )}
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
@@ -164,7 +191,9 @@ class ManageCollectionMemberModal extends Component {
 const mapStateToProps = (state) => ({
     me: state.auth.me,
     thisCollection: state.collection.selected.collection,
-    members: state.collection.selected.members,
+    members: state.collection.getMembers.members,
+    memberPageNum: state.collection.getMembers.pageNum,
+    memberFinished: state.collection.getMembers.finished,
 });
 
 // eslint-disable-next-line no-unused-vars
@@ -172,8 +201,8 @@ const mapDispatchToProps = (dispatch) => ({
     onDeleteMembers: (collectionId, memberIdList) => dispatch(
         collectionActions.deleteMembers(collectionId, memberIdList),
     ),
-    onGetMembers: (collectionId) => dispatch(
-        collectionActions.getCollectionMembers(collectionId),
+    onGetMembers: (collectionId, pageNum) => dispatch(
+        collectionActions.getCollectionMembers(collectionId, pageNum),
     ),
 });
 
@@ -185,6 +214,8 @@ ManageCollectionMemberModal.propTypes = {
     members: PropTypes.arrayOf(PropTypes.any),
     onDeleteMembers: PropTypes.func,
     onGetMembers: PropTypes.func,
+    memberPageNum: PropTypes.number,
+    memberFinished: PropTypes.bool,
 };
 
 ManageCollectionMemberModal.defaultProps = {
@@ -193,4 +224,6 @@ ManageCollectionMemberModal.defaultProps = {
     members: [],
     onDeleteMembers: () => {},
     onGetMembers: () => {},
+    memberPageNum: 0,
+    memberFinished: true,
 };

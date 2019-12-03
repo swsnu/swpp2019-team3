@@ -399,7 +399,7 @@ def select_user_collection(args):
     request_user = args[constants.USER]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Check Collection Id
     if not Collection.objects.filter(id=collection_id).exists():

@@ -30,7 +30,6 @@ const initialState = {
         collection: {},
         error: null,
         papers: [],
-        members: [],
         memberCount: 0,
         replies: [],
     },
@@ -43,6 +42,12 @@ const initialState = {
         status: collectionStatus.NONE,
         count: 0,
         error: null,
+    },
+    getMembers: {
+        status: collectionStatus.NONE,
+        members: [],
+        pageNum: 0,
+        finished: true,
     },
 };
 
@@ -109,19 +114,21 @@ const reducer = (state = initialState, action) => {
     case collectionConstants.GET_COLLECTION_MEMBERS_SUCCESS:
         return {
             ...state,
-            selected: {
-                ...state.selected,
+            getMembers: {
                 status: collectionStatus.SUCCESS,
-                members: action.target,
+                members: action.target.members,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
             },
         };
     case collectionConstants.GET_COLLECTION_MEMBERS_FAILURE:
         return {
             ...state,
-            selected: {
-                ...state.selected,
+            getMembers: {
                 status: collectionStatus.FAILURE,
-                error: action.target,
+                members: [],
+                pageNum: 0,
+                finished: false,
             },
         };
     case collectionConstants.SET_OWNER:
