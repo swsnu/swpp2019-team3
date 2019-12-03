@@ -43,17 +43,17 @@ class ReviewCard extends Component {
             if (Object.keys(this.props.target).length !== 0) {
                 header = (
                     <Card.Header id="headerSubscriptionTarget">
-                        <div className="reviewCardHeader">
+                        <div className="CardHeader">
                             {actorLink}
                             <h5 className="verb">{` ${this.props.verb} this review on `}</h5>
-                            <a href={`/paper_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
                         </div>
+                        <a className="targetLink" href={`/paper_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
                     </Card.Header>
                 );
             } else {
                 header = (
                     <Card.Header id="headerSubscription">
-                        <div className="reviewCardHeader">
+                        <div className="CardHeader">
                             {actorLink}
                             <h5 className="verb">{` ${this.props.verb} this review`}</h5>
                         </div>
