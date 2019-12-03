@@ -653,3 +653,147 @@ class UserTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content)['count']['users'], 1)
+
+    def test_get_user_following_collection(self):
+        """Get Users User is Following that Not in Collection"""
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        swpp_user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+        swpp2_user_id = User.objects.filter(email='swpp2@snu.ac.kr').first().id
+        swpp3_user_id = User.objects.filter(email='swpp3@snu.ac.kr').first().id
+
+        UserFollow.objects.create(following_user_id=swpp_user_id, followed_user_id=swpp2_user_id)
+        UserFollow.objects.create(following_user_id=swpp_user_id, followed_user_id=swpp3_user_id)
+
+        # Make Collection
+        client.post('/api/collection',
+                    json.dumps({
+                        constants.TITLE: 'SWPP Papers',
+                        constants.TEXT: 'papers for swpp 2019 class'
+                    }),
+                    content_type='application/json')
+
+        collection_id = Collection.objects.filter(title='SWPP Papers').first().id
+
+        # My Following User Not in Collection count : 2
+        response = client.get('/api/user/following/collection',
+                              data={
+                                  constants.COLLECTION_ID: collection_id,
+                                  constants.PAGE_NUMBER: 1
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 2)
+
+        # My Following User Not in Collection count : 1
+        client.post('/api/user/collection',
+                    json.dumps({
+                        constants.ID: collection_id,
+                        constants.USER_IDS: [swpp2_user_id]
+                    }),
+                    content_type='application/json')
+        response = client.get('/api/user/following/collection',
+                              data={
+                                  constants.COLLECTION_ID: collection_id,
+                                  constants.PAGE_NUMBER: 1
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 1)
+
+        # My Following User Not in Collection count : 0
+        client.post('/api/user/collection',
+                    json.dumps({
+                        constants.ID: collection_id,
+                        constants.USER_IDS: [swpp3_user_id]
+                    }),
+                    content_type='application/json')
+        response = client.get('/api/user/following/collection',
+                              data={
+                                  constants.COLLECTION_ID: collection_id,
+                                  constants.PAGE_NUMBER: 1
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 0)
+
+    def test_user_search_collection(self):
+        """ SEARCH USERS NOT IN COLLECTION"""
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        swpp2_user_id = User.objects.filter(email='swpp2@snu.ac.kr').first().id
+        swpp3_user_id = User.objects.filter(email='swpp3@snu.ac.kr').first().id
+
+        # Make Collection
+        client.post('/api/collection',
+                    json.dumps({
+                        constants.TITLE: 'SWPP Papers',
+                        constants.TEXT: 'papers for swpp 2019 class'
+                    }),
+                    content_type='application/json')
+
+        collection_id = Collection.objects.filter(title='SWPP Papers').first().id
+
+        # Search with Keyword 'swpp' count : 2
+        response = client.get('/api/user/search/collection',
+                              data={
+                                  constants.TEXT: 'swpp',
+                                  constants.COLLECTION_ID: collection_id
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 2)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
+
+        # Search with Keyword 'swpp' count : 1
+        client.post('/api/user/collection',
+                    json.dumps({
+                        constants.ID: collection_id,
+                        constants.USER_IDS: [swpp2_user_id]
+                    }),
+                    content_type='application/json')
+        response = client.get('/api/user/search/collection',
+                              data={
+                                  constants.TEXT: 'swpp',
+                                  constants.COLLECTION_ID: collection_id
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 1)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
+
+        # Search with Keyword 'swpp' count : 1
+        client.post('/api/user/collection',
+                    json.dumps({
+                        constants.ID: collection_id,
+                        constants.USER_IDS: [swpp3_user_id]
+                    }),
+                    content_type='application/json')
+        response = client.get('/api/user/search/collection',
+                              data={
+                                  constants.TEXT: 'swpp',
+                                  constants.COLLECTION_ID: collection_id
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.USERS]), 0)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
