@@ -277,30 +277,34 @@ def update_paper_collection(args):
     # Containing Collections
     containing_collection_ids = __get_collections_contains_paper(paper_id, request_user)
 
+    # Not Containing Collections
+    not_containing_collection_ids = list(set(collection_ids) - set(containing_collection_ids))
+
     # Add To Collections
-    __add_paper_to_collections(paper_id, list(set(collection_ids) - set(containing_collection_ids)), request_user)
+    __add_paper_to_collections(paper_id, not_containing_collection_ids, request_user)
 
     # Remove From Collections
     __remove_paper_from_collections(paper_id, list(set(containing_collection_ids) - set(collection_ids)), request_user)
 
     # store an action for subscription feed
-    try:
-        subscription = Subscription.objects.get(
-            actor=request_user,
-            verb="added",
-            action_object_object_id=paper_id,
-            target_object_id=collection_ids[0],
-        )
-        subscription.save() # for updating time
-    except Subscription.DoesNotExist:
-        paper = Paper.objects.get(id=paper_id)
-        collection = Collection.objects.get(id=collection_ids[0])
-        Subscription.objects.create(
-            actor=request_user,
-            verb="added",
-            action_object=paper,
-            target=collection,
-        )
+    if not_containing_collection_ids:
+        try:
+            subscription = Subscription.objects.get(
+                actor=request_user,
+                verb="added",
+                action_object_object_id=paper_id,
+                target_object_id=not_containing_collection_ids[0],
+            )
+            subscription.save() # for updating time
+        except Subscription.DoesNotExist:
+            paper = Paper.objects.get(id=paper_id)
+            collection = Collection.objects.get(id=not_containing_collection_ids[0])
+            Subscription.objects.create(
+                actor=request_user,
+                verb="added",
+                action_object=paper,
+                target=collection,
+            )
 
 
 def get_collections(filter_query, request_user, count, paper_id=None):

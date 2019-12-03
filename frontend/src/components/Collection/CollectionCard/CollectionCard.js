@@ -38,15 +38,15 @@ class CollectionCard extends Component {
 
     render() {
         let header = null;
-        if (this.props.headerExists) {
-            if (this.props.subscription) {
-                header = (
-                    <Card.Header id="headerSubscription">
-                        <Card.Link className="actorLink" href={`/profile_id=${this.props.actor.id}`}>{this.props.actor.username}</Card.Link>
-                        <h5 className="verb">{` ${this.props.verb} this collection.`}</h5>
-                    </Card.Header>
-                );
-            }
+        if (this.props.headerExists && this.props.subscription) {
+            header = (
+                <Card.Header id="headerSubscription">
+                    <div className="collectionCardHeader">
+                        <a className="actorLink" href={`/profile_id=${this.props.actor.id}`}>{this.props.actor.username}</a>
+                        <h5 className="verb">{` ${this.props.verb} this collection`}</h5>
+                    </div>
+                </Card.Header>
+            );
         }
         return (
             <div className="wrapper">

@@ -86,18 +86,20 @@ class PaperCard extends Component {
                 if (Object.keys(this.props.target).length !== 0) {
                     header = (
                         <Card.Header id="headerSubscriptionTarget">
-                            <div className="CardHeader">
+                            <div className="paperCardHeader">
                                 {actorLink}
-                                <h5 className="verb">{` ${this.props.verb} this paper on`}</h5>
-                                <a href={`/collection_id=${this.props.target.id}`}>{`${this.props.target.title}.`}</a>
+                                <h5 className="verb">{` ${this.props.verb} this paper to`}</h5>
+                                <a href={`/collection_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
                             </div>
                         </Card.Header>
                     );
                 } else {
                     header = (
                         <Card.Header id="headerSubscription">
-                            {actorLink}
-                            <h5 className="verb">{` ${this.props.verb} this paper.`}</h5>
+                            <div className="paperCardHeader">
+                                {actorLink}
+                                <h5 className="verb">{` ${this.props.verb} this paper`}</h5>
+                            </div>
                         </Card.Header>
                     );
                 }
