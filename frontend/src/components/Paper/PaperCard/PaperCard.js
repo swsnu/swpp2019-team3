@@ -81,8 +81,28 @@ class PaperCard extends Component {
     render() {
         let header = null;
         if (this.props.headerExists) {
-            if (this.props.paperSource) {
-                header = <Card.Header>{`from ${this.props.paperSource}`}</Card.Header>;
+            if (this.props.subscription) {
+                const actorLink = (<Card.Link className="actorLink" href={`/profile_id=${this.props.actor.id}`}>{this.props.actor.username}</Card.Link>);
+                if (Object.keys(this.props.target).length !== 0) {
+                    header = (
+                        <Card.Header id="headerSubscriptionTarget">
+                            {actorLink}
+                            <h5 className="verb">{` ${this.props.verb} this paper on `}</h5>
+                            <Card.Link href={`/collection_id=${this.props.target.content.id}`}>
+                                {`${this.props.target.content.title}.`}
+                            </Card.Link>
+                        </Card.Header>
+                    );
+                } else {
+                    header = (
+                        <Card.Header id="headerSubscription">
+                            {actorLink}
+                            <h5 className="verb">{` ${this.props.verb} this paper.`}</h5>
+                        </Card.Header>
+                    );
+                }
+            } else if (this.props.paperSource) {
+                header = <Card.Header id="header">{`from ${this.props.paperSource}`}</Card.Header>;
             }
         }
         let addButton = null;
@@ -152,6 +172,10 @@ PaperCard.propTypes = {
     afterUnlikeCount: PropTypes.number,
     onLikePaper: PropTypes.func,
     onUnlikePaper: PropTypes.func,
+    subscription: PropTypes.bool,
+    actor: PropTypes.objectOf(PropTypes.any),
+    verb: PropTypes.string,
+    target: PropTypes.objectOf(PropTypes.any),
 };
 
 PaperCard.defaultProps = {
@@ -171,4 +195,8 @@ PaperCard.defaultProps = {
     afterUnlikeCount: 0,
     onLikePaper: () => {},
     onUnlikePaper: () => {},
+    subscription: false,
+    actor: {},
+    verb: "",
+    target: {},
 };

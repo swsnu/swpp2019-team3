@@ -1,6 +1,6 @@
 import { authConstants } from "../../actions/actionTypes";
 import {
-    signupStatus, signinStatus, signoutStatus, getMeStatus, notiStatus,
+    signupStatus, signinStatus, signoutStatus, getMeStatus, notiStatus, getSubscriptionsStatus,
 } from "../../../constants/constants";
 
 const initialState = {
@@ -10,7 +10,9 @@ const initialState = {
     getMeStatus: getMeStatus.NONE,
     getNotiStatus: notiStatus.NONE,
     readNotiStatus: notiStatus.NONE,
+    getSubscriptionsStatus: getSubscriptionsStatus.NONE,
     notifications: [],
+    subscriptions: [],
     me: null,
 };
 
@@ -49,6 +51,15 @@ const reducer = (state = initialState, action) => {
         return { ...state, readNotiStatus: notiStatus.SUCCESS };
     case authConstants.READ_NOTI_FAILURE:
         return { ...state, readNotiStatus: notiStatus.FAILURE };
+
+    case authConstants.GET_SUBSCRIPTION_SUCCESS:
+        return {
+            ...state,
+            getSubscriptionsStatus: getSubscriptionsStatus.SUCCESS,
+            subscriptions: action.target,
+        };
+    case authConstants.GET_SUBSCRIPTION_FAILURE:
+        return { ...state, getSubscriptionsStatus: getSubscriptionsStatus.FAILURE };
 
     default:
         return { ...state };

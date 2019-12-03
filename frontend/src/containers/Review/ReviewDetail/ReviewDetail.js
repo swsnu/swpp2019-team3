@@ -56,8 +56,8 @@ class ReviewDetail extends Component {
                     author: this.props.selectedReview.user,
                     paperId: this.props.selectedReview.paper.id,
                     newReply: "",
-                    creationDate: this.props.selectedReview.creation_date.split("T")[0],
-                    modificationDate: this.props.selectedReview.modification_date.split("T")[0],
+                    creationDate: `${this.props.selectedReview.creation_date.split("T")[0]} ${this.props.selectedReview.creation_date.split("T")[1].substring(0, 5)}`,
+                    modificationDate: `${this.props.selectedReview.modification_date.split("T")[0]} ${this.props.selectedReview.modification_date.split("T")[1].substring(0, 5)}`,
                 });
             }).catch(() => {});
 

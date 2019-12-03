@@ -80,8 +80,37 @@ describe("<PaperCard />", () => {
     it("if headerExists is false, then header should not exist", () => {
         paperCard = makePaperCard(stubInitialState, { headerExists: false });
         const component = mount(paperCard);
-        const wrapper = component.find(".header");
+        let wrapper = component.find("#header").hostNodes();
         expect(wrapper.length).toBe(0);
+        wrapper = component.find("#headerSubscription").hostNodes();
+        expect(wrapper.length).toBe(0);
+        wrapper = component.find("#headerSubscriptionTarget").hostNodes();
+        expect(wrapper.length).toBe(0);
+    });
+
+    it("if headerExists && paperSource, then header should exist", () => {
+        paperCard = makePaperCard(stubInitialState, { headerExists: true, subscription: false, paperSource: "source" });
+        const component = mount(paperCard);
+        const wrapper = component.find("#header").hostNodes();
+        expect(wrapper.length).toBe(1);
+    });
+
+    it("if headerExists && subscription, then subscription header should exist", () => {
+        paperCard = makePaperCard(stubInitialState, {
+            headerExists: true, subscription: true, target: {},
+        });
+        const component = mount(paperCard);
+        const wrapper = component.find("#headerSubscription").hostNodes();
+        expect(wrapper.length).toBe(1);
+    });
+
+    it("if headerExists && subscription && target, then subscription header with target should exist", () => {
+        paperCard = makePaperCard(stubInitialState, {
+            headerExists: true, subscription: true, target: { content: { id: 1 } },
+        });
+        const component = mount(paperCard);
+        const wrapper = component.find("#headerSubscriptionTarget").hostNodes();
+        expect(wrapper.length).toBe(1);
     });
 
     it("if addButtonExists is true, then addButton should exist", () => {

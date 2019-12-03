@@ -119,3 +119,4 @@ REPLIES = 'replies'
 
 #Recommendation
 ACTIONS = 'actions'
+RECOMMENDATIONS = 'recommendations'
