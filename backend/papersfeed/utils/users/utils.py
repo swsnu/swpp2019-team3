@@ -237,7 +237,7 @@ def select_user_search(args):
     keyword = args[constants.TEXT]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # User Queryset
     queryset = User.objects.filter(Q(username__icontains=keyword)).values_list('id', flat=True)

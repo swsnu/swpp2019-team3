@@ -212,7 +212,7 @@ def select_collection_search(args):
     keyword = args[constants.TEXT]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Collections Queryset
     queryset = Collection.objects.filter(Q(title__icontains=keyword) | Q(text__icontains=keyword))\
