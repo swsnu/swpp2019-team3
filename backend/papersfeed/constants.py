@@ -62,6 +62,7 @@ SUBSCRIPTIONS = 'subscriptions'
 # Collection
 COLLECTION = 'collection'
 COLLECTIONS = 'collections'
+COLLECTION_ID = 'collection_id'
 COLLECTION_IDS = 'collection_ids'
 TITLE = 'title'
 TEXT = 'text'

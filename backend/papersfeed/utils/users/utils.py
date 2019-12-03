@@ -534,6 +534,82 @@ def remove_user_collection(args):
     return {constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0}
 
 
+def select_user_following_collection(args):
+    """Get Following Users Not in Collection"""
+    is_parameter_exists([
+        constants.COLLECTION_ID
+    ], args)
+
+    # Collection ID
+    collection_id = args[constants.COLLECTION_ID]
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # QuerySet
+    queryset = UserFollow.objects.annotate(
+        is_in_collection=__is_in_collection('followed_user', collection_id)
+    ).filter(
+        following_user=request_user.id,
+        is_in_collection=False
+    ).values_list('followed_user', flat=True)
+
+    # User Ids
+    user_ids = get_results_from_queryset(queryset, 10, page_number)
+
+    # is_finished
+    is_finished = not user_ids.has_next()
+
+    # Filter Query
+    filter_query = Q(id__in=user_ids)
+
+    # Users
+    users, _ = __get_users(filter_query, request_user, 10)
+
+    return users, page_number, is_finished
+
+
+def select_user_search_collection(args):
+    """Search Users Not in Collection"""
+    is_parameter_exists([
+        constants.TEXT, constants.COLLECTION_ID
+    ], args)
+
+    # Collection ID
+    collection_id = args[constants.COLLECTION_ID]
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Search Keyword
+    keyword = args[constants.TEXT]
+
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+
+    # User Queryset
+    queryset = User.objects.annotate(
+        is_in_collection=__is_in_collection('id', collection_id)
+    ).filter(
+        username__icontains=keyword,
+        is_in_collection=False
+    ).values_list('id', flat=True)
+
+    # User Ids
+    user_ids = get_results_from_queryset(queryset, 10, page_number)
+
+    # is_finished
+    is_finished = not user_ids.has_next()
+
+    # Users
+    users, _ = __get_users(Q(id__in=user_ids), request_user, 10)
+
+    return users, page_number, is_finished
+
+
 def __get_users(filter_query, request_user, count, collection_id=None):
     """Get Users By Query"""
     queryset = User.objects.filter(
@@ -591,6 +667,16 @@ def __pack_users(users, request_user, collection_id=None):
         packed.append(packed_user)
 
     return packed
+
+
+def __is_in_collection(outer_ref, collection_id):
+    """Check User in Collection"""
+    return Exists(
+        CollectionUser.objects.filter(
+            user_id=OuterRef(outer_ref),
+            collection_id=collection_id
+        )
+    )
 
 
 def __is_following(outer_ref, request_user):
