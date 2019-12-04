@@ -32,8 +32,6 @@ class AddPaperModal extends Component {
         this.clickUpdateButtonHandler = this.clickUpdateButtonHandler.bind(this);
     }
 
-    equalTwoChecked = (before, curr) => before.sort().toString() === curr.sort().toString()
-
     getCollectionsTrigger(pageNum) {
         this.props.onGetCollectionsWithContains({
             id: this.props.me.id, paper: this.props.id, page_number: pageNum + 1,
@@ -54,6 +52,8 @@ class AddPaperModal extends Component {
             })
             .catch(() => {});
     }
+
+    equalTwoChecked = (before, curr) => before.sort().toString() === curr.sort().toString()
 
     openAddPaperHandler() {
         this.getCollectionsTrigger(0);
