@@ -101,7 +101,6 @@ class SubscriptionFeed extends Component {
                 this.state.recommendations[i],
             ];
         }
-        console.log(this.state.recommendations);
         let temp = [];
         if (this.state.recommendations.length >= this.state.recoNum) {
             temp = this.state.recommendations.splice(0, this.state.recoNum);
@@ -118,7 +117,6 @@ class SubscriptionFeed extends Component {
         this.setState((prevState) => ({
             start: prevState.subscriptions.length,
         }));
-        console.log(this.state.recommendations);
         if (this.props.subscriptionFinished) {
             if (this.state.recommendations.length <= 0) {
                 this.setState({
