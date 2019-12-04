@@ -11,6 +11,7 @@ import requests
 import xmltodict
 from django.db.models import Q, Exists, OuterRef, Count, Case, When
 
+
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
 from papersfeed.utils.papers.abstract_analysis import get_key_phrases

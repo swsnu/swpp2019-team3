@@ -164,7 +164,7 @@ class RecommnedationTestCase(TestCase):
         keyword_id2 = Keyword.objects.filter(name='keyword2').first().id
 
         paper_qs = Paper.objects.filter(title='paper')
-        paper_ids = [ paper.id for paper in paper_qs ]
+        paper_ids = [paper.id for paper in paper_qs]
 
         PaperKeyword.objects.bulk_create([
             PaperKeyword(
@@ -298,8 +298,11 @@ class RecommnedationTestCase(TestCase):
             {"UserId": user_id, "ItemId": paper_id, "Type": "add_to_collection", "Count": 1}
             ], json.loads(response.content)["actions"])
         self.assertListEqual([{'UserId': user_id}], json.loads(response.content)["users"])
-        self.assertDictEqual({'ItemId': paper_id, 'Keywords': [{'id': keyword_id, 'name': 'keyword1', 'type': 'abstract'}], 'Abstract': 'abstract1'},
-                             json.loads(response.content)["papers"][1])
+        self.assertDictEqual({
+            'ItemId': paper_id,
+            'Keywords': [{'id': keyword_id, 'name': 'keyword1', 'type': 'abstract'}],
+            'Abstract': 'abstract1'
+            }, json.loads(response.content)["papers"][1])
 
     def test_post_user_recommendation(self):
         """Post user recommendation"""
@@ -354,14 +357,13 @@ class RecommnedationTestCase(TestCase):
                        constants.PASSWORD: 'iluvswpp1234'
                    },
                    content_type='application/json')
-
         response = client.get('/api/user/all')
 
         self.assertEqual(response.status_code, 200)
-    
+
     def test_get_keyword_init(self):
         """Get Keyword init"""
-        
+
         client = Client()
 
         # Sign In
@@ -378,10 +380,10 @@ class RecommnedationTestCase(TestCase):
 
         self.assertEqual(200, response.status_code)
         self.assertListEqual([{
-                'id': keyword_id,
-                'name': 'keyword1',
+            'id': keyword_id,
+            'name': 'keyword1',
             }], json.loads(response.content)["keywords"])
-    
+
     def test_post_recommendation_init(self):
         """Post Recommendation init"""
 
@@ -396,16 +398,14 @@ class RecommnedationTestCase(TestCase):
                    content_type='application/json')
 
         keyword_id = Keyword.objects.filter(name='keyword1').first().id
-        paper_id = Paper.objects.filter(title='paper1').first().id
 
         response = client.post('/api/recommendation/init',
-                            json.dumps({
-                                'keywords': [ keyword_id ]
-                            }),
-                            content_type='application/json')
+                               json.dumps({
+                                   'keywords': [keyword_id]
+                               }),
+                               content_type='application/json')
 
         self.assertEqual(201, response.status_code)
 
         response = client.get('/api/recommendation')
         self.assertEqual(response.status_code, 200)
-
