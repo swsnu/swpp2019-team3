@@ -13,6 +13,7 @@ from papersfeed.models.papers.paper import Paper
 from papersfeed.models.reviews.review_like import ReviewLike
 from papersfeed.models.replies.reply_review import ReplyReview
 from papersfeed.models.users.user_action import UserAction, USER_ACTION_TYPE
+from papersfeed.models.subscription.subscription import Subscription
 
 
 def select_review(args):
@@ -72,6 +73,24 @@ def insert_review(args):
         title=title,
         text=text
     )
+
+    # store an action for subscription feed
+    try:
+        subscription = Subscription.objects.get(
+            actor=request_user,
+            verb="wrote",
+            action_object_object_id=review.id,
+            target_object_id=paper_id
+        )
+        subscription.save() # for updating time
+    except Subscription.DoesNotExist:
+        paper = Paper.objects.get(id=paper_id)
+        Subscription.objects.create(
+            actor=request_user,
+            verb="wrote",
+            action_object=review,
+            target=paper,
+        )
 
     # Create action for recommendation
     try:

@@ -82,22 +82,24 @@ class PaperCard extends Component {
         let header = null;
         if (this.props.headerExists) {
             if (this.props.subscription) {
-                const actorLink = (<Card.Link className="actorLink" href={`/profile_id=${this.props.actor.id}`}>{this.props.actor.username}</Card.Link>);
+                const actorLink = (<a className="actorLink" href={`/profile_id=${this.props.actor.id}`}>{this.props.actor.username}</a>);
                 if (Object.keys(this.props.target).length !== 0) {
                     header = (
                         <Card.Header id="headerSubscriptionTarget">
-                            {actorLink}
-                            <h5 className="verb">{` ${this.props.verb} this paper on `}</h5>
-                            <Card.Link href={`/collection_id=${this.props.target.content.id}`}>
-                                {`${this.props.target.content.title}.`}
-                            </Card.Link>
+                            <div className="CardHeader">
+                                {actorLink}
+                                <h5 className="verb">{` ${this.props.verb} this paper to`}</h5>
+                                <a className="targetLink" href={`/collection_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
+                            </div>
                         </Card.Header>
                     );
                 } else {
                     header = (
                         <Card.Header id="headerSubscription">
-                            {actorLink}
-                            <h5 className="verb">{` ${this.props.verb} this paper.`}</h5>
+                            <div className="CardHeader">
+                                {actorLink}
+                                <h5 className="verb">{` ${this.props.verb} this paper`}</h5>
+                            </div>
                         </Card.Header>
                     );
                 }
