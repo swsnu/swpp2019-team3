@@ -235,8 +235,11 @@ def select_collection_user(args):
         paper_id = args[constants.PAPER]
 
     # Collections
-    collections, _, is_finished = __get_collections(queryset, request_user, 10, paper_id=paper_id,
-                                                    target_user_id=user_id)
+    params = {
+        constants.PAPER_ID: paper_id,
+        constants.USER_ID: user_id
+    }
+    collections, _, is_finished = __get_collections(queryset, request_user, 10, page_number=page_number, params=params)
 
     return collections, page_number, is_finished
 
@@ -289,7 +292,10 @@ def select_collection_like(args):
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(collection_ids)])
 
     # Collections
-    collections, _, _ = __get_collections(Q(id__in=collection_ids), request_user, 10, order_by=preserved)
+    params = {
+        constants.ORDER_BY: preserved
+    }
+    collections, _, _ = __get_collections(Q(id__in=collection_ids), request_user, 10, params=params)
 
     return collections, page_number, is_finished
 
@@ -343,9 +349,9 @@ def update_paper_collection(args):
             )
 
 
-def get_collections(filter_query, request_user, count, paper_id=None, page_number=1, target_user_id=None):
+def get_collections(filter_query, request_user, count, params={}, page_number=1):
     """Get Collections"""
-    return __get_collections(filter_query, request_user, count, paper_id=paper_id, page_number=page_number, target_user_id=target_user_id)
+    return __get_collections(filter_query, request_user, count, params=params, page_number=page_number)
 
 
 def __get_collections_contains_paper(paper_id, request_user):
@@ -409,9 +415,13 @@ def __add_paper_to_collections(paper_id, collection_ids, request_user):
         )
 
 
-def __get_collections(filter_query, request_user, count, paper_id=None, order_by='-pk', page_number=1,
-                      target_user_id=None):
+def __get_collections(filter_query, request_user, count, params={}, page_number=1):
     """Get Collections By Query"""
+
+    paper_id = None if constants.PAPER_ID not in params else params[constants.PAPER_ID]
+    order_by = '-pk' if constants.ORDER_BY not in params else params[constants.ORDER_BY]
+    target_user_id = request_user.id if constants.USER_ID not in params else params[constants.USER_ID]
+
     queryset = Collection.objects.annotate(
         is_user_collection=__is_member('id', target_user_id if target_user_id else request_user.id),
         is_member=__is_member('id', request_user.id)
