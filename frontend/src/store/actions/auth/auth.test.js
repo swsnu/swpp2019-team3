@@ -359,9 +359,9 @@ describe("authActions", () => {
                 resolve(result);
             }));
 
-        mockStore.dispatch(authActions.getSubscriptions())
+        mockStore.dispatch(authActions.getSubscriptions({ page_number: 1 }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/subscription");
+                expect(spy).toHaveBeenCalledWith("/api/subscription", { params: { page_number: 1 } });
                 done();
             });
     });
@@ -378,9 +378,116 @@ describe("authActions", () => {
                 reject(error);
             }));
 
-        mockStore.dispatch(authActions.getSubscriptions())
+        mockStore.dispatch(authActions.getSubscriptions({ page_number: 1 }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/subscription");
+                expect(spy).toHaveBeenCalledWith("/api/subscription", { params: { page_number: 1 } });
+                done();
+            });
+    });
+
+    it("getRecommendations should call axios.get", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(authActions.getRecommendations({ page_number: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/recommendation", { params: { page_number: 1 } });
+                done();
+            });
+    });
+
+    it("getRecommendations should handle error", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 403,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(authActions.getRecommendations({ page_number: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/recommendation", { params: { page_number: 1 } });
+                done();
+            });
+    });
+
+    it("getKeywordsInit should call axios.get", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(authActions.getKeywordsInit({ page_number: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/keyword/init", { params: { page_number: 1 } });
+                done();
+            });
+    });
+
+    it("getKeywordsInit should handle error", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 403,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(authActions.getKeywordsInit({ page_number: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/keyword/init", { params: { page_number: 1 } });
+                done();
+            });
+    });
+
+
+    it("makeTasteInit should call axios.post", (done) => {
+        const spy = jest.spyOn(axios, "post")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 201,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(authActions.makeTasteInit({ keywords: [1] }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/recommendation/init", { keywords: [1] });
+                done();
+            });
+    });
+
+    it("makeTasteInit should handle error", (done) => {
+        const spy = jest.spyOn(axios, "post")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 403,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(authActions.makeTasteInit({ keywords: [1] }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/recommendation/init", { keywords: [1] });
                 done();
             });
     });

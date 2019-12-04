@@ -43,6 +43,27 @@ export const getSubscriptionsStatus = {
     FAILURE: "FAILURE",
 };
 
+export const getRecommendationsStatus = {
+    NONE: "NONE",
+    WAITING: "WAITING",
+    SUCCESS: "SUCCESS",
+    FAILURE: "FAILURE",
+};
+
+export const getKeywordsInitStatus = {
+    NONE: "NONE",
+    WAITING: "WAITING",
+    SUCCESS: "SUCCESS",
+    FAILURE: "FAILURE",
+};
+
+export const makeTasteInitStatus = {
+    NONE: "NONE",
+    WAITING: "WAITING",
+    SUCCESS: "SUCCESS",
+    FAILURE: "FAILURE",
+};
+
 export const paperStatus = {
     NONE: "NONE",
     WAITING: "WAITING",

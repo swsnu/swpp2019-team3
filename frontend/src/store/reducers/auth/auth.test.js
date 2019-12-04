@@ -1,7 +1,15 @@
 import reducer from "./auth";
 import { authConstants } from "../../actions/actionTypes";
 import {
-    signupStatus, signinStatus, signoutStatus, getMeStatus, notiStatus, getSubscriptionsStatus,
+    signupStatus,
+    signinStatus,
+    signoutStatus,
+    getMeStatus,
+    notiStatus,
+    getSubscriptionsStatus,
+    getRecommendationsStatus,
+    getKeywordsInitStatus,
+    makeTasteInitStatus,
 } from "../../../constants/constants";
 
 const stubInitialState = {
@@ -11,9 +19,26 @@ const stubInitialState = {
     getMeStatus: getMeStatus.NONE,
     getNotiStatus: notiStatus.NONE,
     readNotiStatus: notiStatus.NONE,
-    getSubscriptionsStatus: getSubscriptionsStatus.NONE,
+    subscriptions: {
+        status: getSubscriptionsStatus.NONE,
+        pageNum: 0,
+        finished: true,
+        list: [],
+    },
+    recommendations: {
+        status: getRecommendationsStatus.NONE,
+        list: [],
+        pageNum: 0,
+        finished: true,
+    },
+    keywords: {
+        status: getKeywordsInitStatus.NONE,
+        list: [],
+        pageNum: 0,
+        finished: true,
+    },
+    makeTasteInitStatus: makeTasteInitStatus.NONE,
     notifications: [],
-    subscriptions: [],
     me: null,
 };
 
@@ -35,7 +60,23 @@ const stubError = {
     },
 };
 
-const stubSubscription = ["stubSubscription"];
+const stubSubscription = {
+    subscriptions: ["stubSubscription"],
+    page_number: 1,
+    is_finished: true,
+};
+
+const stubRecommendation = {
+    recommendations: ["stubRecommendation"],
+    page_number: 1,
+    is_finished: true,
+};
+
+const stubKeyword = {
+    keywords: ["stubSubscription"],
+    page_number: 1,
+    is_finished: true,
+};
 
 describe("Auth reducer", () => {
     it("should return default state", () => {
@@ -172,8 +213,10 @@ describe("Auth reducer", () => {
             type: authConstants.GET_SUBSCRIPTION_SUCCESS,
             target: stubSubscription,
         });
-        expect(newState.getSubscriptionsStatus).toBe(getSubscriptionsStatus.SUCCESS);
-        expect(newState.subscriptions).toBe(stubSubscription);
+        expect(newState.subscriptions.status).toBe(getSubscriptionsStatus.SUCCESS);
+        expect(newState.subscriptions.list).toBe(stubSubscription.subscriptions);
+        expect(newState.subscriptions.pageNum).toBe(stubSubscription.page_number);
+        expect(newState.subscriptions.finished).toBe(stubSubscription.is_finished);
     });
 
     it("should handle getSubscription failure", () => {
@@ -181,6 +224,60 @@ describe("Auth reducer", () => {
             type: authConstants.GET_SUBSCRIPTION_FAILURE,
             target: stubError,
         });
-        expect(newState.getSubscriptionsStatus).toBe(getSubscriptionsStatus.FAILURE);
+        expect(newState.subscriptions.status).toBe(getSubscriptionsStatus.FAILURE);
+    });
+
+    it("should handle getRecommendation success", () => {
+        const newState = reducer(stubInitialState, {
+            type: authConstants.GET_RECOMMENDATION_SUCCESS,
+            target: stubRecommendation,
+        });
+        expect(newState.recommendations.status).toBe(getRecommendationsStatus.SUCCESS);
+        expect(newState.recommendations.list).toBe(stubRecommendation.recommendations);
+        expect(newState.recommendations.pageNum).toBe(stubRecommendation.page_number);
+        expect(newState.recommendations.finished).toBe(stubRecommendation.is_finished);
+    });
+
+    it("should handle getRecommendation failure", () => {
+        const newState = reducer(stubInitialState, {
+            type: authConstants.GET_RECOMMENDATION_FAILURE,
+            target: stubError,
+        });
+        expect(newState.recommendations.status).toBe(getRecommendationsStatus.FAILURE);
+    });
+
+    it("should handle getKeywordsInit success", () => {
+        const newState = reducer(stubInitialState, {
+            type: authConstants.GET_KEYWORD_INIT_SUCCESS,
+            target: stubKeyword,
+        });
+        expect(newState.keywords.status).toBe(getKeywordsInitStatus.SUCCESS);
+        expect(newState.keywords.list).toBe(stubKeyword.keywords);
+        expect(newState.keywords.pageNum).toBe(stubKeyword.page_number);
+        expect(newState.keywords.finished).toBe(stubKeyword.is_finished);
+    });
+
+    it("should handle getRecommendation failure", () => {
+        const newState = reducer(stubInitialState, {
+            type: authConstants.GET_KEYWORD_INIT_FAILURE,
+            target: stubError,
+        });
+        expect(newState.keywords.status).toBe(getKeywordsInitStatus.FAILURE);
+    });
+
+    it("should handle makeTasteInit success", () => {
+        const newState = reducer(stubInitialState, {
+            type: authConstants.MAKE_TASTE_INIT_SUCCESS,
+            target: null,
+        });
+        expect(newState.makeTasteInitStatus).toBe(makeTasteInitStatus.SUCCESS);
+    });
+
+    it("should handle makeTasteInit failure", () => {
+        const newState = reducer(stubInitialState, {
+            type: authConstants.MAKE_TASTE_INIT_FAILURE,
+            target: stubError,
+        });
+        expect(newState.makeTasteInitStatus).toBe(makeTasteInitStatus.FAILURE);
     });
 });

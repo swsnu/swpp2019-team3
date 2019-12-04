@@ -126,6 +126,48 @@ const getSubscriptionsFailure = (error) => ({
     target: error,
 });
 
-export const getSubscriptions = () => (dispatch) => axios.get("/api/subscription")
+export const getSubscriptions = (pageNum) => (dispatch) => axios.get("/api/subscription", { params: pageNum })
     .then((res) => dispatch(getSubscriptionsSuccess(res.data)))
     .catch((err) => dispatch(getSubscriptionsFailure(err)));
+
+const getRecommendationsSuccess = (recommendations) => ({
+    type: authConstants.GET_RECOMMENDATION_SUCCESS,
+    target: recommendations,
+});
+
+const getRecommendationsFailure = (error) => ({
+    type: authConstants.GET_RECOMMENDATION_FAILURE,
+    target: error,
+});
+
+export const getRecommendations = (pageNum) => (dispatch) => axios.get("/api/recommendation", { params: pageNum })
+    .then((res) => dispatch(getRecommendationsSuccess(res.data)))
+    .catch((err) => dispatch(getRecommendationsFailure(err)));
+
+const getKeywordsInitSuccess = (keywords) => ({
+    type: authConstants.GET_KEYWORD_INIT_SUCCESS,
+    target: keywords,
+});
+
+const getKeywordsInitFailure = (error) => ({
+    type: authConstants.GET_KEYWORD_INIT_FAILURE,
+    target: error,
+});
+
+export const getKeywordsInit = (pageNum) => (dispatch) => axios.get("/api/keyword/init", { params: pageNum })
+    .then((res) => dispatch(getKeywordsInitSuccess(res.data)))
+    .catch((err) => dispatch(getKeywordsInitFailure(err)));
+
+const makeTasteInitSuccess = () => ({
+    type: authConstants.MAKE_TASTE_INIT_SUCCESS,
+    target: null,
+});
+
+const makeTasteInitFailure = (error) => ({
+    type: authConstants.MAKE_TASTE_INIT_FAILURE,
+    target: error,
+});
+
+export const makeTasteInit = (keywords) => (dispatch) => axios.post("/api/recommendation/init", keywords)
+    .then((res) => dispatch(makeTasteInitSuccess(res.data)))
+    .catch((err) => dispatch(makeTasteInitFailure(err)));

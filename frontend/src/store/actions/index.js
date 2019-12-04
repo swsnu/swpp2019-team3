@@ -9,6 +9,9 @@ import {
     getNoti,
     readNoti,
     getSubscriptions,
+    getRecommendations,
+    getKeywordsInit,
+    makeTasteInit,
 } from "./auth/auth";
 
 import {
@@ -116,6 +119,9 @@ export const authActions = {
     getNoti,
     readNoti,
     getSubscriptions,
+    getRecommendations,
+    getKeywordsInit,
+    makeTasteInit,
 };
 export const paperActions = {
     getPaper,
