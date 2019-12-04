@@ -237,7 +237,7 @@ def select_user_search(args):
     keyword = args[constants.TEXT]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # User Queryset
     queryset = User.objects.filter(Q(username__icontains=keyword)).values_list('id', flat=True)
@@ -267,7 +267,7 @@ def select_user_following(args):
     requested_user_id = args[constants.ID]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Check User Id
     if not User.objects.filter(id=requested_user_id).exists():
@@ -304,7 +304,7 @@ def select_user_followed(args):
     requested_user_id = args[constants.ID]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Check User Id
     if not User.objects.filter(id=requested_user_id).exists():
@@ -399,7 +399,7 @@ def select_user_collection(args):
     request_user = args[constants.USER]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Check Collection Id
     if not Collection.objects.filter(id=collection_id).exists():
@@ -537,7 +537,7 @@ def select_user_following_collection(args):
     request_user = args[constants.USER]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # QuerySet
     queryset = UserFollow.objects.annotate(
@@ -578,7 +578,7 @@ def select_user_search_collection(args):
     keyword = args[constants.TEXT]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # User Queryset
     queryset = User.objects.annotate(
