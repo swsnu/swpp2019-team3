@@ -49,7 +49,7 @@ class UserCard extends Component {
                 {this.state.doIFollow ? "unfollow" : "follow"}
             </Button>
         );
-        if (this.props.me.id === this.props.id) {
+        if (this.props.me && this.props.me.id === this.props.id) {
             followButton = null;
         }
 

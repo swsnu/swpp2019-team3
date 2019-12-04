@@ -64,7 +64,6 @@ describe("CollectionDetail Test", () => {
                     error: null,
                     collection: {},
                     papers: [],
-                    members: [],
                     replies: [],
                 },
                 like: {
@@ -77,9 +76,19 @@ describe("CollectionDetail Test", () => {
                     count: 0,
                     error: null,
                 },
+                getMembers: {
+                    status: collectionStatus.NONE,
+                    members: [],
+                    pageNum: 0,
+                    finished: true,
+                    error: null,
+                },
             },
             review: {},
-            user: {},
+            user: {
+                getFollowings: {},
+                search: {},
+            },
             reply: {
                 list: {
                     list: [],
@@ -131,6 +140,11 @@ describe("CollectionDetail Test", () => {
                         modification_date: "2019-11-26T11:59:41.126",
                         count: {},
                     },
+                },
+                like: {},
+                unlike: {},
+                getMembers: {
+                    status: collectionStatus.SUCCESS,
                     members: [
                         {
                             id: 1,
@@ -145,9 +159,10 @@ describe("CollectionDetail Test", () => {
                             ollection_user_type: "member",
                         },
                     ],
+                    pageNum: 1,
+                    finished: true,
+                    error: null,
                 },
-                like: {},
-                unlike: {},
             },
         };
 

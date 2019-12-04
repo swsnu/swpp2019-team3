@@ -71,6 +71,11 @@ describe("ManageCollectionMemberModal test", () => {
                     status: collectionStatus.SUCCESS,
                     error: null,
                     papers: [],
+                    memberCount: 3,
+                    replies: [],
+                },
+                getMembers: {
+                    status: collectionStatus.NONE,
                     members: [
                         {
                             id: 1,
@@ -91,11 +96,16 @@ describe("ManageCollectionMemberModal test", () => {
                             collection_member_type: "member",
                         },
                     ],
-                    memberCount: 3,
-                    replies: [],
+                    pageNum: 0,
+                    finished: true,
+                    error: null,
                 },
             },
-            user: {},
+            user: {
+                getFollowers: {},
+                getFollowings: {},
+                search: {},
+            },
             review: {},
             reply: {},
         };
@@ -168,25 +178,48 @@ describe("ManageCollectionMemberModal test", () => {
 
     // more tests should be implemented
     it("should call deleteMembers when deleting", async () => {
-        const component = mount(manageCollectionMemberModal);
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                ...stubInitialState.collection,
+                getMembers: {
+                    status: collectionStatus.SUCCESS,
+                    members: [],
+                    pageNum: 1,
+                    finished: false,
+                },
+            },
+        };
+
+        const component = mount(makeManageCollectionMemberModal(stubInitialState));
         const instance = component.find(ManageCollectionMemberModal.WrappedComponent).instance();
+
+        let wrapper = component.find(".ManageCollectionMemberModal #modalOpenButton").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+        await flushPromises();
+        component.update();
+
+        wrapper = component.find("#kickOffEnableButton").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+        await flushPromises();
         instance.setState({
-            isModalOpen: true,
             members: [
                 {
-                    id: 1,
+                    id: 2,
                     username: "test1",
                     description: "asdf",
                     collection_member_type: "owner",
                 },
                 {
-                    id: 2,
+                    id: 3,
                     username: "test2",
                     description: "qwer",
                     collection_member_type: "member",
                 },
                 {
-                    id: 3,
+                    id: 4,
                     username: "test3",
                     description: "zxcv",
                     collection_member_type: "member",
@@ -195,12 +228,7 @@ describe("ManageCollectionMemberModal test", () => {
         });
         component.update();
 
-        let wrapper = component.find("#kickOffEnableButton").hostNodes();
-        expect(wrapper.length).toBe(1);
-        wrapper.simulate("click");
-        component.update();
-
-        wrapper = component.find("#check").at(0); // test2 (excluding 'me')
+        wrapper = component.find("#check").at(0);
         expect(wrapper.length).toBe(1);
         wrapper.simulate("change", { target: { checked: true } });
         expect(instance.state.checkedUserIdList).toEqual([2]);
@@ -212,8 +240,6 @@ describe("ManageCollectionMemberModal test", () => {
         wrapper = component.find(".WarningModal #confirmButton").hostNodes();
         expect(wrapper.length).toBe(1);
         wrapper.simulate("click");
-
-        await flushPromises();
 
         expect(spyDeleteMembers).toHaveBeenCalledTimes(1);
     });

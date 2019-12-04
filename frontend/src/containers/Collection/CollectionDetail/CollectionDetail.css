@@ -69,6 +69,7 @@
     margin-left: 1%;
     margin-right: 5%;
     text-align: left;
+    white-space: pre-wrap;
 }
 
 .itemList {

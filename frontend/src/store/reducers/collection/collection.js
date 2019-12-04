@@ -30,7 +30,6 @@ const initialState = {
         collection: {},
         error: null,
         papers: [],
-        members: [],
         memberCount: 0,
         replies: [],
     },
@@ -42,6 +41,13 @@ const initialState = {
     unlike: {
         status: collectionStatus.NONE,
         count: 0,
+        error: null,
+    },
+    getMembers: {
+        status: collectionStatus.NONE,
+        members: [],
+        pageNum: 0,
+        finished: true,
         error: null,
     },
 };
@@ -109,18 +115,21 @@ const reducer = (state = initialState, action) => {
     case collectionConstants.GET_COLLECTION_MEMBERS_SUCCESS:
         return {
             ...state,
-            selected: {
-                ...state.selected,
+            getMembers: {
                 status: collectionStatus.SUCCESS,
-                members: action.target,
+                members: action.target.members,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
             },
         };
     case collectionConstants.GET_COLLECTION_MEMBERS_FAILURE:
         return {
             ...state,
-            selected: {
-                ...state.selected,
+            getMembers: {
                 status: collectionStatus.FAILURE,
+                members: [],
+                pageNum: 0,
+                finished: false,
                 error: action.target,
             },
         };
@@ -305,7 +314,9 @@ const reducer = (state = initialState, action) => {
             list: {
                 ...state.list,
                 status: collectionStatus.SUCCESS,
-                list: action.target,
+                list: action.target.collections,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
             },
         };
     case collectionConstants.SEARCH_COLLECTION_FAILURE:
@@ -315,6 +326,8 @@ const reducer = (state = initialState, action) => {
                 ...state.list,
                 status: collectionStatus.FAILURE,
                 error: action.target,
+                pageNum: 0,
+                finished: false,
             },
         };
     case collectionConstants.GET_COLLECTION_LIKE_SUCCESS:

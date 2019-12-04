@@ -2,6 +2,7 @@ import axios from "axios";
 
 import * as userActions from "./user";
 
+import { userStatus } from "../../../constants/constants";
 import { getMockStore } from "../../../test-utils/mocks";
 
 const stubInitialState = {
@@ -9,14 +10,32 @@ const stubInitialState = {
     paper: {},
     collection: {},
     user: {
-        userSearchResult: [],
-        selectedUser: null,
-        selectedFollowers: [],
-        selectedFollowings: [],
+        selectedUser: {},
+        getFollowers: {
+            status: userStatus.NONE,
+            followers: [],
+            pageNum: 0,
+            finished: true,
+            error: null,
+        },
+        getFollowings: {
+            status: userStatus.NONE,
+            followings: [],
+            pageNum: 0,
+            finished: true,
+            error: null,
+        },
+        search: {
+            status: userStatus.NONE,
+            users: [],
+            pageNum: 0,
+            finished: true,
+            error: null,
+        },
         followCount: 0,
         unfollowCount: 0,
-        status: "NONE",
-        error: -1,
+        status: userStatus.NONE,
+        error: null,
     },
     review: {},
     reply: {},
@@ -215,6 +234,42 @@ describe("userActions", () => {
         mockStore.dispatch(userActions.getFollowingsByUserId({ id: stubUser.id }))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/user/following", { params: { id: 1 } });
+                done();
+            });
+    });
+
+    it("'getFollowingsNotInCollection' should call axios.get", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: stubUser,
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(userActions.getFollowingsNotInCollection(stubUser.id, 1, 1))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/following/collection", { params: { user: 1, collection_id: 1, page_number: 1 } });
+                done();
+            });
+    });
+
+    it("'getFollowingsNotInCollection' should handle error", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(userActions.getFollowingsNotInCollection(stubUser.id, 1, 1))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/following/collection", { params: { user: 1, collection_id: 1, page_number: 1 } });
                 done();
             });
     });
@@ -440,9 +495,9 @@ describe("userActions", () => {
                 resolve(result);
             }));
 
-        mockStore.dispatch(userActions.searchUser({ text: "a" }))
+        mockStore.dispatch(userActions.searchUser("a", 1))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/user/search", { params: { text: "a" } });
+                expect(spy).toHaveBeenCalledWith("/api/user/search", { params: { text: "a", page_number: 1 } });
                 done();
             });
     });
@@ -459,9 +514,45 @@ describe("userActions", () => {
                 reject(error);
             }));
 
-        mockStore.dispatch(userActions.searchUser({ text: "a" }))
+        mockStore.dispatch(userActions.searchUser("a", 1))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/user/search", { params: { text: "a" } });
+                expect(spy).toHaveBeenCalledWith("/api/user/search", { params: { text: "a", page_number: 1 } });
+                done();
+            });
+    });
+
+    it("'searchUserNotInCollection' should call axios.get", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: stubUser,
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(userActions.searchUserNotInCollection("a", 1, 1))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/search/collection", { params: { text: "a", collection_id: 1, page_number: 1 } });
+                done();
+            });
+    });
+
+    it("'searchUserNotInCollection' should handle error", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 440,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(userActions.searchUserNotInCollection("a", 1, 1))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/search/collection", { params: { text: "a", collection_id: 1, page_number: 1 } });
                 done();
             });
     });

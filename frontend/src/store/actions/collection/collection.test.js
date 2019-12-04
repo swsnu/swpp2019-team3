@@ -290,9 +290,9 @@ describe("collectionActions", () => {
                 resolve(result);
             }));
 
-        mockStore.dispatch(collectionActions.getCollectionMembers(1))
+        mockStore.dispatch(collectionActions.getCollectionMembers(1, 1))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/user/collection", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/user/collection", { params: { id: 1, includes_me: true, page_number: 1 } });
                 done();
             });
     });
@@ -309,9 +309,9 @@ describe("collectionActions", () => {
                 reject(error);
             }));
 
-        mockStore.dispatch(collectionActions.getCollectionMembers(1))
+        mockStore.dispatch(collectionActions.getCollectionMembers(1, 1))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/user/collection", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/user/collection", { params: { id: 1, includes_me: true, page_number: 1 } });
                 done();
             });
     });
@@ -759,9 +759,9 @@ describe("collectionActions", () => {
                 resolve(result);
             }));
 
-        mockStore.dispatch(collectionActions.searchCollection({ text: "a" }))
+        mockStore.dispatch(collectionActions.searchCollection("a", 1))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/collection/search", { params: { text: "a" } });
+                expect(spy).toHaveBeenCalledWith("/api/collection/search", { params: { text: "a", page_number: 1 } });
                 done();
             });
     });
@@ -778,9 +778,9 @@ describe("collectionActions", () => {
                 reject(error);
             }));
 
-        mockStore.dispatch(collectionActions.searchCollection({ text: "a" }))
+        mockStore.dispatch(collectionActions.searchCollection("a", 1))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/collection/search", { params: { text: "a" } });
+                expect(spy).toHaveBeenCalledWith("/api/collection/search", { params: { text: "a", page_number: 1 } });
                 done();
             });
     });

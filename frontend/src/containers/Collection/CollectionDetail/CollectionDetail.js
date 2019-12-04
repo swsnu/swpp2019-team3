@@ -69,16 +69,6 @@ class CollectionDetail extends Component {
             }).catch(() => {});
     }
 
-    /* eslint-disable react/no-did-update-set-state */
-    componentDidUpdate(prevProps) {
-        if (this.props.memberCount !== prevProps.memberCount) {
-            this.setState({
-                userCount: this.props.memberCount,
-            });
-        }
-    }
-    /* eslint-enable react/no-did-update-set-state */
-
     // clickRemovePaperButtonHandler(collection_id: number, paper_id: number)
     // : Call onRemoveCollectionPaper of CollectionDetail to remove the paper from the collection.
 
@@ -162,16 +152,27 @@ class CollectionDetail extends Component {
         ));
 
         let inviteModal = null;
-        if (this.props.me && this.props.members.map((x) => x.id).includes(this.props.me.id)) {
+        if (this.props.selectedCollection.owned
+            || (this.props.me && this.props.members.map((x) => x.id).includes(this.props.me.id))) {
             inviteModal = (
                 <InviteToCollectionModal
                   openButtonName="Invite to ..."
                   members={this.props.members}
+                  whatActionWillFollow={
+                      () => {
+                          this.props.onGetMembers()
+                              .then(() => {
+                                  this.setState({
+                                      userCount: this.props.memberCount,
+                                  });
+                              });
+                      }
+                  }
                 />
             );
         }
         let manageButton = null;
-        if (this.props.me && this.state.owner.id === this.props.me.id) {
+        if (this.props.selectedCollection.owned) {
             manageButton = (
                 <Button
                   id="manageButton"
@@ -274,7 +275,7 @@ const mapStateToProps = (state) => ({
     unlikeCollectionStatus: state.collection.unlike.status,
     afterUnlikeCount: state.collection.unlike.count,
     replyList: state.reply.list,
-    members: state.collection.selected.members,
+    members: state.collection.getMembers.members,
     memberCount: state.collection.selected.memberCount,
 });
 

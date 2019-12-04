@@ -52,17 +52,23 @@ describe("<UserList />", () => {
                     collection: {},
                     error: null,
                     papers: [],
-                    members: [{ id: 2, count: {} }],
                     memberCount: 0,
                     replies: [],
+                },
+                getMembers: {
+                    members: [{ id: 2, count: {} }],
                 },
             },
             review: {},
             auth: {},
             user: {
                 selectedUser: [],
-                selectedFollowers: [{ id: 2, count: {} }],
-                selectedFollowings: [{ id: 2, count: {} }],
+                getFollowers: {
+                    followers: [{ id: 2, count: {} }],
+                },
+                getFollowings: {
+                    followings: [{ id: 2, count: {} }],
+                },
                 followCount: 0,
                 unfollowCount: 0,
                 status: userStatus.NONE,
@@ -119,12 +125,17 @@ describe("<UserList />", () => {
         stubInitialState = {
             ...stubInitialState,
             collection: {
-                selected: {
+                getMembers: {
                     status: collectionStatus.FAILURE,
                 },
             },
             user: {
-                status: userStatus.USER_NOT_EXIST,
+                getFollowings: {
+                    status: userStatus.USER_NOT_EXIST,
+                },
+                getFollowers: {
+                    status: userStatus.USER_NOT_EXIST,
+                },
             },
         };
 

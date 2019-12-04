@@ -9,7 +9,8 @@ import "./SubscriptionFeed.css";
 
 class SubscriptionFeed extends Component {
     componentDidMount() {
-        this.props.onGetSubscriptions();
+        this.props.onGetSubscriptions()
+            .catch(() => {});
     }
 
     // FIXME: if de-commentize those lines, somehow onGetSubscriptions is called recursively

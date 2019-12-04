@@ -68,6 +68,8 @@ COLLECTION_IDS = 'collection_ids'
 TITLE = 'title'
 TEXT = 'text'
 CONTAINS_PAPER = 'contains_paper'
+OWNED = 'owned'
+INCLUDES_ME = 'includes_me'
 
 # Paper
 PAPER = 'paper'
