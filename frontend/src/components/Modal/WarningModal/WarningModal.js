@@ -95,7 +95,7 @@ WarningModal.defaultProps = {
     openButtonText: "",
     whatToWarnText: "",
     whatActionWillBeDone: () => {},
-    whatActionWillFollow: null,
+    whatActionWillFollow: () => {},
     disableCondition: false,
     disableMessage: "",
 };

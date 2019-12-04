@@ -30,6 +30,7 @@ CREATION_DATE = 'creation_date'
 MODIFICATION_DATE = 'modification_date'
 CONTENT = 'content'
 SEARCH_WORD = 'search_word'
+ORDER_BY = 'order_by'
 
 # User
 USER = 'user'
@@ -62,14 +63,18 @@ SUBSCRIPTIONS = 'subscriptions'
 # Collection
 COLLECTION = 'collection'
 COLLECTIONS = 'collections'
+COLLECTION_ID = 'collection_id'
 COLLECTION_IDS = 'collection_ids'
 TITLE = 'title'
 TEXT = 'text'
 CONTAINS_PAPER = 'contains_paper'
+OWNED = 'owned'
+INCLUDES_ME = 'includes_me'
 
 # Paper
 PAPER = 'paper'
 PAPERS = 'papers'
+PAPER_ID = 'paper_id'
 LANGUAGE = 'language'
 TITLES = 'titles'
 ABSTRACT = 'abstract'

@@ -75,6 +75,11 @@ def put_collection(args):
     return {constants.COLLECTION: collections_utils.update_collection(args)}
 
 
+def put_collection_type(args):
+    """Put Collection Type"""
+    return {constants.COLLECTION: collections_utils.update_collection_type(args)}
+
+
 def delete_collection(args):
     """Delete Collection"""
     return collections_utils.remove_collection(args)
@@ -327,12 +332,14 @@ def get_user_followed(args):
             constants.PAGE_NUMBER: page_number,
             constants.IS_FINISHED: is_finished}
 
+
 def get_subscription(args):
     """Get Subscription"""
     subscriptions, page_number, is_finished = subscription_utils.select_subscriptions(args)
     return {constants.SUBSCRIPTIONS: subscriptions,
             constants.PAGE_NUMBER: page_number,
             constants.IS_FINISHED: is_finished}
+
 
 def get_user_action(args):
     """Get User Actions"""
@@ -341,13 +348,16 @@ def get_user_action(args):
             constants.USERS: users,
             constants.ACTIONS: actions}
 
+
 def post_user_recommendation(args):
     """Post User Recommendation"""
     return recommendation_utils.insert_user_recommendation(args)
 
+
 def get_paper_search_ml(args):
     """Get Paper Search ML"""
     return {constants.PAPERS: papers_utils.select_paper_search_ml(args)}
+
 
 def get_recommendation(args):
     """Get Recommendations"""
@@ -356,12 +366,14 @@ def get_recommendation(args):
             constants.PAGE_NUMBER: page_number,
             constants.IS_FINISHED: is_finished}
 
+
 def get_paper_all(args):
     """Get All Papers"""
     papers, page_number, is_finished = recommendation_utils.select_paper_all(args)
     return {constants.PAPERS: papers,
             constants.PAGE_NUMBER: page_number,
             constants.IS_FINISHED: is_finished}
+
 
 def get_user_all(args):
     """Get All Users"""
@@ -377,3 +389,18 @@ def get_keyword_init(args):
 def post_recommendation_init(args):
     """Post Recommendation init"""
     return recommendation_utils.insert_recommendation_init(args)
+
+def get_user_following_collection(args):
+    """Get User Following Collection"""
+    users, page_number, is_finished = users_utils.select_user_following_collection(args)
+    return {constants.USERS: users,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
+
+
+def get_user_search_collection(args):
+    """Get User Search Collection"""
+    users, page_number, is_finished = users_utils.select_user_search_collection(args)
+    return {constants.USERS: users,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}

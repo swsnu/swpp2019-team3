@@ -16,7 +16,7 @@ class CollectionTestCase(TestCase):
         """SET UP"""
         client = Client()
 
-        # Sign Up
+        # Sign Up: swpp
         client.post('/api/user',
                     json.dumps({
                         constants.EMAIL: 'swpp@snu.ac.kr',
@@ -25,7 +25,15 @@ class CollectionTestCase(TestCase):
                     }),
                     content_type='application/json')
 
-        # Sign In
+        client.post('/api/user',
+                    json.dumps({
+                        constants.EMAIL: 'swpp_second@snu.ac.kr',
+                        constants.USERNAME: 'swpp2',
+                        constants.PASSWORD: 'iluvswpp1234'
+                    }),
+                    content_type='application/json')
+
+        # Sign In: swpp
         client.get('/api/session',
                    data={
                        constants.EMAIL: 'swpp@snu.ac.kr',
@@ -33,13 +41,49 @@ class CollectionTestCase(TestCase):
                    },
                    content_type='application/json')
 
-        # Make Collection
+        # Make Public Collection
         client.post('/api/collection',
                     json.dumps({
                         constants.TITLE: 'SWPP Papers',
-                        constants.TEXT: 'papers for swpp 2019 class'
+                        constants.TEXT: 'papers for swpp 2019 class, can be revert to private'
                     }),
                     content_type='application/json')
+        # Make Private Collection and invite swpp_second
+        client.post('/api/collection',
+                    json.dumps({
+                        constants.TITLE: 'Private Collection1',
+                        constants.TEXT: 'Private Collection1'
+                    }),
+                    content_type='application/json')
+        private1_collection_id = Collection.objects.filter(title='Private Collection1').first().id
+        client.put('/api/collection/type',
+                   data=json.dumps({
+                       constants.ID: private1_collection_id,
+                       constants.TYPE: 'private'
+                   }),
+                   content_type='application/json')
+        swpp_second_user_id = User.objects.filter(email='swpp_second@snu.ac.kr').first().id
+        client.post('/api/user/collection',
+                    json.dumps({
+                        constants.ID: private1_collection_id,
+                        constants.USER_IDS: [swpp_second_user_id]
+                    }),
+                    content_type='application/json')
+
+        # Make Private Collection alone
+        client.post('/api/collection',
+                    json.dumps({
+                        constants.TITLE: 'Private Collection2',
+                        constants.TEXT: 'Private Collection2'
+                    }),
+                    content_type='application/json')
+        private2_collection_id = Collection.objects.filter(title='Private Collection2').first().id
+        client.put('/api/collection/type',
+                   data=json.dumps({
+                       constants.ID: private2_collection_id,
+                       constants.TYPE: 'private'
+                   }),
+                   content_type='application/json')
 
     def test_make_collection(self):
         """ MAKE COLLECTION """
@@ -112,6 +156,51 @@ class CollectionTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_edit_collection_type(self):
+        """ EDIT COLLECTION TYPE """
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        collection_id = Collection.objects.filter(title='SWPP Papers').first().id
+
+        # Put Collection with Type: Wrong Type
+        response = client.put('/api/collection/type',
+                              data=json.dumps({
+                                  constants.ID: collection_id,
+                                  constants.TYPE: 'privatee'
+                              }),
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+        # Put Collection with Type: Private Type
+        response = client.put('/api/collection/type',
+                              data=json.dumps({
+                                  constants.ID: collection_id,
+                                  constants.TYPE: 'private'
+                              }),
+                              content_type='application/json')
+        collection = json.loads(response.content)[constants.COLLECTION]
+        self.assertEqual(collection[constants.TYPE], 'private')
+        self.assertEqual(response.status_code, 200)
+
+        # Put Collection with Type: Public Type
+        response = client.put('/api/collection/type',
+                              data=json.dumps({
+                                  constants.ID: collection_id,
+                                  constants.TYPE: 'public'
+                              }),
+                              content_type='application/json')
+        collection = json.loads(response.content)[constants.COLLECTION]
+        self.assertEqual(collection[constants.TYPE], 'public')
+        self.assertEqual(response.status_code, 200)
+
     def test_get_collections_of_user(self):
         """ GET USER'S COLLECTIONS """
         client = Client()
@@ -132,17 +221,42 @@ class CollectionTestCase(TestCase):
                                   constants.ID: user_id
                               },
                               content_type='application/json')
-
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
         self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         collections = json.loads(response.content)[constants.COLLECTIONS]
-        self.assertEqual(len(collections), 1)
-        self.assertEqual(collections[0][constants.TITLE], 'SWPP Papers')
+        self.assertEqual(len(collections), 3)
+        self.assertEqual(collections[0][constants.TITLE], 'Private Collection2')
+
+    def test_get_collections_of_user_except_private(self):
+        """ GET USER'S COLLECTIONS EXCEPT PRIVATE"""
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp_second@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        swpp_user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+
+        # Get swpp2 User's Collections: count should be 0 cause it's private
+        response = client.get('/api/collection/user',
+                              data={
+                                  constants.ID: swpp_user_id
+                              },
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
+        collections = json.loads(response.content)[constants.COLLECTIONS]
+        self.assertEqual(len(collections), 2)
 
     def test_get_collections_of_user_with_paper(self):
-        """ GET USER'S COLLECTIONS """
+        """ GET USER'S COLLECTIONS WITH PAPER """
         client = Client()
 
         # Sign In
@@ -187,9 +301,11 @@ class CollectionTestCase(TestCase):
         self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 
         collections = json.loads(response.content)[constants.COLLECTIONS]
-        self.assertEqual(len(collections), 1)
-        self.assertEqual(collections[0][constants.TITLE], 'SWPP Papers')
-        self.assertEqual(collections[0][constants.CONTAINS_PAPER], True)
+        self.assertEqual(len(collections), 3)
+        self.assertEqual(collections[2][constants.TITLE], 'SWPP Papers')
+        self.assertEqual(collections[2][constants.CONTAINS_PAPER], True)
+        self.assertEqual(collections[0][constants.TITLE], 'Private Collection2')
+        self.assertEqual(collections[0][constants.CONTAINS_PAPER], False)
 
     def test_delete_collection(self):
         """ DELETE Collection """
@@ -297,6 +413,30 @@ class CollectionTestCase(TestCase):
                               content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 0)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
+
+    def test_collection_search_except_private(self):
+        """ Search Collection Except Private """
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp_second@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Search with Keyword 'private'
+        response = client.get('/api/collection/search',
+                              data={
+                                  constants.TEXT: 'private'
+                              },
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content.decode())[constants.COLLECTIONS]), 2)
         self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
         self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
 

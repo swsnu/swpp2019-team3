@@ -46,10 +46,12 @@ import {
     getUserByUserId,
     getFollowersByUserId,
     getFollowingsByUserId,
+    getFollowingsNotInCollection,
     addUserFollowing,
     removeUserFollowing,
     editUserInfo,
     searchUser,
+    searchUserNotInCollection,
 } from "./user/user";
 
 import {
@@ -135,10 +137,12 @@ export const userActions = {
     getUserByUserId,
     getFollowersByUserId,
     getFollowingsByUserId,
+    getFollowingsNotInCollection,
     addUserFollowing,
     removeUserFollowing,
     editUserInfo,
     searchUser,
+    searchUserNotInCollection,
 };
 
 export const replyActions = {

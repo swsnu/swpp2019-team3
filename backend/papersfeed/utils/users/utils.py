@@ -237,7 +237,7 @@ def select_user_search(args):
     keyword = args[constants.TEXT]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # User Queryset
     queryset = User.objects.filter(Q(username__icontains=keyword)).values_list('id', flat=True)
@@ -267,7 +267,7 @@ def select_user_following(args):
     requested_user_id = args[constants.ID]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Check User Id
     if not User.objects.filter(id=requested_user_id).exists():
@@ -304,7 +304,7 @@ def select_user_followed(args):
     requested_user_id = args[constants.ID]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Check User Id
     if not User.objects.filter(id=requested_user_id).exists():
@@ -398,15 +398,23 @@ def select_user_collection(args):
 
     request_user = args[constants.USER]
 
+    # Decide if results include request_user if she or he is one of members
+    includes_me = True if constants.INCLUDES_ME not in args else json.loads(args[constants.INCLUDES_ME])
+
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Check Collection Id
     if not Collection.objects.filter(id=collection_id).exists():
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     # Members QuerySet
-    queryset = CollectionUser.objects.filter(collection_id=collection_id)
+    if includes_me:
+        query = Q(collection_id=collection_id)
+    else:
+        query = Q(collection_id=collection_id) & ~Q(user_id=request_user.id)
+
+    queryset = CollectionUser.objects.filter(query)
 
     # Members(including owner) Of Collections
     collection_members = get_results_from_queryset(queryset, 10, page_number)
@@ -436,7 +444,9 @@ def insert_user_collection(args):
     request_user = args[constants.USER]
 
     # Check Collection Id
-    if not Collection.objects.filter(id=collection_id).exists():
+    try:
+        collection = Collection.objects.get(id=collection_id)
+    except ObjectDoesNotExist:
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     # Self Add
@@ -450,6 +460,14 @@ def insert_user_collection(args):
             user_id=user_id,
             type=COLLECTION_USER_TYPE[1], # member, not owner
         )
+
+    invited_users = User.objects.filter(Q(id__in=user_ids))
+    notify.send(
+        request_user,
+        recipient=invited_users,
+        verb='invited you to',
+        target=collection
+    )
 
     # Get the number of Members(including owner) Of Collections
     user_counts = __get_collection_user_count([collection_id], 'collection_id')
@@ -478,7 +496,7 @@ def update_user_collection(args):
     if collection_user.type != COLLECTION_USER_TYPE[0]:
         raise ApiError(constants.AUTH_ERROR)
 
-    collection_user.type = COLLECTION_USER_TYPE[1] # change to member
+    collection_user.type = COLLECTION_USER_TYPE[1]  # change to member
     collection_user.save()
 
     # Grant ownership to the user whose id is user_id
@@ -487,7 +505,7 @@ def update_user_collection(args):
     except ObjectDoesNotExist:
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
-    collection_user.type = COLLECTION_USER_TYPE[0] # change to owner
+    collection_user.type = COLLECTION_USER_TYPE[0]  # change to owner
     collection_user.save()
 
 
@@ -522,6 +540,82 @@ def remove_user_collection(args):
     # Get the number of Members(including owner) Of Collections
     user_counts = __get_collection_user_count([collection_id], 'collection_id')
     return {constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0}
+
+
+def select_user_following_collection(args):
+    """Get Following Users Not in Collection"""
+    is_parameter_exists([
+        constants.COLLECTION_ID
+    ], args)
+
+    # Collection ID
+    collection_id = args[constants.COLLECTION_ID]
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
+
+    # QuerySet
+    queryset = UserFollow.objects.annotate(
+        is_in_collection=__is_in_collection('followed_user', collection_id)
+    ).filter(
+        following_user=request_user.id,
+        is_in_collection=False
+    ).values_list('followed_user', flat=True)
+
+    # User Ids
+    user_ids = get_results_from_queryset(queryset, 10, page_number)
+
+    # is_finished
+    is_finished = not user_ids.has_next()
+
+    # Filter Query
+    filter_query = Q(id__in=user_ids)
+
+    # Users
+    users, _ = __get_users(filter_query, request_user, 10)
+
+    return users, page_number, is_finished
+
+
+def select_user_search_collection(args):
+    """Search Users Not in Collection"""
+    is_parameter_exists([
+        constants.TEXT, constants.COLLECTION_ID
+    ], args)
+
+    # Collection ID
+    collection_id = args[constants.COLLECTION_ID]
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Search Keyword
+    keyword = args[constants.TEXT]
+
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
+
+    # User Queryset
+    queryset = User.objects.annotate(
+        is_in_collection=__is_in_collection('id', collection_id)
+    ).filter(
+        username__icontains=keyword,
+        is_in_collection=False
+    ).values_list('id', flat=True)
+
+    # User Ids
+    user_ids = get_results_from_queryset(queryset, 10, page_number)
+
+    # is_finished
+    is_finished = not user_ids.has_next()
+
+    # Users
+    users, _ = __get_users(Q(id__in=user_ids), request_user, 10)
+
+    return users, page_number, is_finished
 
 
 def __get_users(filter_query, request_user, count, collection_id=None):
@@ -581,6 +675,16 @@ def __pack_users(users, request_user, collection_id=None):
         packed.append(packed_user)
 
     return packed
+
+
+def __is_in_collection(outer_ref, collection_id):
+    """Check User in Collection"""
+    return Exists(
+        CollectionUser.objects.filter(
+            user_id=OuterRef(outer_ref),
+            collection_id=collection_id
+        )
+    )
 
 
 def __is_following(outer_ref, request_user):

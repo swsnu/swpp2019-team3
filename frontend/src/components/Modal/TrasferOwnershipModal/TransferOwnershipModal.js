@@ -14,6 +14,9 @@ class TransferOwnershipModal extends Component {
             isModalOpen: false,
             selectedUserId: -1,
             selectedUserName: "",
+            members: [],
+            memberPageNum: 0,
+            memberFinished: true,
         };
 
 
@@ -22,7 +25,21 @@ class TransferOwnershipModal extends Component {
         this.checkHandler = this.checkHandler.bind(this);
     }
 
+    getMembersTrigger = (pageNum) => {
+        this.props.onGetMembers(this.props.thisCollection.id, pageNum + 1, false)
+            .then(() => {
+                const { members } = this.state;
+                this.setState({
+                    members: members.concat(this.props.members),
+                    memberPageNum: this.props.memberPageNum,
+                    memberFinished: this.props.memberFinished,
+                });
+            })
+            .catch(() => {});
+    }
+
     clickOpenHandler = () => {
+        this.getMembersTrigger(0);
         this.setState({ isModalOpen: true });
     }
 
@@ -31,6 +48,9 @@ class TransferOwnershipModal extends Component {
             isModalOpen: false,
             selectedUserId: -1,
             selectedUserName: "",
+            members: [],
+            memberPageNum: 0,
+            memberFinished: true,
         });
     }
 
@@ -43,8 +63,8 @@ class TransferOwnershipModal extends Component {
 
     render() {
         let memberList = (<div />);
-        if (this.props.me && this.props.members.length > 0) {
-            memberList = this.props.members
+        if (this.props.me && this.state.members.length > 0) {
+            memberList = this.state.members
                 .filter((user) => user.id !== this.props.me.id)
                 .map((user) => (
                     <UserEntry
@@ -72,6 +92,16 @@ class TransferOwnershipModal extends Component {
                     </Modal.Header>
                     <Modal.Body>
                         {memberList}
+                        { this.state.memberFinished ? null
+                            : (
+                                <Button
+                                  className="user-more-button"
+                                  onClick={() => this.getMembersTrigger(this.state.memberPageNum)}
+                                  block
+                                >
+                            View More
+                                </Button>
+                            )}
                     </Modal.Body>
                     <Modal.Footer>
                         <WarningModal
@@ -100,12 +130,17 @@ class TransferOwnershipModal extends Component {
 const mapStateToProps = (state) => ({
     me: state.auth.me,
     thisCollection: state.collection.selected.collection,
-    members: state.collection.selected.members,
+    members: state.collection.getMembers.members,
+    memberPageNum: state.collection.getMembers.pageNum,
+    memberFinished: state.collection.getMembers.finished,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onTransferOwnership: (collectionId, targetUserId) => dispatch(
         collectionActions.setOwner(collectionId, targetUserId),
+    ),
+    onGetMembers: (collectionId, pageNum, includesMe) => dispatch(
+        collectionActions.getCollectionMembers(collectionId, pageNum, includesMe),
     ),
 });
 
@@ -120,6 +155,9 @@ TransferOwnershipModal.propTypes = {
     members: PropTypes.arrayOf(PropTypes.any),
 
     onTransferOwnership: PropTypes.func,
+    onGetMembers: PropTypes.func,
+    memberPageNum: PropTypes.number,
+    memberFinished: PropTypes.bool,
 };
 
 TransferOwnershipModal.defaultProps = {
@@ -130,4 +168,7 @@ TransferOwnershipModal.defaultProps = {
     members: [],
 
     onTransferOwnership: () => {},
+    onGetMembers: () => {},
+    memberPageNum: 0,
+    memberFinished: true,
 };

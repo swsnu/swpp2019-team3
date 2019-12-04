@@ -19,9 +19,9 @@ def select_subscriptions(args):
     page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
 
     # get the list of users that this user is following
-    # pylint: disable=line-too-long
-    followings_queryset = UserFollow.objects.filter(following_user=request_user.id).values_list('followed_user', flat=True)
-    # pylint: enable=line-too-long
+    followings_queryset = UserFollow.objects.filter(
+        following_user=request_user.id).values_list('followed_user', flat=True)
+
     # Notification QuerySet
     subscription_queryset = Subscription.objects.filter(Q(actor__in=followings_queryset))
     subscriptions = get_results_from_queryset(subscription_queryset, 20, page_number)
@@ -63,11 +63,15 @@ def __pack_subscriptions(subscriptions, request_user):
             action_object = {}
 
         try:
-            target = {
-                constants.TYPE: str(subscription.target_content_type),
-                constants.ID: subscription.target.id,
-                constants.STRING: str(subscription.target)
-            }
+            target_type = str(subscription.target_content_type)
+            if target_type in ('paper', 'collection', 'review'):
+                target = {
+                    constants.TYPE: str(subscription.target_content_type),
+                    constants.ID: subscription.target.id,
+                    constants.TITLE: str(subscription.target)
+                }
+            else:
+                raise AttributeError
         except AttributeError: # the target can be null or removed
             target = {}
 

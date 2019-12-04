@@ -50,12 +50,20 @@ def insert_like_paper(args):
     )
 
     # store an action for subscription feed
-    paper = Paper.objects.get(id=paper_id)
-    Subscription.objects.create(
-        actor=request_user,
-        verb="liked",
-        action_object=paper,
-    )
+    try:
+        subscription = Subscription.objects.get(
+            actor=request_user,
+            verb="liked",
+            action_object_object_id=paper_id
+        )
+        subscription.save() # for updating time
+    except Subscription.DoesNotExist:
+        paper = Paper.objects.get(id=paper_id)
+        Subscription.objects.create(
+            actor=request_user,
+            verb="liked",
+            action_object=paper
+        )
 
     # Create action for recommendation
     try:
@@ -137,11 +145,19 @@ def insert_like_review(args):
     review_author = User.objects.get(id=review.user_id)
 
     # store an action for subscription feed
-    Subscription.objects.create(
-        actor=request_user,
-        verb="liked",
-        action_object=review,
-    )
+    try:
+        subscription = Subscription.objects.get(
+            actor=request_user,
+            verb="liked",
+            action_object_object_id=review_id
+        )
+        subscription.save() # for updating time
+    except Subscription.DoesNotExist:
+        Subscription.objects.create(
+            actor=request_user,
+            verb="liked",
+            action_object=review
+        )
 
     notify.send(
         request_user,
@@ -208,6 +224,21 @@ def insert_like_collection(args):
     member_ids = list(set(member_ids))
 
     members = User.objects.filter(Q(id__in=member_ids))
+
+    # store an action for subscription feed
+    try:
+        subscription = Subscription.objects.get(
+            actor=request_user,
+            verb="liked",
+            action_object_object_id=collection_id
+        )
+        subscription.save() # for updating time
+    except Subscription.DoesNotExist:
+        Subscription.objects.create(
+            actor=request_user,
+            verb="liked",
+            action_object=collection
+        )
 
     notify.send(
         request_user,

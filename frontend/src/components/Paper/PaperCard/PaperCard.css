@@ -3,29 +3,21 @@
 }
 
 #headerSubscriptionTarget {
-    display: inline-flex;
+    display: inline-block;
     flex-direction: row;
+    justify-content: space-around;
 }
 
 #headerSubscription {
-    display: inline-flex;
+    display: inline-block;
     flex-direction: row;
+    justify-content: space-around;
 }
 
 #headerLine {
-    display: inline-flex;
+    display: inline-block;
     flex-direction: row;
-}
-
-.actorLink {
-    /* This is interval between texts: DO NOT MODIFY IT */
-    margin-right: 5px;
-    font-size: 120%;
-}
-
-.verb {
-    /* This is interval between texts: DO NOT MODIFY IT */
-    margin-right: 5px;
+    justify-content: space-around;
 }
 
 .paper {

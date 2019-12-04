@@ -26,22 +26,14 @@ class CollectionManage extends Component {
                 if (this.props.collectionStatus !== collectionStatus.SUCCESS) {
                     this.props.history.push("/main");
                 } else {
+                    if (!this.props.selectedCollection.owned) {
+                        this.props.history.goBack();
+                    }
                     this.setState({
                         collectionName: this.props.selectedCollection.title,
                         collectionDescription: this.props.selectedCollection.text,
                     });
                 }
-            })
-            .catch(() => {});
-        this.props.onGetMembers(collectionId)
-            .then(() => {
-                this.props.members.forEach((x) => {
-                    if (x.collection_user_type === "owner") {
-                        if (this.props.me.id !== x.id) {
-                            this.props.history.goBack();
-                        }
-                    }
-                });
             })
             .catch(() => {});
     }
@@ -148,7 +140,6 @@ const mapStateToProps = (state) => ({
     me: state.auth.me,
     collectionStatus: state.collection.selected.status,
     selectedCollection: state.collection.selected.collection,
-    members: state.collection.selected.members,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -159,37 +150,30 @@ const mapDispatchToProps = (dispatch) => ({
     onDeleteCollection: (collectionId) => dispatch(
         collectionActions.deleteCollection(collectionId),
     ),
-    onGetMembers: (collectionId) => dispatch(collectionActions.getCollectionMembers(collectionId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionManage);
 
 CollectionManage.propTypes = {
-    me: PropTypes.objectOf(PropTypes.any),
     history: PropTypes.objectOf(PropTypes.any),
     location: PropTypes.objectOf(PropTypes.any),
 
     selectedCollection: PropTypes.objectOf(PropTypes.any),
     collectionStatus: PropTypes.string,
-    members: PropTypes.arrayOf(PropTypes.any),
 
     onGetCollection: PropTypes.func,
     onUpdateCollectionInfo: PropTypes.func,
     onDeleteCollection: PropTypes.func,
-    onGetMembers: PropTypes.func,
 };
 
 CollectionManage.defaultProps = {
-    me: {},
     history: null,
     location: null,
 
     selectedCollection: {},
     collectionStatus: collectionStatus.NONE,
-    members: [],
 
     onGetCollection: () => {},
     onUpdateCollectionInfo: () => {},
     onDeleteCollection: () => {},
-    onGetMembers: () => {},
 };

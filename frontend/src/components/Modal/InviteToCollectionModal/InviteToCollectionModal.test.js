@@ -64,40 +64,50 @@ describe("InviteToCollectionModal test", () => {
                     error: null,
                     collection: {},
                     papers: [],
-                    members: [],
                     memberCount: 0,
                     replies: [],
                 },
+                getMembers: {
+                    status: collectionStatus.NONE,
+                    members: [],
+                    pageNum: 0,
+                    finished: true,
+                    error: null,
+                },
             },
             user: {
-                selectedFollowing: [
-                    {
-                        id: 1,
-                        username: "test1",
-                        description: "asdf",
-                    },
-                    {
-                        id: 2,
-                        username: "test2",
-                        description: "qwer",
-                    },
-                    {
-                        id: 3,
-                        username: "test3",
-                        description: "zxcv",
-                    },
-                ],
+                getFollowers: {},
+                getFollowings: {
+                    followings: [
+                        {
+                            id: 1,
+                            username: "test1",
+                            description: "asdf",
+                        },
+                        {
+                            id: 2,
+                            username: "test2",
+                            description: "qwer",
+                        },
+                        {
+                            id: 3,
+                            username: "test3",
+                            description: "zxcv",
+                        },
+                    ],
+                },
+                search: {},
             },
             review: {},
             reply: {},
         };
 
         inviteToCollectionModal = makeInviteToCollectionModal(stubInitialState);
-        spyGetFollowings = jest.spyOn(userActions, "getFollowingsByUserId")
+        spyGetFollowings = jest.spyOn(userActions, "getFollowingsNotInCollection")
             .mockImplementation(() => () => mockPromise);
         spyAddNewMemers = jest.spyOn(collectionActions, "addNewMembers")
             .mockImplementation(() => () => mockPromise);
-        spySearch = jest.spyOn(userActions, "searchUser")
+        spySearch = jest.spyOn(userActions, "searchUserNotInCollection")
             .mockImplementation(() => () => mockPromise);
     });
 

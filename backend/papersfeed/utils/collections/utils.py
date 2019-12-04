@@ -6,14 +6,15 @@ from django.db.models import Q, Exists, OuterRef, Count, Case, When
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
-from papersfeed.models.collections.collection import Collection
+from papersfeed.models.collections.collection import Collection, COLLECTION_SHARE_TYPE
 from papersfeed.models.collections.collection_like import CollectionLike
 from papersfeed.models.collections.collection_user import CollectionUser, COLLECTION_USER_TYPE
 from papersfeed.models.collections.collection_paper import CollectionPaper
 from papersfeed.models.replies.reply_collection import ReplyCollection
 from papersfeed.models.users.user_action import UserAction, USER_ACTION_TYPE
-from papersfeed.models.users.user import User
 from papersfeed.models.subscription.subscription import Subscription
+from papersfeed.models.papers.paper import Paper
+
 
 def insert_collection(args):
     """Insert Collection"""
@@ -40,12 +41,11 @@ def insert_collection(args):
         raise ApiError(constants.PARAMETER_ERROR)
 
     # Create New Collection
-    collection = Collection.objects.create(title=title, text=text)
+    collection = Collection.objects.create(title=title, text=text, type=COLLECTION_SHARE_TYPE[0])
 
     # store an action for subscription feed
-    req_user = User.objects.get(id=request_user.id)
     Subscription.objects.create(
-        actor=req_user,
+        actor=request_user,
         verb="created",
         action_object=collection,
     )
@@ -55,7 +55,7 @@ def insert_collection(args):
 
     collection_id = collection.id
 
-    collections, _ = __get_collections(Q(id=collection_id), request_user, None)
+    collections, _, _ = __get_collections(Q(id=collection_id), request_user, None)
 
     # Does Not Exist
     if not collections:
@@ -105,7 +105,56 @@ def update_collection(args):
 
     collection.save()
 
-    collections, _ = __get_collections(Q(id=collection.id), request_user, None)
+    collections, _, _ = __get_collections(Q(id=collection.id), request_user, None)
+
+    if not collections:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    return collections[0]
+
+
+def update_collection_type(args):
+    """Update Collection Type"""
+    is_parameter_exists([
+        constants.ID,
+        constants.TYPE
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Collection Share Type
+    share_type = args[constants.TYPE]
+
+    # Collection Id
+    collection_id = args[constants.ID]
+
+    # Revoke ownership from request_user
+    try:
+        collection_user = CollectionUser.objects.get(collection_id=collection_id, user_id=request_user.id)
+    except ObjectDoesNotExist:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    # if request_user is not owner, then raise AUTH_ERROR
+    if collection_user.type != COLLECTION_USER_TYPE[0]:
+        raise ApiError(constants.AUTH_ERROR)
+
+    # Get Collection
+    try:
+        collection = Collection.objects.get(id=collection_id)
+    except ObjectDoesNotExist:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    if share_type == COLLECTION_SHARE_TYPE[0]:
+        collection.type = COLLECTION_SHARE_TYPE[0]
+    elif share_type == COLLECTION_SHARE_TYPE[1]:
+        collection.type = COLLECTION_SHARE_TYPE[1]
+    else:
+        raise ApiError(constants.PARAMETER_ERROR)
+
+    collection.save()
+
+    collections, _, _ = __get_collections(Q(id=collection.id), request_user, None)
 
     if not collections:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -152,7 +201,7 @@ def select_collection(args):
     collection_id = args[constants.ID]
 
     # Collections
-    collections, _ = __get_collections(Q(id=collection_id), request_user, None)
+    collections, _, _ = __get_collections(Q(id=collection_id), request_user, None)
 
     # Does Not Exist
     if not collections:
@@ -176,26 +225,21 @@ def select_collection_user(args):
     user_id = args[constants.ID]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Collections Queryset
-    queryset = CollectionUser.objects.filter(user_id=user_id).values_list('collection_id', flat=True)
-
-    # User's Collections
-    collection_ids = get_results_from_queryset(queryset, 10, page_number)
-
-    # is_finished
-    is_finished = not collection_ids.has_next()
-
-    # Filter Query
-    filter_query = Q(id__in=collection_ids)
+    queryset = Q(is_user_collection=True) & (Q(type=COLLECTION_SHARE_TYPE[0]) | Q(is_member=True))
 
     paper_id = None
     if constants.PAPER in args and args[constants.PAPER] is not None:
         paper_id = args[constants.PAPER]
 
     # Collections
-    collections, _ = __get_collections(filter_query, request_user, 10, paper_id=paper_id)
+    params = {
+        constants.PAPER_ID: paper_id,
+        constants.USER_ID: user_id
+    }
+    collections, _, is_finished = __get_collections(queryset, request_user, 10, page_number=page_number, params=params)
 
     return collections, page_number, is_finished
 
@@ -213,20 +257,14 @@ def select_collection_search(args):
     keyword = args[constants.TEXT]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Collections Queryset
-    queryset = Collection.objects.filter(Q(title__icontains=keyword) | Q(text__icontains=keyword))\
-        .values_list('id', flat=True)
-
-    # Collection Ids
-    collection_ids = get_results_from_queryset(queryset, 10, page_number)
-
-    # is_finished
-    is_finished = not collection_ids.has_next()
+    queryset = (Q(title__icontains=keyword) | Q(text__icontains=keyword)) & (Q(type=COLLECTION_SHARE_TYPE[0])
+                                                                             | Q(is_member=True))
 
     # Collections
-    collections, _ = __get_collections(Q(id__in=collection_ids), request_user, 10)
+    collections, _, is_finished = __get_collections(queryset, request_user, 10, page_number=page_number)
 
     return collections, page_number, is_finished
 
@@ -254,7 +292,10 @@ def select_collection_like(args):
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(collection_ids)])
 
     # Collections
-    collections, _ = __get_collections(Q(id__in=collection_ids), request_user, 10, order_by=preserved)
+    params = {
+        constants.ORDER_BY: preserved
+    }
+    collections, _, _ = __get_collections(Q(id__in=collection_ids), request_user, 10, params=params)
 
     return collections, page_number, is_finished
 
@@ -278,16 +319,40 @@ def update_paper_collection(args):
     # Containing Collections
     containing_collection_ids = __get_collections_contains_paper(paper_id, request_user)
 
+    # Not Containing Collections
+    not_containing_collection_ids = list(set(collection_ids) - set(containing_collection_ids))
+
     # Add To Collections
-    __add_paper_to_collections(paper_id, list(set(collection_ids) - set(containing_collection_ids)), request_user)
+    __add_paper_to_collections(paper_id, not_containing_collection_ids, request_user)
 
     # Remove From Collections
     __remove_paper_from_collections(paper_id, list(set(containing_collection_ids) - set(collection_ids)), request_user)
 
+    # store an action for subscription feed
+    if not_containing_collection_ids:
+        try:
+            subscription = Subscription.objects.get(
+                actor=request_user,
+                verb="added",
+                action_object_object_id=paper_id,
+                target_object_id=not_containing_collection_ids[0],
+            )
+            subscription.save() # for updating time
+        except Subscription.DoesNotExist:
+            paper = Paper.objects.get(id=paper_id)
+            collection = Collection.objects.get(id=not_containing_collection_ids[0])
+            Subscription.objects.create(
+                actor=request_user,
+                verb="added",
+                action_object=paper,
+                target=collection,
+            )
 
-def get_collections(filter_query, request_user, count, paper_id=None):
+
+def get_collections(filter_query, request_user, count, params=None, page_number=1):
     """Get Collections"""
-    return __get_collections(filter_query, request_user, count, paper_id=paper_id)
+    return __get_collections(filter_query, request_user, count, params=params,
+                             page_number=page_number)
 
 
 def __get_collections_contains_paper(paper_id, request_user):
@@ -325,6 +390,7 @@ def __remove_paper_from_collections(paper_id, collection_ids, request_user):
         obj.count = obj.count - 1
         obj.save()
 
+
 def __add_paper_to_collections(paper_id, collection_ids, request_user):
     """Add Paper To Collections"""
     for collection_id in collection_ids:
@@ -350,21 +416,34 @@ def __add_paper_to_collections(paper_id, collection_ids, request_user):
         )
 
 
-def __get_collections(filter_query, request_user, count, paper_id=None, order_by='-pk'):
+def __get_collections(filter_query, request_user, count, params=None, page_number=1):
     """Get Collections By Query"""
-    queryset = Collection.objects.filter(
+    params = {} if params is None else params
+    paper_id = None if constants.PAPER_ID not in params else params[constants.PAPER_ID]
+    order_by = '-pk' if constants.ORDER_BY not in params else params[constants.ORDER_BY]
+    target_user_id = request_user.id if constants.USER_ID not in params else params[constants.USER_ID]
+
+    queryset = Collection.objects.annotate(
+        is_user_collection=__is_member('id', target_user_id if target_user_id else request_user.id),
+        is_member=__is_member('id', request_user.id)
+    ).filter(
         filter_query
     ).annotate(
         is_liked=__is_collection_liked('id', request_user),
+        is_owned=__is_collection_owned('id', request_user),
         contains_paper=__contains_paper('id', paper_id)).order_by(order_by)
 
-    collections = get_results_from_queryset(queryset, count)
+    collections = get_results_from_queryset(queryset, count, page_number)
+
+    is_finished = True
+    if count is not None:
+        is_finished = not collections.has_next()
 
     pagination_value = collections[len(collections) - 1].id if collections else 0
 
     collections = __pack_collections(collections, request_user, paper_id=paper_id)
 
-    return collections, pagination_value
+    return collections, pagination_value, is_finished
 
 
 def __pack_collections(collections, request_user, paper_id=None):  # pylint: disable=unused-argument
@@ -393,6 +472,7 @@ def __pack_collections(collections, request_user, paper_id=None):  # pylint: dis
             constants.TITLE: collection.title,
             constants.TEXT: collection.text,
             constants.LIKED: collection.is_liked,
+            constants.OWNED: collection.is_owned,
             constants.COUNT: {
                 constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0,
                 constants.PAPERS: paper_counts[collection_id] if collection_id in paper_counts else 0,
@@ -400,7 +480,8 @@ def __pack_collections(collections, request_user, paper_id=None):  # pylint: dis
                 constants.REPLIES: reply_counts[collection_id] if collection_id in reply_counts else 0
             },
             constants.CREATION_DATE: collection.creation_date,
-            constants.MODIFICATION_DATE: collection.modification_date
+            constants.MODIFICATION_DATE: collection.modification_date,
+            constants.TYPE: collection.type
         }
 
         if paper_id:
@@ -415,6 +496,23 @@ def __is_collection_liked(outer_ref, request_user):
     """Check If Collection is Liked by User"""
     return Exists(
         CollectionLike.objects.filter(collection_id=OuterRef(outer_ref),
+                                      user_id=request_user.id if request_user else None)
+    )
+
+
+def __is_member(outer_ref, user_id):
+    """Check If Collection is Member by User"""
+    return Exists(
+        CollectionUser.objects.filter(collection_id=OuterRef(outer_ref),
+                                      user_id=user_id)
+    )
+
+
+def __is_collection_owned(outer_ref, request_user):
+    """Check If Collection is Owned by User"""
+    return Exists(
+        CollectionUser.objects.filter(collection_id=OuterRef(outer_ref),
+                                      type=COLLECTION_USER_TYPE[0],
                                       user_id=request_user.id if request_user else None)
     )
 

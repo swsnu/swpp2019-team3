@@ -41,7 +41,6 @@ const stubInitialState = {
             error: null,
             collection: {},
             papers: [],
-            members: [],
             replies: [],
         },
         like: {
@@ -54,6 +53,7 @@ const stubInitialState = {
             count: 0,
             error: null,
         },
+        getMembers: {},
     },
     review: {
         like: {
@@ -67,7 +67,11 @@ const stubInitialState = {
             error: null,
         },
     },
-    user: {},
+    user: {
+        getFollowings: {},
+        getFollowers: {},
+        search: {},
+    },
     reply: {},
 };
 
