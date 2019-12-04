@@ -95,27 +95,32 @@ class SubscriptionFeed extends Component {
     }
 
     addRecoToSub = () => {
-        this.shuffle(this.state.recommendations, this.state.start);
+        for (let i = this.state.recommendations.length - 1; i > this.state.start; i -= 1) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this.state.recommendations[i], this.state.recommendations[j]] = [
+                this.state.recommendations[j],
+                this.state.recommendations[i],
+            ];
+        }
         let temp = [];
         if (this.state.recommendations.length >= this.state.recoNum) {
-            temp = this.state.recommendations.slice(0, this.state.recoNum);
+            temp = this.state.recommendations.splice(0, this.state.recoNum);
         } else {
-            temp = this.state.recommendations.slice(0, this.state.recommendations.length);
+            temp = this.state.recommendations.splice(0, this.state.recommendations.length);
+        }
+
+        for (let i = 0; i < temp.length; i += 1) {
+            const index = Math.random()
+            * (this.state.recommendations.length - this.state.start)
+            + this.state.start;
+            this.state.recommendations.splice(index, 0, temp[i]);
         }
         const { newSubscriptions } = this.state.subscriptions.concat(temp);
-        this.shuffle(newSubscriptions, this.state.start);
+        this.shuffle(newSubscriptions);
         this.setState({
             subscriptions: newSubscriptions,
             start: newSubscriptions.length,
         });
-    }
-
-    shuffle = (array, start) => {
-        const shuffleArray = array;
-        for (let i = array.length - 1; i > start; i -= 1) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffleArray[i], shuffleArray[j]] = [shuffleArray[j], shuffleArray[i]];
-        }
     }
 
     paperCardMaker = (key, paper, actor, verb, target) => (

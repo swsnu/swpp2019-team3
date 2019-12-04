@@ -3,13 +3,17 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { authActions } from "../../store/actions";
+import { Form } from "react-bootstrap";
 
 class Init extends Component {
     constructor(props) {
         super(props);
         this.state = {
             keywords: [],
+            checkedKeywords: [],
         };
+        
+        this.checkHandler = this.checkHandler.bind(this);
     }
 
     componentDidMount() {
@@ -21,9 +25,66 @@ class Init extends Component {
             });
     }
 
+    checkHandler = (id) => {
+        const { checkedKeywords } = this.state;
+        if (this.state.checkedKeywords.includes(id)) {
+            this.setState({
+                checkedKeywords: checkedKeywords.splice(checkedKeywords.indexOf(id),1),
+            });
+        } else {
+            this.setState({
+                checkedKeywords = checkedKeywords.concat(id),
+            });
+        }
+    }
+
     render() {
-        keywords = 
-        return ();
+        let keywords = null;
+        let keywordsSet = null;
+        if (this.state.keywords.length >= 1) {
+            keywords = this.state.keywords.map((keyword) => (
+                <Form.Check
+                  inline label={keyword.name}
+                  type = 'checkbox'
+                  id={keyword.id}
+                  onChange={() => this.checkHandler(keyword.id)}
+                />
+            ));
+            
+            const count = keywords.length / 4;
+            while (count > 0) {
+                keywordsSet.push(
+                    <div key='inilne checkbox' className={`checkbox${count}`}>
+                        {keywords.splice(0, 4)}
+                    </div>
+                    );
+            }
+
+            keywordsSet.push(
+                <div key='inilne checkbox' className={`checkbox${count}`}>
+                {keywords}
+            </div>
+            );
+        }
+
+        return (
+            <div className="init">
+                <div classNmae="keywordCheckbox">
+                    {keywordsSet}
+                </div>
+                { this.state.finished ? null
+                    : (
+                        <Button
+                          className="more-button"
+                          onClick={this.clickMoreHandler}
+                          size="lg"
+                          block
+                        >
+                View More
+                        </Button>
+                    ) }
+            </div>
+        );
     }
 }
 
