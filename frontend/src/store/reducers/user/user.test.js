@@ -3,10 +3,28 @@ import { userStatus } from "../../../constants/constants";
 import { userConstants } from "../../actions/actionTypes";
 
 const stubInitialState = {
-    userSearchResult: [],
     selectedUser: {},
-    selectedFollowers: [],
-    selectedFollowings: [],
+    getFollowers: {
+        status: userStatus.NONE,
+        followers: [],
+        pageNum: 0,
+        finished: true,
+        error: null,
+    },
+    getFollowings: {
+        status: userStatus.NONE,
+        followings: [],
+        pageNum: 0,
+        finished: true,
+        error: null,
+    },
+    search: {
+        status: userStatus.NONE,
+        users: [],
+        pageNum: 0,
+        finished: true,
+        error: null,
+    },
     followCount: 0,
     unfollowCount: 0,
     status: userStatus.NONE,
@@ -60,10 +78,10 @@ describe("UserReducer Test", () => {
     it("should handle 'GET_FOLLOWERS'", () => {
         const newState = UserReducer(stubInitialState, {
             type: userConstants.GET_FOLLOWERS,
-            target: stubFollowers,
+            target: { followers: stubFollowers },
         });
-        expect(newState.selectedFollowers).toBe(stubFollowers);
-        expect(newState.status).toBe(userStatus.SUCCESS);
+        expect(newState.getFollowers.followers).toBe(stubFollowers);
+        expect(newState.getFollowers.status).toBe(userStatus.SUCCESS);
     });
 
     it("should handle 'GET_FOLLOWERS_FAILURE_USER_NOT_EXIST'", () => {
@@ -71,17 +89,17 @@ describe("UserReducer Test", () => {
             type: userConstants.GET_FOLLOWERS_FAILURE_USER_NOT_EXIST,
             target: stubError,
         });
-        expect(newState.status).toBe(userStatus.USER_NOT_EXIST);
-        expect(newState.error).toBe(stubError);
+        expect(newState.getFollowers.status).toBe(userStatus.USER_NOT_EXIST);
+        expect(newState.getFollowers.error).toBe(stubError);
     });
 
     it("should handle 'GET_FOLLOWINGS'", () => {
         const newState = UserReducer(stubInitialState, {
             type: userConstants.GET_FOLLOWINGS,
-            target: stubFollowings,
+            target: { followings: stubFollowings },
         });
-        expect(newState.selectedFollowings).toBe(stubFollowings);
-        expect(newState.status).toBe(userStatus.SUCCESS);
+        expect(newState.getFollowings.followings).toBe(stubFollowings);
+        expect(newState.getFollowings.status).toBe(userStatus.SUCCESS);
     });
 
     it("should handle 'GET_FOLLOWINGS_FAILURE_USER_NOT_EXIST'", () => {
@@ -89,8 +107,8 @@ describe("UserReducer Test", () => {
             type: userConstants.GET_FOLLOWINGS_FAILURE_USER_NOT_EXIST,
             target: stubError,
         });
-        expect(newState.status).toBe(userStatus.USER_NOT_EXIST);
-        expect(newState.error).toBe(stubError);
+        expect(newState.getFollowings.status).toBe(userStatus.USER_NOT_EXIST);
+        expect(newState.getFollowings.error).toBe(stubError);
     });
 
     it("should handle 'ADD_FOLLOWING'", () => {
@@ -151,7 +169,7 @@ describe("UserReducer Test", () => {
             type: userConstants.SEARCH_USER_SUCCESS,
             target: [],
         });
-        expect(newState.status).toEqual(userStatus.SUCCESS);
+        expect(newState.search.status).toEqual(userStatus.SUCCESS);
     });
 
     it("should handle searchUser failure", () => {
@@ -159,6 +177,6 @@ describe("UserReducer Test", () => {
             type: userConstants.SEARCH_USER_FAILURE,
             target: stubError,
         });
-        expect(newState.status).toEqual(userStatus.FAILURE);
+        expect(newState.search.status).toEqual(userStatus.FAILURE);
     });
 });

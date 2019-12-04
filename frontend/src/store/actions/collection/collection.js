@@ -80,9 +80,9 @@ export const getCollectionPapers = (collectionId) => (dispatch) => axios.get("/a
     .then((res) => { dispatch(getCollectionPapersSuccess(res.data)); })
     .catch((err) => { (dispatch(getCollectionPapersFailure(err))); });
 
-const getCollectionMembersSuccess = (members) => ({
+const getCollectionMembersSuccess = (data) => ({
     type: collectionConstants.GET_COLLECTION_MEMBERS_SUCCESS,
-    target: members.users,
+    target: { members: data.users, pageNum: data.page_number, finished: data.is_finished },
 });
 
 const getCollectionMembersFailure = (error) => ({
@@ -90,7 +90,7 @@ const getCollectionMembersFailure = (error) => ({
     target: error,
 });
 
-export const getCollectionMembers = (collectionID) => (dispatch) => axios.get("/api/user/collection", { params: { id: collectionID } })
+export const getCollectionMembers = (collectionID, pageNum, includesMe = true) => (dispatch) => axios.get("/api/user/collection", { params: { id: collectionID, page_number: pageNum, includes_me: includesMe } })
     .then((res) => { dispatch(getCollectionMembersSuccess(res.data)); })
     .catch((err) => { dispatch(getCollectionMembersFailure(err)); });
 
@@ -277,9 +277,13 @@ export const unlikeCollection = (collectionId) => (dispatch) => axios.delete("/a
     .catch((err) => dispatch(unlikeCollectionFailure(err)));
 
 
-const searchCollectionSuccess = (collections) => ({
+const searchCollectionSuccess = (data) => ({
     type: collectionConstants.SEARCH_COLLECTION_SUCCESS,
-    target: collections.collections,
+    target: {
+        collections: data.collections,
+        pageNum: data.page_number,
+        finished: data.is_finished,
+    },
 });
 
 const searchCollectionFailure = (error) => ({
@@ -287,7 +291,7 @@ const searchCollectionFailure = (error) => ({
     target: error,
 });
 
-export const searchCollection = (searchWord) => (dispatch) => axios.get("/api/collection/search", { params: searchWord })
+export const searchCollection = (searchWord, pageNum) => (dispatch) => axios.get("/api/collection/search", { params: { text: searchWord, page_number: pageNum } })
     .then((res) => dispatch(searchCollectionSuccess(res.data)))
     .catch((err) => dispatch(searchCollectionFailure(err)));
 

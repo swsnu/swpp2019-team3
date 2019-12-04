@@ -15,6 +15,7 @@ from papersfeed.models.users.user_action import UserAction, USER_ACTION_TYPE
 from papersfeed.models.subscription.subscription import Subscription
 from papersfeed.models.papers.paper import Paper
 
+
 def insert_collection(args):
     """Insert Collection"""
     is_parameter_exists([
@@ -212,7 +213,7 @@ def select_collection_search(args):
     keyword = args[constants.TEXT]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Collections Queryset
     queryset = Collection.objects.filter(Q(title__icontains=keyword) | Q(text__icontains=keyword))\
@@ -378,6 +379,7 @@ def __get_collections(filter_query, request_user, count, paper_id=None, order_by
         filter_query
     ).annotate(
         is_liked=__is_collection_liked('id', request_user),
+        is_owned=__is_collection_owned('id', request_user),
         contains_paper=__contains_paper('id', paper_id)).order_by(order_by)
 
     collections = get_results_from_queryset(queryset, count)
@@ -415,6 +417,7 @@ def __pack_collections(collections, request_user, paper_id=None):  # pylint: dis
             constants.TITLE: collection.title,
             constants.TEXT: collection.text,
             constants.LIKED: collection.is_liked,
+            constants.OWNED: collection.is_owned,
             constants.COUNT: {
                 constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0,
                 constants.PAPERS: paper_counts[collection_id] if collection_id in paper_counts else 0,
@@ -437,6 +440,15 @@ def __is_collection_liked(outer_ref, request_user):
     """Check If Collection is Liked by User"""
     return Exists(
         CollectionLike.objects.filter(collection_id=OuterRef(outer_ref),
+                                      user_id=request_user.id if request_user else None)
+    )
+
+
+def __is_collection_owned(outer_ref, request_user):
+    """Check If Collection is Owned by User"""
+    return Exists(
+        CollectionUser.objects.filter(collection_id=OuterRef(outer_ref),
+                                      type=COLLECTION_USER_TYPE[0],
                                       user_id=request_user.id if request_user else None)
     )
 

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 import { UserCard } from "../../../components";
 import { userActions, collectionActions } from "../../../store/actions";
@@ -16,48 +17,76 @@ class UserList extends Component {
         super(props);
         this.state = {
             users: [],
+            pageNum: 0,
+            finished: true,
         };
 
+        this.getUsersTrigger = this.getUsersTrigger.bind(this);
         this.userCardsMaker = this.userCardsMaker.bind(this);
     }
 
     componentDidMount() {
         this._isMounted = true;
-        if (this.props.mode === "followings") {
-            this.props.onFollowingUser({ id: this.props.match.params.id })
-                .then(() => {
-                    if (this.props.userStatus === userStatus.USER_NOT_EXIST) {
-                        this.props.history.push("/main");
-                    }
-                    if (this._isMounted) {
-                        this.setState({ users: this.props.followingUsers });
-                    }
-                });
-        } else if (this.props.mode === "followers") {
-            this.props.onFollowerUser({ id: this.props.match.params.id })
-                .then(() => {
-                    if (this.props.userStatus === userStatus.USER_NOT_EXIST) {
-                        this.props.history.push("/main");
-                    }
-                    if (this._isMounted) {
-                        this.setState({ users: this.props.followerUsers });
-                    }
-                });
-        } else if (this.props.mode === "members") {
-            this.props.onGetMembers(this.props.match.params.id)
-                .then(() => {
-                    if (this.props.getMembersStatus === collectionStatus.FAILURE) {
-                        this.props.history.push("/main");
-                    }
-                    if (this._isMounted) {
-                        this.setState({ users: this.props.members });
-                    }
-                });
+        if (this.props.match.params) {
+            this.getUsersTrigger(this.state.pageNum);
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.match.params !== prevProps.match.params) {
+            this.getUsersTrigger(this.state.pageNum);
         }
     }
 
     componentWillUnmount() {
         this._isMounted = false;
+    }
+
+    getUsersTrigger = (pageNum) => {
+        const { users } = this.state;
+        if (this.props.mode === "followings") {
+            this.props.onFollowingUser({ id: this.props.match.params.id, page_number: pageNum + 1 })
+                .then(() => {
+                    if (this.props.getFollowingsStatus === userStatus.USER_NOT_EXIST) {
+                        this.props.history.push("/main");
+                    }
+                    if (this._isMounted) {
+                        this.setState({
+                            users: users.concat(this.props.followingUsers),
+                            pageNum: this.props.followingPageNum,
+                            finished: this.props.followingFinished,
+                        });
+                    }
+                });
+        } else if (this.props.mode === "followers") {
+            this.props.onFollowerUser({ id: this.props.match.params.id, page_number: pageNum + 1 })
+                .then(() => {
+                    if (this.props.getFollowersStatus === userStatus.USER_NOT_EXIST) {
+                        this.props.history.push("/main");
+                    }
+                    if (this._isMounted) {
+                        this.setState({
+                            users: users.concat(this.props.followerUsers),
+                            pageNum: this.props.followerPageNum,
+                            finished: this.props.followerFinished,
+                        });
+                    }
+                });
+        } else if (this.props.mode === "members") {
+            this.props.onGetMembers(this.props.match.params.id, pageNum + 1)
+                .then(() => {
+                    if (this.props.getMembersStatus === collectionStatus.FAILURE) {
+                        this.props.history.push("/main");
+                    }
+                    if (this._isMounted) {
+                        this.setState({
+                            users: users.concat(this.props.members),
+                            pageNum: this.props.memberPageNum,
+                            finished: this.props.memberFinished,
+                        });
+                    }
+                });
+        }
     }
 
     userCardsMaker = (user) => (
@@ -96,6 +125,17 @@ class UserList extends Component {
                         <div id="user-cards-left">{userCardsLeft}</div>
                         <div id="user-cards-right">{userCardsRight}</div>
                     </div>
+                    { this.state.finished ? null
+                        : (
+                            <Button
+                              className="user-more-button"
+                              onClick={() => this.getUsersTrigger(this.state.pageNum)}
+                              size="lg"
+                              block
+                            >
+                            View More
+                            </Button>
+                        )}
                 </div>
             </div>
         );
@@ -103,18 +143,25 @@ class UserList extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    userStatus: state.user.status,
-    followerUsers: state.user.selectedFollowers,
-    followingUsers: state.user.selectedFollowings,
-    getMembersStatus: state.collection.selected.status,
-    members: state.collection.selected.members,
+    getFollowersStatus: state.user.getFollowers.status,
+    followerUsers: state.user.getFollowers.followers,
+    followerPageNum: state.user.getFollowers.pageNum,
+    followerFinished: state.user.getFollowers.finished,
+    getFollowingsStatus: state.user.getFollowings.status,
+    followingUsers: state.user.getFollowings.followings,
+    followingPageNum: state.user.getFollowings.pageNum,
+    followingFinished: state.user.getFollowings.finished,
+    getMembersStatus: state.collection.getMembers.status,
+    members: state.collection.getMembers.members,
+    memberPageNum: state.collection.getMembers.pageNum,
+    memberFinished: state.collection.getMembers.finished,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onFollowerUser: (userId) => dispatch(userActions.getFollowersByUserId(userId)),
     onFollowingUser: (userId) => dispatch(userActions.getFollowingsByUserId(userId)),
-    onGetMembers: (collectionId) => dispatch(
-        collectionActions.getCollectionMembers(collectionId),
+    onGetMembers: (collectionId, pageNum) => dispatch(
+        collectionActions.getCollectionMembers(collectionId, pageNum),
     ),
 });
 
@@ -130,8 +177,15 @@ UserList.propTypes = {
     onFollowingUser: PropTypes.func,
     members: PropTypes.arrayOf(PropTypes.any),
     onGetMembers: PropTypes.func,
-    userStatus: PropTypes.string,
+    getFollowersStatus: PropTypes.string,
+    followerPageNum: PropTypes.number,
+    followerFinished: PropTypes.bool,
+    getFollowingsStatus: PropTypes.string,
+    followingPageNum: PropTypes.number,
+    followingFinished: PropTypes.bool,
     getMembersStatus: PropTypes.string,
+    memberPageNum: PropTypes.number,
+    memberFinished: PropTypes.bool,
 };
 
 UserList.defaultProps = {
@@ -144,6 +198,13 @@ UserList.defaultProps = {
     onFollowingUser: () => {},
     members: [],
     onGetMembers: () => {},
-    userStatus: userStatus.NONE,
+    getFollowersStatus: userStatus.NONE,
+    followerPageNum: 0,
+    followerFinished: true,
+    getFollowingsStatus: userStatus.NONE,
+    followingPageNum: 0,
+    followingFinished: true,
     getMembersStatus: collectionStatus.NONE,
+    memberPageNum: 0,
+    memberFinished: true,
 };

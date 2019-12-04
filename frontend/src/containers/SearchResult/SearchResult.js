@@ -70,14 +70,14 @@ class SearchResult extends Component {
                     this.paperCardsDistributor(this.props.searchedPapers);
                 }
             });
-        this.props.onSearchCollection({ text: searchWord })
+        this.props.onSearchCollection(searchWord, this.props.collectionPageNum + 1)
             .then(() => {
                 // if searchWord is changed while waiting promise, don't update state
                 if (this.state.searchWord === searchWord) {
                     this.setState({ collections: this.props.searchedCollections });
                 }
             });
-        this.props.onSearchUser({ text: searchWord })
+        this.props.onSearchUser(searchWord, this.props.userPageNum + 1)
             .then(() => {
                 // if searchWord is changed while waiting promise, don't update state
                 if (this.state.searchWord === searchWord) {
@@ -213,6 +213,9 @@ class SearchResult extends Component {
         let userCardsRight = null;
         let collectionMessage = "no collections";
         let userMessage = "no users";
+        let paperPlus = "";
+        let collectionPlus = "";
+        let userPlus = "";
 
         if (this.state.collections.length > 0) {
             collectionCardsLeft = this.state.collections
@@ -246,6 +249,7 @@ class SearchResult extends Component {
                 >View More
                 </Button>
             );
+            paperPlus = "+";
         } else if (this.state.searchPaperStatus === paperStatus.WAITING
             && !paperEmpty) {
             paperMoreButton = (
@@ -253,11 +257,18 @@ class SearchResult extends Component {
             );
         }
 
+        if (!this.props.collectionFinished) {
+            collectionPlus = "+";
+        }
+        if (!this.props.userFinished) {
+            userPlus = "+";
+        }
+
         return (
             <div className="search-result">
                 <div className="item-list">
                     <Tabs defaultActiveKey="paper-tab" className="item-tabs">
-                        <Tab className="paper-tab" eventKey="paper-tab" title={`Paper(${paperCardsLeft.length + paperCardsRight.length})`}>
+                        <Tab className="paper-tab" eventKey="paper-tab" title={`Paper(${this.state.paperIds.length + paperPlus})`}>
                             <div id="paper-cards">
                                 <h3 id="paper-message">{this.state.paperHeadMessage}</h3>
                                 <div id="paper-cards-left">{paperCardsLeft}</div>
@@ -265,19 +276,64 @@ class SearchResult extends Component {
                             </div>
                             {paperMoreButton}
                         </Tab>
-                        <Tab className="collection-tab" eventKey="collection-tab" title={`Collection(${this.state.collections.length})`}>
+                        <Tab className="collection-tab" eventKey="collection-tab" title={`Collection(${this.state.collections.length + collectionPlus})`}>
                             <div id="collection-cards">
                                 <h3 id="collection-message">{collectionMessage}</h3>
                                 <div id="collection-cards-left">{collectionCardsLeft}</div>
                                 <div id="collection-cards-right">{collectionCardsRight}</div>
                             </div>
+                            { this.props.collectionFinished ? null
+                                : (
+                                    <Button
+                                      className="collection-more-button"
+                                      onClick={() => {
+                                          this.props.onSearchCollection(
+                                              this.state.searchWord,
+                                              this.props.collectionPageNum + 1,
+                                          )
+                                              .then(() => {
+                                                  const { collections } = this.state;
+                                                  this.setState({
+                                                      collections: collections.concat(
+                                                          this.props.searchedCollections,
+                                                      ),
+                                                  });
+                                              });
+                                      }}
+                                      size="lg"
+                                      block
+                                    >
+                            View More
+                                    </Button>
+                                )}
                         </Tab>
-                        <Tab className="user-tab" eventKey="user-tab" title={`People(${this.state.users.length})`}>
+                        <Tab className="user-tab" eventKey="user-tab" title={`People(${this.state.users.length + userPlus})`}>
                             <div id="user-cards">
                                 <h3 id="user-message">{userMessage}</h3>
                                 <div id="user-cards-left">{userCardsLeft}</div>
                                 <div id="user-cards-right">{userCardsRight}</div>
                             </div>
+                            { this.props.userFinished ? null
+                                : (
+                                    <Button
+                                      className="user-more-button"
+                                      onClick={() => {
+                                          this.props.onSearchUser(
+                                              this.state.searchWord, this.props.userPageNum + 1,
+                                          )
+                                              .then(() => {
+                                                  const { users } = this.state;
+                                                  this.setState({
+                                                      users: users.concat(this.props.searchedUsers),
+                                                  });
+                                              });
+                                      }}
+                                      size="lg"
+                                      block
+                                    >
+                            View More
+                                    </Button>
+                                )}
                         </Tab>
                     </Tabs>
                 </div>
@@ -289,18 +345,24 @@ class SearchResult extends Component {
 const mapStateToProps = (state) => ({
     searchPaperStatus: state.paper.search.status,
     searchCollectionStatus: state.collection.list.status,
-    searchUserStatus: state.user.status,
+    searchUserStatus: state.user.search.status,
     searchedPapers: state.paper.search.papers,
     searchedCollections: state.collection.list.list,
-    searchedUsers: state.user.searchedUsers,
+    searchedUsers: state.user.search.users,
     paperPageNum: state.paper.search.pageNum,
     paperFinished: state.paper.search.finished,
+    collectionPageNum: state.collection.list.pageNum,
+    collectionFinished: state.collection.list.finished,
+    userPageNum: state.user.search.pageNum,
+    userFinished: state.user.search.finished,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onSearchPaper: (searchWord) => dispatch(paperActions.searchPaper(searchWord)),
-    onSearchCollection: (searchWord) => dispatch(collectionActions.searchCollection(searchWord)),
-    onSearchUser: (searchWord) => dispatch(userActions.searchUser(searchWord)),
+    onSearchCollection: (searchWord, pageNum) => dispatch(
+        collectionActions.searchCollection(searchWord, pageNum),
+    ),
+    onSearchUser: (searchWord, pageNum) => dispatch(userActions.searchUser(searchWord, pageNum)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchResult);
@@ -316,6 +378,10 @@ SearchResult.propTypes = {
     searchedUsers: PropTypes.arrayOf(PropTypes.any),
     paperPageNum: PropTypes.number,
     paperFinished: PropTypes.bool,
+    collectionPageNum: PropTypes.number,
+    collectionFinished: PropTypes.bool,
+    userPageNum: PropTypes.number,
+    userFinished: PropTypes.bool,
 };
 
 SearchResult.defaultProps = {
@@ -329,4 +395,8 @@ SearchResult.defaultProps = {
     searchedUsers: [],
     paperPageNum: 0,
     paperFinished: true,
+    collectionPageNum: 0,
+    collectionFinished: true,
+    userPageNum: 0,
+    userFinished: true,
 };
