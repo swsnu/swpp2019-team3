@@ -75,6 +75,11 @@ def put_collection(args):
     return {constants.COLLECTION: collections_utils.update_collection(args)}
 
 
+def put_collection_type(args):
+    """Put Collection Type"""
+    return {constants.COLLECTION: collections_utils.update_collection_type(args)}
+
+
 def delete_collection(args):
     """Delete Collection"""
     return collections_utils.remove_collection(args)

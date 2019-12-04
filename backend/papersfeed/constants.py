@@ -30,6 +30,7 @@ CREATION_DATE = 'creation_date'
 MODIFICATION_DATE = 'modification_date'
 CONTENT = 'content'
 SEARCH_WORD = 'search_word'
+ORDER_BY = 'order_by'
 
 # User
 USER = 'user'
@@ -73,6 +74,7 @@ INCLUDES_ME = 'includes_me'
 # Paper
 PAPER = 'paper'
 PAPERS = 'papers'
+PAPER_ID = 'paper_id'
 LANGUAGE = 'language'
 TITLES = 'titles'
 ABSTRACT = 'abstract'

@@ -496,7 +496,7 @@ def update_user_collection(args):
     if collection_user.type != COLLECTION_USER_TYPE[0]:
         raise ApiError(constants.AUTH_ERROR)
 
-    collection_user.type = COLLECTION_USER_TYPE[1] # change to member
+    collection_user.type = COLLECTION_USER_TYPE[1]  # change to member
     collection_user.save()
 
     # Grant ownership to the user whose id is user_id
@@ -505,7 +505,7 @@ def update_user_collection(args):
     except ObjectDoesNotExist:
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
-    collection_user.type = COLLECTION_USER_TYPE[0] # change to owner
+    collection_user.type = COLLECTION_USER_TYPE[0]  # change to owner
     collection_user.save()
 
 
