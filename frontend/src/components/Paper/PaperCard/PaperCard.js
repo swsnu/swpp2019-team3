@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { Component } from "react";
 import { Card, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
@@ -46,9 +47,9 @@ class PaperCard extends Component {
     ).slice(0, 10).filter(
         (keyword) => keyword.type === type,
     ).map(
-        (keyword) => (
+        (keyword, index) => (
             <Button
-              key={keyword.id}
+              key={index}
               id={keyword.name}
               className="keyword-tag"
               href={`/search=${keyword.name}`}

@@ -302,7 +302,7 @@ class RecommnedationTestCase(TestCase):
             'ItemId': paper_id,
             'Keywords': [{'id': keyword_id, 'name': 'keyword1', 'type': 'abstract'}],
             'Abstract': 'abstract1'
-            }, json.loads(response.content)["papers"][1])
+            }, json.loads(response.content)["papers"][10])
 
     def test_post_user_recommendation(self):
         """Post user recommendation"""

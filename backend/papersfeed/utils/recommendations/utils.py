@@ -121,12 +121,14 @@ def insert_recommendation_init(args):
 
         paper_counts = paper_utils.get_paper_like_count(paper_ids, 'paper_id')
 
-        if not paper_counts:
+        if paper_counts:
             paper_sort = sorted(paper_counts.items(), key=(lambda x: x[1]), reverse=True)
+            paper_sort = [paper[0] for paper in paper_sort]
         else:
             paper_sort = []
 
-        paper_sort += [paper for paper in paper_ids[0:20] if not paper in paper_sort]
+        paper_sort += [paper for paper in paper_ids[0:20]]
+        paper_sort = list(set(paper_sort))
 
         UserRecommendation.objects.bulk_create([
             UserRecommendation(
@@ -207,9 +209,9 @@ def __pack_recommendations(recommendations, request_user):
 
         review_qs = Review.objects.filter(Q(paper_id=recommendation.paper.id))
         review_ids = [review.id for review in review_qs]
-        if not review_ids:
+        if review_ids:
             review_counts = review_utils.get_review_like_count(review_ids, 'review_id')
-            if not review_counts:
+            if review_counts:
                 review_top = sorted(review_counts.items(), key=(lambda x: x[1]), reverse=True)[0][0]
             else:
                 review_top = review_ids[0]

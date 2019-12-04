@@ -10,6 +10,7 @@ import CollectionList from "./Collection/CollectionList/CollectionList";
 import SearchResult from "./SearchResult/SearchResult";
 import UserList from "./User/UserList/UserList";
 import History from "./History/History";
+import Init from "./Init/Init";
 
 export {
     Intro,
@@ -24,4 +25,5 @@ export {
     SearchResult,
     UserList,
     History,
+    Init,
 };

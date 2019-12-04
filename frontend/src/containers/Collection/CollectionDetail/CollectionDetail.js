@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
@@ -29,6 +30,7 @@ class CollectionDetail extends Component {
         };
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
         this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
+        this.clickMoreButtonHandler = this.clickMoreButtonHandler.bind(this);
         this.handleReplies = this.handleReplies.bind(this);
     }
 
@@ -99,8 +101,24 @@ class CollectionDetail extends Component {
         />
     )
 
+    clickMoreButtonHandler = () => {
+        this.props.onGetReplies({
+            id: Number(this.props.location.pathname.split("=")[1]),
+            page_number: this.props.replyList.pageNum + 1,
+        })
+            .then(() => {
+                const { replies } = this.state;
+                this.setState({
+                    replies: replies.concat(this.props.replyList.list),
+                });
+            });
+    }
+
     handleReplies() {
-        this.props.onGetReplies({ id: Number(this.props.location.pathname.split("=")[1]) })
+        this.props.onGetReplies({
+            id: Number(this.props.location.pathname.split("=")[1]),
+            page_number: this.props.replyList.pageNum,
+        })
             .then(() => {
                 this.setState({
                     replies: this.props.replyList.list,
@@ -135,9 +153,9 @@ class CollectionDetail extends Component {
             .filter((x) => this.state.papers.indexOf(x) % 2 === 1)
             .map((paper) => this.paperCardMaker(paper));
 
-        const replies = this.state.replies.map((reply) => (
+        const replies = this.state.replies.map((reply, index) => (
             <Reply
-              key={reply.id}
+              key={index}
               id={reply.id}
               author={reply.user.username}
               content={reply.text}
@@ -254,6 +272,17 @@ class CollectionDetail extends Component {
                                     </div>
                                     <div id="replyList">
                                         {replies}
+                                        { this.props.replyList.finished ? null
+                                            : (
+                                                <Button
+                                                  className="reply-more-button"
+                                                  onClick={this.clickMoreButtonHandler}
+                                                  size="lg"
+                                                  block
+                                                >
+                View More
+                                                </Button>
+                                            ) }
                                     </div>
                                 </div>
                             </Tab>

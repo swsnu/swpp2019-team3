@@ -118,7 +118,7 @@ export const readNoti = (notificationId) => (dispatch) => axios.put("/api/notifi
 
 const getSubscriptionsSuccess = (subscriptions) => ({
     type: authConstants.GET_SUBSCRIPTION_SUCCESS,
-    target: subscriptions.subscriptions,
+    target: subscriptions,
 });
 
 const getSubscriptionsFailure = (error) => ({

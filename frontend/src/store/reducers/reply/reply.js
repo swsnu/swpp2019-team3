@@ -11,6 +11,8 @@ const initialState = {
         status: replyStatus.NONE,
         list: [],
         error: null,
+        pageNum: 0,
+        finished: true,
     },
     edit: {
         status: replyStatus.NONE,
@@ -83,7 +85,9 @@ const replyReducer = (state = initialState, action) => {
             list: {
                 ...state.list,
                 status: replyStatus.SUCCESS,
-                list: action.target,
+                list: action.target.replies,
+                pageNum: action.target.page_number,
+                finished: action.target.is_finished,
             },
         };
     case replyConstants.GET_REPLIES_BY_REVIEW_SUCCESS:
@@ -92,7 +96,9 @@ const replyReducer = (state = initialState, action) => {
             list: {
                 ...state.list,
                 status: replyStatus.SUCCESS,
-                list: action.target,
+                list: action.target.replies,
+                pageNum: action.target.page_number,
+                finished: action.target.is_finished,
             },
         };
     case replyConstants.EDIT_REPLY_SUCCESS:

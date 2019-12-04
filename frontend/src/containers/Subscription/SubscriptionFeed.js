@@ -21,7 +21,7 @@ class SubscriptionFeed extends Component {
         this.paperCardMaker = this.paperCardMaker.bind(this);
         this.reviewCardMaker = this.reviewCardMaker.bind(this);
         this.collectionCardMaker = this.collectionCardMaker.bind(this);
-        this.clickViewMoreButton = this.clickViewMoreButton.bind(this);
+        this.clickMoreButton = this.clickMoreButton.bind(this);
         this.addRecoToSub = this.addRecoToSub.bind(this);
     }
 
@@ -31,20 +31,25 @@ class SubscriptionFeed extends Component {
                 this.setState({
                     subscriptions: this.props.subscriptionItems,
                 });
-            });
-        this.props.onGetRecommendations()
-            .then(() => {
-                this.setState({
-                    recommendations: this.props.recommendationItems,
-                });
-                this.addRecoToSub();
-            });
-
-        if (this.props.subscriptionFinished && this.props.recommendationFinished) {
-            this.setState({
-                finished: true,
-            });
-        }
+                this.props.onGetRecommendations()
+                    .then(() => {
+                        this.setState({
+                            recommendations: this.props.recommendationItems,
+                        });
+                        this.addRecoToSub();
+                        if (this.props.subscriptionFinished) {
+                            if (this.state.recommendations.length <= 0) {
+                                this.setState({
+                                    finished: true,
+                                });
+                            } else {
+                                this.setState({
+                                    recoNum: 20,
+                                });
+                            }
+                        }
+                    }).catch(() => {});
+            }).catch(() => {});
     }
 
     // FIXME: if de-commentize those lines, somehow onGetSubscriptions is called recursively
@@ -54,7 +59,7 @@ class SubscriptionFeed extends Component {
     //     }
     // }
 
-    clickViewMoreButton = () => {
+    clickMoreButton = () => {
         if (!this.props.subscriptionFinished) {
             this.props.onGetSubscriptions({
                 page_number: this.props.subscriptionPageNum + 1,
@@ -64,9 +69,14 @@ class SubscriptionFeed extends Component {
                     this.setState({
                         subscriptions: subscriptions.concat(this.props.subscriptionItems),
                     });
-                });
+                    this.clickMoreButtonNext();
+                }).catch(() => {});
+        } else {
+            this.clickMoreButtonNext();
         }
+    }
 
+    clickMoreButtonNext = () => {
         if (!this.props.recommendationFinished) {
             this.props.onGetRecommendations({
                 page_number: this.props.recommendationPageNum + 1,
@@ -76,21 +86,10 @@ class SubscriptionFeed extends Component {
                     this.setState({
                         recommendations: recommendations.concat(this.props.recommendationItems),
                     });
-                });
-        }
-
-        this.addRecoToSub();
-
-        if (this.props.subscriptionFinished) {
-            if (this.state.recommendations.length <= 0) {
-                this.setState({
-                    finished: true,
-                });
-            } else {
-                this.setState({
-                    recoNum: 30,
-                });
-            }
+                    this.addRecoToSub();
+                }).catch(() => {});
+        } else {
+            this.addRecoToSub();
         }
     }
 
@@ -106,21 +105,34 @@ class SubscriptionFeed extends Component {
         if (this.state.recommendations.length >= this.state.recoNum) {
             temp = this.state.recommendations.splice(0, this.state.recoNum);
         } else {
-            temp = this.state.recommendations.splice(0, this.state.recommendations.length);
+            temp = this.state.recommendations;
+            this.setState({
+                recommendations: [],
+            });
         }
 
         for (let i = 0; i < temp.length; i += 1) {
             const index = Math.random()
-            * (this.state.recommendations.length - this.state.start)
+            * (this.state.subscriptions.length - this.state.start)
             + this.state.start;
-            this.state.recommendations.splice(index, 0, temp[i]);
+            this.state.subscriptions.splice(index, 0, temp[i]);
         }
-        const { newSubscriptions } = this.state.subscriptions.concat(temp);
-        this.shuffle(newSubscriptions);
+        const { nextStart } = this.state.subscriptions.length;
         this.setState({
-            subscriptions: newSubscriptions,
-            start: newSubscriptions.length,
+            start: nextStart,
         });
+
+        if (this.props.subscriptionFinished) {
+            if (this.state.recommendations.length <= 0) {
+                this.setState({
+                    finished: true,
+                });
+            } else {
+                this.setState({
+                    recoNum: 20,
+                });
+            }
+        }
     }
 
     paperCardMaker = (key, paper, actor, verb, target) => (
@@ -180,21 +192,21 @@ class SubscriptionFeed extends Component {
         />
     )
 
-    cardMaker = (item) => {
+    cardMaker = (item, index) => {
         const itemType = item.action_object.type;
         if (itemType === "paper") {
             return this.paperCardMaker(
-                item.id, item.action_object.content, item.actor, item.verb, item.target,
+                index, item.action_object.content, item.actor, item.verb, item.target,
             );
         }
         if (itemType === "collection") {
             return this.collectionCardMaker(
-                item.id, item.action_object.content, item.actor, item.verb, item.target,
+                index, item.action_object.content, item.actor, item.verb, item.target,
             );
         }
         if (itemType === "review") {
             return this.reviewCardMaker(
-                item.id, item.action_object.content, item.actor, item.verb, item.target,
+                index, item.action_object.content, item.actor, item.verb, item.target,
             );
         }
         return null;
@@ -203,11 +215,11 @@ class SubscriptionFeed extends Component {
     render() {
         const cardsLeft = this.state.subscriptions
             .filter((x) => this.props.subscriptionItems.indexOf(x) % 2 === 0)
-            .map((item) => this.cardMaker(item));
+            .map((item, index) => this.cardMaker(item, index));
 
         const cardsRight = this.state.subscriptions
             .filter((x) => this.props.subscriptionItems.indexOf(x) % 2 === 1)
-            .map((item) => this.cardMaker(item));
+            .map((item, index) => this.cardMaker(item, index));
 
         return (
             <div className="SubscriptionFeed">
@@ -220,7 +232,7 @@ class SubscriptionFeed extends Component {
                     : (
                         <Button
                           className="more-button"
-                          onClick={this.clickMoreHandler}
+                          onClick={this.clickMoreButton}
                           size="lg"
                           block
                         >
