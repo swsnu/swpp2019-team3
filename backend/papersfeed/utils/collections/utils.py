@@ -244,6 +244,27 @@ def select_collection_user(args):
     return collections, page_number, is_finished
 
 
+def select_collection_user_shared(args):
+    """Select User's Shared Collections"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
+
+    # Collections Queryset
+    queryset = Q(is_user_collection=True) & Q(is_shared=True) & (Q(type=COLLECTION_SHARE_TYPE[0]) | Q(is_member=True))
+
+    # Collections
+    collections, _, is_finished = __get_collections(queryset, request_user, 10, page_number=page_number)
+
+    return collections, page_number, is_finished
+
+
 def select_collection_search(args):
     """Select Collection Search"""
     is_parameter_exists([
@@ -424,8 +445,9 @@ def __get_collections(filter_query, request_user, count, params=None, page_numbe
     target_user_id = request_user.id if constants.USER_ID not in params else params[constants.USER_ID]
 
     queryset = Collection.objects.annotate(
-        is_user_collection=__is_member('id', target_user_id if target_user_id else request_user.id),
-        is_member=__is_member('id', request_user.id)
+        is_user_collection=__is_member('id', target_user_id),
+        is_member=__is_member('id', request_user.id),
+        is_shared=__is_shared('id', target_user_id)
     ).filter(
         filter_query
     ).annotate(
@@ -506,6 +528,11 @@ def __is_member(outer_ref, user_id):
         CollectionUser.objects.filter(collection_id=OuterRef(outer_ref),
                                       user_id=user_id)
     )
+
+
+def __is_shared(outer_ref, user_id):
+    """Check If Collection is Shared"""
+    return Exists(CollectionUser.objects.filter(Q(collection_id=OuterRef(outer_ref)), ~Q(user_id=user_id)))
 
 
 def __is_collection_owned(outer_ref, request_user):
