@@ -63,11 +63,15 @@ def __pack_subscriptions(subscriptions, request_user):
             action_object = {}
 
         try:
-            target = {
-                constants.TYPE: str(subscription.target_content_type),
-                constants.ID: subscription.target.id,
-                constants.STRING: str(subscription.target)
-            }
+            target_type = str(subscription.target_content_type)
+            if target_type in ('paper', 'collection', 'review'):
+                target = {
+                    constants.TYPE: str(subscription.target_content_type),
+                    constants.ID: subscription.target.id,
+                    constants.TITLE: str(subscription.target)
+                }
+            else:
+                raise AttributeError
         except AttributeError: # the target can be null or removed
             target = {}
 
