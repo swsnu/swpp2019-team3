@@ -93,6 +93,14 @@ def get_collection_user(args):
             constants.IS_FINISHED: is_finished}
 
 
+def get_collection_user_shared(args):
+    """Get Collection User Shared"""
+    collections, page_number, is_finished = collections_utils.select_collection_user_shared(args)
+    return {constants.COLLECTIONS: collections,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
+
+
 def get_paper(args):
     """Get Paper"""
     return {constants.PAPER: papers_utils.select_paper(args)}

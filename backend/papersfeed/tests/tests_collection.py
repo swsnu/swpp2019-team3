@@ -307,6 +307,35 @@ class CollectionTestCase(TestCase):
         self.assertEqual(collections[0][constants.TITLE], 'Private Collection2')
         self.assertEqual(collections[0][constants.CONTAINS_PAPER], False)
 
+    def test_get_shared_collections_of_user(self):
+        """ GET USER'S SHARED COLLECTIONS WITH PAPER """
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+
+        # Get User's Collections
+        response = client.get('/api/collection/user/shared',
+                              data={
+                                  constants.ID: user_id
+                              },
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
+
+        collections = json.loads(response.content)[constants.COLLECTIONS]
+        self.assertEqual(len(collections), 1)
+        self.assertEqual(collections[0][constants.TITLE], 'Private Collection1')
+
     def test_delete_collection(self):
         """ DELETE Collection """
         client = Client()
