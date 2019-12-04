@@ -253,6 +253,9 @@ def select_collection_user_shared(args):
     # Request User
     request_user = args[constants.USER]
 
+    # User Id
+    user_id = args[constants.ID]
+
     # Page Number
     page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
@@ -260,7 +263,10 @@ def select_collection_user_shared(args):
     queryset = Q(is_user_collection=True) & Q(is_shared=True) & (Q(type=COLLECTION_SHARE_TYPE[0]) | Q(is_member=True))
 
     # Collections
-    collections, _, is_finished = __get_collections(queryset, request_user, 10, page_number=page_number)
+    params = {
+        constants.USER_ID: user_id
+    }
+    collections, _, is_finished = __get_collections(queryset, request_user, 10, page_number=page_number, params=params)
 
     return collections, page_number, is_finished
 
