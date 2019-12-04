@@ -433,8 +433,8 @@ describe("SubscriptionFeed test", () => {
         const button = component.find(".more-button").hostNodes();
         button.simulate("click");
 
-        expect(spyGetSubscription).toBeCalledTimes(1); // Fix me: it should be 2
-        expect(instance.state.subscriptions).toBe(stubSubscriptions);
+        expect(spyGetSubscription).toBeCalledTimes(2);
+        await flushPromises();
         expect(spyClickNext).toBeCalledTimes(1);
 
         await flushPromises();
@@ -476,8 +476,8 @@ describe("SubscriptionFeed test", () => {
         const button = component.find(".more-button").hostNodes();
         button.simulate("click");
 
-        expect(spyGetSubscription).toBeCalledTimes(1); // Fix me: it should be 2
-        expect(instance.state.subscriptions).toBe(stubSubscriptions);
+        expect(spyGetSubscription).toBeCalledTimes(2);
+        await flushPromises();
         expect(spyClickNext).toBeCalledTimes(1);
 
         await flushPromises();

@@ -101,14 +101,12 @@ class SubscriptionFeed extends Component {
                 this.state.recommendations[i],
             ];
         }
+        console.log(this.state.recommendations);
         let temp = [];
         if (this.state.recommendations.length >= this.state.recoNum) {
             temp = this.state.recommendations.splice(0, this.state.recoNum);
         } else {
-            temp = this.state.recommendations;
-            this.setState({
-                recommendations: [],
-            });
+            temp = this.state.recommendations.splice(0, this.state.recommendations.length);
         }
 
         for (let i = 0; i < temp.length; i += 1) {
@@ -117,11 +115,10 @@ class SubscriptionFeed extends Component {
             + this.state.start;
             this.state.subscriptions.splice(index, 0, temp[i]);
         }
-        const { nextStart } = this.state.subscriptions.length;
-        this.setState({
-            start: nextStart,
-        });
-
+        this.setState((prevState) => ({
+            start: prevState.subscriptions.length,
+        }));
+        console.log(this.state.recommendations);
         if (this.props.subscriptionFinished) {
             if (this.state.recommendations.length <= 0) {
                 this.setState({
@@ -214,11 +211,11 @@ class SubscriptionFeed extends Component {
 
     render() {
         const cardsLeft = this.state.subscriptions
-            .filter((x) => this.props.subscriptionItems.indexOf(x) % 2 === 0)
+            .filter((x) => this.state.subscriptions.indexOf(x) % 2 === 0)
             .map((item, index) => this.cardMaker(item, index));
 
         const cardsRight = this.state.subscriptions
-            .filter((x) => this.props.subscriptionItems.indexOf(x) % 2 === 1)
+            .filter((x) => this.state.subscriptions.indexOf(x) % 2 === 1)
             .map((item, index) => this.cardMaker(item, index));
 
         return (
@@ -246,7 +243,7 @@ class SubscriptionFeed extends Component {
 
 const mapStateToProps = (state) => ({
     subscriptionPageNum: state.auth.subscriptions.pageNum,
-    subscriptionFinished: state.auth.subscriptions.finshed,
+    subscriptionFinished: state.auth.subscriptions.finished,
     subscriptionItems: state.auth.subscriptions.list,
     recommendationItems: state.auth.recommendations.list,
     recommendationPageNum: state.auth.recommendations.pageNum,

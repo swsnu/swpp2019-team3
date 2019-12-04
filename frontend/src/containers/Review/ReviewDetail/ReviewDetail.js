@@ -70,10 +70,17 @@ class ReviewDetail extends Component {
             }).catch(() => {});
     }
 
-    handleChange(e) {
-        this.setState({
-            newReply: e.target.value,
-        });
+    clickMoreButtonHandler = () => {
+        this.props.onGetReplies({
+            id: Number(this.props.match.params.review_id),
+            page_number: this.props.replyList.pageNum + 1,
+        })
+            .then(() => {
+                const { replies } = this.state;
+                this.setState({
+                    replies: replies.concat(this.props.replyList.list),
+                });
+            });
     }
 
     // handle click 'Like' button
@@ -94,6 +101,16 @@ class ReviewDetail extends Component {
             });
     }
 
+    clickReplyAddButtonHandler() {
+        this.props.onMakeNewReply({ id: this.state.thisReview.id, text: this.state.newReply })
+            .then(() => {
+                this.handleReplies();
+                this.setState({
+                    newReply: "",
+                });
+            });
+    }
+
     clickEditButtonHandler() {
         this.props.history.push(`/review_id=${this.state.thisReview.id}/edit`);
     }
@@ -107,27 +124,10 @@ class ReviewDetail extends Component {
             });
     }
 
-    clickMoreButtonHandler = () => {
-        this.props.onGetReplies({
-            id: Number(this.props.match.params.review_id),
-            page_number: this.props.replyList.pageNum + 1,
-        })
-            .then(() => {
-                const { replies } = this.state;
-                this.setState({
-                    replies: replies.concat(this.props.replyList.list),
-                });
-            });
-    }
-
-    clickReplyAddButtonHandler() {
-        this.props.onMakeNewReply({ id: this.state.thisReview.id, text: this.state.newReply })
-            .then(() => {
-                this.handleReplies();
-                this.setState({
-                    newReply: "",
-                });
-            });
+    handleChange(e) {
+        this.setState({
+            newReply: e.target.value,
+        });
     }
 
     handleReplies() {
