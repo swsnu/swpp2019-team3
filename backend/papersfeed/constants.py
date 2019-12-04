@@ -97,6 +97,7 @@ RANK = 'rank'
 # Review
 REVIEW = 'review'
 REVIEWS = 'reviews'
+IS_ANONYMOUS = 'is_anonymous'
 
 # Keyword
 KEYWORD = 'keyword'

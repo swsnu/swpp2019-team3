@@ -20,6 +20,9 @@ class Review(BaseModel):
     # 이메일
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name='review_user')
 
+    # 익명
+    anonymous = models.BooleanField(default=False)
+
     def __str__(self):
         return self.title
 

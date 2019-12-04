@@ -47,6 +47,7 @@ class ReviewTestCase(TestCase):
 
         paper_id = Paper.objects.filter(title='paper1').first().id
 
+        # Make Review
         client.post('/api/review',
                     data=json.dumps({
                         constants.ID: paper_id,
@@ -188,12 +189,12 @@ class ReviewTestCase(TestCase):
                    },
                    content_type='application/json')
 
-        user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+        paper_id = Paper.objects.filter(title='paper1').first().id
 
         # Get Paper's Reviews
         response = client.get('/api/review/paper',
                               data={
-                                  constants.ID: user_id
+                                  constants.ID: paper_id
                               },
                               content_type='application/json')
 
@@ -258,3 +259,94 @@ class ReviewTestCase(TestCase):
         # the last action comes first
         self.assertEqual(reviews[0]['title'], 'review2')
         self.assertEqual(reviews[1]['title'], 'review1')
+
+    def test_anonymous_review(self):
+        """ ANONYMOUS REVIEW """
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        paper_id = Paper.objects.filter(title='paper1').first().id
+        swpp_user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+
+        # Make Anonymous Review
+        response = client.post('/api/review',
+                               data=json.dumps({
+                                   constants.ID: paper_id,
+                                   constants.TITLE: 'Anonymous Title',
+                                   constants.TEXT: 'Anonymous Text',
+                                   constants.IS_ANONYMOUS: True
+                               }),
+                               content_type='application/json')
+
+        self.assertEqual(response.status_code, 201)
+
+        review = json.loads(response.content)['review']
+        self.assertEqual(review[constants.IS_ANONYMOUS], True)
+        self.assertEqual(review[constants.TITLE], 'Anonymous Title')
+
+        # Get My Reviews
+        response = client.get('/api/review/user',
+                              data={
+                                  constants.ID: swpp_user_id
+                              },
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        reviews = json.loads(response.content)['reviews']
+        self.assertEqual(len(reviews), 2)
+
+        # Get Paper's Review It should be count 2
+        paper_id = Paper.objects.filter(title='paper1').first().id
+        response = client.get('/api/review/paper',
+                              data={
+                                  constants.ID: paper_id
+                              },
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        reviews = json.loads(response.content)['reviews']
+        self.assertEqual(len(reviews), 2)
+
+        # Sign Up & In with swpp2
+        client.post('/api/user',
+                    json.dumps({
+                        constants.EMAIL: 'swpp2@snu.ac.kr',
+                        constants.USERNAME: 'swpp2',
+                        constants.PASSWORD: 'iluvswpp1234'
+                    }),
+                    content_type='application/json')
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp2@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Get swpp's Reviews: It should be count 1 cause one is anonymous
+        response = client.get('/api/review/user',
+                              data={
+                                  constants.ID: swpp_user_id
+                              },
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        reviews = json.loads(response.content)['reviews']
+        self.assertEqual(len(reviews), 1)
+
+        # Get Paper's Review It should be count 2
+        response = client.get('/api/review/paper',
+                              data={
+                                  constants.ID: paper_id
+                              },
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        reviews = json.loads(response.content)['reviews']
+        self.assertEqual(len(reviews), 2)
