@@ -305,15 +305,9 @@ def select_collection_like(args):
     # Page Number
     page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
-    # Collections Queryset
-    queryset = CollectionLike.objects.filter(Q(user_id=request_user.id)).order_by(
-        '-creation_date').values_list('collection_id', flat=True)
-
     # Collection Ids
-    collection_ids = get_results_from_queryset(queryset, 10, page_number)
-
-    # is_finished
-    is_finished = not collection_ids.has_next()
+    collection_ids = CollectionLike.objects.filter(Q(user_id=request_user.id)).order_by(
+        '-creation_date').values_list('collection_id', flat=True)
 
     # need to maintain the order
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(collection_ids)])
@@ -322,7 +316,7 @@ def select_collection_like(args):
     params = {
         constants.ORDER_BY: preserved
     }
-    collections, _, _ = __get_collections(Q(id__in=collection_ids), request_user, 10, params=params)
+    collections, _, is_finished = __get_collections(Q(id__in=collection_ids), request_user, 10, params=params)
 
     return collections, page_number, is_finished
 

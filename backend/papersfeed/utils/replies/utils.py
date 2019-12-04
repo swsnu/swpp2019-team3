@@ -309,7 +309,7 @@ def __pack_replies(replies, request_user):
         reply_id__in=reply_ids
     )
     review_ids = [reply.review_id for reply in review_replies]
-    reviews, _ = reviews_utils.get_reviews(Q(id__in=review_ids), request_user, None)
+    reviews, _, _ = reviews_utils.get_reviews(Q(id__in=review_ids), request_user, None)
     # {review_id: review}
     reviews = {review[constants.ID]: review for review in reviews}
 

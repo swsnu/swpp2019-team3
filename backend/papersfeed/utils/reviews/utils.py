@@ -29,7 +29,7 @@ def select_review(args):
     request_user = args[constants.USER]
 
     # Reviews
-    reviews, _ = __get_reviews(Q(id=review_id), request_user, None)
+    reviews, _, _ = __get_reviews(Q(id=review_id), request_user, None)
 
     # Not Exists
     if not reviews:
@@ -58,6 +58,9 @@ def insert_review(args):
     # Text
     text = args[constants.TEXT]
 
+    # Anonymous
+    is_anonymous = False if constants.IS_ANONYMOUS not in args else args[constants.IS_ANONYMOUS]
+
     # Check Valid
     if not title or not text:
         raise ApiError(constants.PARAMETER_ERROR)
@@ -71,7 +74,8 @@ def insert_review(args):
         paper_id=paper_id,
         user_id=request_user.id,
         title=title,
-        text=text
+        text=text,
+        anonymous=is_anonymous
     )
 
     # store an action for subscription feed
@@ -109,7 +113,7 @@ def insert_review(args):
             count=1,
         )
 
-    reviews, _ = __get_reviews(Q(id=review.id), request_user, None)
+    reviews, _, _ = __get_reviews(Q(id=review.id), request_user, None)
 
     if not reviews:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -146,6 +150,9 @@ def update_review(args):
     # Text
     text = args[constants.TEXT] if constants.TEXT in args else None
 
+    # Anonymous
+    is_anonymous = args[constants.IS_ANONYMOUS] if constants.IS_ANONYMOUS in args else None
+
     # Update Title
     if title:
         review.title = title
@@ -154,9 +161,13 @@ def update_review(args):
     if text:
         review.text = text
 
+    # Update Anonymous
+    if is_anonymous:
+        review.anonymous = is_anonymous
+
     review.save()
 
-    reviews, _ = __get_reviews(Q(id=review.id), request_user, None)
+    reviews, _, _ = __get_reviews(Q(id=review.id), request_user, None)
 
     if not reviews:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -213,18 +224,12 @@ def select_review_paper(args):
     request_user = args[constants.USER]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Reviews Queryset
-    queryset = Review.objects.filter(Q(paper_id=paper_id)).values_list('id', flat=True)
+    queryset = Q(paper_id=paper_id)
 
-    # Review Ids
-    review_ids = get_results_from_queryset(queryset, 10, page_number)
-
-    # is_finished
-    is_finished = not review_ids.has_next()
-
-    reviews, _ = __get_reviews(Q(id__in=review_ids), request_user, 10)
+    reviews, _, is_finished = __get_reviews(queryset, request_user, 10, page_number=page_number)
 
     return reviews, page_number, is_finished
 
@@ -242,18 +247,15 @@ def select_review_user(args):
     request_user = args[constants.USER]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Reviews Queryset
-    queryset = Review.objects.filter(Q(user_id=user_id)).values_list('id', flat=True)
+    if int(user_id) == int(request_user.id):
+        queryset = Q(user_id=user_id)
+    else:
+        queryset = Q(user_id=user_id) & Q(anonymous=False)
 
-    # Review Ids
-    review_ids = get_results_from_queryset(queryset, 10, page_number)
-
-    # is_finished
-    is_finished = not review_ids.has_next()
-
-    reviews, _ = __get_reviews(Q(id__in=review_ids), request_user, 10)
+    reviews, _, is_finished = __get_reviews(queryset, request_user, 10, page_number=page_number)
 
     return reviews, page_number, is_finished
 
@@ -267,31 +269,26 @@ def select_review_like(args):
     # Page Number
     page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
-    # Reviews Queryset
-    queryset = ReviewLike.objects.filter(Q(user_id=request_user.id)).order_by(
-        '-creation_date').values_list('review_id', flat=True)
-
     # Review Ids
-    review_ids = get_results_from_queryset(queryset, 10, page_number)
-
-    # is_finished
-    is_finished = not review_ids.has_next()
+    review_ids = ReviewLike.objects.filter(Q(user_id=request_user.id)).order_by(
+        '-creation_date').values_list('review_id', flat=True)
 
     # need to maintain the order
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(review_ids)])
 
     # Reviews
-    reviews, _ = __get_reviews(Q(id__in=review_ids), request_user, 10, preserved)
+    reviews, _, is_finished = __get_reviews(Q(id__in=review_ids), request_user, 10, order_by=preserved,
+                                            page_number=page_number)
 
     return reviews, page_number, is_finished
 
 
-def get_reviews(filter_query, request_user, count):
+def get_reviews(filter_query, request_user, count, page_number=1):
     """Get Reviews"""
-    return __get_reviews(filter_query, request_user, count)
+    return __get_reviews(filter_query, request_user, count, page_number=page_number)
 
 
-def __get_reviews(filter_query, request_user, count, order_by='-pk'):
+def __get_reviews(filter_query, request_user, count, page_number=1, order_by='-pk'):
     """Get Reviews By Query"""
     queryset = Review.objects.filter(
         filter_query
@@ -299,13 +296,17 @@ def __get_reviews(filter_query, request_user, count, order_by='-pk'):
         is_liked=__is_review_liked('id', request_user)
     ).order_by(order_by)
 
-    reviews = get_results_from_queryset(queryset, count)
+    reviews = get_results_from_queryset(queryset, count, page_number)
+
+    is_finished = True
+    if count is not None:
+        is_finished = not reviews.has_next()
 
     pagination_value = reviews[len(reviews) - 1].id if reviews else 0
 
     reviews = __pack_reviews(reviews, request_user)
 
-    return reviews, pagination_value
+    return reviews, pagination_value, is_finished
 
 
 # pylint: disable-msg=too-many-locals
@@ -359,7 +360,8 @@ def __pack_reviews(reviews, request_user):
                 constants.REPLIES: reply_counts[review_id] if review_id in reply_counts else 0
             },
             constants.CREATION_DATE: review.creation_date,
-            constants.MODIFICATION_DATE: review.modification_date
+            constants.MODIFICATION_DATE: review.modification_date,
+            constants.IS_ANONYMOUS: review.anonymous
         }
 
         packed.append(packed_review)
