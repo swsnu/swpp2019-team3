@@ -17,15 +17,22 @@ describe("<GoMyCollectionsModal />", () => {
     });
 
     it("should open addpapermodal when openTrigger", () => {
-        const component = mount(<GoMyCollectionsModal openTrigger />);
-        const wrapper = component.find(".go-button").hostNodes();
+        const component = mount(<GoMyCollectionsModal disableCondition={false} />);
+        const wrapper = component.find(".update-button").hostNodes();
 
         expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        const instance = component.find(GoMyCollectionsModal).instance();
+        expect(instance.state.isModalOpen).toBe(true);
     });
 
     it("should be closed if cancelButton is clicked", () => {
-        const component = mount(<GoMyCollectionsModal openTrigger />);
-        const wrapper = component.find(".go-button").hostNodes();
+        const component = mount(<GoMyCollectionsModal disableCondition={false} />);
+        let wrapper = component.find(".update-button").hostNodes();
+        wrapper.simulate("click");
+
+        wrapper = component.find(".go-button").hostNodes();
         const gotoModalInstance = component.find(GoMyCollectionsModal).instance();
 
         expect(wrapper.length).toBe(1);
@@ -38,7 +45,13 @@ describe("<GoMyCollectionsModal />", () => {
     });
 
     it("should redirect to Collection List Page if go-button is clicked", () => {
-        const component = mount(<GoMyCollectionsModal openTrigger history={mockHistory} />);
+        const component = mount(<GoMyCollectionsModal
+          disableCondition={false}
+          history={mockHistory}
+        />);
+        const wrapper = component.find(".update-button").hostNodes();
+        wrapper.simulate("click");
+
         const goButton = component.find(".go-button").hostNodes();
         const gotoModalInstance = component.find(GoMyCollectionsModal).instance();
 

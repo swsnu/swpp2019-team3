@@ -19,7 +19,7 @@ class TransferOwnershipModal extends Component {
             memberFinished: true,
         };
 
-
+        this.getMembersTrigger = this.getMembersTrigger.bind(this);
         this.clickOpenHandler = this.clickOpenHandler.bind(this);
         this.clickCancelHandler = this.clickCancelHandler.bind(this);
         this.checkHandler = this.checkHandler.bind(this);

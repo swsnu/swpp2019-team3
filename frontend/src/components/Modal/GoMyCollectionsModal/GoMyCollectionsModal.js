@@ -1,16 +1,25 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Modal, Button } from "react-bootstrap";
+
 import "./GoMyCollectionsModal.css";
 
 class GoMyCollectionsModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isModalOpen: this.props.openTrigger,
+            isModalOpen: false,
         };
-        this.clickCancelButtonHandler = this.clickCancelButtonHandler.bind(this);
+
+        this.clickUpdateButtonHandler = this.clickUpdateButtonHandler.bind(this);
+        this.clickCancelHandler = this.clickCancelHandler.bind(this);
         this.clickGotoButtonHandler = this.clickGotoButtonHandler.bind(this);
+    }
+
+    clickUpdateButtonHandler = () => {
+        this.props.whatActionWillBeDone();
+        // NOTE: this modal will be open even though updating fails
+        this.setState({ isModalOpen: true });
     }
 
     clickGotoButtonHandler() {
@@ -18,15 +27,23 @@ class GoMyCollectionsModal extends Component {
         this.props.history.push("/collections");
     }
 
-    clickCancelButtonHandler() {
+    clickCancelHandler() {
         this.setState({ isModalOpen: false });
     }
 
     render() {
         return (
             <div className="gotomycollectionsmodal">
+                <Button
+                  className="update-button"
+                  onClick={this.clickUpdateButtonHandler}
+                  disabled={this.props.disableCondition}
+                >
+                    Update
+                </Button>
                 <Modal
                   show={this.state.isModalOpen}
+                  onHide={this.clickCancelHandler}
                   className="modal"
                   centered
                 >
@@ -41,7 +58,7 @@ class GoMyCollectionsModal extends Component {
                               onClick={this.clickGotoButtonHandler}
                             >My Collection
                             </Button>
-                            <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
+                            <Button className="cancel-button" onClick={this.clickCancelHandler}>Cancel</Button>
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
@@ -57,10 +74,12 @@ export default GoMyCollectionsModal;
 
 GoMyCollectionsModal.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
-    openTrigger: PropTypes.bool,
+    whatActionWillBeDone: PropTypes.func,
+    disableCondition: PropTypes.bool,
 };
 
 GoMyCollectionsModal.defaultProps = {
     history: null,
-    openTrigger: false,
+    whatActionWillBeDone: () => {},
+    disableCondition: true,
 };
