@@ -22,7 +22,7 @@ class IntroModal extends Component {
         this.openSigninHandler = this.openSigninHandler.bind(this);
         this.clickSignupButtonHandler = this.clickSignupButtonHandler.bind(this);
         this.clickSigninButtonHandler = this.clickSigninButtonHandler.bind(this);
-        this.clickCancelButtonHandler = this.clickCancelButtonHandler.bind(this);
+        this.clickCancelHandler = this.clickCancelHandler.bind(this);
     }
 
     openSignupHandler() {
@@ -93,7 +93,7 @@ class IntroModal extends Component {
             });
     }
 
-    clickCancelButtonHandler() {
+    clickCancelHandler() {
         this.setState({
             signupStatus: signupStatus.NONE,
             signinStatus: signinStatus.NONE,
@@ -137,7 +137,7 @@ class IntroModal extends Component {
             modalHeader = (
                 <Modal.Header>
                     <h2 id="create-account">Create account</h2>
-                    <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
+                    <Button className="cancel-button" onClick={this.clickCancelHandler}>Cancel</Button>
                 </Modal.Header>
             );
             usernameInput = (
@@ -170,7 +170,7 @@ class IntroModal extends Component {
             modalHeader = (
                 <Modal.Header>
                     <h2 id="welcome-back">Welcome back</h2>
-                    <Button className="cancel-button" onClick={this.clickCancelButtonHandler}>Cancel</Button>
+                    <Button className="cancel-button" onClick={this.clickCancelHandler}>Cancel</Button>
                 </Modal.Header>
             );
             modalFooter = (
@@ -193,6 +193,7 @@ class IntroModal extends Component {
                 </div>
                 <Modal
                   show={this.state.isSignupOpen || this.state.isSigninOpen}
+                  onHide={this.clickCancelHandler}
                   className="signup-modal"
                   centered
                 >
