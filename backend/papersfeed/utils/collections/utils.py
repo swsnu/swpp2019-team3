@@ -317,7 +317,8 @@ def select_collection_like(args):
     params = {
         constants.ORDER_BY: preserved
     }
-    collections, _, is_finished = __get_collections(Q(id__in=collection_ids), request_user, 10, params=params)
+    collections, _, is_finished = __get_collections(Q(id__in=collection_ids), request_user, 10, params=params,
+                                                    page_number=page_number)
 
     return collections, page_number, is_finished
 
