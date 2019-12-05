@@ -80,7 +80,6 @@ class PaperCard extends Component {
     }
 
     render() {
-        console.log(this.props.actor.id);
         let header = null;
         if (this.props.headerExists) {
             if (this.props.subscription) {
