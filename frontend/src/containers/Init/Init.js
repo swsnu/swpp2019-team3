@@ -29,15 +29,15 @@ class Init extends Component {
             });
     }
 
-    checkHandler = (id) => {
+    checkHandler = (keywordId) => {
         const { checkedKeywords } = this.state;
-        if (this.state.checkedKeywords.includes(id)) {
+        if (this.state.checkedKeywords.includes(keywordId)) {
             this.setState({
-                checkedKeywords: checkedKeywords.splice(checkedKeywords.indexOf(id), 1),
+                checkedKeywords: checkedKeywords.filter((id) => id !== keywordId),
             });
         } else {
             this.setState({
-                checkedKeywords: checkedKeywords.concat(id),
+                checkedKeywords: checkedKeywords.concat(keywordId),
             });
         }
     }
@@ -64,6 +64,7 @@ class Init extends Component {
     render() {
         let keywords = null;
         let keywordsSet = null;
+        console.log(this.state.checkedKeywords);
         if (this.state.keywords != null && this.state.keywords.length > 0) {
             keywords = this.state.keywords.map((keyword) => (
                 <Form.Check
