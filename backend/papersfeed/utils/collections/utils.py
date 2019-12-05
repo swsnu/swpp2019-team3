@@ -1,6 +1,7 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
 
+from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Exists, OuterRef, Count, Case, When
 
@@ -321,6 +322,7 @@ def select_collection_like(args):
     return collections, page_number, is_finished
 
 
+@transaction.atomic
 def update_paper_collection(args):
     """Update Paper Collection"""
 
@@ -378,7 +380,7 @@ def get_collections(filter_query, request_user, count, params=None, page_number=
 
 def __get_collections_contains_paper(paper_id, request_user):
     """Get Collections Containing paper"""
-    collections = CollectionUser.objects.filter(
+    collection_users = CollectionUser.objects.filter(
         user_id=request_user.id  # User's Collections
     ).annotate(
         exists=Exists(
@@ -391,7 +393,7 @@ def __get_collections_contains_paper(paper_id, request_user):
         exists=True
     )
 
-    return [collection.id for collection in collections]
+    return [collection_user.collection_id for collection_user in collection_users]
 
 
 def __remove_paper_from_collections(paper_id, collection_ids, request_user):

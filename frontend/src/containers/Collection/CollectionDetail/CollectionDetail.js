@@ -160,7 +160,7 @@ class CollectionDetail extends Component {
                   members={this.props.members}
                   whatActionWillFollow={
                       () => {
-                          this.props.onGetMembers()
+                          this.props.onGetMembers(this.props.selectedCollection.id)
                               .then(() => {
                                   this.setState({
                                       userCount: this.props.memberCount,

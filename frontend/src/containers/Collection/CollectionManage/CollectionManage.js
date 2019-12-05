@@ -17,6 +17,8 @@ class CollectionManage extends Component {
             collectionName: "",
             collectionDescription: "",
         };
+
+        this.updateCollectionHandler = this.updateCollectionHandler.bind(this);
     }
 
     componentDidMount() {

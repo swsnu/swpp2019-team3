@@ -22,6 +22,7 @@ class ManageCollectionMemberModal extends Component {
         };
 
         this.getMembersTrigger = this.getMembersTrigger.bind(this);
+        this.refreshMembers = this.refreshMembers.bind(this);
         this.clickOpenHandler = this.clickOpenHandler.bind(this);
         this.clickCloseHandler = this.clickCloseHandler.bind(this);
         this.clickKickOffCancelHandler = this.clickKickOffCancelHandler.bind(this);

@@ -6,7 +6,7 @@ import { ConnectedRouter } from "connected-react-router";
 import CollectionList from "./CollectionList";
 import { collectionStatus } from "../../../constants/constants";
 import { collectionActions } from "../../../store/actions";
-import { getMockStore, mockPromise } from "../../../test-utils/mocks";
+import { getMockStore, mockPromise, flushPromises } from "../../../test-utils/mocks";
 import { history } from "../../../store/store";
 
 const makeCollectionList = (initialState) => (
@@ -146,5 +146,32 @@ describe("CollectionList test", () => {
         expect(wrapperRight.length).toBe(1);
 
         expect(spyGetCollections).toHaveBeenCalledTimes(1);
+    });
+
+    it("should show more if collection-more-button clicked", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                ...stubInitialState.collection,
+                list: {
+                    status: collectionStatus.SUCCESS,
+                    list: [],
+                    pageNum: 1,
+                    finished: false,
+                },
+            },
+        };
+        const component = mount(makeCollectionList(stubInitialState));
+
+        expect(spyGetCollections).toBeCalledTimes(1);
+        await flushPromises();
+        component.update();
+
+        const wrapper = component.find(".collection-more-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        expect(spyGetCollections).toBeCalledTimes(2);
+        await flushPromises();
     });
 });

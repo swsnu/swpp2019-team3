@@ -101,10 +101,10 @@ describe("Collection reducer", () => {
     it("should return get_collections", () => {
         const newState = reducer(stubInitialState, {
             type: collectionConstants.GET_COLLECTIONS,
-            target: stubCollection,
+            target: { collections: [stubCollection], pageNum: 1, finished: true },
         });
         expect(newState.list.status).toBe(collectionStatus.SUCCESS);
-        expect(newState.list.list).toBe(stubCollection);
+        expect(newState.list.list).toEqual([stubCollection]);
     });
 
     it("should return get_collection", () => {

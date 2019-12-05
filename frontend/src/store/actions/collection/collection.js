@@ -25,9 +25,13 @@ export const makeNewCollection = (collection) => (dispatch) => axios.post("/api/
 
 
 // getCollectionsByUserId
-const getCollectionsByUserIdSuccess = (collections) => ({
+const getCollectionsByUserIdSuccess = (data) => ({
     type: collectionConstants.GET_COLLECTIONS,
-    target: collections.collections,
+    target: {
+        collections: data.collections,
+        pageNum: data.page_number,
+        finished: data.is_finished,
+    },
 });
 
 const getCollectionsByUserIdFailure = (error) => ({

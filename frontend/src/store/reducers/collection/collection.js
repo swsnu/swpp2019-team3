@@ -82,7 +82,9 @@ const reducer = (state = initialState, action) => {
             list: {
                 ...state.selected,
                 status: collectionStatus.SUCCESS,
-                list: action.target,
+                list: action.target.collections,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
             },
         };
     case collectionConstants.GET_COLLECTION:
