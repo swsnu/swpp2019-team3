@@ -387,6 +387,16 @@ def get_user_all(args):
     """Get All Users"""
     return {constants.USERS: recommendation_utils.select_user_all(args)}
 
+def get_keyword_init(args):
+    """Get Keyword Init"""
+    keywords, page_number, is_finished = recommendation_utils.select_keyword_init(args)
+    return {constants.KEYWORDS: keywords,
+            constants.PAGE_NUMBER: page_number,
+            constants.IS_FINISHED: is_finished}
+
+def post_recommendation_init(args):
+    """Post Recommendation init"""
+    return recommendation_utils.insert_recommendation_init(args)
 
 def get_user_following_collection(args):
     """Get User Following Collection"""

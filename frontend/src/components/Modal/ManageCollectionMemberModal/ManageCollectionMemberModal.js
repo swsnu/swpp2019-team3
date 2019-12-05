@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -117,9 +118,9 @@ class ManageCollectionMemberModal extends Component {
         if (this.props.me && this.state.members.length > 0) {
             memberList = this.state.members
                 .filter((user) => (!this.state.removeMode || user.id !== this.props.me.id))
-                .map((user) => (
+                .map((user, index) => (
                     <UserEntry
-                      key={user.id}
+                      key={index}
                       id={user.id}
                       userName={user.username}
                       userDesc={user.descrpition}

@@ -4,7 +4,7 @@ import { replyConstants } from "../actionTypes";
 // get replies by collection id
 const getRepliesByCollectionSucess = (replies) => ({
     type: replyConstants.GET_REPLIES_BY_COLLECTION_SUCCESS,
-    target: replies.replies,
+    target: replies,
 });
 
 const getRepliesByCollectionFailure = (error) => ({
@@ -12,9 +12,9 @@ const getRepliesByCollectionFailure = (error) => ({
     target: error,
 });
 
-export const getRepliesByCollection = (collectionId) => (dispatch) => axios.get(
+export const getRepliesByCollection = (collectionIdAndPage) => (dispatch) => axios.get(
     "/api/reply/collection",
-    { params: collectionId },
+    { params: collectionIdAndPage },
 )
     .then((res) => dispatch(getRepliesByCollectionSucess(res.data)))
     .catch((err) => dispatch(getRepliesByCollectionFailure(err)));
@@ -22,7 +22,7 @@ export const getRepliesByCollection = (collectionId) => (dispatch) => axios.get(
 // get replies by review id
 const getRepliesByReviewSuccess = (replies) => ({
     type: replyConstants.GET_REPLIES_BY_REVIEW_SUCCESS,
-    target: replies.replies,
+    target: replies,
 });
 
 const getRepliesByReviewFailure = (error) => ({
@@ -30,7 +30,7 @@ const getRepliesByReviewFailure = (error) => ({
     target: error,
 });
 
-export const getRepliesByReview = (reviewId) => (dispatch) => axios.get("/api/reply/review", { params: reviewId })
+export const getRepliesByReview = (reviewIdAndPage) => (dispatch) => axios.get("/api/reply/review", { params: reviewIdAndPage })
     .then((res) => dispatch(getRepliesByReviewSuccess(res.data)))
     .catch((err) => dispatch(getRepliesByReviewFailure(err)));
 

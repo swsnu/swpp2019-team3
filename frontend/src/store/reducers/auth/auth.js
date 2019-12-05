@@ -1,6 +1,14 @@
 import { authConstants } from "../../actions/actionTypes";
 import {
-    signupStatus, signinStatus, signoutStatus, getMeStatus, notiStatus, getSubscriptionsStatus,
+    signupStatus,
+    signinStatus,
+    signoutStatus,
+    getMeStatus,
+    notiStatus,
+    getSubscriptionsStatus,
+    getRecommendationsStatus,
+    getKeywordsInitStatus,
+    makeTasteInitStatus,
 } from "../../../constants/constants";
 
 const initialState = {
@@ -10,9 +18,26 @@ const initialState = {
     getMeStatus: getMeStatus.NONE,
     getNotiStatus: notiStatus.NONE,
     readNotiStatus: notiStatus.NONE,
-    getSubscriptionsStatus: getSubscriptionsStatus.NONE,
+    subscriptions: {
+        status: getSubscriptionsStatus.NONE,
+        pageNum: 0,
+        finished: true,
+        list: [],
+    },
+    recommendations: {
+        status: getRecommendationsStatus.NONE,
+        list: [],
+        pageNum: 0,
+        finished: true,
+    },
+    keywords: {
+        status: getKeywordsInitStatus.NONE,
+        list: [],
+        pageNum: 0,
+        finished: true,
+    },
+    makeTasteInitStatus: makeTasteInitStatus.NONE,
     notifications: [],
-    subscriptions: [],
     me: null,
 };
 
@@ -55,11 +80,70 @@ const reducer = (state = initialState, action) => {
     case authConstants.GET_SUBSCRIPTION_SUCCESS:
         return {
             ...state,
-            getSubscriptionsStatus: getSubscriptionsStatus.SUCCESS,
-            subscriptions: action.target,
+            subscriptions: {
+                ...state.subscriptions,
+                status: getSubscriptionsStatus.SUCCESS,
+                list: action.target.subscriptions,
+                pageNum: action.target.page_number,
+                finished: action.target.is_finished,
+            },
         };
     case authConstants.GET_SUBSCRIPTION_FAILURE:
-        return { ...state, getSubscriptionsStatus: getSubscriptionsStatus.FAILURE };
+        return {
+            ...state,
+            subscriptions: {
+                ...state.subscriptions,
+                status: getSubscriptionsStatus.FAILURE,
+                finished: true,
+            },
+        };
+
+    case authConstants.GET_RECOMMENDATION_SUCCESS:
+        return {
+            ...state,
+            recommendations: {
+                ...state.recommendations,
+                status: getRecommendationsStatus.SUCCESS,
+                list: action.target.recommendations,
+                pageNum: action.target.page_number,
+                finished: action.target.is_finished,
+            },
+        };
+    case authConstants.GET_RECOMMENDATION_FAILURE:
+        return {
+            ...state,
+            recommendations: {
+                ...state.recommendations,
+                status: getRecommendationsStatus.FAILURE,
+                finished: true,
+            },
+        };
+
+    case authConstants.GET_KEYWORD_INIT_SUCCESS:
+        return {
+            ...state,
+            keywords: {
+                ...state.keywords,
+                status: getKeywordsInitStatus.SUCCESS,
+                list: action.target.keywords,
+                pageNum: action.target.page_number,
+                finished: action.target.is_finished,
+            },
+        };
+    case authConstants.GET_KEYWORD_INIT_FAILURE:
+        return {
+            ...state,
+            keywords: {
+                ...state.keywords,
+                status: getKeywordsInitStatus.FAILURE,
+                finished: true,
+            },
+        };
+
+    case authConstants.MAKE_TASTE_INIT_SUCCESS:
+        return { ...state, makeTasteInitStatus: makeTasteInitStatus.SUCCESS };
+    case authConstants.MAKE_TASTE_INIT_FAILURE:
+        return { ...state, makeTasteInitStatus: makeTasteInitStatus.FAILURE };
 
     default:
         return { ...state };

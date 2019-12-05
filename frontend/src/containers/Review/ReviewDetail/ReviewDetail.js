@@ -38,6 +38,7 @@ class ReviewDetail extends Component {
         this.clickEditButtonHandler = this.clickEditButtonHandler.bind(this);
         this.clickDeleteButtonHandler = this.clickDeleteButtonHandler.bind(this);
         this.clickReplyAddButtonHandler = this.clickReplyAddButtonHandler.bind(this);
+        this.clickMoreButtonHandler = this.clickMoreButtonHandler.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleReplies = this.handleReplies.bind(this);
     }
@@ -69,10 +70,17 @@ class ReviewDetail extends Component {
             }).catch(() => {});
     }
 
-    handleChange(e) {
-        this.setState({
-            newReply: e.target.value,
-        });
+    clickMoreButtonHandler = () => {
+        this.props.onGetReplies({
+            id: Number(this.props.match.params.review_id),
+            page_number: this.props.replyList.pageNum + 1,
+        })
+            .then(() => {
+                const { replies } = this.state;
+                this.setState({
+                    replies: replies.concat(this.props.replyList.list),
+                });
+            });
     }
 
     // handle click 'Like' button
@@ -93,6 +101,16 @@ class ReviewDetail extends Component {
             });
     }
 
+    clickReplyAddButtonHandler() {
+        this.props.onMakeNewReply({ id: this.state.thisReview.id, text: this.state.newReply })
+            .then(() => {
+                this.handleReplies();
+                this.setState({
+                    newReply: "",
+                });
+            });
+    }
+
     clickEditButtonHandler() {
         this.props.history.push(`/review_id=${this.state.thisReview.id}/edit`);
     }
@@ -106,18 +124,17 @@ class ReviewDetail extends Component {
             });
     }
 
-    clickReplyAddButtonHandler() {
-        this.props.onMakeNewReply({ id: this.state.thisReview.id, text: this.state.newReply })
-            .then(() => {
-                this.handleReplies();
-                this.setState({
-                    newReply: "",
-                });
-            });
+    handleChange(e) {
+        this.setState({
+            newReply: e.target.value,
+        });
     }
 
     handleReplies() {
-        this.props.onGetReplies({ id: Number(this.props.match.params.review_id) })
+        this.props.onGetReplies({
+            id: Number(this.props.match.params.review_id),
+            page_number: this.props.replyList.pageNum,
+        })
             .then(() => {
                 this.setState({
                     replies: this.props.replyList.list,
@@ -180,6 +197,17 @@ class ReviewDetail extends Component {
                                 </Form>
                                 <div className="replies">
                                     {replies}
+                                    { this.props.replyList.finished ? null
+                                        : (
+                                            <Button
+                                              className="reply-more-button"
+                                              onClick={this.clickMoreButtonHandler}
+                                              size="lg"
+                                              block
+                                            >
+                View More
+                                            </Button>
+                                        ) }
                                 </div>
                             </div>
                         </Card.Body>

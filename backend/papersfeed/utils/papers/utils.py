@@ -11,6 +11,7 @@ import requests
 import xmltodict
 from django.db.models import Q, Exists, OuterRef, Count, Case, When
 
+
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
 from papersfeed.utils.papers.abstract_analysis import get_key_phrases
@@ -502,6 +503,13 @@ def get_keywords_paper(filter_query):
     """get keywords paper"""
     return __get_keywords_paper(filter_query)
 
+def pack_keywords(keywords):
+    """pack keywords"""
+    return __pack_keywords(keywords)
+
+def get_paper_like_count(paper_ids, group_by_field):
+    """get paper like count"""
+    return __get_paper_like_count(paper_ids, group_by_field)
 
 def __get_keywords_paper(filter_query):
     """Get Keywords Of Paper"""

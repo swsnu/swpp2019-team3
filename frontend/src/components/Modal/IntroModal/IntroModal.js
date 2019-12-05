@@ -51,8 +51,10 @@ class IntroModal extends Component {
                     break;
                 case signupStatus.SUCCESS:
                     this.setState({ signupStatus: signupStatus.NONE, isSignupOpen: false });
-                    this.props.onSignin(signingUpUser);
-                    this.props.history.push("/main");
+                    this.props.onSignin(signingUpUser)
+                        .then(() => {
+                            this.props.history.push("/init");
+                        }).catch(() => {});
                     break;
                 case signupStatus.DUPLICATE_EMAIL:
                     this.setState({ signupStatus: signupStatus.DUPLICATE_EMAIL });

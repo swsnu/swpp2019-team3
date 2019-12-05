@@ -1,14 +1,14 @@
 import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
-import { ConnectedRouter } from "connected-react-router";
 
 import SubscriptionFeed from "./SubscriptionFeed";
 import {
     signinStatus, signoutStatus, signupStatus, getMeStatus,
     getSubscriptionsStatus, notiStatus, reviewStatus, collectionStatus,
+    getRecommendationsStatus, getKeywordsInitStatus, makeTasteInitStatus,
 } from "../../constants/constants";
-import { getMockStore, mockPromise } from "../../test-utils/mocks";
+import { getMockStore, mockPromise, flushPromises } from "../../test-utils/mocks";
 import { history } from "../../store/store";
 import { authActions } from "../../store/actions";
 
@@ -162,11 +162,80 @@ const stubSubscriptions = [
     },
 ];
 
+const stubRecommendation = [
+    {
+        action_object: {
+            type: "paper",
+            content: {
+                DOI: "10.2140/gt.2007.11.1255",
+                ISSN: "",
+                abstract: "This paper ... ",
+                authors: [
+                    {
+                        address: "",
+                        email: "",
+                        first_name: "Michael",
+                        id: 54,
+                        last_name: "Farber",
+                        rank: 1,
+                        researcher_id: "",
+                        type: "general",
+                    },
+                    {
+                        address: "",
+                        email: "",
+                        first_name: "Dirk",
+                        id: 55,
+                        last_name: "Schuetz",
+                        rank: 2,
+                        researcher_id: "",
+                        type: "general",
+                    },
+                ],
+                count: {
+                    reviews: 0,
+                    likes: 1,
+                },
+                download_url: "http://arxiv.org/pdf/math/0609005v1",
+                eISSN: "",
+                file_url: "http://arxiv.org/abs/math/0609005v1",
+                id: 32,
+                keywords: [],
+                language: "english",
+                liked: false,
+                publication: {},
+                title: "Cohomological estimates",
+            },
+        },
+        actor: {
+            id: 0,
+            username: "papersfeed",
+        },
+        creation_date: "2019-12-02T03:41:13.561",
+        id: 9,
+        target: {},
+        verb: "liked",
+    },
+];
+
+const makeFeed = (initialState, props = {}) => (
+    <Provider store={getMockStore(initialState)}>
+        <SubscriptionFeed
+          match={{ params: { review_id: 1 } }}
+          history={history}
+          props={props}
+        />
+    </Provider>
+);
+
 describe("SubscriptionFeed test", () => {
     let feed;
+    let stubInitialState;
+    let spyGetRecommendation;
+    let spyGetSubscription;
 
     beforeEach(() => {
-        const stubInitialState = {
+        stubInitialState = {
             paper: {},
             auth: {
                 signupStatus: signupStatus.NONE,
@@ -175,9 +244,25 @@ describe("SubscriptionFeed test", () => {
                 getMeStatus: getMeStatus.NONE,
                 getNotiStatus: notiStatus.NONE,
                 readNotiStatus: notiStatus.NONE,
-                getSubscriptionsStatus: getSubscriptionsStatus.SUCCESS,
+                subscriptions: {
+                    status: getSubscriptionsStatus.SUCCESS,
+                    list: stubSubscriptions,
+                    pageNum: 1,
+                    finished: true,
+                },
+                recommendations: {
+                    status: getRecommendationsStatus.SUCCESS,
+                    list: stubRecommendation,
+                    finished: true,
+                },
+                keywords: {
+                    status: getKeywordsInitStatus.NONE,
+                    list: [],
+                    pageNum: 0,
+                    finished: true,
+                },
+                makeTasteInitStatus: makeTasteInitStatus.NONE,
                 notifications: [],
-                subscriptions: stubSubscriptions,
                 me: null,
             },
             collection: {
@@ -263,35 +348,222 @@ describe("SubscriptionFeed test", () => {
             },
             reply: {},
         };
-        const mockStore = getMockStore(stubInitialState);
-        feed = (
-            <Provider store={mockStore}>
-                <ConnectedRouter history={history}>
-                    <SubscriptionFeed />
-                </ConnectedRouter>
-            </Provider>
-        );
+        feed = makeFeed(stubInitialState);
+        spyGetSubscription = jest.spyOn(authActions, "getSubscriptions")
+            .mockImplementation(() => () => mockPromise);
+        spyGetRecommendation = jest.spyOn(authActions, "getRecommendations")
+            .mockImplementation(() => () => mockPromise);
     });
 
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    it("should render well", () => {
-        const spyGetSubscription = jest.spyOn(authActions, "getSubscriptions")
-            .mockImplementation(() => () => mockPromise);
-
+    it("should render well", async () => {
         const component = mount(feed);
         const wrapper = component.find(".SubscriptionFeed");
         expect(wrapper.length).toBe(1);
         expect(spyGetSubscription).toBeCalledTimes(1);
 
+        const instance = component.find(SubscriptionFeed.WrappedComponent).instance();
+        await flushPromises();
+
+        expect(instance.state.subscriptions).toBe(stubSubscriptions);
+        expect(spyGetRecommendation).toBeCalledTimes(1);
+    });
+
+    it("should handle cards well", () => {
+        const component = mount(feed);
+        component.find("SubscriptionFeed").instance().setState({
+            subscriptions: stubSubscriptions,
+            recommendations: stubRecommendation,
+        });
+        component.update();
+
         const wrapperLeft = component.find("#subscriptionCardsLeft");
         const wrapperRight = component.find("#subscriptionCardsRight");
-        expect(component.find("PaperCard").length).toBe(1);
+        expect(component.find("PaperCard").length).toBe(2);
         expect(component.find("CollectionCard").length).toBe(1);
         expect(component.find("ReviewCard").length).toBe(1);
         expect(wrapperLeft.children().length).toBe(2);
-        expect(wrapperRight.children().length).toBe(1);
+        expect(wrapperRight.children().length).toBe(2);
+    });
+
+    it("should not render click view more button", () => {
+        const component = mount(feed);
+        component.find("SubscriptionFeed").instance().setState({
+            finished: true,
+        });
+        component.update();
+
+        expect(component.find(".more-button").hostNodes().length).toBe(0);
+    });
+
+    it("should handle click view more button witout finish", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            auth: {
+                ...stubInitialState.auth,
+                subscriptions: {
+                    ...stubInitialState.auth.subscriptions,
+                    finished: false,
+                    list: stubSubscriptions,
+                },
+                recommendations: {
+                    ...stubInitialState.auth.recommendations,
+                    finished: false,
+                    list: stubRecommendation,
+                },
+            },
+        };
+        const component = mount(makeFeed(stubInitialState));
+
+        const instance = component.find(SubscriptionFeed.WrappedComponent).instance();
+        const spyAdd = jest.spyOn(instance, "addRecoToSub");
+        expect(spyGetSubscription).toBeCalledTimes(1);
+        await flushPromises();
+
+        expect(spyGetRecommendation).toBeCalledTimes(1);
+        await flushPromises();
+
+        expect(instance.state.recommendations.length).toBe(0);
+        expect(spyAdd).toBeCalledTimes(1);
+        const spyClickNext = jest.spyOn(instance, "clickMoreButtonNext");
+
+        const button = component.find(".more-button").hostNodes();
+        button.simulate("click");
+
+        expect(spyGetSubscription).toBeCalledTimes(2);
+        await flushPromises();
+        expect(spyClickNext).toBeCalledTimes(1);
+
+        await flushPromises();
+
+        expect(spyGetRecommendation).toBeCalledTimes(2);
+        expect(spyAdd).toBeCalledTimes(2);
+        expect(instance.state.recommendations.length).toBe(0);
+    });
+
+    it("should handle click view more button with reco_finish", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            auth: {
+                ...stubInitialState.auth,
+                subscriptions: {
+                    ...stubInitialState.auth.subscriptions,
+                    finished: false,
+                    list: stubSubscriptions,
+                },
+                recommendations: {
+                    ...stubInitialState.auth.recommendations,
+                    finished: true,
+                    list: stubRecommendation,
+                },
+            },
+        };
+        const component = mount(makeFeed(stubInitialState));
+        const instance = component.find(SubscriptionFeed.WrappedComponent).instance();
+        const spyAdd = jest.spyOn(instance, "addRecoToSub");
+        expect(spyGetSubscription).toBeCalledTimes(1);
+        await flushPromises();
+
+        expect(spyGetRecommendation).toBeCalledTimes(1);
+        await flushPromises();
+
+        expect(instance.state.recommendations.length).toBe(0);
+        expect(spyAdd).toBeCalledTimes(1);
+        const spyClickNext = jest.spyOn(instance, "clickMoreButtonNext");
+        const button = component.find(".more-button").hostNodes();
+        button.simulate("click");
+
+        expect(spyGetSubscription).toBeCalledTimes(2);
+        await flushPromises();
+        expect(spyClickNext).toBeCalledTimes(1);
+
+        await flushPromises();
+        expect(spyGetRecommendation).toBeCalledTimes(1);
+        expect(spyAdd).toBeCalledTimes(2);
+        expect(instance.state.recommendations.length).toBe(0);
+    });
+
+    it("should handle click view more button with sub_finish", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            auth: {
+                ...stubInitialState.auth,
+                subscriptions: {
+                    ...stubInitialState.auth.subscriptions,
+                    finished: true,
+                },
+                recommendations: {
+                    ...stubInitialState.auth.recommendations,
+                    finished: false,
+                },
+            },
+        };
+        const component = mount(makeFeed(stubInitialState));
+        component.update();
+        const instance = component.find(SubscriptionFeed.WrappedComponent).instance();
+        const spyAdd = jest.spyOn(instance, "addRecoToSub");
+        expect(spyGetSubscription).toBeCalledTimes(1);
+        await flushPromises();
+
+        expect(spyGetRecommendation).toBeCalledTimes(1);
+        await flushPromises();
+
+        expect(instance.state.recommendations.length).toBe(0);
+        expect(spyAdd).toBeCalledTimes(1);
+        const spyClickNext = jest.spyOn(instance, "clickMoreButtonNext");
+        const button = component.find(".more-button").hostNodes();
+        button.simulate("click");
+
+        expect(spyGetSubscription).toBeCalledTimes(1);
+        expect(instance.state.subscriptions).toBe(stubSubscriptions);
+        expect(spyClickNext).toBeCalledTimes(1);
+
+        expect(spyGetRecommendation).toBeCalledTimes(2);
+        await flushPromises();
+        expect(spyAdd).toBeCalledTimes(2);
+        expect(instance.state.finished).toBe(true);
+        expect(instance.state.recommendations.length).toBe(0);
+    });
+
+    it("should handle click view more button with both finish", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            auth: {
+                ...stubInitialState.auth,
+                subscriptions: {
+                    ...stubInitialState.auth.subscriptions,
+                    finished: true,
+                },
+                recommendations: {
+                    ...stubInitialState.auth.recommendations,
+                    finished: true,
+                },
+            },
+        };
+        const component = mount(makeFeed(stubInitialState));
+        component.update();
+        const instance = component.find(SubscriptionFeed.WrappedComponent).instance();
+        const spyAdd = jest.spyOn(instance, "addRecoToSub");
+        expect(spyGetSubscription).toBeCalledTimes(1);
+        await flushPromises();
+
+        expect(spyGetRecommendation).toBeCalledTimes(1);
+        await flushPromises();
+
+        expect(instance.state.recommendations.length).toBe(0);
+        expect(spyAdd).toBeCalledTimes(1);
+        const spyClickNext = jest.spyOn(instance, "clickMoreButtonNext");
+        const button = component.find(".more-button").hostNodes();
+        button.simulate("click");
+
+        expect(spyGetSubscription).toBeCalledTimes(1);
+        expect(instance.state.subscriptions).toBe(stubSubscriptions);
+        expect(spyClickNext).toBeCalledTimes(1);
+        expect(spyGetRecommendation).toBeCalledTimes(1);
+        expect(spyAdd).toBeCalledTimes(2);
+        expect(instance.state.recommendations.length).toBe(0);
     });
 });

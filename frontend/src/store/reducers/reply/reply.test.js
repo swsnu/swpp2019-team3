@@ -100,16 +100,16 @@ describe("Reply reducer", () => {
     it("should return get_replies_by_collection", () => {
         const newState = ReplyReducer(stubInitialState, {
             type: replyConstants.GET_REPLIES_BY_COLLECTION_SUCCESS,
-            target: stubReply,
+            target: { replies: [stubReply] },
         });
         expect(newState.list.status).toBe(replyStatus.SUCCESS);
-        expect(newState.list.list).toBe(stubReply);
+        expect(newState.list.list[0]).toBe(stubReply);
     });
 
     it("should return get_replys_by_review", () => {
         const newState = ReplyReducer(stubInitialState, {
             type: replyConstants.GET_REPLIES_BY_REVIEW_SUCCESS,
-            target: stubReply,
+            target: { replies: stubReply },
         });
         expect(newState.list.status).toBe(replyStatus.SUCCESS);
         expect(newState.list.list).toBe(stubReply);
@@ -118,7 +118,7 @@ describe("Reply reducer", () => {
     it("should return get_replies_by_collection", () => {
         const newState = ReplyReducer(stubInitialState, {
             type: replyConstants.GET_REPLIES_BY_COLLECTION_SUCCESS,
-            target: stubReply,
+            target: { replies: stubReply },
         });
         expect(newState.list.status).toBe(replyStatus.SUCCESS);
         expect(newState.list.list).toBe(stubReply);

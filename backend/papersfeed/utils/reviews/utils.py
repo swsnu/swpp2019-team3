@@ -287,6 +287,9 @@ def get_reviews(filter_query, request_user, count, page_number=1):
     """Get Reviews"""
     return __get_reviews(filter_query, request_user, count, page_number=page_number)
 
+def get_review_like_count(review_ids, group_by_field):
+    """Get Review like Count"""
+    return __get_review_like_count(review_ids, group_by_field)
 
 def __get_reviews(filter_query, request_user, count, page_number=1, order_by='-pk'):
     """Get Reviews By Query"""

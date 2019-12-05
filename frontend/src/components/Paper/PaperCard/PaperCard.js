@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { Component } from "react";
 import { Card, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
@@ -46,9 +47,9 @@ class PaperCard extends Component {
     ).slice(0, 10).filter(
         (keyword) => keyword.type === type,
     ).map(
-        (keyword) => (
+        (keyword, index) => (
             <Button
-              key={keyword.id}
+              key={index}
               id={keyword.name}
               className="keyword-tag"
               href={`/search=${keyword.name}`}
@@ -87,7 +88,9 @@ class PaperCard extends Component {
                     header = (
                         <Card.Header id="headerSubscriptionTarget">
                             <div className="CardHeader">
-                                {actorLink}
+                                {this.props.actor.id === 0
+                                    ? (<h5 className="actorLink">{this.props.actor.username}</h5>)
+                                    : actorLink}
                                 <h5 className="verb">{` ${this.props.verb} this paper to`}</h5>
                                 <a className="targetLink" href={`/collection_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
                             </div>
@@ -97,7 +100,9 @@ class PaperCard extends Component {
                     header = (
                         <Card.Header id="headerSubscription">
                             <div className="CardHeader">
-                                {actorLink}
+                                {this.props.actor.id === 0
+                                    ? (<h5 className="actorLink">{this.props.actor.username}</h5>)
+                                    : actorLink}
                                 <h5 className="verb">{` ${this.props.verb} this paper`}</h5>
                             </div>
                         </Card.Header>
