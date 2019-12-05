@@ -64,7 +64,6 @@ class Init extends Component {
     render() {
         let keywords = null;
         let keywordsSet = null;
-        console.log(this.state.checkedKeywords);
         if (this.state.keywords != null && this.state.keywords.length > 0) {
             keywords = this.state.keywords.map((keyword) => (
                 <Form.Check
