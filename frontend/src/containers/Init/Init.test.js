@@ -293,6 +293,6 @@ describe("Init test", () => {
         wrapper.simulate("change");
         const wrapper2 = component.find({ id: 3 }).hostNodes();
         wrapper2.simulate("change");
-        expect(instance.state.checkedKeywords).toStrictEqual([1, 3]); // Fix me: it should be 2, 3
+        expect(instance.state.checkedKeywords).toStrictEqual([2, 3]);
     });
 });
