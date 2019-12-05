@@ -80,6 +80,7 @@ class PaperCard extends Component {
     }
 
     render() {
+        console.log(this.props.actor.id);
         let header = null;
         if (this.props.headerExists) {
             if (this.props.subscription) {
@@ -100,7 +101,9 @@ class PaperCard extends Component {
                     header = (
                         <Card.Header id="headerSubscription">
                             <div className="CardHeader">
-                                {actorLink}
+                                {this.props.actor.id === 0
+                                    ? (<h5 className="actorLink">{this.props.actor.username}</h5>)
+                                    : actorLink}
                                 <h5 className="verb">{` ${this.props.verb} this paper`}</h5>
                             </div>
                         </Card.Header>

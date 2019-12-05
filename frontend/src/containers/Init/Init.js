@@ -72,6 +72,7 @@ class Init extends Component {
                   key={keyword.id}
                   type="checkbox"
                   id={keyword.id}
+                  checked={this.state.checkedKeywords.includes(keyword.id)}
                   onChange={() => this.checkHandler(keyword.id)}
                 />
             ));
