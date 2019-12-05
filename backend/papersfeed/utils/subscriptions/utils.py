@@ -16,7 +16,7 @@ def select_subscriptions(args):
     """Get Subscriptions of the current User"""
 
     request_user = args[constants.USER]
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # get the list of users that this user is following
     followings_queryset = UserFollow.objects.filter(
