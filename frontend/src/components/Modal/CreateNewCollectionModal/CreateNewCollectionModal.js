@@ -31,7 +31,7 @@ class CreateNewCollectionModal extends Component {
             text: newCollectionDesc,
         })
             .then(() => {
-                this.props.onUpdateCollection({ id: this.props.me.id });
+                this.props.whatActionWillFollow();
                 this.setState({
                     isModalOpen: false,
                     newCollectionName: "",
@@ -114,19 +114,16 @@ const mapDispatchToProps = (dispatch) => ({
     onCreateNewCollection: (collection) => dispatch(
         collectionActions.makeNewCollection(collection),
     ),
-    onUpdateCollection: (id) => dispatch(collectionActions.getCollectionsByUserId(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateNewCollectionModal);
 
 CreateNewCollectionModal.propTypes = {
-    me: PropTypes.objectOf(PropTypes.any),
     onCreateNewCollection: PropTypes.func,
-    onUpdateCollection: PropTypes.func,
+    whatActionWillFollow: PropTypes.func,
 };
 
 CreateNewCollectionModal.defaultProps = {
-    me: null,
-    onCreateNewCollection: null,
-    onUpdateCollection: null,
+    onCreateNewCollection: () => {},
+    whatActionWillFollow: () => {},
 };
