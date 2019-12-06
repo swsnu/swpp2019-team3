@@ -78,6 +78,8 @@ import {
     likeReply,
     unlikeReply,
 } from "./reply/reply";
+
+
 /*
     export actions from here
 */
@@ -87,7 +89,6 @@ export const collectionActions = {
     getCollection,
     getCollectionPapers,
     getCollectionMembers,
-    // getCollectionReplies,
     setOwner,
     setTitleAndDescription,
     addCollectionPaper,
