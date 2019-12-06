@@ -70,14 +70,14 @@ class SearchResult extends Component {
                     this.paperCardsDistributor(this.props.searchedPapers);
                 }
             });
-        this.props.onSearchCollection(searchWord, this.props.collectionPageNum + 1)
+        this.props.onSearchCollection(searchWord, 1)
             .then(() => {
                 // if searchWord is changed while waiting promise, don't update state
                 if (this.state.searchWord === searchWord) {
                     this.setState({ collections: this.props.searchedCollections });
                 }
             });
-        this.props.onSearchUser(searchWord, this.props.userPageNum + 1)
+        this.props.onSearchUser(searchWord, 1)
             .then(() => {
                 // if searchWord is changed while waiting promise, don't update state
                 if (this.state.searchWord === searchWord) {

@@ -1,9 +1,11 @@
 """tests_recommendation.py"""
 # -*- coding: utf-8 -*-
 import json
-#
+from unittest.mock import patch
 from django.test import TestCase, Client
+
 from papersfeed import constants
+from papersfeed.tests.tests import MockResponse
 from papersfeed.models.users.user import User
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.reviews.review import Review
@@ -328,8 +330,20 @@ class RecommnedationTestCase(TestCase):
 
         self.assertEqual(response.status_code, 201)
 
-    def test_get_paper_all(self):
+    @patch('requests.get')
+    def test_get_paper_all(self, mock_get):
         """Get Paper All"""
+
+        # create paper with empty abstract
+        Paper.objects.create(
+            title="paper_without_abstract",
+            language="English",
+            abstract="",
+            DOI="10.1136/jech.2007.061986",
+        )
+
+        stub_json = json.loads(open("papersfeed/tests/papers/stub_semanticscholar.json", 'r').read())
+        mock_get.return_value = MockResponse(json_data=stub_json, status_code=200)
 
         client = Client()
 
@@ -344,6 +358,9 @@ class RecommnedationTestCase(TestCase):
         response = client.get('/api/paper/all')
 
         self.assertEqual(response.status_code, 200)
+        # ['papers'][0] of response is corresponding to the "paper_without_abstract" paper
+        # because we got a new abstract from Semantic Scholar API(mocked), its length should be more than 0
+        self.assertTrue(response.json()['papers'][0]['Abstract'])
 
     def test_get_user_all(self):
         """Get User All"""

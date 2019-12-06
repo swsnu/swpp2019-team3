@@ -157,7 +157,7 @@ def __parse_and_save_crossref_info(message):
             keywords_exist = PaperKeyword.objects.filter(paper_id=paper_id).exists()
             if abstract:
                 if not keywords_exist: # if not exist, try extracting keywords this time
-                    abstracts[paper_id] = abstract # if it doesn't have abstract, move on
+                    abstracts[paper_id] = abstract
             else: # if abstract doesn't exist, try getting abstract this time
                 __make_id_to_dois(paper_id, item, no_abstract_dois)
             continue
@@ -185,7 +185,7 @@ def __parse_and_save_crossref_info(message):
         paper_ids.append(new_paper.id)
 
         # save the abstract with key of paper for extracting keywords later
-        if abstract: # if it doesn't have abstract, move on
+        if abstract:
             abstracts[new_paper.id] = abstract
         else: # if abstract doesn't exist, try getting abstract this time
             __make_id_to_dois(new_paper.id, item, no_abstract_dois)
@@ -259,6 +259,8 @@ def __save_semanticscholar_info(paper_id, response_json):
     """Save information from Semantic Scholar API, then call Text Analytics API for extracting keywords"""
     if 'abstract' in response_json and response_json['abstract']:
         try:
+            import json
+            json.dump(response_json, open("stub_semantic_scholar.json", 'w'), indent=4)
             paper = Paper.objects.get(id=paper_id)
             paper.abstract = response_json['abstract']
             paper.save()

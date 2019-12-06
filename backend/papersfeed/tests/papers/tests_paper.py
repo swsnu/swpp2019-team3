@@ -6,6 +6,7 @@ from unittest.mock import Mock, patch
 from django.test import TestCase, Client
 
 from papersfeed import constants
+from papersfeed.tests.tests import MockResponse
 from papersfeed.models.collections.collection import Collection
 from papersfeed.models.papers.paper import Paper
 
@@ -402,17 +403,6 @@ class PaperTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         # there was one result from arXiv, so our search API's response should have one paper result, too
         self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
-
-# pylint: disable=too-few-public-methods
-class MockResponse:
-    """MockResponse"""
-    def __init__(self, json_data, status_code):
-        self.json_data = json_data
-        self.status_code = status_code
-
-    def json(self):
-        """json()"""
-        return self.json_data
 
 def make_stub_keyphrases_response(json_file, status_code):
     """Make Stub Text Analytics API Response"""
