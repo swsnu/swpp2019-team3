@@ -13,6 +13,7 @@ from papersfeed.models.collections.collection_like import CollectionLike
 from papersfeed.models.collections.collection_user import CollectionUser, COLLECTION_USER_TYPE
 from papersfeed.models.collections.collection_paper import CollectionPaper
 from papersfeed.models.replies.reply_collection import ReplyCollection
+from papersfeed.models.users.user import User
 from papersfeed.models.users.user_action import UserAction, USER_ACTION_TYPE
 from papersfeed.models.subscription.subscription import Subscription
 from papersfeed.models.papers.paper import Paper
@@ -491,9 +492,9 @@ def __get_collections(filter_query, request_user, count, params=None, page_numbe
     return collections, pagination_value, is_finished
 
 
-def __pack_collections(collections, request_user, paper_id=None):  # pylint: disable=unused-argument
+# pylint: disable=unused-argument, too-many-locals
+def __pack_collections(collections, request_user, paper_id=None):
     """Pack Collections"""
-    from papersfeed.utils.users.utils import get_users  # import in def because of circular dependency
     packed = []
 
     collection_ids = [collection.id for collection in collections]
@@ -512,7 +513,11 @@ def __pack_collections(collections, request_user, paper_id=None):  # pylint: dis
 
     # Owner User
     user_ids = [collection.owner_id for collection in collections]
-    users, _ = get_users(filter_query=Q(id__in=user_ids), request_user=request_user, count=None)
+    owner_id = int(user_ids[0]) if user_ids else None
+    user = {
+        constants.ID: owner_id,
+        constants.USERNAME: User.objects.get(id=owner_id).username if owner_id else None
+    }
 
     for collection in collections:
         collection_id = collection.id
@@ -533,7 +538,7 @@ def __pack_collections(collections, request_user, paper_id=None):  # pylint: dis
             constants.MODIFICATION_DATE: collection.modification_date,
             constants.TYPE: collection.type,
             constants.COLLECTION_USER_TYPE: collection.collection_user_type,
-            constants.OWNER: users[0] if users else None
+            constants.OWNER: user
         }
 
         if paper_id:
@@ -542,6 +547,7 @@ def __pack_collections(collections, request_user, paper_id=None):  # pylint: dis
         packed.append(packed_collection)
 
     return packed
+# pylint: enable=unused-argument, too-many-locals
 
 
 def __is_collection_liked(outer_ref, request_user):
