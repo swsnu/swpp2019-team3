@@ -189,14 +189,14 @@ describe("reviewActions", () => {
             .mockImplementation(() => new Promise((resolve) => {
                 const result = {
                     status: 200,
-                    data: stubReview,
+                    data: { reviews: [stubReview] },
                 };
                 resolve(result);
             }));
 
-        mockStore.dispatch(reviewActions.getReviewsByPaperId({ id: 1 }))
+        mockStore.dispatch(reviewActions.getReviewsByPaperId(1, 1))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/review/paper", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/review/paper", { params: { id: 1, page_number: 1 } });
                 done();
             });
     });
@@ -213,9 +213,9 @@ describe("reviewActions", () => {
                 reject(result);
             }));
 
-        mockStore.dispatch(reviewActions.getReviewsByPaperId({ id: 1 }))
+        mockStore.dispatch(reviewActions.getReviewsByPaperId(1, 1))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/review/paper", { params: { id: 1 } });
+                expect(spy).toHaveBeenCalledWith("/api/review/paper", { params: { id: 1, page_number: 1 } });
                 done();
             });
     });
