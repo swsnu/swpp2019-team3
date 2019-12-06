@@ -131,7 +131,7 @@ def __parse_and_save_arxiv_info(feed):
 # pylint: enable=too-many-locals
 
 
-# pylint: disable=too-many-locals
+# pylint: disable=too-many-locals, too-many-branches
 def __parse_and_save_crossref_info(message):
     paper_ids = []
     abstracts = {}
@@ -205,7 +205,7 @@ def __parse_and_save_crossref_info(message):
         __exploit_semanticscholar_for_abstract.delay(paper_id, dois)
 
     return paper_ids, is_finished
-# pylint: enable=too-many-locals
+# pylint: enable=too-many-locals, too-many-branches
 
 
 def __make_id_to_dois(paper_id, item, id_to_dois):
