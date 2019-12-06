@@ -140,7 +140,7 @@ class PaperCard extends Component {
                                       : this.clickPaperCardLikeHandler}
                                 >
                                     <div id="likeButtonInside">
-                                        <SVG name="heart" height="50%" width="50%" />
+                                        <SVG name="heart" height="25px" width="25px" />
                                         {this.state.likeCount}
                                     </div>
                                 </Button>
@@ -150,7 +150,7 @@ class PaperCard extends Component {
                                   href={`/paper_id=${this.props.id}`}
                                 >
                                     <div id="reviewButtonInside">
-                                        <SVG name="zoom" height="30px" width="30px" />
+                                        <SVG name="zoom" height="25px" width="25px" />
                                         {this.props.reviewCount}
                                     </div>
                                 </Button>

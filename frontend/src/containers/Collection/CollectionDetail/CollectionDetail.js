@@ -158,7 +158,7 @@ class CollectionDetail extends Component {
 
         paperCards = this.state.papers.length !== 0
             ? (
-                <div>
+                <div id="paperCards">
                     <div id="paperCardsLeft">{paperCardsLeft}</div>
                     <div id="paperCardsRight">{paperCardsRight}</div>
                 </div>
@@ -273,9 +273,7 @@ class CollectionDetail extends Component {
                     <div className="itemList">
                         <Tabs defaultActiveKey="paperTab" id="itemTabs">
                             <Tab eventKey="paperTab" title={`Papers(${this.state.paperCount})`}>
-                                <div id="paperCards">
-                                    {paperCards}
-                                </div>
+                                {paperCards}
                             </Tab>
                             <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${this.state.replyCount})`}>
                                 <div id="replies">

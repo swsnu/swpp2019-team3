@@ -70,10 +70,10 @@
     height: 100%;
     margin: 15px;
     
-    display: flex;
+    /* display: flex;
     justify-content: flex-start;
     flex-flow: row wrap;
-    align-items: flex-start;
+    align-items: flex-start; */
 }
 
 .itemList #paperCardsLeft {
