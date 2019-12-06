@@ -259,8 +259,6 @@ def __save_semanticscholar_info(paper_id, response_json):
     """Save information from Semantic Scholar API, then call Text Analytics API for extracting keywords"""
     if 'abstract' in response_json and response_json['abstract']:
         try:
-            import json
-            json.dump(response_json, open("stub_semantic_scholar.json", 'w'), indent=4)
             paper = Paper.objects.get(id=paper_id)
             paper.abstract = response_json['abstract']
             paper.save()
