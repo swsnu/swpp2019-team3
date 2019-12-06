@@ -81,7 +81,6 @@ const reducer = (state = initialState, action) => {
         return {
             ...state,
             subscriptions: {
-                ...state.subscriptions,
                 status: getSubscriptionsStatus.SUCCESS,
                 list: action.target.subscriptions,
                 pageNum: action.target.page_number,
@@ -92,8 +91,9 @@ const reducer = (state = initialState, action) => {
         return {
             ...state,
             subscriptions: {
-                ...state.subscriptions,
                 status: getSubscriptionsStatus.FAILURE,
+                list: [],
+                pageNum: 0,
                 finished: true,
             },
         };
@@ -102,7 +102,6 @@ const reducer = (state = initialState, action) => {
         return {
             ...state,
             recommendations: {
-                ...state.recommendations,
                 status: getRecommendationsStatus.SUCCESS,
                 list: action.target.recommendations,
                 pageNum: action.target.page_number,
@@ -113,8 +112,9 @@ const reducer = (state = initialState, action) => {
         return {
             ...state,
             recommendations: {
-                ...state.recommendations,
                 status: getRecommendationsStatus.FAILURE,
+                list: [],
+                pageNum: 0,
                 finished: true,
             },
         };
@@ -123,7 +123,6 @@ const reducer = (state = initialState, action) => {
         return {
             ...state,
             keywords: {
-                ...state.keywords,
                 status: getKeywordsInitStatus.SUCCESS,
                 list: action.target.keywords,
                 pageNum: action.target.page_number,
@@ -134,8 +133,9 @@ const reducer = (state = initialState, action) => {
         return {
             ...state,
             keywords: {
-                ...state.keywords,
                 status: getKeywordsInitStatus.FAILURE,
+                list: [],
+                pageNum: 0,
                 finished: true,
             },
         };

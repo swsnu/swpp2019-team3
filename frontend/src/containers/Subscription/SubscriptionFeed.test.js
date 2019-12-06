@@ -12,216 +12,9 @@ import { getMockStore, mockPromise, flushPromises } from "../../test-utils/mocks
 import { history } from "../../store/store";
 import { authActions } from "../../store/actions";
 
-const stubSubscriptions = [
-    {
-        action_object: {
-            content: {
-                count: {
-                    likes: 1,
-                    replies: 0,
-                },
-                creation_date: "2019-12-02T07:31:40.975",
-                id: 2,
-                liked: false,
-                modification_date: "2019-12-02T07:31:40.976",
-                paper: {
-                    DOI: "",
-                    ISSN: "",
-                    abstract: "We explain why semistability of a one-ended proper CAT(0) space can be↵determined by the geodesic rays. This is applied to boundaries of CAT(0)↵groups.",
-                    authors: [{
-                        address: "",
-                        email: "",
-                        first_name: "Ross",
-                        id: 53,
-                        last_name: "Geoghegan",
-                        rank: 1,
-                        researcher_id: "",
-                        type: "general",
-                    }],
-                    count: { reviews: 2, likes: 1 },
-                    download_url: "http://arxiv.org/pdf/1703.07003v1",
-                    eISSN: "",
-                    file_url: "http://arxiv.org/abs/1703.07003v1",
-                    id: 31,
-                    keywords: [],
-                    language: "english",
-                    liked: false,
-                    publication: {},
-                    title: "Semistability and CAT(0) Geometry",
-                },
-                text: "zxcbvzxcb",
-                title: "asfdas",
-                user: {
-                    id: 1,
-                    username: "asdf",
-                    email: "asdf@snu.ac.kr",
-                    description: "",
-                    count: {
-                        follower: 1,
-                        following: 1,
-                    },
-                },
-            },
-            type: "review",
-        },
-        actor: {
-            id: 2,
-            username: "girin",
-        },
-        creation_date: "2019-12-02T07:31:58.980",
-        id: 11,
-        target: {},
-        verb: "liked",
-    },
-    {
-        action_object: {
-            content: {
-                count: {
-                    users: 1,
-                    papers: 0,
-                    likes: 0,
-                    replies: 0,
-                },
-                creation_date: "2019-12-02T05:56:28.856",
-                id: 2,
-                liked: false,
-                modification_date: "2019-12-02T05:56:28.856",
-                text: "meowwww",
-                title: "girin",
-            },
-            type: "collection",
-        },
-        actor: { id: 2, username: "girin" },
-        creation_date: "2019-12-02T05:56:28.864",
-        id: 10,
-        target: {},
-        verb: "created",
-    },
-    {
-        action_object: {
-            type: "paper",
-            content: {
-                DOI: "10.2140/gt.2007.11.1255",
-                ISSN: "",
-                abstract: "This paper ... ",
-                authors: [
-                    {
-                        address: "",
-                        email: "",
-                        first_name: "Michael",
-                        id: 54,
-                        last_name: "Farber",
-                        rank: 1,
-                        researcher_id: "",
-                        type: "general",
-                    },
-                    {
-                        address: "",
-                        email: "",
-                        first_name: "Dirk",
-                        id: 55,
-                        last_name: "Schuetz",
-                        rank: 2,
-                        researcher_id: "",
-                        type: "general",
-                    },
-                ],
-                count: {
-                    reviews: 0,
-                    likes: 1,
-                },
-                download_url: "http://arxiv.org/pdf/math/0609005v1",
-                eISSN: "",
-                file_url: "http://arxiv.org/abs/math/0609005v1",
-                id: 32,
-                keywords: [],
-                language: "english",
-                liked: false,
-                publication: {},
-                title: "Cohomological estimates",
-            },
-        },
-        actor: {
-            id: 2,
-            username: "girin",
-        },
-        creation_date: "2019-12-02T03:41:13.561",
-        id: 9,
-        target: {},
-        verb: "liked",
-    },
-    {
-        action_object: {
-            type: "type that cannot exist",
-            content: {},
-        },
-        creation_date: "2019-12-02T03:41:13.561",
-        id: 9,
-        target: {},
-        verb: "liked",
-    },
-];
-
-const stubRecommendation = [
-    {
-        action_object: {
-            type: "paper",
-            content: {
-                DOI: "10.2140/gt.2007.11.1255",
-                ISSN: "",
-                abstract: "This paper ... ",
-                authors: [
-                    {
-                        address: "",
-                        email: "",
-                        first_name: "Michael",
-                        id: 54,
-                        last_name: "Farber",
-                        rank: 1,
-                        researcher_id: "",
-                        type: "general",
-                    },
-                    {
-                        address: "",
-                        email: "",
-                        first_name: "Dirk",
-                        id: 55,
-                        last_name: "Schuetz",
-                        rank: 2,
-                        researcher_id: "",
-                        type: "general",
-                    },
-                ],
-                count: {
-                    reviews: 0,
-                    likes: 1,
-                },
-                download_url: "http://arxiv.org/pdf/math/0609005v1",
-                eISSN: "",
-                file_url: "http://arxiv.org/abs/math/0609005v1",
-                id: 32,
-                keywords: [],
-                language: "english",
-                liked: false,
-                publication: {},
-                title: "Cohomological estimates",
-            },
-        },
-        actor: {
-            id: 0,
-            username: "papersfeed",
-        },
-        creation_date: "2019-12-02T03:41:13.561",
-        id: 9,
-        target: {},
-        verb: "liked",
-    },
-];
-
 const makeFeed = (initialState, props = {}) => (
     <Provider store={getMockStore(initialState)}>
         <SubscriptionFeed
-          match={{ params: { review_id: 1 } }}
           history={history}
           props={props}
         />
@@ -230,11 +23,172 @@ const makeFeed = (initialState, props = {}) => (
 
 describe("SubscriptionFeed test", () => {
     let feed;
+    let stubSubscriptions;
+    let stubRecommendations;
     let stubInitialState;
     let spyGetRecommendation;
     let spyGetSubscription;
 
     beforeEach(() => {
+        stubSubscriptions = [
+            {
+                action_object: {
+                    type: "review",
+                    content: {
+                        count: {
+                            likes: 1,
+                            replies: 0,
+                        },
+                        id: 2,
+                        liked: false,
+                        paper: {
+                            abstract: "We explain why semistability of a one-ended proper CAT(0) space can be↵determined by the geodesic rays. This is applied to boundaries of CAT(0)↵groups.",
+                            authors: [{
+                                first_name: "Ross",
+                                id: 53,
+                                last_name: "Geoghegan",
+                                rank: 1,
+                            }],
+                            count: { reviews: 2, likes: 1 },
+                            id: 31,
+                            keywords: [],
+                            liked: false,
+                            title: "Semistability and CAT(0) Geometry",
+                        },
+                        text: "zxcbvzxcb",
+                        title: "asfdas",
+                        user: {
+                            id: 1,
+                            username: "asdf",
+                            email: "asdf@snu.ac.kr",
+                            description: "",
+                            count: {
+                                follower: 1,
+                                following: 1,
+                            },
+                        },
+                    },
+                },
+                actor: {
+                    id: 2,
+                    username: "girin",
+                },
+                id: 11,
+                target: {},
+                verb: "liked",
+            },
+            {
+                action_object: {
+                    type: "collection",
+                    content: {
+                        count: {
+                            users: 1,
+                            papers: 0,
+                            likes: 0,
+                            replies: 0,
+                        },
+                        id: 2,
+                        liked: false,
+                        text: "meowwww",
+                        title: "girin",
+                    },
+                },
+                actor: { id: 2, username: "girin" },
+                id: 10,
+                target: {},
+                verb: "created",
+            },
+            {
+                action_object: {
+                    type: "paper",
+                    content: {
+                        abstract: "This paper ... ",
+                        authors: [
+                            {
+                                address: "",
+                                email: "",
+                                first_name: "Michael",
+                                id: 54,
+                                last_name: "Farber",
+                                rank: 1,
+                            },
+                            {
+                                address: "",
+                                email: "",
+                                first_name: "Dirk",
+                                id: 55,
+                                last_name: "Schuetz",
+                                rank: 2,
+                            },
+                        ],
+                        count: {
+                            reviews: 0,
+                            likes: 1,
+                        },
+                        id: 32,
+                        keywords: [],
+                        liked: false,
+                        title: "Cohomological estimates",
+                    },
+                },
+                actor: {
+                    id: 2,
+                    username: "girin",
+                },
+                id: 9,
+                target: {},
+                verb: "liked",
+            },
+            {
+                action_object: {
+                    type: "type that cannot exist",
+                    content: {},
+                },
+                id: 9,
+                target: {},
+                verb: "liked",
+            },
+        ];
+
+        stubRecommendations = [
+            {
+                action_object: {
+                    type: "paper",
+                    content: {
+                        abstract: "This paper ... ",
+                        authors: [
+                            {
+                                first_name: "Michael",
+                                id: 54,
+                                last_name: "Farber",
+                                rank: 1,
+                            },
+                            {
+                                first_name: "Dirk",
+                                id: 55,
+                                last_name: "Schuetz",
+                                rank: 2,
+                            },
+                        ],
+                        count: {
+                            reviews: 0,
+                            likes: 1,
+                        },
+                        id: 32,
+                        keywords: [],
+                        liked: false,
+                        title: "Cohomological estimates",
+                    },
+                },
+                actor: {
+                    id: 0,
+                    username: "papersfeed",
+                },
+                id: 9,
+                target: {},
+                verb: "liked",
+            },
+        ];
         stubInitialState = {
             paper: {},
             auth: {
@@ -252,7 +206,8 @@ describe("SubscriptionFeed test", () => {
                 },
                 recommendations: {
                     status: getRecommendationsStatus.SUCCESS,
-                    list: stubRecommendation,
+                    list: stubRecommendations,
+                    pageNum: 1,
                     finished: true,
                 },
                 keywords: {
@@ -372,16 +327,15 @@ describe("SubscriptionFeed test", () => {
         expect(spyGetRecommendation).toBeCalledTimes(1);
     });
 
-    it("should handle cards well", () => {
+    it("should handle cards well", async () => {
         const component = mount(feed);
-        component.find("SubscriptionFeed").instance().setState({
-            subscriptions: stubSubscriptions,
-            recommendations: stubRecommendation,
-        });
+
+        await flushPromises();
         component.update();
 
         const wrapperLeft = component.find("#subscriptionCardsLeft");
         const wrapperRight = component.find("#subscriptionCardsRight");
+
         expect(component.find("PaperCard").length).toBe(2);
         expect(component.find("CollectionCard").length).toBe(1);
         expect(component.find("ReviewCard").length).toBe(1);
@@ -412,7 +366,7 @@ describe("SubscriptionFeed test", () => {
                 recommendations: {
                     ...stubInitialState.auth.recommendations,
                     finished: false,
-                    list: stubRecommendation,
+                    list: stubRecommendations,
                 },
             },
         };
@@ -422,9 +376,10 @@ describe("SubscriptionFeed test", () => {
         const spyAdd = jest.spyOn(instance, "addRecoToSub");
         expect(spyGetSubscription).toBeCalledTimes(1);
         await flushPromises();
-
+        component.update();
         expect(spyGetRecommendation).toBeCalledTimes(1);
         await flushPromises();
+        component.update();
 
         expect(instance.state.recommendations.length).toBe(0);
         expect(spyAdd).toBeCalledTimes(1);
@@ -457,7 +412,7 @@ describe("SubscriptionFeed test", () => {
                 recommendations: {
                     ...stubInitialState.auth.recommendations,
                     finished: true,
-                    list: stubRecommendation,
+                    list: stubRecommendations,
                 },
             },
         };

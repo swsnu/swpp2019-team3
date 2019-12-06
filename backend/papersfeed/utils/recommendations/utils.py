@@ -1,5 +1,6 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
+from collections import OrderedDict
 from datetime import datetime, timedelta
 from django.db.models import OuterRef, Subquery, F, Q, Count
 from django.core.paginator import Paginator
@@ -83,7 +84,7 @@ def select_recommendation(args):
     request_user = args[constants.USER]
     page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
-    recommendation_queryset = UserRecommendation.objects.filter(user_id=request_user.id)
+    recommendation_queryset = UserRecommendation.objects.filter(user_id=request_user.id).order_by('rank')
 
     recommendations = get_results_from_queryset(recommendation_queryset, 20, page_number)
 
@@ -127,15 +128,15 @@ def insert_recommendation_init(args):
         else:
             paper_sort = []
 
-        paper_sort += [paper for paper in paper_ids[0:20]]
-        paper_sort = list(set(paper_sort))
+        paper_sort += [paper for paper in paper_ids[:20]]
+        paper_sort = list(OrderedDict.fromkeys(paper_sort))
 
         UserRecommendation.objects.bulk_create([
             UserRecommendation(
                 user_id=request_user.id,
                 paper_id=paper_id,
                 rank=k*10 + i+1,
-            ) for i, paper_id in enumerate(paper_sort[0:10])
+            ) for i, paper_id in enumerate(paper_sort[:10])
         ])
 
 def select_paper_all(args):

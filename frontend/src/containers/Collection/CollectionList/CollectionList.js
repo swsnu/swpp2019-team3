@@ -73,7 +73,12 @@ class CollectionList extends Component {
                 <div className="CollectionListContent">
                     <div id="collectionListText">My Collections</div>
                     <div id="collectionNewButtonDiv">
-                        <CreateNewCollectionModal />
+                        <CreateNewCollectionModal
+                          whatActionWillFollow={() => {
+                              this.setState({ collections: [] });
+                              this.getCollectionsTrigger(0);
+                          }}
+                        />
                     </div>
                     <div id="colletionCards">
                         <div id="collectionCardsLeft">{collectionCardsLeft}</div>

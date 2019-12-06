@@ -17,6 +17,7 @@ const makeCreateNewCollectionModal = (initialState) => (
 describe("CreateNewCollection test", () => {
     let stubInitialState;
     let createNewCollection;
+    let spyMakeNewCollection;
 
     beforeEach(() => {
         stubInitialState = {
@@ -61,6 +62,9 @@ describe("CreateNewCollection test", () => {
             reply: {},
         };
         createNewCollection = makeCreateNewCollectionModal(stubInitialState);
+
+        spyMakeNewCollection = jest.spyOn(collectionActions, "makeNewCollection")
+            .mockImplementation(() => () => mockPromise);
     });
 
     it("should render without errors", () => {
@@ -98,14 +102,6 @@ describe("CreateNewCollection test", () => {
     });
 
     it("should handle making new collection", async () => {
-        // mocking actions
-        /* eslint-disable no-unused-vars */
-        const spyMakeNewCollection = jest.spyOn(collectionActions, "makeNewCollection")
-            .mockImplementation(() => () => mockPromise);
-        const spyGetCollectionsByUserId = jest.spyOn(collectionActions, "getCollectionsByUserId")
-            .mockImplementation(() => () => mockPromise);
-        /* eslint-enable no-unused-vars */
-
         // change state and click button
         const component = mount(createNewCollection);
         let wrapper = component.find("#modalOpenButton").hostNodes();
@@ -124,7 +120,6 @@ describe("CreateNewCollection test", () => {
         await flushPromises();
         component.update();
 
-        expect(spyGetCollectionsByUserId).toHaveBeenCalledTimes(1);
         const instance = component.find("CreateNewCollectionModal").instance();
         expect(instance.state.isModalOpen).toBe(false);
     });

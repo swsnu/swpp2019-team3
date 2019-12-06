@@ -52,13 +52,6 @@ class SubscriptionFeed extends Component {
             }).catch(() => {});
     }
 
-    // FIXME: if de-commentize those lines, somehow onGetSubscriptions is called recursively
-    // componentDidUpdate(prevProps) {
-    //     if (this.props.subscriptionItems !== prevProps.subscriptionItems) {
-    //         this.props.onGetSubscriptions();
-    //     }
-    // }
-
     clickMoreButton = () => {
         if (!this.props.subscriptionFinished) {
             this.props.onGetSubscriptions({
