@@ -139,8 +139,8 @@ class SubscriptionFeed extends Component {
           addButtonExists
           history={this.props.history}
           headerExists
-          subscription={type==="subscription"}
-          recommendation={type==="recommendation_paper"}
+          subscription={type === "subscription"}
+          recommendation={type === "recommendation_paper"}
           actor={actor}
           verb={verb}
           target={target}
@@ -158,7 +158,7 @@ class SubscriptionFeed extends Component {
           likeCount={collection.count.likes}
           isLiked={collection.liked}
           headerExists
-          subscription={type==="subscription"}
+          subscription={type === "subscription"}
           actor={actor}
           verb={verb}
           target={target}
@@ -177,8 +177,8 @@ class SubscriptionFeed extends Component {
           likeCount={review.count.likes}
           replyCount={review.count.replies}
           headerExists
-          subscription={type==="subscription"}
-          recommendation={type==="recommendation_review"}
+          subscription={type === "subscription"}
+          recommendation={type === "recommendation_review"}
           actor={actor}
           verb={verb}
           target={target}
@@ -189,17 +189,31 @@ class SubscriptionFeed extends Component {
         const itemType = item.action_object.type;
         if (itemType === "paper") {
             return this.paperCardMaker(
-                item.type + String(item.id), item.action_object.content, item.actor, item.verb, item.target, item.type,
+                item.type + String(item.id),
+                item.action_object.content,
+                item.actor, item.verb,
+                item.target,
+                item.type,
             );
         }
         if (itemType === "collection") {
             return this.collectionCardMaker(
-                item.type + String(item.id), item.action_object.content, item.actor, item.verb, item.target, item.type,
+                item.type + String(item.id),
+                item.action_object.content,
+                item.actor,
+                item.verb,
+                item.target,
+                item.type,
             );
         }
         if (itemType === "review") {
             return this.reviewCardMaker(
-                item.type + String(item.id), item.action_object.content, item.actor, item.verb, item.target, item.type,
+                item.type + String(item.id),
+                item.action_object.content,
+                item.actor,
+                item.verb,
+                item.target,
+                item.type,
             );
         }
         return null;

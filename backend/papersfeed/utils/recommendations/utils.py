@@ -115,7 +115,7 @@ def insert_recommendation_init(args):
 
     request_user = args[constants.USER]
     keywords = args[constants.KEYWORDS]
-    n = len(keywords);
+    keyword_number = len(keywords)
     for k, keyword in enumerate(keywords):
         paper_queryset = Keyword.objects.filter(Q(id=keyword))[0].papers.all()
         paper_ids = [paper.id for paper in paper_queryset]
@@ -135,7 +135,7 @@ def insert_recommendation_init(args):
             UserRecommendation(
                 user_id=request_user.id,
                 paper_id=paper_id,
-                rank= i*n + k + 1,
+                rank=i*keyword_number + k + 1,
             ) for i, paper_id in enumerate(paper_sort[:10])
         ])
 

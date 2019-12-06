@@ -32,6 +32,7 @@ describe("SubscriptionFeed test", () => {
     beforeEach(() => {
         stubSubscriptions = [
             {
+                type: "subscription",
                 action_object: {
                     type: "review",
                     content: {
@@ -78,6 +79,7 @@ describe("SubscriptionFeed test", () => {
                 verb: "liked",
             },
             {
+                type: "subscription",
                 action_object: {
                     type: "collection",
                     content: {
@@ -99,6 +101,7 @@ describe("SubscriptionFeed test", () => {
                 verb: "created",
             },
             {
+                type: "subscription",
                 action_object: {
                     type: "paper",
                     content: {
@@ -140,6 +143,7 @@ describe("SubscriptionFeed test", () => {
                 verb: "liked",
             },
             {
+                type: "subscription",
                 action_object: {
                     type: "type that cannot exist",
                     content: {},
@@ -152,6 +156,7 @@ describe("SubscriptionFeed test", () => {
 
         stubRecommendations = [
             {
+                type: "recommendation_paper",
                 action_object: {
                     type: "paper",
                     content: {
@@ -382,7 +387,7 @@ describe("SubscriptionFeed test", () => {
 
         expect(instance.state.recommendations.length).toBe(0);
         expect(spyAdd).toBeCalledTimes(1);
-        
+
         expect(instance.state.finished).toBe(false);
         const spyClickNext = jest.spyOn(instance, "clickMoreButtonNext");
 
@@ -428,10 +433,10 @@ describe("SubscriptionFeed test", () => {
         component.update();
         expect(instance.state.recommendations.length).toBe(0);
         expect(spyAdd).toBeCalledTimes(1);
-        
+
         expect(instance.state.finished).toBe(false);
         const spyClickNext = jest.spyOn(instance, "clickMoreButtonNext");
-        
+
         const button = component.find(".more-button").hostNodes();
         button.simulate("click");
 
@@ -464,7 +469,7 @@ describe("SubscriptionFeed test", () => {
         const component = mount(makeFeed(stubInitialState));
         component.update();
         const instance = component.find("SubscriptionFeed").instance();
-        
+
 
         const spyAdd = jest.spyOn(instance, "addRecoToSub");
         expect(spyGetSubscription).toBeCalledTimes(1);

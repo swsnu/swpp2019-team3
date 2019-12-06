@@ -129,6 +129,7 @@ ReviewCard.propTypes = {
     actor: PropTypes.objectOf(PropTypes.any),
     verb: PropTypes.string,
     target: PropTypes.objectOf(PropTypes.any),
+    recommendation: PropTypes.bool,
 };
 
 ReviewCard.defaultProps = {
@@ -149,4 +150,5 @@ ReviewCard.defaultProps = {
     actor: {},
     verb: "",
     target: {},
+    recommendation: false,
 };

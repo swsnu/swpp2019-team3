@@ -105,14 +105,14 @@ class PaperCard extends Component {
                     );
                 }
             } else if (this.props.recommendation) {
-                    header = (
-                        <Card.Header id="headerSubscription">
-                            <div className="CardHeader">
-                                <h5 className="verb">{`${this.props.verb}`}</h5>
-                            </div>
-                        </Card.Header>
-                    );
-            }else if (this.props.paperSource) {
+                header = (
+                    <Card.Header id="headerSubscription">
+                        <div className="CardHeader">
+                            <h5 className="verb">{`${this.props.verb}`}</h5>
+                        </div>
+                    </Card.Header>
+                );
+            } else if (this.props.paperSource) {
                 header = <Card.Header id="header">{`from ${this.props.paperSource}`}</Card.Header>;
             }
         }
@@ -184,6 +184,7 @@ PaperCard.propTypes = {
     onLikePaper: PropTypes.func,
     onUnlikePaper: PropTypes.func,
     subscription: PropTypes.bool,
+    recommendation: PropTypes.bool,
     actor: PropTypes.objectOf(PropTypes.any),
     verb: PropTypes.string,
     target: PropTypes.objectOf(PropTypes.any),
@@ -202,6 +203,7 @@ PaperCard.defaultProps = {
     paperSource: "",
     headerExists: true,
     addButtonExists: false,
+    recommendation: false,
     afterLikeCount: 0,
     afterUnlikeCount: 0,
     onLikePaper: () => {},
