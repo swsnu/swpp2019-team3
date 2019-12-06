@@ -4,14 +4,14 @@
 
 #headerSubscriptionTarget {
     display: inline-block;
-    flex-direction: row;
-    justify-content: space-around;
+    /* flex-direction: row; */
+    /* justify-content: space-around; */
 }
 
 #headerSubscription {
     display: inline-block;
-    flex-direction: row;
-    justify-content: space-around;
+    /* flex-direction: row;
+    justify-content: space-around; */
 }
 
 #headerLine {
@@ -52,25 +52,33 @@
     font-style: italic;
 }
 
-.paper .footer {
+.paper #footer-flex {
     display: flex;
-    align-items: flex-start;
-}
-.paper .footer .add-button{
-    margin-left: 5%;
+    justify-content : space-between;
 }
 
+ #footer-left-buttons {
+    display: block;
+}
 
-.paper .review-button{
-    width: 17%;
+.like-button {
+    height: 40px;
+    width: 60px;
+}
+
+.review-button {
+    height: 40px;
+    width: 60px;
+}
+
+#reviewButtonInside {
+    /* width: 17%; */
     display: flex;
     justify-content: space-around;
-    margin-right: 25%;
 }
 
-
-.paper .like-button{
-    width: 17%;
+#likeButtonInside {
+    /* width: 17%; */
     display: flex;
     justify-content: space-around;
 }

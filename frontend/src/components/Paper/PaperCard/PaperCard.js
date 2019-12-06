@@ -114,7 +114,7 @@ class PaperCard extends Component {
         }
         let addButton = null;
         if (this.props.addButtonExists) {
-            addButton = <AddPaperModal className="add-button" id={this.props.id} history={this.props.history} />;
+            addButton = <AddPaperModal className="add-button" paperId={this.props.id} history={this.props.history} />;
         }
 
         return (
@@ -130,13 +130,35 @@ class PaperCard extends Component {
                         <Card.Text className="keywords">{this.state.keywords}</Card.Text>
                     </Card.Body>
                     <Card.Footer className="footer">
-
-                        <Button variant="light" className="like-button" onClick={this.state.isLiked ? this.clickPaperCardUnlikeHandler : this.clickPaperCardLikeHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
-
-                        <Button variant="light" className="review-button" href={`/paper_id=${this.props.id}`}>
-                            <div className="review-image"><SVG name="zoom" height="70%" width="70%" /></div>{this.props.reviewCount}
-                        </Button>
-                        {addButton}
+                        <div id="footer-flex">
+                            <div id="footer-left-buttons">
+                                <Button
+                                  variant="light"
+                                  className="like-button"
+                                  onClick={this.state.isLiked
+                                      ? this.clickPaperCardUnlikeHandler
+                                      : this.clickPaperCardLikeHandler}
+                                >
+                                    <div id="likeButtonInside">
+                                        <SVG name="heart" height="50%" width="50%" />
+                                        {this.state.likeCount}
+                                    </div>
+                                </Button>
+                                <Button
+                                  variant="light"
+                                  className="review-button"
+                                  href={`/paper_id=${this.props.id}`}
+                                >
+                                    <div id="reviewButtonInside">
+                                        <SVG name="zoom" height="30px" width="30px" />
+                                        {this.props.reviewCount}
+                                    </div>
+                                </Button>
+                            </div>
+                            <div>
+                                {addButton}
+                            </div>
+                        </div>
                     </Card.Footer>
                 </Card>
             </div>

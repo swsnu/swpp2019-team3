@@ -1,11 +1,18 @@
 .header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background: white;
+    border-bottom: 2px solid rgb(220,224,227);
+    min-height: 70px;
+    height: 9vh;
+    z-index: 10 !important;
+}
+
+#header {
     justify-content: space-between;
     justify-content: flex-start;
     display: flexbox;
-    position: sticky;
-    border-bottom: 2px solid rgb(220,224,227);
-    z-index: 10 !important;
-    width: 100vw;
 }
 
 .header .logo {

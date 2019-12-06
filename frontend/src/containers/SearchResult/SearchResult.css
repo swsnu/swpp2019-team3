@@ -1,7 +1,7 @@
 .search-result {
     min-height: 1000px;
     background: rgb(242,243,247);
-    margin-left: 18%;
+     
     position: relative;
     display: flex;
 }

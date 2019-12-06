@@ -1,7 +1,6 @@
-/* .paperspec {
-    display: flex;
-    flex-direction: column;
-} */
+.paperspec {
+    /* background-color: aquamarine; */
+}
 
 .paperspec #title {
     margin-top: 5%;
