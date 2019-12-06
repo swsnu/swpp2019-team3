@@ -125,7 +125,7 @@ def __parse_and_save_arxiv_info(feed):
             __process_author(first_name, last_name, author_rank, new_paper.id)
             author_rank += 1
 
-    __extract_keywords_from_abstract.delay(abstracts)
+    __extract_keywords_from_abstract.delay(abstracts) # give response to user, not waiting extracted keywords
 
     return paper_ids, is_finished
 # pylint: enable=too-many-locals
@@ -160,7 +160,13 @@ def __parse_and_save_crossref_info(message):
                     abstracts[paper_id] = abstract # if it doesn't have abstract, move on
             else: # if abstract doesn't exist, try getting abstract this time
                 if 'DOI' in item:
-                    no_abstract_dois[paper_id] = item['DOI']
+                    no_abstract_dois[paper_id] = [item['DOI']]
+                # alternative-id is the alternative for DOI which has no corresponding result in Semantic Scholar
+                if 'alternative-id' in item: # its type is list
+                    if paper_id in no_abstract_dois:
+                        no_abstract_dois[paper_id].extend(item['alternative-id'])
+                    else:
+                        no_abstract_dois[paper_id] = item['alternative-id']
             continue
 
         # many times, abstract doesn't exist
@@ -190,7 +196,13 @@ def __parse_and_save_crossref_info(message):
             abstracts[new_paper.id] = abstract
         else: # if abstract doesn't exist, try getting abstract this time
             if 'DOI' in item:
-                no_abstract_dois[new_paper.id] = item['DOI']
+                no_abstract_dois[new_paper.id] = [item['DOI']]
+            # alternative-id is the alternative for DOI which has no corresponding result in Semantic Scholar
+            if 'alternative-id' in item: # its type is list
+                if new_paper.id in no_abstract_dois:
+                    no_abstract_dois[new_paper.id].extend(item['alternative-id'])
+                else:
+                    no_abstract_dois[new_paper.id] = item['alternative-id']
 
         # save information of the authors
         author_rank = 1
@@ -200,9 +212,11 @@ def __parse_and_save_crossref_info(message):
             __process_author(first_name, last_name, author_rank, new_paper.id)
             author_rank += 1
 
-    __extract_keywords_from_abstract.delay(abstracts)
-    for paper_id, doi in no_abstract_dois.items():
-        __exploit_semanticscholar_for_abstract.delay(paper_id, doi)
+    __extract_keywords_from_abstract.delay(abstracts) # give response to user, not waiting extracted keywords
+
+    # each worker call Semantic Scholar API for getting more information of the given paper
+    for paper_id, dois in no_abstract_dois.items(): # multiple calls in parallel
+        __exploit_semanticscholar_for_abstract.delay(paper_id, dois)
 
     return paper_ids, is_finished
 # pylint: enable=too-many-locals
@@ -225,37 +239,27 @@ def __process_author(first_name, last_name, author_rank, new_paper_id):
 
 
 @shared_task
-def __exploit_semanticscholar_for_abstract(paper_id, doi):
+def __exploit_semanticscholar_for_abstract(paper_id, dois):
     """Exploit Semantic Scholar for getting detailed information"""
     semanticscholar_url = "https://api.semanticscholar.org/v1/paper/"
-    try:
-        logging.info("[Semantic Scholar API] searching")
-        start_time = time.time()
-        response = requests.get(semanticscholar_url + doi, timeout=TIMEOUT)
-        logging.info("[Semantic Scholar API] response latency: %s", time.time() - start_time)
-
-        if response.status_code == 200:
-            __save_semanticscholar_info(paper_id, response.json())
-
-        elif response.status_code == 404:
-            # sometiems, DOI should be upper-cased
+    for doi in dois:
+        try:
+            logging.info("[Semantic Scholar API] searching")
             start_time = time.time()
-            logging.info("[Semantic Scholar API] searching - upper")
-            response = requests.get(semanticscholar_url + doi.upper(), timeout=TIMEOUT)
+            response = requests.get(semanticscholar_url + doi, timeout=TIMEOUT)
             logging.info("[Semantic Scholar API] response latency: %s", time.time() - start_time)
+
             if response.status_code == 200:
                 __save_semanticscholar_info(paper_id, response.json())
             else:
                 logging.warning("[Semantic Scholar API] error code %d", response.status_code)
 
-        else:
-            logging.warning("[Semantic Scholar API] error code %d", response.status_code)
-
-    except requests.exceptions.RequestException as exception:
-        logging.warning(exception)
+        except requests.exceptions.RequestException as exception:
+            logging.warning(exception)
 
 
 def __save_semanticscholar_info(paper_id, response_json):
+    """Save information from Semantic Scholar API, then call Text Analytics API for extracting keywords"""
     if 'abstract' in response_json and response_json['abstract']:
         try:
             paper = Paper.objects.get(id=paper_id)
