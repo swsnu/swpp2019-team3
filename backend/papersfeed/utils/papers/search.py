@@ -125,7 +125,7 @@ def __parse_and_save_arxiv_info(feed):
             __process_author(first_name, last_name, author_rank, new_paper.id)
             author_rank += 1
 
-    __extract_keywords_from_abstract(abstracts)
+    __extract_keywords_from_abstract.delay(abstracts)
 
     return paper_ids, is_finished
 # pylint: enable=too-many-locals
@@ -200,8 +200,9 @@ def __parse_and_save_crossref_info(message):
             __process_author(first_name, last_name, author_rank, new_paper.id)
             author_rank += 1
 
-    __extract_keywords_from_abstract(abstracts)
-    __exploit_semanticscholar_for_abstract.delay(no_abstract_dois)
+    __extract_keywords_from_abstract.delay(abstracts)
+    for paper_id, doi in no_abstract_dois.items():
+        __exploit_semanticscholar_for_abstract.delay(paper_id, doi)
 
     return paper_ids, is_finished
 # pylint: enable=too-many-locals
@@ -223,6 +224,51 @@ def __process_author(first_name, last_name, author_rank, new_paper_id):
     )
 
 
+@shared_task
+def __exploit_semanticscholar_for_abstract(paper_id, doi):
+    """Exploit Semantic Scholar for getting detailed information"""
+    semanticscholar_url = "https://api.semanticscholar.org/v1/paper/"
+    try:
+        logging.info("[Semantic Scholar API] searching")
+        start_time = time.time()
+        response = requests.get(semanticscholar_url + doi, timeout=TIMEOUT)
+        logging.info("[Semantic Scholar API] response latency: %s", time.time() - start_time)
+
+        if response.status_code == 200:
+            __save_semanticscholar_info(paper_id, response.json())
+
+        elif response.status_code == 404:
+            # sometiems, DOI should be upper-cased
+            start_time = time.time()
+            logging.info("[Semantic Scholar API] searching - upper")
+            response = requests.get(semanticscholar_url + doi.upper(), timeout=TIMEOUT)
+            logging.info("[Semantic Scholar API] response latency: %s", time.time() - start_time)
+            if response.status_code == 200:
+                __save_semanticscholar_info(paper_id, response.json())
+            else:
+                logging.warning("[Semantic Scholar API] error code %d", response.status_code)
+
+        else:
+            logging.warning("[Semantic Scholar API] error code %d", response.status_code)
+
+    except requests.exceptions.RequestException as exception:
+        logging.warning(exception)
+
+
+def __save_semanticscholar_info(paper_id, response_json):
+    if 'abstract' in response_json and response_json['abstract']:
+        try:
+            paper = Paper.objects.get(id=paper_id)
+            paper.abstract = response_json['abstract']
+            paper.save()
+            __extract_keywords_from_abstract.delay({paper_id: response_json['abstract']})
+        except ObjectDoesNotExist:
+            logging.warning("[Semantic Scholar API] cannot find corresponding paper in PapersFeed DB")
+    else:
+        logging.warning("[Semantic Scholar API] the abstract don't exist")
+
+
+@shared_task
 def __extract_keywords_from_abstract(abstracts):
     """for every abstract, extract keywords by calling 'get_key_phrases'"""
     doc_list = []
@@ -287,47 +333,3 @@ def __process_key_phrases(key_phrases):
                     keyword_id=keyword_id,
                     type="abstract"
                 )
-
-
-@shared_task
-def __exploit_semanticscholar_for_abstract(id_to_doi):
-    """Exploit Semantic Scholar for getting detailed information"""
-    semanticscholar_url = "https://api.semanticscholar.org/v1/paper/"
-    for paper_id, doi in id_to_doi.items():
-        try:
-            logging.info("[Semantic Scholar API] searching")
-            start_time = time.time()
-            response = requests.get(semanticscholar_url + doi, timeout=TIMEOUT)
-            logging.info("[Semantic Scholar API] response latency: %s", time.time() - start_time)
-
-            if response.status_code == 200:
-                __save_semanticscholar_info(paper_id, response.json())
-
-            elif response.status_code == 404:
-                # sometiems, DOI should be upper-cased
-                start_time = time.time()
-                logging.info("[Semantic Scholar API] searching - upper")
-                response = requests.get(semanticscholar_url + doi.upper(), timeout=TIMEOUT)
-                logging.info("[Semantic Scholar API] response latency: %s", time.time() - start_time)
-                if response.status_code == 200:
-                    __save_semanticscholar_info(paper_id, response.json())
-                else:
-                    logging.warning("[Semantic Scholar API] error code %d", response.status_code)
-
-            else:
-                logging.warning("[Semantic Scholar API] error code %d", response.status_code)
-
-        except requests.exceptions.RequestException as exception:
-            logging.warning(exception)
-
-
-def __save_semanticscholar_info(paper_id, response_json):
-    if 'abstract' in response_json and response_json['abstract']:
-        try:
-            paper = Paper.objects.get(id=paper_id)
-            paper.abstract = response_json['abstract']
-            paper.save()
-        except ObjectDoesNotExist:
-            logging.warning("[Semantic Scholar API] cannot find corresponding paper in PapersFeed DB")
-    else:
-        logging.warning("[Semantic Scholar API] the abstract don't exist")

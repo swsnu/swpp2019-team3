@@ -35,7 +35,7 @@ class SearchResult extends Component {
         this.searchTrigger();
     }
 
-    // when users search another keyword on SearchResult
+    // when users search another word on SearchResult
     /* eslint-disable react/no-did-update-set-state */
     componentDidUpdate(prevProps) {
         if (this.props.location !== prevProps.location) {
@@ -107,7 +107,6 @@ class SearchResult extends Component {
           title={paper.title}
           date={paper.date}
           authors={paper.authors}
-          keywords={paper.keywords}
           likeCount={paper.count.likes}
           reviewCount={paper.count.reviews}
           isLiked={paper.liked}
