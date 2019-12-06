@@ -325,7 +325,6 @@ describe("SubscriptionFeed test", () => {
         expect(wrapper.length).toBe(1);
         expect(spyGetSubscription).toBeCalledTimes(1);
 
-        const instance = component.find(SubscriptionFeed.WrappedComponent).instance();
         await flushPromises();
 
         expect(spyGetRecommendation).toBeCalledTimes(1);
@@ -523,7 +522,6 @@ describe("SubscriptionFeed test", () => {
         expect(instance.state.recommendations.length).toBe(0);
         expect(spyAdd).toBeCalledTimes(1);
         expect(instance.state.finished).toBe(true);
-        const spyClickNext = jest.spyOn(instance, "clickMoreButtonNext");
         const button = component.find(".more-button").hostNodes();
         expect(button.length).toBe(0);
     });
