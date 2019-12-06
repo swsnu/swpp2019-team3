@@ -159,14 +159,7 @@ def __parse_and_save_crossref_info(message):
                 if not keywords_exist: # if not exist, try extracting keywords this time
                     abstracts[paper_id] = abstract # if it doesn't have abstract, move on
             else: # if abstract doesn't exist, try getting abstract this time
-                if 'DOI' in item:
-                    no_abstract_dois[paper_id] = [item['DOI']]
-                # alternative-id is the alternative for DOI which has no corresponding result in Semantic Scholar
-                if 'alternative-id' in item: # its type is list
-                    if paper_id in no_abstract_dois:
-                        no_abstract_dois[paper_id].extend(item['alternative-id'])
-                    else:
-                        no_abstract_dois[paper_id] = item['alternative-id']
+                __make_id_to_dois(paper_id, item, no_abstract_dois)
             continue
 
         # many times, abstract doesn't exist
@@ -195,14 +188,7 @@ def __parse_and_save_crossref_info(message):
         if abstract: # if it doesn't have abstract, move on
             abstracts[new_paper.id] = abstract
         else: # if abstract doesn't exist, try getting abstract this time
-            if 'DOI' in item:
-                no_abstract_dois[new_paper.id] = [item['DOI']]
-            # alternative-id is the alternative for DOI which has no corresponding result in Semantic Scholar
-            if 'alternative-id' in item: # its type is list
-                if new_paper.id in no_abstract_dois:
-                    no_abstract_dois[new_paper.id].extend(item['alternative-id'])
-                else:
-                    no_abstract_dois[new_paper.id] = item['alternative-id']
+            __make_id_to_dois(new_paper.id, item, no_abstract_dois)
 
         # save information of the authors
         author_rank = 1
@@ -220,6 +206,17 @@ def __parse_and_save_crossref_info(message):
 
     return paper_ids, is_finished
 # pylint: enable=too-many-locals
+
+
+def __make_id_to_dois(paper_id, item, id_to_dois):
+    if 'DOI' in item:
+        id_to_dois[paper_id] = [item['DOI']]
+    # alternative-id is the alternative for DOI which has no corresponding result in Semantic Scholar
+    if 'alternative-id' in item: # its type is list
+        if paper_id in id_to_dois:
+            id_to_dois[paper_id].extend(item['alternative-id'])
+        else:
+            id_to_dois[paper_id] = item['alternative-id']
 
 
 def __process_author(first_name, last_name, author_rank, new_paper_id):
