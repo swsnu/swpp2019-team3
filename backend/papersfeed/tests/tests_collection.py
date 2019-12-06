@@ -568,3 +568,31 @@ class CollectionTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         collection = json.loads(response.content)[constants.COLLECTION]
         self.assertEqual(collection[constants.COLLECTION_USER_TYPE], 'member')
+
+        # Sign Up: swpp_third
+        client.post('/api/user',
+                    json.dumps({
+                        constants.EMAIL: 'swpp_thrid@snu.ac.kr',
+                        constants.USERNAME: 'swpp_third',
+                        constants.PASSWORD: 'iluvswpp1234'
+                    }),
+                    content_type='application/json')
+
+        # Sign In: swpp_third
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp_thrid@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Get Collection
+        response = client.get('/api/collection',
+                              data={
+                                  constants.ID: collection_id
+                              },
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        collection = json.loads(response.content)[constants.COLLECTION]
+        self.assertEqual(collection[constants.COLLECTION_USER_TYPE], None)
