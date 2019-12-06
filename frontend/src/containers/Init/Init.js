@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -8,6 +9,8 @@ import { authActions } from "../../store/actions";
 import "./Init.css";
 
 class Init extends Component {
+    _isMounted=false;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -21,12 +24,20 @@ class Init extends Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
+
         this.props.onGetKeywords()
             .then(() => {
-                this.setState({
-                    keywords: this.props.keywordItems,
-                });
+                if (this._isMounted) {
+                    this.setState({
+                        keywords: this.props.keywordItems,
+                    });
+                }
             });
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     checkHandler = (keywordId) => {

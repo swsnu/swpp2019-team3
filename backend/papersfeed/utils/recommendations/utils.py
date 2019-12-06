@@ -86,7 +86,7 @@ def select_recommendation(args):
 
     recommendation_queryset = UserRecommendation.objects.filter(user_id=request_user.id).order_by('rank')
 
-    recommendations = get_results_from_queryset(recommendation_queryset, 20, page_number)
+    recommendations = get_results_from_queryset(recommendation_queryset, 30, page_number)
 
     is_finished = not recommendations.has_next()
 
@@ -115,7 +115,7 @@ def insert_recommendation_init(args):
 
     request_user = args[constants.USER]
     keywords = args[constants.KEYWORDS]
-
+    n = len(keywords);
     for k, keyword in enumerate(keywords):
         paper_queryset = Keyword.objects.filter(Q(id=keyword))[0].papers.all()
         paper_ids = [paper.id for paper in paper_queryset]
@@ -135,7 +135,7 @@ def insert_recommendation_init(args):
             UserRecommendation(
                 user_id=request_user.id,
                 paper_id=paper_id,
-                rank=k*10 + i+1,
+                rank= i*n + k + 1,
             ) for i, paper_id in enumerate(paper_sort[:10])
         ])
 
@@ -197,14 +197,10 @@ def __pack_recommendations(recommendations, request_user):
         }
 
         packed_paper_recommendation = {
+            constants.TYPE: "recommendation_paper",
             constants.ID: recommendation.id,
-            constants.ACTOR: {
-                constants.ID: 0,
-                constants.USERNAME: 'papersfeed',
-            },
-            constants.VERB: 'recommended',
+            constants.VERB: 'Recommended Paper',
             constants.ACTION_OBJECT: action_object_paper,
-            constants.TARGET: {},
             constants.CREATION_DATE: recommendation.creation_date,
         }
 
@@ -224,12 +220,9 @@ def __pack_recommendations(recommendations, request_user):
             }
 
             packed_review_recommendation = {
+                constants.TYPE: "recommendation_review",
                 constants.ID: recommendation.id,
-                constants.ACTOR: {
-                    constants.ID: 0,
-                    constants.USERNAME: 'papersfeed',
-                },
-                constants.VERB: 'recommended',
+                constants.VERB: 'Recommended Review',
                 constants.ACTION_OBJECT: action_object_review,
                 constants.TARGET: {
                     constants.TYPE: 'paper',

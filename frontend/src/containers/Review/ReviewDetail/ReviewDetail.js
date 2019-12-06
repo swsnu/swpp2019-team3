@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -19,7 +20,6 @@ class ReviewDetail extends Component {
             replies: [],
             isLiked: false,
             likeCount: 0,
-            replyCount: 0,
             author: {
                 id: 0,
                 username: "",
@@ -32,6 +32,9 @@ class ReviewDetail extends Component {
             paperId: 0,
             creationDate: "",
             modificationDate: "",
+            newReplies: [],
+            replyPageCount: 1,
+            replyFinished: true,
         };
 
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
@@ -55,7 +58,6 @@ class ReviewDetail extends Component {
                     thisReview: this.props.selectedReview,
                     isLiked: this.props.selectedReview.liked,
                     likeCount: this.props.selectedReview.count.likes,
-                    replyCount: this.props.selectedReview.count.replies,
                     author: this.props.selectedReview.user,
                     paperId: this.props.selectedReview.paper.id,
                     newReply: "",
@@ -68,6 +70,8 @@ class ReviewDetail extends Component {
             .then(() => {
                 this.setState({
                     replies: this.props.replyList.list,
+                    replyPageCount: 1,
+                    replyFinished: this.props.replyList.finished,
                 });
             }).catch(() => {});
     }
@@ -75,22 +79,55 @@ class ReviewDetail extends Component {
     clickMoreButtonHandler = () => {
         this.props.onGetReplies({
             id: Number(this.props.match.params.review_id),
-            page_number: this.props.replyList.pageNum + 1,
+            page_number: this.state.replyPageCount + 1,
         })
             .then(() => {
                 const { replies } = this.state;
                 this.setState({
                     replies: replies.concat(this.props.replyList.list),
+                    replyPageCount: this.props.replyList.pageNum,
+                    replyFinished: this.props.replyList.finished,
                 });
             });
+    }
+
+    async handleReplies() {
+        const end = this.state.replyPageCount;
+        this.setState({
+            newReplies: [],
+        });
+        for (let i = 1; (i === 1) || (i < end + 1); i += 1) {
+            await this.forEachHandleReply(i, end);
+            if (i === end || this.props.replyList.finished === true) {
+                this.setState((prevState) => ({
+                    replies: prevState.newReplies.concat(this.props.replyList.list),
+                    replyPageCount: this.props.replyList.pageNum,
+                    newReplies: [],
+                    replyFinished: this.props.replyList.finished,
+                }), () => true);
+                break;
+            }
+            this.setState((prevState) => ({
+                newReplies: prevState.newReplies.concat(this.props.replyList.list),
+            }), () => false);
+        }
+    }
+
+    forEachHandleReply(i) {
+        return this.props.onGetReplies({
+            id: Number(this.props.match.params.review_id),
+            page_number: Number(i),
+        });
     }
 
     // handle click 'Like' button
     clickLikeButtonHandler() {
         this.props.onLikeReview({ id: Number(this.props.match.params.review_id) })
             .then(() => {
-                this.setState({ likeCount: this.props.afterLikeCount });
-                this.setState({ isLiked: true });
+                this.setState({
+                    likeCount: this.props.afterLikeCount,
+                    isLiked: true,
+                });
             });
     }
 
@@ -98,18 +135,20 @@ class ReviewDetail extends Component {
     clickUnlikeButtonHandler() {
         this.props.onUnlikeReview({ id: Number(this.props.match.params.review_id) })
             .then(() => {
-                this.setState({ likeCount: this.props.afterUnlikeCount });
-                this.setState({ isLiked: false });
+                this.setState({
+                    likeCount: this.props.afterUnlikeCount,
+                    isLiked: false,
+                });
             });
     }
 
     clickReplyAddButtonHandler() {
         this.props.onMakeNewReply({ id: this.state.thisReview.id, text: this.state.newReply })
             .then(() => {
-                this.handleReplies();
                 this.setState({
                     newReply: "",
                 });
+                this.handleReplies();
             });
     }
 
@@ -132,18 +171,6 @@ class ReviewDetail extends Component {
         });
     }
 
-    handleReplies() {
-        this.props.onGetReplies({
-            id: Number(this.props.match.params.review_id),
-            page_number: this.props.replyList.pageNum,
-        })
-            .then(() => {
-                this.setState({
-                    replies: this.props.replyList.list,
-                });
-            }).catch(() => {});
-    }
-
     render() {
         const replies = this.state.replies.map((reply) => (
             <Reply
@@ -160,8 +187,9 @@ class ReviewDetail extends Component {
               type="review"
             />
         ));
-
-
+        const replyCount = (this.state.replyPageCount > 1
+            || (this.state.replyPageCount === 1 && this.state.replyFinished === false))
+            ? "10+" : this.state.replies.length;
         return (
             <div className="review-detail">
                 <div className="board">
@@ -182,7 +210,7 @@ class ReviewDetail extends Component {
                             <div className="reply">
                                 <div className="review-extra">
                                     <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
-                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="60%" width="60%" /></div>{this.state.replyCount}</Button>
+                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="60%" width="60%" /></div>{replyCount}</Button>
                                     {this.props.me && this.state.author.id === this.props.me.id
                                         ? <Button className="edit-button" onClick={this.clickEditButtonHandler}>Edit</Button>
 
@@ -199,7 +227,7 @@ class ReviewDetail extends Component {
                                 </Form>
                                 <div className="replies">
                                     {replies}
-                                    { this.props.replyList.finished ? null
+                                    { this.state.replyFinished ? null
                                         : (
                                             <Button
                                               className="reply-more-button"

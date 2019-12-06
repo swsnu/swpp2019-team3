@@ -323,7 +323,6 @@ describe("SubscriptionFeed test", () => {
         const instance = component.find(SubscriptionFeed.WrappedComponent).instance();
         await flushPromises();
 
-        expect(instance.state.subscriptions).toBe(stubSubscriptions);
         expect(spyGetRecommendation).toBeCalledTimes(1);
     });
 
@@ -383,6 +382,8 @@ describe("SubscriptionFeed test", () => {
 
         expect(instance.state.recommendations.length).toBe(0);
         expect(spyAdd).toBeCalledTimes(1);
+        
+        expect(instance.state.finished).toBe(false);
         const spyClickNext = jest.spyOn(instance, "clickMoreButtonNext");
 
         const button = component.find(".more-button").hostNodes();
@@ -421,13 +422,16 @@ describe("SubscriptionFeed test", () => {
         const spyAdd = jest.spyOn(instance, "addRecoToSub");
         expect(spyGetSubscription).toBeCalledTimes(1);
         await flushPromises();
-
+        component.update();
         expect(spyGetRecommendation).toBeCalledTimes(1);
         await flushPromises();
-
+        component.update();
         expect(instance.state.recommendations.length).toBe(0);
         expect(spyAdd).toBeCalledTimes(1);
+        
+        expect(instance.state.finished).toBe(false);
         const spyClickNext = jest.spyOn(instance, "clickMoreButtonNext");
+        
         const button = component.find(".more-button").hostNodes();
         button.simulate("click");
 
@@ -452,34 +456,37 @@ describe("SubscriptionFeed test", () => {
                 },
                 recommendations: {
                     ...stubInitialState.auth.recommendations,
+                    list: [],
                     finished: false,
                 },
             },
         };
         const component = mount(makeFeed(stubInitialState));
         component.update();
-        const instance = component.find(SubscriptionFeed.WrappedComponent).instance();
+        const instance = component.find("SubscriptionFeed").instance();
+        
+
         const spyAdd = jest.spyOn(instance, "addRecoToSub");
         expect(spyGetSubscription).toBeCalledTimes(1);
         await flushPromises();
-
+        component.update();
         expect(spyGetRecommendation).toBeCalledTimes(1);
         await flushPromises();
-
+        component.update();
         expect(instance.state.recommendations.length).toBe(0);
         expect(spyAdd).toBeCalledTimes(1);
+        expect(instance.state.finished).toBe(false);
         const spyClickNext = jest.spyOn(instance, "clickMoreButtonNext");
         const button = component.find(".more-button").hostNodes();
         button.simulate("click");
-
         expect(spyGetSubscription).toBeCalledTimes(1);
-        expect(instance.state.subscriptions).toBe(stubSubscriptions);
+        expect(instance.state.subscriptions).toStrictEqual(stubSubscriptions);
         expect(spyClickNext).toBeCalledTimes(1);
 
         expect(spyGetRecommendation).toBeCalledTimes(2);
         await flushPromises();
         expect(spyAdd).toBeCalledTimes(2);
-        expect(instance.state.finished).toBe(true);
+        expect(instance.state.finished).toBe(false);
         expect(instance.state.recommendations.length).toBe(0);
     });
 
@@ -504,21 +511,15 @@ describe("SubscriptionFeed test", () => {
         const spyAdd = jest.spyOn(instance, "addRecoToSub");
         expect(spyGetSubscription).toBeCalledTimes(1);
         await flushPromises();
-
+        component.update();
         expect(spyGetRecommendation).toBeCalledTimes(1);
         await flushPromises();
-
+        component.update();
         expect(instance.state.recommendations.length).toBe(0);
         expect(spyAdd).toBeCalledTimes(1);
+        expect(instance.state.finished).toBe(true);
         const spyClickNext = jest.spyOn(instance, "clickMoreButtonNext");
         const button = component.find(".more-button").hostNodes();
-        button.simulate("click");
-
-        expect(spyGetSubscription).toBeCalledTimes(1);
-        expect(instance.state.subscriptions).toBe(stubSubscriptions);
-        expect(spyClickNext).toBeCalledTimes(1);
-        expect(spyGetRecommendation).toBeCalledTimes(1);
-        expect(spyAdd).toBeCalledTimes(2);
-        expect(instance.state.recommendations.length).toBe(0);
+        expect(button.length).toBe(0);
     });
 });

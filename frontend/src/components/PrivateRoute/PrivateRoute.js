@@ -13,6 +13,10 @@ class PrivateRoute extends Component {
                 case getMeStatus.SUCCESS:
                     if (this.props.history.location.pathname === "/") {
                         this.props.history.push("/main");
+                    } else if (this.props.history.location.pathname === "/init") {
+                        if (this.props.history.location.state == null || this.props.history.location.state !== "signup") {
+                            this.props.history.push("/main");
+                        }
                     }
                     break;
                 case getMeStatus.FAILURE:

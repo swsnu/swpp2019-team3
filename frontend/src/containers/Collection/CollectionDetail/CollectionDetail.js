@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
@@ -21,13 +22,15 @@ class CollectionDetail extends Component {
             userCount: 0,
             likeCount: 0,
             paperCount: 0,
-            replyCount: 0,
             newReplyContent: "",
             isLiked: false,
             replies: [],
             papers: [],
             thisCollection: {},
             owner: {},
+            newReplies: [],
+            replyPageCount: 1,
+            replyFinished: true,
         };
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
         this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
@@ -49,7 +52,6 @@ class CollectionDetail extends Component {
                         likeCount: this.props.selectedCollection.count.likes,
                         userCount: this.props.selectedCollection.count.users,
                         paperCount: this.props.selectedCollection.count.papers,
-                        replyCount: this.props.selectedCollection.count.replies,
                     });
                 }
             });
@@ -69,6 +71,8 @@ class CollectionDetail extends Component {
             .then(() => {
                 this.setState({
                     replies: this.props.replyList.list,
+                    replyPageCount: 1,
+                    replyFinished: this.props.replyList.finished,
                 });
             }).catch(() => {});
     }
@@ -83,7 +87,7 @@ class CollectionDetail extends Component {
                     newReplyContent: "",
                 });
                 this.handleReplies();
-            }).catch(() => {});
+            });
     }
 
     paperCardMaker = (paper) => (
@@ -106,27 +110,48 @@ class CollectionDetail extends Component {
     clickMoreButtonHandler = () => {
         this.props.onGetReplies({
             id: Number(this.props.location.pathname.split("=")[1]),
-            page_number: this.props.replyList.pageNum + 1,
+            page_number: this.state.replyPageCount + 1,
         })
             .then(() => {
                 const { replies } = this.state;
                 this.setState({
                     replies: replies.concat(this.props.replyList.list),
+                    replyPageCount: this.props.replyList.pageNum,
+                    replyFinished: this.props.replyList.finished,
                 });
             });
     }
 
-    handleReplies() {
-        this.props.onGetReplies({
-            id: Number(this.props.location.pathname.split("=")[1]),
-            page_number: this.props.replyList.pageNum,
-        })
-            .then(() => {
-                this.setState({
-                    replies: this.props.replyList.list,
-                });
-            }).catch(() => {});
+
+    async handleReplies() {
+        const end = this.state.replyPageCount;
+        this.setState({
+            newReplies: [],
+        });
+        for (let i = 1; (i === 1) || (i < end + 1); i += 1) {
+            await this.forEachHandleReply(i, end);
+            if (i === end || this.props.replyList.finished === true) {
+                this.setState((prevState) => ({
+                    replies: prevState.newReplies.concat(this.props.replyList.list),
+                    replyPageCount: this.props.replyList.pageNum,
+                    newReplies: [],
+                    replyFinished: this.props.replyList.finished,
+                }), () => true);
+                break;
+            }
+            this.setState((prevState) => ({
+                newReplies: prevState.newReplies.concat(this.props.replyList.list),
+            }), () => false);
+        }
     }
+
+    forEachHandleReply(i) {
+        return this.props.onGetReplies({
+            id: Number(this.props.location.pathname.split("=")[1]),
+            page_number: Number(i),
+        });
+    }
+
 
     // handle click 'Like' button
     clickLikeButtonHandler() {
@@ -155,9 +180,9 @@ class CollectionDetail extends Component {
             .filter((x) => this.state.papers.indexOf(x) % 2 === 1)
             .map((paper) => this.paperCardMaker(paper));
 
-        const replies = this.state.replies.map((reply, index) => (
+        const replies = this.state.replies.map((reply) => (
             <Reply
-              key={index}
+              key={reply.id}
               id={reply.id}
               author={reply.user.username}
               content={reply.text}
@@ -170,6 +195,10 @@ class CollectionDetail extends Component {
               type="collection"
             />
         ));
+
+        const replyCount = (this.state.replyPageCount > 1
+            || (this.state.replyPageCount === 1 && this.state.replyFinished === false))
+            ? "10+" : this.state.replies.length;
 
         let inviteModal = null;
         if (this.props.selectedCollection.owned
@@ -254,7 +283,7 @@ class CollectionDetail extends Component {
                                     <div id="paperCardsRight">{paperCardsRight}</div>
                                 </div>
                             </Tab>
-                            <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${this.state.replyCount})`}>
+                            <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${replyCount})`}>
                                 <div id="replies">
                                     <div id="createNewReply">
                                         <textarea
@@ -274,7 +303,7 @@ class CollectionDetail extends Component {
                                     </div>
                                     <div id="replyList">
                                         {replies}
-                                        { this.props.replyList.finished ? null
+                                        {this.state.replyFinished ? null
                                             : (
                                                 <Button
                                                   className="reply-more-button"

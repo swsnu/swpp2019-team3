@@ -47,9 +47,9 @@ class PaperCard extends Component {
     ).slice(0, 10).filter(
         (keyword) => keyword.type === type,
     ).map(
-        (keyword, index) => (
+        (keyword) => (
             <Button
-              key={index}
+              key={keyword.id}
               id={keyword.name}
               className="keyword-tag"
               href={`/search=${keyword.name}`}
@@ -88,9 +88,7 @@ class PaperCard extends Component {
                     header = (
                         <Card.Header id="headerSubscriptionTarget">
                             <div className="CardHeader">
-                                {this.props.actor.id === 0
-                                    ? (<h5 className="actorLink">{this.props.actor.username}</h5>)
-                                    : actorLink}
+                                {actorLink}
                                 <h5 className="verb">{` ${this.props.verb} this paper to`}</h5>
                                 <a className="targetLink" href={`/collection_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
                             </div>
@@ -100,15 +98,21 @@ class PaperCard extends Component {
                     header = (
                         <Card.Header id="headerSubscription">
                             <div className="CardHeader">
-                                {this.props.actor.id === 0
-                                    ? (<h5 className="actorLink">{this.props.actor.username}</h5>)
-                                    : actorLink}
+                                {actorLink}
                                 <h5 className="verb">{` ${this.props.verb} this paper`}</h5>
                             </div>
                         </Card.Header>
                     );
                 }
-            } else if (this.props.paperSource) {
+            } else if (this.props.recommendation) {
+                    header = (
+                        <Card.Header id="headerSubscription">
+                            <div className="CardHeader">
+                                <h5 className="verb">{`${this.props.verb}`}</h5>
+                            </div>
+                        </Card.Header>
+                    );
+            }else if (this.props.paperSource) {
                 header = <Card.Header id="header">{`from ${this.props.paperSource}`}</Card.Header>;
             }
         }
