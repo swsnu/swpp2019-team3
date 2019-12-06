@@ -1,6 +1,7 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import, unicode_literals
 import concurrent.futures
 import time
 import urllib
@@ -911,6 +912,7 @@ def __parse_and_save_crossref_info(message):
             author_rank += 1
 
     __extract_keywords_from_abstract(abstracts)
+    __exploit_semanticscholar_for_abstract(no_abstract_ids)
 
     return paper_ids, is_finished
 
@@ -995,3 +997,9 @@ def __process_key_phrases(key_phrases):
                     keyword_id=keyword_id,
                     type="abstract"
                 )
+
+
+@shared_task
+def __exploit_semanticscholar_for_abstract(paper_ids):
+    time.sleep(10)
+    print(paper_ids)
