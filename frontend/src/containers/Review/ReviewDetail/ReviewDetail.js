@@ -19,6 +19,7 @@ class ReviewDetail extends Component {
             replies: [],
             isLiked: false,
             likeCount: 0,
+            replyCount: 0,
             author: {
                 id: 0,
                 username: "",
@@ -54,6 +55,7 @@ class ReviewDetail extends Component {
                     thisReview: this.props.selectedReview,
                     isLiked: this.props.selectedReview.liked,
                     likeCount: this.props.selectedReview.count.likes,
+                    replyCount: this.props.selectedReview.count.replies,
                     author: this.props.selectedReview.user,
                     paperId: this.props.selectedReview.paper.id,
                     newReply: "",
@@ -180,7 +182,7 @@ class ReviewDetail extends Component {
                             <div className="reply">
                                 <div className="review-extra">
                                     <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
-                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="60%" width="60%" /></div>{this.state.replies.length}</Button>
+                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="60%" width="60%" /></div>{this.state.replyCount}</Button>
                                     {this.props.me && this.state.author.id === this.props.me.id
                                         ? <Button className="edit-button" onClick={this.clickEditButtonHandler}>Edit</Button>
 

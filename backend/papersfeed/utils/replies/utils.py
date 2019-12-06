@@ -33,7 +33,7 @@ def select_reply_collection(args):
     request_user = args[constants.USER]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Replies Queryset
     queryset = ReplyCollection.objects.filter(
@@ -64,7 +64,7 @@ def select_reply_review(args):
     request_user = args[constants.USER]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Replies Queryset
     queryset = ReplyReview.objects.filter(

@@ -71,13 +71,26 @@ const ReviewReducer = (state = initialState, action) => {
                 error: action.target,
             },
         };
-    case reviewConstants.GET_REVIEWS_BY_PAPER:
+    case reviewConstants.GET_REVIEWS_BY_PAPER_SUCCESS:
         return {
             ...state,
             list: {
                 ...state.list,
                 status: reviewStatus.SUCCESS,
-                list: action.target,
+                list: action.target.reviews,
+                pageNum: action.target.page_number,
+                finished: action.target.is_finished,
+            },
+        };
+    case reviewConstants.GET_REVIEWS_BY_PAPER_FAILURE:
+        return {
+            ...state,
+            list: {
+                ...state.list,
+                status: reviewStatus.FAILURE,
+                error: action.target,
+                pageNum: 0,
+                finished: false,
             },
         };
     case reviewConstants.GET_REVIEWS_BY_USER:
@@ -89,8 +102,6 @@ const ReviewReducer = (state = initialState, action) => {
                 list: action.target,
             },
         };
-    // case reviewConstants.GET_RECENT_REVIEWS:
-    // return;
     case reviewConstants.GET_REVIEW:
         return {
             ...state,

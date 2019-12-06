@@ -169,5 +169,5 @@ const makeTasteInitFailure = (error) => ({
 });
 
 export const makeTasteInit = (keywords) => (dispatch) => axios.post("/api/recommendation/init", keywords)
-    .then((res) => dispatch(makeTasteInitSuccess(res.data)))
+    .then(() => dispatch(makeTasteInitSuccess()))
     .catch((err) => dispatch(makeTasteInitFailure(err)));

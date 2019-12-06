@@ -94,11 +94,20 @@ describe("Review reducer", () => {
 
     it("should return get_reviews_by_paper", () => {
         const newState = ReviewReducer(stubInitialState, {
-            type: reviewConstants.GET_REVIEWS_BY_PAPER,
-            target: stubReview,
+            type: reviewConstants.GET_REVIEWS_BY_PAPER_SUCCESS,
+            target: { reviews: [stubReview], page_number: 1, is_finished: true },
         });
         expect(newState.list.status).toBe(reviewStatus.SUCCESS);
-        expect(newState.list.list).toBe(stubReview);
+        expect(newState.list.list).toEqual([stubReview]);
+    });
+
+    it("should handle get_reviews_by_paper_failure", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.GET_REVIEWS_BY_PAPER_FAILURE,
+            target: { reviews: stubReview, page_number: 1, is_finished: true },
+        });
+        expect(newState.list.status).toBe(reviewStatus.FAILURE);
+        expect(newState.list.list).toEqual([]);
     });
 
     it("should return get_reviews_by_user", () => {
