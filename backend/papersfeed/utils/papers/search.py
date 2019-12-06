@@ -74,6 +74,7 @@ def exploit_crossref(search_word, page_number):
         logging.warning(exception)
     return [], True
 
+
 # pylint: disable=too-many-locals
 def __parse_and_save_arxiv_info(feed):
     paper_ids = []
@@ -130,6 +131,7 @@ def __parse_and_save_arxiv_info(feed):
 # pylint: enable=too-many-locals
 
 
+# pylint: disable=too-many-locals
 def __parse_and_save_crossref_info(message):
     paper_ids = []
     abstracts = {}
@@ -202,6 +204,7 @@ def __parse_and_save_crossref_info(message):
     __exploit_semanticscholar_for_abstract.delay(no_abstract_dois)
 
     return paper_ids, is_finished
+# pylint: enable=too-many-locals
 
 
 def __process_author(first_name, last_name, author_rank, new_paper_id):
