@@ -16,7 +16,7 @@ def select_notifications(args):
     request_user = args[constants.USER] if constants.USER in args else None
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # User
     user = User.objects.get(pk=request_user.id)
