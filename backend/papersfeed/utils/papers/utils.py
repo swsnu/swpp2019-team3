@@ -10,7 +10,7 @@ from pprint import pformat
 import requests
 import xmltodict
 from django.db.models import Q, Exists, OuterRef, Count, Case, When
-
+from celery import shared_task
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
@@ -503,13 +503,16 @@ def get_keywords_paper(filter_query):
     """get keywords paper"""
     return __get_keywords_paper(filter_query)
 
+
 def pack_keywords(keywords):
     """pack keywords"""
     return __pack_keywords(keywords)
 
+
 def get_paper_like_count(paper_ids, group_by_field):
     """get paper like count"""
     return __get_paper_like_count(paper_ids, group_by_field)
+
 
 def __get_keywords_paper(filter_query):
     """Get Keywords Of Paper"""
@@ -844,6 +847,7 @@ def __parse_and_save_arxiv_info(feed):
 def __parse_and_save_crossref_info(message):
     paper_ids = []
     abstracts = {}
+    no_abstract_ids = []
 
     is_finished = len(message['items']) < SEARCH_COUNT
     for item in message['items']:
@@ -863,8 +867,11 @@ def __parse_and_save_crossref_info(message):
 
             # check it has keywords
             keywords_exist = PaperKeyword.objects.filter(paper_id=paper_id).exists()
-            if not keywords_exist and abstract: # if not exist, try extracting keywords this time
-                abstracts[paper_id] = abstract # if it doesn't have abstract, move on
+            if abstract:
+                if not keywords_exist: # if not exist, try extracting keywords this time
+                    abstracts[paper_id] = abstract # if it doesn't have abstract, move on
+            else: # if abstract doesn't exist, try getting abstract this time
+                no_abstract_ids.append(paper_id)
             continue
 
         # many times, abstract doesn't exist
@@ -892,6 +899,8 @@ def __parse_and_save_crossref_info(message):
         # save the abstract with key of paper for extracting keywords later
         if abstract: # if it doesn't have abstract, move on
             abstracts[new_paper.id] = abstract
+        else: # if abstract doesn't exist, try getting abstract this time
+            no_abstract_ids.append(new_paper.id)
 
         # save information of the authors
         author_rank = 1
