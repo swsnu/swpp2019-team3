@@ -27,21 +27,21 @@ export const makeNewReview = (review) => (dispatch) => axios.post("/api/review",
     .catch((err) => dispatch(makeNewReviewFailure(err)));
 
 // get reviews by paper id
-const getReviewsByPaperIdSuccess = (reviews) => (
+const getReviewsByPaperIdSuccess = (data) => (
     {
-        type: reviewConstants.GET_REVIEWS_BY_PAPER,
-        target: reviews.reviews,
+        type: reviewConstants.GET_REVIEWS_BY_PAPER_SUCCESS,
+        target: data,
     }
 );
 
 const getReviewsByPaperIdFailure = (error) => (
     {
-        type: null,
+        type: reviewConstants.GET_REVIEWS_BY_PAPER_FAILURE,
         target: error,
     }
 );
 
-export const getReviewsByPaperId = (paperId) => (dispatch) => axios.get("/api/review/paper", { params: paperId })
+export const getReviewsByPaperId = (paperId, pageNum) => (dispatch) => axios.get("/api/review/paper", { params: { id: paperId, page_number: pageNum } })
     .then((res) => dispatch(getReviewsByPaperIdSuccess(res.data)))
     .catch((err) => dispatch(getReviewsByPaperIdFailure(err)));
 

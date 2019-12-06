@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 
 import PaperDetail from "./PaperDetail";
 import { PaperSpec } from "../../components";
-import { paperActions } from "../../store/actions";
+import { paperActions, reviewActions } from "../../store/actions";
 import {
     paperStatus, collectionStatus, reviewStatus, signinStatus,
 } from "../../constants/constants";
@@ -22,6 +22,7 @@ describe("<PaperDetail />", () => {
     let stubInitialState;
     let paperDetail;
     let spyGetPaper;
+    let spyGetReviews;
 
     beforeEach(() => {
         stubInitialState = {
@@ -42,6 +43,8 @@ describe("<PaperDetail />", () => {
                 list: {
                     status: collectionStatus.NONE,
                     list: [],
+                    pageNum: 0,
+                    finished: true,
                     error: null,
                 },
                 edit: {
@@ -75,11 +78,20 @@ describe("<PaperDetail />", () => {
                     count: 0,
                     error: null,
                 },
+                list: {
+                    status: reviewStatus.NONE,
+                    list: [],
+                    pageNum: 0,
+                    finished: true,
+                    error: null,
+                },
             },
             reply: {},
         };
         paperDetail = makePaperDetail(stubInitialState);
         spyGetPaper = jest.spyOn(paperActions, "getPaper")
+            .mockImplementation(() => () => mockPromise);
+        spyGetReviews = jest.spyOn(reviewActions, "getReviewsByPaperId")
             .mockImplementation(() => () => mockPromise);
     });
 
@@ -165,37 +177,11 @@ describe("<PaperDetail />", () => {
                 singinStatus: signinStatus.SUCCESS,
                 me: null,
             },
-            collection: {
-                make: {
-                    status: collectionStatus.NONE,
-                    collection: {},
-                    error: null,
-                },
+            review: {
                 list: {
-                    status: collectionStatus.NONE,
-                    list: [],
-                    error: null,
-                },
-                edit: {
-                    status: collectionStatus.NONE,
-                    collection: {},
-                    error: null,
-                },
-                delete: {
-                    status: collectionStatus.NONE,
-                    collection: {},
-                    error: null,
-                },
-                selected: {
-                    status: collectionStatus.NONE,
-                    error: null,
-                    collection: {},
-                    papers: [],
-                    members: [],
-                    replies: [],
+                    status: reviewStatus.SUCCESS,
                 },
             },
-            user: {},
         };
         mount(makePaperDetail(stubInitialState));
         await flushPromises();
@@ -284,5 +270,32 @@ describe("<PaperDetail />", () => {
 
         instance = component.find(PaperSpec.WrappedComponent).instance();
         expect(instance.props.link).toEqual("http://file_url");
+    });
+
+    it("should show more if review-more-button clicked", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            review: {
+                ...stubInitialState.review,
+                list: {
+                    status: reviewStatus.SUCCESS,
+                    list: [],
+                    pageNum: 1,
+                    finished: false,
+                },
+            },
+        };
+        const component = mount(makePaperDetail(stubInitialState));
+
+        expect(spyGetReviews).toBeCalledTimes(1);
+        await flushPromises();
+        component.update();
+
+        const wrapper = component.find(".review-more-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        expect(spyGetReviews).toBeCalledTimes(2);
+        await flushPromises();
     });
 });

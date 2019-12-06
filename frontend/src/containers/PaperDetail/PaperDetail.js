@@ -18,6 +18,8 @@ class PaperDetail extends Component {
             date: "",
             reviews: [],
         };
+
+        this.getReviewsTrigger = this.getReviewsTrigger.bind(this);
         this.reviewMaker = this.reviewMaker.bind(this);
         this.handleClickReviewAddButton = this.handleClickReviewAddButton.bind(this);
     }
@@ -45,11 +47,16 @@ class PaperDetail extends Component {
             })
             .catch(() => {});
 
-        this.props.onGetReviewsByPaper({ id: this.props.location.pathname.split("=")[1] })
+        this.getReviewsTrigger(0);
+    }
+
+    getReviewsTrigger(pageNum) {
+        this.props.onGetReviewsByPaper(this.props.location.pathname.split("=")[1], pageNum + 1)
             .then(() => {
-                if (this.props.reviewList.status === reviewStatus.SUCCESS) {
+                if (this.props.getReviewStatus === reviewStatus.SUCCESS) {
+                    const { reviews } = this.state;
                     this.setState({
-                        reviews: this.props.reviewList.list,
+                        reviews: reviews.concat(this.props.reviewList),
                     });
                 } else {
                     this.props.history.push("/main");
@@ -112,13 +119,26 @@ class PaperDetail extends Component {
                           history={this.props.history}
                         />
                         <div className="up-review">
-                            <h3 id="review-count">{this.state.reviews.length} reviews</h3>
+                            <h3 id="review-count">{this.state.reviewCount} reviews</h3>
                             <Button className="review-add" onClick={this.handleClickReviewAddButton}>Add</Button>
                         </div>
                         <div className="reviewcards">
                             <div className="reviewcards-left">{reviewCardsLeft}</div>
                             <div className="reviewcards-right">{reviewCardsRight}</div>
                         </div>
+                        { this.props.reviewFinished ? null
+                            : (
+                                <Button
+                                  className="review-more-button"
+                                  onClick={() => this.getReviewsTrigger(
+                                      this.props.reviewPageNum,
+                                  )}
+                                  size="lg"
+                                  block
+                                >
+                            View More
+                                </Button>
+                            )}
                     </div>
                 </div>
             </div>
@@ -128,12 +148,17 @@ class PaperDetail extends Component {
 const mapStateToProps = (state) => ({
     getPaperStatus: state.paper.getPaperStatus,
     selectedPaper: state.paper.selectedPaper,
-    reviewList: state.review.list,
+    reviewList: state.review.list.list,
+    getReviewStatus: state.review.list.status,
+    reviewPageNum: state.review.list.pageNum,
+    reviewFinished: state.review.list.finished,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onGetPaper: (paperId) => dispatch(paperActions.getPaper(paperId)),
-    onGetReviewsByPaper: (paperId) => dispatch(reviewActions.getReviewsByPaperId(paperId)),
+    onGetReviewsByPaper: (paperId, pageNum) => dispatch(
+        reviewActions.getReviewsByPaperId(paperId, pageNum),
+    ),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PaperDetail);
@@ -143,9 +168,12 @@ PaperDetail.propTypes = {
     location: PropTypes.objectOf(PropTypes.any),
     onGetPaper: PropTypes.func,
     getPaperStatus: PropTypes.string,
+    getReviewStatus: PropTypes.string,
     selectedPaper: PropTypes.objectOf(PropTypes.any),
-    reviewList: PropTypes.objectOf(PropTypes.any),
+    reviewList: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
     onGetReviewsByPaper: PropTypes.func,
+    reviewPageNum: PropTypes.number,
+    reviewFinished: PropTypes.bool,
 };
 
 PaperDetail.defaultProps = {
@@ -153,7 +181,10 @@ PaperDetail.defaultProps = {
     location: null,
     onGetPaper: null,
     getPaperStatus: paperStatus.NONE,
+    getReviewStatus: reviewStatus.NONE,
     selectedPaper: {},
-    reviewList: null,
+    reviewList: [],
     onGetReviewsByPaper: () => {},
+    reviewPageNum: 0,
+    reviewFinished: true,
 };

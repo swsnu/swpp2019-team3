@@ -21,6 +21,7 @@ class CollectionDetail extends Component {
             userCount: 0,
             likeCount: 0,
             paperCount: 0,
+            replyCount: 0,
             newReplyContent: "",
             isLiked: false,
             replies: [],
@@ -48,6 +49,7 @@ class CollectionDetail extends Component {
                         likeCount: this.props.selectedCollection.count.likes,
                         userCount: this.props.selectedCollection.count.users,
                         paperCount: this.props.selectedCollection.count.papers,
+                        replyCount: this.props.selectedCollection.count.replies,
                     });
                 }
             });
@@ -252,7 +254,7 @@ class CollectionDetail extends Component {
                                     <div id="paperCardsRight">{paperCardsRight}</div>
                                 </div>
                             </Tab>
-                            <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${this.state.replies.length})`}>
+                            <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${this.state.replyCount})`}>
                                 <div id="replies">
                                     <div id="createNewReply">
                                         <textarea
