@@ -493,6 +493,7 @@ def __get_collections(filter_query, request_user, count, params=None, page_numbe
 
 def __pack_collections(collections, request_user, paper_id=None):  # pylint: disable=unused-argument
     """Pack Collections"""
+    from papersfeed.utils.users.utils import get_users  # import in def because of circular dependency
     packed = []
 
     collection_ids = [collection.id for collection in collections]
@@ -508,6 +509,10 @@ def __pack_collections(collections, request_user, paper_id=None):  # pylint: dis
 
     # Reply Count
     reply_counts = __get_collection_reply_count(collection_ids, 'collection_id')
+
+    # Owner User
+    user_ids = [collection.owner_id for collection in collections]
+    users, _ = get_users(filter_query=Q(id__in=user_ids), request_user=request_user, count=None)
 
     for collection in collections:
         collection_id = collection.id
@@ -527,7 +532,8 @@ def __pack_collections(collections, request_user, paper_id=None):  # pylint: dis
             constants.CREATION_DATE: collection.creation_date,
             constants.MODIFICATION_DATE: collection.modification_date,
             constants.TYPE: collection.type,
-            constants.COLLECTION_USER_TYPE: collection.collection_user_type
+            constants.COLLECTION_USER_TYPE: collection.collection_user_type,
+            constants.OWNER: users[0] if users else None
         }
 
         if paper_id:

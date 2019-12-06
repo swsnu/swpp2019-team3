@@ -129,6 +129,8 @@ class CollectionTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+        collection = json.loads(response.content)[constants.COLLECTION]
+        self.assertEqual(collection[constants.OWNER][constants.USERNAME], 'swpp')
 
     def test_edit_collection(self):
         """ EDIT COLLECTION """

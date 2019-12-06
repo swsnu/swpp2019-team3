@@ -70,6 +70,7 @@ TEXT = 'text'
 CONTAINS_PAPER = 'contains_paper'
 OWNED = 'owned'
 INCLUDES_ME = 'includes_me'
+OWNER = 'owner'
 
 # Paper
 PAPER = 'paper'
