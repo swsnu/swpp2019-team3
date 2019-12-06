@@ -509,11 +509,6 @@ def __pack_collections(collections, request_user, paper_id=None):  # pylint: dis
     # Reply Count
     reply_counts = __get_collection_reply_count(collection_ids, 'collection_id')
 
-    # Collection User Type
-    # collection_user_types = [collection.collection_user_collection for collection in collections]
-    # print("##################")
-    # print(collection_user_types)
-    # print("##################")
     for collection in collections:
         collection_id = collection.id
 
@@ -531,7 +526,8 @@ def __pack_collections(collections, request_user, paper_id=None):  # pylint: dis
             },
             constants.CREATION_DATE: collection.creation_date,
             constants.MODIFICATION_DATE: collection.modification_date,
-            constants.TYPE: collection.type
+            constants.TYPE: collection.type,
+            constants.COLLECTION_USER_TYPE: collection.collection_user_type
         }
 
         if paper_id:
