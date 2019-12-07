@@ -97,7 +97,7 @@ class SubscriptionFeed extends Component {
         // sort recommendations
         for (let i = recommendations.length - 1; i > this.state.start; i -= 1) {
             const j = Math.floor(Math.random() * (i + 1));
-            [recommendations[i], this.state.recommendations[j]] = [
+            [recommendations[i], recommendations[j]] = [
                 recommendations[j],
                 recommendations[i],
             ];
@@ -107,7 +107,7 @@ class SubscriptionFeed extends Component {
         if (recommendations.length >= this.state.recoCount) {
             temp = recommendations.splice(0, this.state.recoCount);
         } else {
-            temp = recommendations.splice(0, this.state.recommendations.length);
+            temp = recommendations.splice(0, recommendations.length);
         }
 
         // add temp to new subscription
