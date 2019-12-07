@@ -34,7 +34,7 @@ class AddPaperModal extends Component {
 
     getCollectionsTrigger(pageNum) {
         this.props.onGetCollectionsWithContains({
-            id: this.props.me.id, paper: this.props.id, page_number: pageNum + 1,
+            id: this.props.me.id, paper: this.props.paperId, page_number: pageNum + 1,
         })
             .then(() => {
                 const { collections } = this.state;
@@ -88,7 +88,7 @@ class AddPaperModal extends Component {
     clickUpdateButtonHandler() {
         const { beforeCheckedCollections } = this.state;
         let collectionIds = this.state.checkedCollections;
-        const paperId = this.props.id;
+        const { paperId } = this.props;
         let collectionsAndPaper = { id: paperId, collection_ids: collectionIds };
 
         // create new collection and update it with other collections
@@ -146,9 +146,7 @@ class AddPaperModal extends Component {
 
         return (
             <div className="addpapermodal">
-                <div className="buttons">
-                    <Button className="addpaper-open-button" onClick={this.openAddPaperHandler}>Add to...</Button>
-                </div>
+                <Button className="addpaper-open-button" onClick={this.openAddPaperHandler}>Add to...</Button>
                 <Modal
                   show={this.state.isAddPaperOpen}
                   onHide={this.clickCancelHandler}
@@ -231,7 +229,7 @@ AddPaperModal.propTypes = {
     onGetCollectionsWithContains: PropTypes.func,
     onMakeNewCollection: PropTypes.func,
     onAddPaper: PropTypes.func,
-    id: PropTypes.number,
+    paperId: PropTypes.number,
     addPaperCollectionStatus: PropTypes.string,
     makeNewCollectionStatus: PropTypes.string,
     me: PropTypes.objectOf(PropTypes.any),
@@ -246,7 +244,7 @@ AddPaperModal.defaultProps = {
     onGetCollectionsWithContains: () => {},
     onMakeNewCollection: () => {},
     onAddPaper: () => {},
-    id: 0,
+    paperId: 0,
     addPaperCollectionStatus: collectionStatus.NONE,
     makeNewCollectionStatus: collectionStatus.NONE,
     me: {},

@@ -184,7 +184,7 @@ describe("CollectionDetail Test", () => {
 
     it("should call likeReview when Like Button is clicked", () => {
         const component = mount(collectionDetail);
-        const wrapper = component.find(".like-button").hostNodes();
+        const wrapper = component.find("#LikeButton").hostNodes();
         expect(wrapper.length).toBe(1);
 
         wrapper.simulate("click");
@@ -198,7 +198,7 @@ describe("CollectionDetail Test", () => {
         instance.setState({ isLiked: true });
         component.update();
 
-        const wrapper = component.find(".like-button").hostNodes();
+        const wrapper = component.find("#LikeButton").hostNodes();
         expect(wrapper.length).toBe(1);
 
         wrapper.simulate("click");
@@ -213,6 +213,16 @@ describe("CollectionDetail Test", () => {
         wrapper.simulate("change", { target: { value: "Hello" } });
         const instance = component.find("CollectionDetail").instance();
         expect(instance.state.newReplyContent).toBe("Hello");
+    });
+
+    it("should not render paper cards if no papers in the collection", () => {
+        const component = mount(collectionDetail);
+        let wrapper = component.find("#paperCardsLeft");
+        expect(wrapper.length).toBe(0);
+        wrapper = component.find("#paperCardsRight");
+        expect(wrapper.length).toBe(0);
+        wrapper = component.find("#noPapersText");
+        expect(wrapper.length).toBe(1);
     });
 
     it("should show paper cards well", () => {
@@ -257,6 +267,7 @@ describe("CollectionDetail Test", () => {
                     }],
             },
         );
+        component.update();
 
         const wrapperLeft = component.find("#paperCardsLeft");
         const wrapperRight = component.find("#paperCardsRight");

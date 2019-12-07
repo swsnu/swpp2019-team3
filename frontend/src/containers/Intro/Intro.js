@@ -8,7 +8,7 @@ import "./Intro.css";
 class Intro extends Component {
     render() {
         return (
-            <div className="intro-page">
+            <div id="intro-page">
                 <div className="welcome-sentence">
                     <h1 id="welcome-to">Welcome to&nbsp;</h1>
                     <h1 id="papersfeed">PAPERSFEED</h1>

@@ -1,7 +1,7 @@
 .CollectionListContent {
     min-height: 1000px;
     background: rgb(242,243,247);
-    margin-left: 18%;
+     
     position: relative;
     display: flex;
     flex-direction: column;
@@ -21,6 +21,7 @@
     height: 100%;
     margin-left: 5%;
     margin-right: 10%;
+    
     display: flex;
     justify-content: flex-start;
     flex-flow: row wrap;

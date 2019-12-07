@@ -171,7 +171,7 @@ class IntroModal extends Component {
             };
             modalHeader = (
                 <Modal.Header>
-                    <h2 id="welcome-back">Welcome back</h2>
+                    <h2 id="welcome-back">Welcome back!</h2>
                     <Button className="cancel-button" onClick={this.clickCancelHandler}>Cancel</Button>
                 </Modal.Header>
             );

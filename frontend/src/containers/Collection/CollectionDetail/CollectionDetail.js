@@ -1,6 +1,5 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
@@ -147,6 +146,8 @@ class CollectionDetail extends Component {
     }
 
     render() {
+        let paperCards = null;
+
         const paperCardsLeft = this.state.papers
             .filter((x) => this.state.papers.indexOf(x) % 2 === 0)
             .map((paper) => this.paperCardMaker(paper));
@@ -155,21 +156,32 @@ class CollectionDetail extends Component {
             .filter((x) => this.state.papers.indexOf(x) % 2 === 1)
             .map((paper) => this.paperCardMaker(paper));
 
-        const replies = this.state.replies.map((reply, index) => (
-            <Reply
-              key={index}
-              id={reply.id}
-              author={reply.user.username}
-              content={reply.text}
-              authorId={reply.user.id}
-              likeCount={reply.count.likes}
-              isLiked={reply.liked}
-              onChange={this.handleReplies}
-              userId={this.props.me.id}
-              date={reply.modification_date}
-              type="collection"
-            />
-        ));
+        paperCards = this.state.papers.length !== 0
+            ? (
+                <div id="paperCards">
+                    <div id="paperCardsLeft">{paperCardsLeft}</div>
+                    <div id="paperCardsRight">{paperCardsRight}</div>
+                </div>
+            )
+            : (<h5 id="noPapersText">There is no paper in this collection for now.</h5>);
+
+        const replies = this.state.replies.length !== 0
+            ? (this.state.replies.map((reply, index) => (
+                <Reply
+                  key={index}
+                  id={reply.id}
+                  author={reply.user.username}
+                  content={reply.text}
+                  authorId={reply.user.id}
+                  likeCount={reply.count.likes}
+                  isLiked={reply.liked}
+                  onChange={this.handleReplies}
+                  userId={this.props.me.id}
+                  date={reply.modification_date}
+                  type="collection"
+                />
+            )))
+            : (<h5 id="noRepliesText">There is no reply in this collection for now.</h5>);
 
         let inviteModal = null;
         if (this.props.selectedCollection.owned
@@ -214,45 +226,54 @@ class CollectionDetail extends Component {
         return (
             <div className="CollectionDetail">
                 <div className="CollectionDetailContent">
-                    <div className="head">COLLECTION</div>
+                    <div id="header">
+                        <Button
+                          id="LikeButton"
+                          variant="light"
+                          onClick={this.state.isLiked
+                              ? this.clickUnlikeButtonHandler
+                              : this.clickLikeButtonHandler}
+                        >
+                            <div className="heart-image">
+                                <SVG name="heart" height="70%" width="70%" />
+                            </div>
+                            {this.state.likeCount}
+                        </Button>
+                        <Button
+                          id="memberButton"
+                          variant="light"
+                          href={`/collection_id=${this.props.selectedCollection.id}/members`}
+                        >
+                            <div className="people-image">
+                                <SVG name="people" height="70%" width="70%" />
+                            </div>
+                            {this.state.userCount}
+                        </Button>
+                        {inviteModal}
+                        {manageButton}
+                    </div>
                     <div className="CollectionInfo">
-                        <div id="collectionName">
-                            <h2 id="collectionName">{this.state.thisCollection.title}</h2>
-                        </div>
-                        <div id="collectionInfoMid">
-                            <div id="likeStat">
-                                <h5 id="likeCount">{this.state.likeCount}</h5>
-                                <h5 id="likeText">Likes</h5>
-                            </div>
-                            <Link id="memberStat" to={`${this.props.location.pathname}/members`}>
-                                <h5 id="memberCount">{this.state.userCount}</h5>
-                                <h5 id="memberText">Members</h5>
-                            </Link>
-                            <div id="collectionButtons">
-                                <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}>
-                                    <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>
-                                    {this.state.likeCount}
-                                </Button>
-                                {inviteModal}
-                                {manageButton}
+                        <div id="collectionBasicInfo">
+                            <h1 id="collectionName">{this.state.thisCollection.title}</h1>
+                            <p id="descriptionBox">
+                                {this.state.thisCollection.text !== ""
+                                    ? this.state.thisCollection.text
+                                    : "No description for this collection."}
+                            </p>
+                            <div id="owner">
+                                <h id="ownerText">Owned by </h>
+                                <a href={`/profile_id=${this.state.owner.id}`}>{this.state.owner.username}</a>
                             </div>
                         </div>
-                        <div id="collectionDescription">
-                            <div id="owner">Owner: {this.state.owner.username}</div>
-                            <div id="date">
-                                <div id="creationDate">Created: {creationDate}</div>
-                                <div id="lastUpdateDate">Last Update: {modificationDate}</div>
-                            </div>
-                            <p id="descriptionBox">{this.state.thisCollection.text}</p>
+                        <div id="collectionDates">
+                            <div id="creationDate">Created: {creationDate}</div>
+                            <div id="lastUpdateDate">Last Update: {modificationDate}</div>
                         </div>
                     </div>
                     <div className="itemList">
                         <Tabs defaultActiveKey="paperTab" id="itemTabs">
                             <Tab eventKey="paperTab" title={`Papers(${this.state.paperCount})`}>
-                                <div id="paperCards">
-                                    <div id="paperCardsLeft">{paperCardsLeft}</div>
-                                    <div id="paperCardsRight">{paperCardsRight}</div>
-                                </div>
+                                {paperCards}
                             </Tab>
                             <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${this.state.replyCount})`}>
                                 <div id="replies">
@@ -282,7 +303,7 @@ class CollectionDetail extends Component {
                                                   size="lg"
                                                   block
                                                 >
-                View More
+                                                View More
                                                 </Button>
                                             ) }
                                     </div>

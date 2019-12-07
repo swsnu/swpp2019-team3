@@ -120,8 +120,8 @@ class Header extends Component {
         }
 
         return (
-            <div>
-                <Navbar className="header">
+            <div className="header">
+                <Navbar id="header">
                     <Nav.Link className="logo" href="/main">PapersFeed</Nav.Link>
                     <div className="search"> {/* if 'Form', 'enter' triggers calls twice} */}
                         <Form.Control

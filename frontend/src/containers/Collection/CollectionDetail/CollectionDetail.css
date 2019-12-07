@@ -1,85 +1,68 @@
-.CollectionDetailContent {
-    min-height: 1000px;
+.CollectionDetail {
     background: rgb(242,243,247);
-    margin-left: 18%;
-    position: relative;
+    min-height: 91vh;
+}
+
+.CollectionDetailContent {
     display: flex;
     flex-direction: column;
+    padding-left: 5%;
+    padding-right: 5%;
 }
 
-.CollectionDetailContent .head {
-    width:92%;
-    margin-top: 5%;
-    font-weight: bold;
-    font-size: 200%;
-    margin-bottom: 2%;
-
-}
-
-.CollectionInfo {
-    width: 92%;
-    margin-top: 1%;
-    margin-left: 1%;
-    margin-right: 3%;
+.CollectionDetailContent #header {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 1vh;
 }
 
-.CollectionInfo #collectionName {
-    margin-right: 4%;
-}
-
-.CollectionInfo #collectionInfoMid {
-    width: 92%;
-    margin-top: 1%;
-    margin-bottom: 1%;
-    margin-left: 6%;
-    display: inline-flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
-.like-button {
+.CollectionDetailContent #header #LikeButton {
     width: 80px;
     height: 40px;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    border: 2px solid  rgb(255, 120, 120);
 }
 
-.CollectionInfo #collectionDescription #owner {
-    margin-left: 1%;
-    margin-right: 5%;
+.CollectionDetailContent #header #memberButton {
+    width: 80px;
+    height: 40px;
     display: flex;
-    justify-content: space-between;
-    font-weight: bold;
+    flex-direction: row;
+    justify-content: space-around;
 }
 
-.CollectionInfo #collectionDescription #date {
-    margin-left: 1%;
-    margin-right: 5%;
-    display: flex;
-    justify-content: space-between;
-    font-weight: 200;
-    font-style: italic;
-}
-
-.CollectionInfo #collectionDescription #descriptionBox {
-    margin-left: 1%;
-    margin-right: 5%;
+.CollectionInfo {
     text-align: left;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 3%;
+    padding-bottom: 1%;
+    border-bottom: 2px solid rgb(225,225,225);
+}
+
+.CollectionInfo #collectionBasicInfo #owner {
+    font-weight: 600;
+    font-size: large;
+}
+
+.CollectionInfo #collectionBasicInfo #descriptionBox {
+    margin-left: 5%;
+    margin-right: 5%;
     white-space: pre-wrap;
 }
 
-.itemList {
-    margin-left: 1%;
-    margin-right: 5%;
-    background: rgb(255,255,255);
+.CollectionInfo #collectionDates {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-style: oblique;
 }
 
-.itemList .reply-tab {
+.itemList {
     background: white;
+    border-radius: 2%;
 }
 
 .itemList #paperCards {
@@ -118,16 +101,15 @@
 
 .itemList #replies #createNewReply {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
 }
 
 .itemList #replies #createNewReply #newReplyContentInput {
-    width: 1000px;
+    width: 90%;
 }
 
 .itemList #replies #replyList {
-
-    background: rgb(242,243,247);
-    margin: 10px;
+    margin: 2%;
+    text-align: left;
 }
