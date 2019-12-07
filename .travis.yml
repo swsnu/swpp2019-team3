@@ -36,6 +36,7 @@ matrix:
     dist: trusty
     services:
     - mysql
+    - redis-server
     env:
     - COVERALLS_PARALLEL=true
     - TEXT_ANALYTICS_SUBSCRIPTION_KEY=secret

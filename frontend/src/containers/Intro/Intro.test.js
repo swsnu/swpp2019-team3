@@ -13,7 +13,7 @@ describe("<Intro />", () => {
 
     it("should render without errors", () => {
         const component = mount(<Intro />);
-        const wrapper = component.find(".intro-page");
+        const wrapper = component.find("#intro-page");
         expect(wrapper.length).toBe(1);
     });
 });

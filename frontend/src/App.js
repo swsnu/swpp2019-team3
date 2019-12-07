@@ -17,96 +17,102 @@ import CollectionManage from "./containers/Collection/CollectionManage/Collectio
 
 function App(props) {
     return (
-        <ConnectedRouter history={props.history} match={props.match}>
-            <div className="App">
+        <div className="App">
+            <ConnectedRouter history={props.history} match={props.match}>
                 <PrivateRoute history={props.history} />
                 <Switch>
                     <Route path="/" exact component={Intro} />
                     <>
                         <Header history={props.history} />
-                        <SideBar />
-                        <Switch>
-                            <Route path="/main" exact component={Main} />
-                            <Route path="/init" exact component={Init} />
-                            <Route path="/search=:search_word" exact component={SearchResult} />
-                            <Route
-                              path="/paper_id=:paper_id/create"
-                              exact
-                              render={() => (
-                                  <div>
-                                      <ReviewControl
-                                        mode={0}
-                                        match={props.match}
-                                        history={props.history}
-                                      />
-                                  </div>
-                              )}
-                            />
-                            <Route path="/review_id=:review_id" exact component={ReviewDetail} />
-                            <Route
-                              path="/review_id=:review_id/edit"
-                              exact
-                              render={() => (
-                                  <div>
-                                      <ReviewControl
-                                        mode={1}
-                                        match={props.match}
-                                        history={props.history}
-                                      />
-                                  </div>
-                              )}
-                            />
-                            <Route path="/history" exact component={History} />
-                            <Route path="/paper_id=:paper_id" exact component={PaperDetail} />
-                            <Route path="/profile_id=:profile_id" exact component={ProfileDetail} />
-                            <Route
-                              path="/profile_id=:id/followers"
-                              exact
-                              render={() => (
-                                  <div>
-                                      <UserList
-                                        mode="followers"
-                                        match={props.match}
-                                        history={props.history}
-                                      />
-                                  </div>
-                              )}
-                            />
-                            <Route
-                              path="/profile_id=:id/followings"
-                              exact
-                              render={() => (
-                                  <div>
-                                      <UserList
-                                        mode="followings"
-                                        match={props.match}
-                                        history={props.history}
-                                      />
-                                  </div>
-                              )}
-                            />
-                            <Route path="/account_setting" exact component={AccountSetting} />
-                            <Route path="/collections" exact component={CollectionList} />
-                            <Route path="/collection_id=:collection_id" exact component={CollectionDetail} />
-                            <Route
-                              path="/collection_id=:id/members"
-                              exact
-                              render={() => (
-                                  <div>
-                                      <UserList
-                                        mode="members"
-                                        match={props.match}
-                                        history={props.history}
-                                      />
-                                  </div>
-                              )}
-                            />
-                            <Route path="/collection_id=:collection_id/manage" exact component={CollectionManage} />
-                        </Switch>
+                        <div className="container">
+                            <div className="row" id="content-row">
+                                <div className="col-sm-2"><SideBar /></div>
+                                <div className="col-sm-10">
+                                    <Switch>
+                                        <Route path="/main" exact component={Main} />
+                                        <Route path="/init" exact component={Init} />
+                                        <Route path="/search=:search_word" exact component={SearchResult} />
+                                        <Route
+                                          path="/paper_id=:paper_id/create"
+                                          exact
+                                          render={() => (
+                                              <div>
+                                                  <ReviewControl
+                                                    mode={0}
+                                                    match={props.match}
+                                                    history={props.history}
+                                                  />
+                                              </div>
+                                          )}
+                                        />
+                                        <Route path="/review_id=:review_id" exact component={ReviewDetail} />
+                                        <Route
+                                          path="/review_id=:review_id/edit"
+                                          exact
+                                          render={() => (
+                                              <div>
+                                                  <ReviewControl
+                                                    mode={1}
+                                                    match={props.match}
+                                                    history={props.history}
+                                                  />
+                                              </div>
+                                          )}
+                                        />
+                                        <Route path="/history" exact component={History} />
+                                        <Route path="/paper_id=:paper_id" exact component={PaperDetail} />
+                                        <Route path="/profile_id=:profile_id" exact component={ProfileDetail} />
+                                        <Route
+                                          path="/profile_id=:id/followers"
+                                          exact
+                                          render={() => (
+                                              <div>
+                                                  <UserList
+                                                    mode="followers"
+                                                    match={props.match}
+                                                    history={props.history}
+                                                  />
+                                              </div>
+                                          )}
+                                        />
+                                        <Route
+                                          path="/profile_id=:id/followings"
+                                          exact
+                                          render={() => (
+                                              <div>
+                                                  <UserList
+                                                    mode="followings"
+                                                    match={props.match}
+                                                    history={props.history}
+                                                  />
+                                              </div>
+                                          )}
+                                        />
+                                        <Route path="/account_setting" exact component={AccountSetting} />
+                                        <Route path="/collections" exact component={CollectionList} />
+                                        <Route path="/collection_id=:collection_id" exact component={CollectionDetail} />
+                                        <Route
+                                          path="/collection_id=:id/members"
+                                          exact
+                                          render={() => (
+                                              <div>
+                                                  <UserList
+                                                    mode="members"
+                                                    match={props.match}
+                                                    history={props.history}
+                                                  />
+                                              </div>
+                                          )}
+                                        />
+                                        <Route path="/collection_id=:collection_id/manage" exact component={CollectionManage} />
+                                    </Switch>
+                                </div>
+                            </div>
+                        </div>
                     </>
                 </Switch>
-            </div>
-        </ConnectedRouter>
+            </ConnectedRouter>
+        </div>
     );
 }
 

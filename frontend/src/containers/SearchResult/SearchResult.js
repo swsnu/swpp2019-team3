@@ -35,7 +35,7 @@ class SearchResult extends Component {
         this.searchTrigger();
     }
 
-    // when users search another keyword on SearchResult
+    // when users search another word on SearchResult
     /* eslint-disable react/no-did-update-set-state */
     componentDidUpdate(prevProps) {
         if (this.props.location !== prevProps.location) {
@@ -70,14 +70,14 @@ class SearchResult extends Component {
                     this.paperCardsDistributor(this.props.searchedPapers);
                 }
             });
-        this.props.onSearchCollection(searchWord, this.props.collectionPageNum + 1)
+        this.props.onSearchCollection(searchWord, 1)
             .then(() => {
                 // if searchWord is changed while waiting promise, don't update state
                 if (this.state.searchWord === searchWord) {
                     this.setState({ collections: this.props.searchedCollections });
                 }
             });
-        this.props.onSearchUser(searchWord, this.props.userPageNum + 1)
+        this.props.onSearchUser(searchWord, 1)
             .then(() => {
                 // if searchWord is changed while waiting promise, don't update state
                 if (this.state.searchWord === searchWord) {
@@ -107,7 +107,6 @@ class SearchResult extends Component {
           title={paper.title}
           date={paper.date}
           authors={paper.authors}
-          keywords={paper.keywords}
           likeCount={paper.count.likes}
           reviewCount={paper.count.reviews}
           isLiked={paper.liked}
