@@ -18,7 +18,7 @@ from papersfeed.utils.papers.search import __exploit_semanticscholar_for_abstrac
 from papersfeed.utils.reviews import utils as review_utils
 from papersfeed.utils.base_utils import get_results_from_queryset
 
-ALL_PAPER_PAGE_COUNT = 1000
+ALL_PAPER_PAGE_COUNT = 50
 
 
 def select_user_actions(_):
