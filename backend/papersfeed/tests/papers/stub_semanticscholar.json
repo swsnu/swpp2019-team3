@@ -1,0 +1,45 @@
+{
+    "abstract": "BACKGROUND\nMilitary service is considered to be a hidden variable underlying current knowledge about well-being in the elderly. This study aimed to examine life satisfaction and quality of life in Australia's surviving male Korean War veterans and a community comparison group, and to investigate any association with war deployment-related factors.\n\n\nMETHODS\nParticipants completed a postal questionnaire which included the Life Satisfaction Scale, the brief World Health Organization Quality of Life (WHOQOL-Bref) questionnaire and the Combat Exposure Scale.\n\n\nRESULTS\nKorean War veterans reported significantly lower Percentage Life Satisfaction (PLS) and quality of life scores on four WHOQOL-Bref domains, compared with similarly aged Australian men (each p value <0.001). These outcomes were most strongly associated with severity of combat exposure and low rank. Mean PLS was approximately 15% lower in veterans who reported heavy combat compared with those reporting no combat, and approximately 12% lower in enlisted ranked veterans compared with officers.\n\n\nCONCLUSIONS\nFifty years after the Korean War, life satisfaction and quality in Australian veterans is poor relative to other Australian men, and is associated with deployment-related factors including combat severity and low rank. In order to respond effectively to current and projected population health needs, nations with large veteran populations may need to consider the impact of military service on well-being in later life.",
+    "arxivId": null,
+    "authors": [
+        {
+            "authorId": "6670627",
+            "name": "Jillian Frances Ikin",
+            "url": "https://www.semanticscholar.org/author/6670627"
+        }
+    ],
+    "citationVelocity": 0,
+    "citations": [
+        {
+            "arxivId": null,
+            "authors": [
+                {
+                    "authorId": "27345601",
+                    "name": "Kim Gordon",
+                    "url": "https://www.semanticscholar.org/author/27345601"
+                }
+            ],
+            "doi": null,
+            "intent": [
+                "background"
+            ],
+            "isInfluential": false,
+            "paperId": "9a387abf29466ecec481f535c256c9913a077c6a",
+            "title": "Making sense of life narratives : the perspectives of British armed forces ex-service personnel",
+            "url": "https://www.semanticscholar.org/paper/9a387abf29466ecec481f535c256c9913a077c6a",
+            "venue": "",
+            "year": 2016
+        }
+    ],
+    "title": "Life satisfaction and quality in Korean War veterans five decades after the war.",
+    "topics": [
+        {
+            "topic": "Korean War",
+            "topicId": "398712",
+            "url": "https://www.semanticscholar.org/topic/398712"
+        }
+    ],
+    "url": "https://www.semanticscholar.org/paper/341baa0de3875ba7e1c8d058f5b5bd2d95f77dbd",
+    "venue": "Journal of epidemiology and community health",
+    "year": 2009
+}

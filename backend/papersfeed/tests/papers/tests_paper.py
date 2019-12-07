@@ -6,6 +6,7 @@ from unittest.mock import Mock, patch
 from django.test import TestCase, Client
 
 from papersfeed import constants
+from papersfeed.tests.tests import MockResponse
 from papersfeed.models.collections.collection import Collection
 from papersfeed.models.papers.paper import Paper
 
@@ -324,7 +325,7 @@ class PaperTestCase(TestCase):
     @patch('requests.post')
     @patch('requests.get')
     def test_paper_search_external(self, mock_get, mock_post):
-        """Search Paper from external sources & Search Paper for ML(dummy data)"""
+        """Search Paper from external sources"""
         client = Client()
 
         # Sign In
@@ -337,35 +338,40 @@ class PaperTestCase(TestCase):
 
         # mock a response from arXiv API (one has a entry)
         stub_xml = open("papersfeed/tests/papers/stub_arxiv_entry.xml", 'r')
+        mock_arxiv = Mock(text=stub_xml.read(), status_code=200)
 
         # mock a response from Crossref API (one has a entry)
         stub_json = json.loads(open("papersfeed/tests/papers/stub_crossref_item.json", 'r').read())
+        mock_crossref = MockResponse(json_data=stub_json, status_code=200)
 
         mock_get.side_effect = [
-            Mock(
-                text=stub_xml.read(),
-                status_code=200
-            ), MockResponse(
-                json_data=stub_json,
-                status_code=200
-            )
+            # for first search
+            mock_arxiv, mock_crossref,
+            # for second search
+            mock_arxiv, mock_crossref
         ]
 
         mock_post.return_value = make_stub_keyphrases_response("papersfeed/tests/papers/stub_key_phrases.json", 200)
 
-        # Search with Keyword 'blahblah' (first, send requests to arXiv)
-        response = client.get('/api/paper/search',
-                              data={
-                                  constants.TEXT: 'blahblah'
-                              },
-                              content_type='application/json')
+        def __do_search_test(client):
+            # Search with Keyword 'blahblah' (first, send requests to arXiv)
+            response = client.get('/api/paper/search',
+                                  data={
+                                      constants.TEXT: 'blahblah'
+                                  },
+                                  content_type='application/json')
 
-        self.assertEqual(response.status_code, 200)
-        # there was one result from arXiv and one result from Crossref,
-        # so our search API's response should have two paper result, too
-        self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 2)
-        self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
-        self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
+            self.assertEqual(response.status_code, 200)
+            # there was one result from arXiv and one result from Crossref,
+            # so our search API's response should have two paper result, too
+            self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 2)
+            self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
+            self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
+
+        # when first searching, call each two API and save the results in DB
+        __do_search_test(client)
+        # when second searching, call each two API and give results same with before
+        __do_search_test(client)
 
     @patch('requests.post')
     @patch('requests.get')
@@ -402,17 +408,6 @@ class PaperTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         # there was one result from arXiv, so our search API's response should have one paper result, too
         self.assertEqual(len(json.loads(response.content.decode())[constants.PAPERS]), 1)
-
-# pylint: disable=too-few-public-methods
-class MockResponse:
-    """MockResponse"""
-    def __init__(self, json_data, status_code):
-        self.json_data = json_data
-        self.status_code = status_code
-
-    def json(self):
-        """json()"""
-        return self.json_data
 
 def make_stub_keyphrases_response(json_file, status_code):
     """Make Stub Text Analytics API Response"""

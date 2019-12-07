@@ -229,3 +229,16 @@ class ApiEntryTestCase(TestCase):
         self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
         self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 2)
     # pylint: enable=too-many-locals, too-many-statements
+
+
+# TEST UTILS
+# pylint: disable=too-few-public-methods
+class MockResponse:
+    """MockResponse"""
+    def __init__(self, json_data, status_code):
+        self.json_data = json_data
+        self.status_code = status_code
+
+    def json(self):
+        """json()"""
+        return self.json_data
