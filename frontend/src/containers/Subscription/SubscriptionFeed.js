@@ -30,6 +30,7 @@ class SubscriptionFeed extends Component {
             .then(() => {
                 this.setState((prevState) => ({
                     subscriptions: prevState.subscriptions.concat(this.props.subscriptionItems),
+                    // To maintain the number of feeds as 30 at least there are more than 30 feeds
                     recoCount: 30 - this.props.subscriptionItems.length,
                 }));
                 this.props.onGetRecommendations()
@@ -54,6 +55,7 @@ class SubscriptionFeed extends Component {
                 .then(() => {
                     this.setState((prevState) => ({
                         subscriptions: prevState.subscriptions.concat(this.props.subscriptionItems),
+                        // To maintain the number of feeds as 30 at least there are more than 30 feeds
                         recoCount: 30 - this.props.subscriptionItems.length,
                     }), () => {
                         this.clickMoreButtonNext();
@@ -61,6 +63,7 @@ class SubscriptionFeed extends Component {
                 }).catch(() => {});
         } else {
             this.setState({
+                // To maintain the number of feeds as 30 at least there are more than 30 feeds
                 recoCount: 30,
             });
             this.clickMoreButtonNext();
