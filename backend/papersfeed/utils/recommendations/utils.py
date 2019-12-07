@@ -1,6 +1,6 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
-#
+
 from collections import OrderedDict
 from datetime import datetime, timedelta
 from django.db.models import OuterRef, Subquery, F, Q, Count
