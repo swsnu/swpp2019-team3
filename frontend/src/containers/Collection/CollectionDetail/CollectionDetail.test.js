@@ -353,8 +353,8 @@ describe("CollectionDetail Test", () => {
         const instance = component.find("CollectionDetail").instance();
         instance.setState(
             {
-                replyFinished: false,
-                replyPageCount: 2,
+                replyCollectionFinished: false,
+                replyCollectionPageCount: 2,
                 replies: [{
                     id: 4,
                     user: {
@@ -370,7 +370,7 @@ describe("CollectionDetail Test", () => {
         const spyHandleReplies = jest.spyOn(instance, "handleReplies");
         const spyForEach = jest.spyOn(instance, "forEachHandleReply");
 
-        expect(instance.state.replyPageCount).toBe(2);
+        expect(instance.state.replyCollectionPageCount).toBe(2);
 
         instance.handleReplies();
         await flushPromises();
@@ -405,8 +405,8 @@ describe("CollectionDetail Test", () => {
         const instance = component.find("CollectionDetail").instance();
         instance.setState(
             {
-                replyFinished: false,
-                replyPageCount: 1,
+                replyCollectionFinished: false,
+                replyCollectionPageCount: 1,
                 replies: [],
             },
         );
@@ -417,7 +417,7 @@ describe("CollectionDetail Test", () => {
 
         await flushPromises();
         expect(spyGetRepliesByCollection).toBeCalledTimes(2);
-        expect(instance.state.replyPageCount).toBe(2);
-        expect(instance.state.replyFinished).toBe(true);
+        expect(instance.state.replyCollectionPageCount).toBe(2);
+        expect(instance.state.replyCollectionFinished).toBe(true);
     });
 });

@@ -26,9 +26,9 @@ class CollectionDetail extends Component {
             papers: [],
             thisCollection: {},
             owner: {},
-            newReplies: [],
-            replyPageCount: 1,
-            replyFinished: true,
+            newCollectionReplies: [],
+            replyCollectionPageCount: 1,
+            replyCollectionFinished: true,
         };
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
         this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
@@ -69,8 +69,8 @@ class CollectionDetail extends Component {
             .then(() => {
                 this.setState({
                     replies: this.props.replyList.list,
-                    replyPageCount: 1,
-                    replyFinished: this.props.replyList.finished,
+                    replyCollectionPageCount: 1,
+                    replyCollectionFinished: this.props.replyList.finished,
                 });
             }).catch(() => {});
     }
@@ -108,38 +108,40 @@ class CollectionDetail extends Component {
     clickMoreButtonHandler = () => {
         this.props.onGetReplies({
             id: Number(this.props.location.pathname.split("=")[1]),
-            page_number: this.state.replyPageCount + 1,
+            page_number: this.state.replyCollectionPageCount + 1,
         })
             .then(() => {
                 const { replies } = this.state;
                 this.setState({
                     replies: replies.concat(this.props.replyList.list),
-                    replyPageCount: this.props.replyList.pageNum,
-                    replyFinished: this.props.replyList.finished,
+                    replyCollectionPageCount: this.props.replyList.pageNum,
+                    replyCollectionFinished: this.props.replyList.finished,
                 });
             });
     }
 
 
     async handleReplies() {
-        const end = this.state.replyPageCount;
+        const end = this.state.replyCollectionPageCount;
         this.setState({
-            newReplies: [],
+            newCollectionReplies: [],
         });
         for (let i = 1; (i === 1) || (i < end + 1); i += 1) {
             await this.forEachHandleReply(i, end);
             if (i === end || this.props.replyList.finished === true) {
                 this.setState((prevState) => ({
-                    replies: prevState.newReplies.concat(this.props.replyList.list),
-                    replyPageCount: this.props.replyList.pageNum,
-                    newReplies: [],
-                    replyFinished: this.props.replyList.finished,
-                }), () => true);
+                    newCollectionReplies: [],
+                    replyCollectionFinished: this.props.replyList.finished,
+                    replyCollectionPageCount: this.props.replyList.pageNum,
+                    replies: prevState.newCollectionReplies.concat(this.props.replyList.list),
+
+                }));
                 break;
             }
             this.setState((prevState) => ({
-                newReplies: prevState.newReplies.concat(this.props.replyList.list),
-            }), () => false);
+                newCollectionReplies:
+                prevState.newCollectionReplies.concat(this.props.replyList.list),
+            }));
         }
     }
 
@@ -207,8 +209,9 @@ class CollectionDetail extends Component {
             )))
             : (<h5 id="noRepliesText">There is no reply in this collection for now.</h5>);
 
-        const replyCount = (this.state.replyPageCount > 1
-            || (this.state.replyPageCount === 1 && this.state.replyFinished === false))
+        const replyCount = (this.state.replyCollectionPageCount > 1
+            || (this.state.replyCollectionPageCount === 1
+                && this.state.replyCollectionFinished === false))
             ? "10+" : this.state.replies.length;
 
         let inviteModal = null;
@@ -323,7 +326,7 @@ class CollectionDetail extends Component {
                                     </div>
                                     <div id="replyList">
                                         {replies}
-                                        {this.state.replyFinished ? null
+                                        {this.state.replyCollectionFinished ? null
                                             : (
                                                 <Button
                                                   className="reply-more-button"
