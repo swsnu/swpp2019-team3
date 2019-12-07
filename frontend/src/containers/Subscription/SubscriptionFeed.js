@@ -55,7 +55,7 @@ class SubscriptionFeed extends Component {
                 .then(() => {
                     this.setState((prevState) => ({
                         subscriptions: prevState.subscriptions.concat(this.props.subscriptionItems),
-                        // To maintain the number of feeds as 30 at least there are more than 30 feeds
+                        // To maintain the number of feeds as 30
                         recoCount: 30 - this.props.subscriptionItems.length,
                     }), () => {
                         this.clickMoreButtonNext();
