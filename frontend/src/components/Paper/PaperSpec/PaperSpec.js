@@ -15,6 +15,7 @@ class PaperSpec extends Component {
             isLiked: false,
             likeCount: 0,
             truncateAbstractKeywords: true,
+            truncateAbstract: true,
         };
         this.processKeywords = this.processKeywords.bind(this);
         this.clickPaperSpecUnlikeHandler = this.clickPaperSpecUnlikeHandler.bind(this);
@@ -120,6 +121,42 @@ class PaperSpec extends Component {
             }
         }
 
+        let abstract = null;
+        if (this.props.abstractfoldExists) {
+            if (this.state.truncateAbstract) {
+                abstract = (
+                    <p id="abstract-content">
+                        {this.props.abstract.substring(0, 300)}
+                        <Button
+                          className="abstract-more-button"
+                          onClick={() => this.setState({ truncateAbstract: false })}
+                          variant="light"
+                          size="sm"
+                        >
+                        ...
+                        </Button>
+                    </p>
+                );
+            } else {
+                abstract = (
+                    <p id="abstract-content">
+                        {this.props.abstract}
+                        <Button
+                          className="abstract-less-button"
+                          onClick={() => this.setState({ truncateAbstract: true })}
+                          variant="light"
+                          size="sm"
+                        >
+                            {"<"}
+                        </Button>
+                    </p>
+
+                );
+            }
+        } else {
+            abstract = (<p id="abstract-content">{this.props.abstract}</p>);
+        }
+
         let authorNames = "";
         if (this.props.authors.length > 0) {
             authorNames = this.props.authors.map((author) => `${author.first_name} ${author.last_name}`).join(", ");
@@ -156,7 +193,7 @@ class PaperSpec extends Component {
                 </div>
                 <div className="abstract">
                     <h3 id="abstract-title">Abstract</h3>
-                    <p id="abstract-content">{this.props.abstract}</p>
+                    {abstract}
                 </div>
             </div>
         );
@@ -197,6 +234,7 @@ PaperSpec.propTypes = {
     afterUnlikeCount: PropTypes.number,
     onLikePaper: PropTypes.func,
     onUnlikePaper: PropTypes.func,
+    abstractfoldExists: PropTypes.bool,
 };
 
 PaperSpec.defaultProps = {
@@ -215,4 +253,5 @@ PaperSpec.defaultProps = {
     afterUnlikeCount: 0,
     onLikePaper: () => {},
     onUnlikePaper: () => {},
+    abstractfoldExists: false,
 };

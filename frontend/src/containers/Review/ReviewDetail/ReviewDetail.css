@@ -80,8 +80,7 @@
     justify-content: flex-start;
     flex-direction: column;
     text-align: left;
-    margin-bottom: 10%;
-    margin-left: 3%;
+    margin-left: 5%;
     height: 100%;
     width: 90%;
 }
@@ -97,8 +96,8 @@
 }
 
 .review-detail .board .review-reply .reply .new-reply .new-reply-button{
-    margin-left: 93%;
-    width: 7%;
+    min-width: 60px;
+    align-self: flex-end;
 }
 
 .review-detail .board .review-reply .reply .replies{
