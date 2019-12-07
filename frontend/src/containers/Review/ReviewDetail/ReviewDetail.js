@@ -105,12 +105,12 @@ class ReviewDetail extends Component {
                     replyPageCount: this.props.replyList.pageNum,
                     newReplies: [],
                     replyFinished: this.props.replyList.finished,
-                }), () => true);
+                }));
                 break;
             }
             this.setState((prevState) => ({
                 newReplies: prevState.newReplies.concat(this.props.replyList.list),
-            }), () => false);
+            }));
         }
     }
 

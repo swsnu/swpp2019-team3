@@ -299,12 +299,114 @@ describe("CollectionDetail Test", () => {
         expect(wrapper.length).toBe(2);
     });
 
-    it("should handle replies", () => {
-        const spy = jest.spyOn(replyActions, "getRepliesByCollection")
-            .mockImplementation(() => () => mockPromise);
-        const wrapper = mount(collectionDetail);
-        const instance = wrapper.find("CollectionDetail").instance();
+    it("should handle replies well repeatedly", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            reply: {
+                ...stubInitialState.reply,
+                list: {
+                    ...stubInitialState.reply.list,
+                    pageNum: 1,
+                    list: [{
+                        id: 1,
+                        user: {
+                            username: "afdaf",
+                        },
+                        count: {
+                            likes: 0,
+                        },
+                    },
+                    {
+                        id: 2,
+                        user: {
+                            username: "afdaf",
+                        },
+                        count: {
+                            likes: 0,
+                        },
+                    },
+                    {
+                        id: 3,
+                        user: {
+                            username: "afdaf",
+                        },
+                        count: {
+                            likes: 0,
+                        },
+                    }],
+                    finished: false,
+                },
+            },
+        };
+        const component = mount(makeCollectionDetail(stubInitialState));
+        const instance = component.find("CollectionDetail").instance();
+        instance.setState(
+            {
+                replyFinished: false,
+                replyPageCount: 2,
+                replies: [{
+                    id: 4,
+                    user: {
+                        username: "afdaf",
+                    },
+                    count: {
+                        likes: 0,
+                    },
+                }],
+            },
+        );
+        component.update();
+        const spyHandleReplies = jest.spyOn(instance, "handleReplies");
+        const spyForEach = jest.spyOn(instance, "forEachHandleReply");
+
+        expect(instance.state.replyPageCount).toBe(2);
+
         instance.handleReplies();
-        expect(spy).toHaveBeenCalledTimes(2);
+        await flushPromises();
+        component.update();
+        expect(spyGetRepliesByCollection).toBeCalledTimes(3);
+        expect(spyHandleReplies).toBeCalledTimes(1);
+        expect(spyForEach).toBeCalledTimes(2);
+    });
+
+    it("should handle click more button", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            reply: {
+                ...stubInitialState.reply,
+                list: {
+                    ...stubInitialState.reply.list,
+                    pageNum: 2,
+                    list: [{
+                        id: 3,
+                        user: {
+                            username: "afdaf",
+                        },
+                        count: {
+                            likes: 0,
+                        },
+                    }],
+                    finished: true,
+                },
+            },
+        };
+        const component = mount(makeCollectionDetail(stubInitialState));
+        const instance = component.find("CollectionDetail").instance();
+        instance.setState(
+            {
+                replyFinished: false,
+                replyPageCount: 1,
+                replies: [],
+            },
+        );
+        component.update();
+        const button = component.find(".reply-more-button").hostNodes();
+        expect(button.length).toBe(1);
+        button.simulate("click");
+
+        await flushPromises();
+        expect(spyGetRepliesByCollection).toBeCalledTimes(2);
+        expect(instance.state.replyPageCount).toBe(2);
+        expect(instance.state.replyFinished).toBe(true);
     });
 });
