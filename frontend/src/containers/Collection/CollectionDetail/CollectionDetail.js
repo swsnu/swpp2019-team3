@@ -191,7 +191,7 @@ class CollectionDetail extends Component {
             : (<h5 id="noPapersText">There is no paper in this collection for now.</h5>);
 
         const replies = this.state.replies.length !== 0
-            ? (this.state.replies.map((reply, index) => (
+            ? (this.state.replies.map((reply) => (
                 <Reply
                   key={reply.id}
                   id={reply.id}
