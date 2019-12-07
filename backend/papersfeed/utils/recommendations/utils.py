@@ -1,5 +1,6 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
+
 from collections import OrderedDict
 from datetime import datetime, timedelta
 from django.db.models import OuterRef, Subquery, F, Q, Count
@@ -13,8 +14,12 @@ from papersfeed.models.users.user_action import UserAction
 from papersfeed.models.users.user_recommendation import UserRecommendation
 from papersfeed.models.papers.keyword import Keyword
 from papersfeed.utils.papers import utils as paper_utils
+from papersfeed.utils.papers.search import __exploit_semanticscholar_for_abstract
 from papersfeed.utils.reviews import utils as review_utils
 from papersfeed.utils.base_utils import get_results_from_queryset
+
+ALL_PAPER_PAGE_COUNT = 1000
+
 
 def select_user_actions(_):
     """Select user actions"""
@@ -59,6 +64,7 @@ def select_user_actions(_):
 
     return new_papers, new_users, new_actions
 
+
 def insert_user_recommendation(args):
     """Insert user recommendation"""
 
@@ -78,6 +84,7 @@ def insert_user_recommendation(args):
         modification_date__lt=(datetime.now() + timedelta(hours=-2))
     ).delete()
 
+
 def select_recommendation(args):
     """Get Recommendations"""
 
@@ -94,6 +101,7 @@ def select_recommendation(args):
 
     return recommendations, page_number, is_finished
 
+
 def select_keyword_init(args):
     """Get keywords init"""
 
@@ -109,6 +117,7 @@ def select_keyword_init(args):
     keywords = paper_utils.pack_keywords(keywords)
 
     return keywords, page_number, is_finished
+
 
 def insert_recommendation_init(args):
     """Get recommendation init"""
@@ -139,29 +148,44 @@ def insert_recommendation_init(args):
             ) for i, paper_id in enumerate(paper_sort[:10])
         ])
 
+
 def select_paper_all(args):
     """Get All Papers"""
 
     page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
-    paper_queryset = Paper.objects.all().annotate(
-        ItemId=F('id')
-    ).values(
-        'ItemId'
-    )
+    # list of tuple (id, abtract, DOI)
+    paper_queryset = Paper.objects.all().values_list('id', 'abstract', 'DOI')
 
-    papers = Paginator(paper_queryset, 1000).get_page(page_number)
+    papers = Paginator(paper_queryset, ALL_PAPER_PAGE_COUNT).get_page(page_number)
 
     is_finished = not papers.has_next()
 
-    for paper in papers:
-        paper_id = paper['ItemId']
-        keywords = paper_utils.get_keywords_paper(Q(paper_id=paper_id))
-        paper['Keywords'] = keywords[paper_id] if paper_id in keywords else []
-        paper['Abstract'] = Paper.objects.get(id=paper_id).abstract
+    results = [] # list of dictionaries whose keys are ItemId, Abstract, and Keywords
 
-    papers = list(papers)
-    return papers, page_number, is_finished
+    for paper in papers:
+        result = {}
+        paper_id, abstract, doi = paper
+        keywords = paper_utils.get_keywords_paper(Q(paper_id=paper_id))
+        result['Keywords'] = keywords[paper_id] if paper_id in keywords else []
+        result['ItemId'] = paper_id
+
+        if abstract:
+            result['Abstract'] = abstract
+        # If abstract doesn't exist, try getting abstract this time.
+        #   We can use 'alternative-id' of Crossref for getting results from Semantic Scholar,
+        #   but it is currently not saved in our DB. So use only DOI for now.
+        else:
+            if doi:
+                __exploit_semanticscholar_for_abstract(paper_id, [doi]) # NOTE: This doesn't use shared_task of celery
+                result['Abstract'] = Paper.objects.get(id=paper_id).abstract
+            else:
+                result['Abstract'] = abstract # save empty abstract
+
+        results.append(result)
+
+    return results, page_number, is_finished
+
 
 def select_user_all(_):
     """Select User All"""
@@ -175,15 +199,18 @@ def select_user_all(_):
     users = list(users)
     return users
 
+
 def __get_user_id(outer_ref):
     return Subquery(
         User.objects.filter(id=OuterRef(outer_ref)).values('id')
     )
 
+
 def __get_paper_id(outer_ref):
     return Subquery(
         Paper.objects.filter(id=OuterRef(outer_ref)).values('id')
     )
+
 
 def __pack_recommendations(recommendations, request_user):
     packed = []

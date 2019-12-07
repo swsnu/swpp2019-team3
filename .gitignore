@@ -211,3 +211,6 @@ _db.json
 
 # fixtures
 fixtures/
+
+# redis
+dump.rdb

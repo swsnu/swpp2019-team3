@@ -6,6 +6,8 @@ import PropTypes from "prop-types";
 import { userActions, collectionActions } from "../../../store/actions";
 import UserEntry from "../../User/UserEntry/UserEntry";
 
+import "./InviteToCollectionModal.css";
+
 class InviteToCollectionModal extends Component {
     constructor(props) {
         super(props);

@@ -34,7 +34,6 @@
 .verb {
     /* This is interval between texts: DO NOT MODIFY IT */
     margin-right: 5px;
-
 }
 
 .collection .body {
@@ -49,26 +48,19 @@
     font-size: 130%;
 }
 
+.collection .footer {
+    display: flex;
+    justify-content: flex-start;
+}
+
 .collection .like-button{
     width: 17%;
     display: flex;
     justify-content: space-around;
 }
 
-.collection .footer {
-    display: flex;
-    justify-content: flex-start;
-}
-.collection .like-button .heart-image{
-margin-top: 2%;
-margin-right: 1%;
-}
 .collection .reply-button{
     width: 17%;
     display: flex;
     justify-content: space-around;
 }
-
-.collection .reply-button .talk-image{
-    margin-top: 9%;
-}   
