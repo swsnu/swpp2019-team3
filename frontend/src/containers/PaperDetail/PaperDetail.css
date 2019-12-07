@@ -1,8 +1,8 @@
 .paperdetail {
-    min-height: 1000px;
+    min-height: 90vh;
     background: rgb(242,243,247);
-    margin-left: 18%;
-    position: relative;
+    /*   */
+    /* position: relative; */
     display: flex;
 }
 
@@ -16,7 +16,7 @@
     background: white;
     border-radius: 0.5em;
 }
-
+/*
 .paperdetail-content .up-review {
     display: flex;
     align-items: flex-start;
@@ -59,4 +59,8 @@
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
-}
+} */
+
+/* .paperdetail-page {
+    background: wheat;
+} */
