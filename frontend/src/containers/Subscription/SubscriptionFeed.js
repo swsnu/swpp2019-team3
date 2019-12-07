@@ -46,6 +46,7 @@ class SubscriptionFeed extends Component {
     }
 
     clickMoreButton = () => {
+        // get new subscription
         if (!this.props.subscriptionFinished) {
             this.props.onGetSubscriptions({
                 page_number: this.props.subscriptionPageNum + 1,
@@ -67,6 +68,7 @@ class SubscriptionFeed extends Component {
     }
 
     clickMoreButtonNext = () => {
+        // get new recommendation
         if (!this.props.recommendationFinished) {
             this.props.onGetRecommendations({
                 page_number: this.props.recommendationPageNum + 1,
@@ -86,8 +88,10 @@ class SubscriptionFeed extends Component {
     }
 
     addRecoToSub = () => {
+        // add new recommendation to subscription
         const { recommendations } = this.state;
         const { subscriptions } = this.state;
+        // sort recommendations
         for (let i = recommendations.length - 1; i > this.state.start; i -= 1) {
             const j = Math.floor(Math.random() * (i + 1));
             [recommendations[i], this.state.recommendations[j]] = [
@@ -95,6 +99,7 @@ class SubscriptionFeed extends Component {
                 recommendations[i],
             ];
         }
+        // put selected recommendations in temp
         let temp = [];
         if (recommendations.length >= this.state.recoCount) {
             temp = recommendations.splice(0, this.state.recoCount);
@@ -102,6 +107,7 @@ class SubscriptionFeed extends Component {
             temp = recommendations.splice(0, this.state.recommendations.length);
         }
 
+        // add temp to new subscription
         for (let i = 0; i < temp.length; i += 1) {
             const index = Math.random()
             * (subscriptions.length - this.state.start)
@@ -113,6 +119,7 @@ class SubscriptionFeed extends Component {
             recommendations,
             subscriptions,
         });
+        // finished check
         if (this.props.subscriptionFinished
             && this.props.recommendationFinished
             && this.state.recommendations.length <= 0) {

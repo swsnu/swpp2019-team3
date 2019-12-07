@@ -92,6 +92,7 @@ class ReviewDetail extends Component {
     }
 
     async handleReplies() {
+        // get replies utile previous pageCount
         const end = this.state.replyPageCount;
         this.setState({
             newReplies: [],
