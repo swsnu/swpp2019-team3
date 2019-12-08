@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
-
+//
 import { PaperCard, CollectionCard, ReviewCard } from "../../components";
 import { authActions } from "../../store/actions";
 
