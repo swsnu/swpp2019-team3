@@ -14,9 +14,9 @@ class SubscriptionFeed extends Component {
         this.state = {
             subscriptions: [],
             recommendations: [],
-            finished: false,
+            finished: true,
             start: 0,
-            recoNum: 10,
+            recoCount: 10,
         };
         this.paperCardMaker = this.paperCardMaker.bind(this);
         this.reviewCardMaker = this.reviewCardMaker.bind(this);
@@ -28,58 +28,62 @@ class SubscriptionFeed extends Component {
     componentDidMount() {
         this.props.onGetSubscriptions()
             .then(() => {
-                this.setState({
-                    subscriptions: this.props.subscriptionItems,
-                });
+                this.setState((prevState) => ({
+                    subscriptions: prevState.subscriptions.concat(this.props.subscriptionItems),
+                    // To maintain the number of feeds as 30 at least there are more than 30 feeds
+                    recoCount: 30 - this.props.subscriptionItems.length,
+                }));
                 this.props.onGetRecommendations()
                     .then(() => {
-                        this.setState({
-                            recommendations: this.props.recommendationItems,
+                        this.setState((prevState) => ({
+                            recommendations: prevState.recommendations.concat(
+                                this.props.recommendationItems,
+                            ),
+                        }), () => {
+                            this.addRecoToSub();
                         });
-                        this.addRecoToSub();
-                        if (this.props.subscriptionFinished) {
-                            if (this.state.recommendations.length <= 0) {
-                                this.setState({
-                                    finished: true,
-                                });
-                            } else {
-                                this.setState({
-                                    recoNum: 20,
-                                });
-                            }
-                        }
                     }).catch(() => {});
             }).catch(() => {});
     }
 
     clickMoreButton = () => {
+        // get new subscription
         if (!this.props.subscriptionFinished) {
             this.props.onGetSubscriptions({
                 page_number: this.props.subscriptionPageNum + 1,
             })
                 .then(() => {
-                    const { subscriptions } = this.state;
-                    this.setState({
-                        subscriptions: subscriptions.concat(this.props.subscriptionItems),
+                    this.setState((prevState) => ({
+                        subscriptions: prevState.subscriptions.concat(this.props.subscriptionItems),
+                        // To maintain the number of feeds as 30
+                        recoCount: 30 - this.props.subscriptionItems.length,
+                    }), () => {
+                        this.clickMoreButtonNext();
                     });
-                    this.clickMoreButtonNext();
                 }).catch(() => {});
         } else {
+            this.setState({
+                // To maintain the number of feeds as 30 at least there are more than 30 feeds
+                recoCount: 30,
+            });
             this.clickMoreButtonNext();
         }
     }
 
     clickMoreButtonNext = () => {
+        // get new recommendation
         if (!this.props.recommendationFinished) {
             this.props.onGetRecommendations({
                 page_number: this.props.recommendationPageNum + 1,
             })
                 .then(() => {
-                    const { recommendations } = this.state;
-                    this.setState({
-                        recommendations: recommendations.concat(this.props.recommendationItems),
+                    this.setState((prevState) => ({
+                        recommendations: prevState.recommendations.concat(
+                            this.props.recommendationItems,
+                        ),
+                    }), () => {
+                        this.addRecoToSub();
                     });
-                    this.addRecoToSub();
                 }).catch(() => {});
         } else {
             this.addRecoToSub();
@@ -87,43 +91,52 @@ class SubscriptionFeed extends Component {
     }
 
     addRecoToSub = () => {
-        for (let i = this.state.recommendations.length - 1; i > this.state.start; i -= 1) {
+        // add new recommendation to subscription
+        const { recommendations } = this.state;
+        const { subscriptions } = this.state;
+        // sort recommendations
+        for (let i = recommendations.length - 1; i > this.state.start; i -= 1) {
             const j = Math.floor(Math.random() * (i + 1));
-            [this.state.recommendations[i], this.state.recommendations[j]] = [
-                this.state.recommendations[j],
-                this.state.recommendations[i],
+            [recommendations[i], recommendations[j]] = [
+                recommendations[j],
+                recommendations[i],
             ];
         }
+        // put selected recommendations in temp
         let temp = [];
-        if (this.state.recommendations.length >= this.state.recoNum) {
-            temp = this.state.recommendations.splice(0, this.state.recoNum);
+        if (recommendations.length >= this.state.recoCount) {
+            temp = recommendations.splice(0, this.state.recoCount);
         } else {
-            temp = this.state.recommendations.splice(0, this.state.recommendations.length);
+            temp = recommendations.splice(0, recommendations.length);
         }
 
+        // add temp to new subscription
         for (let i = 0; i < temp.length; i += 1) {
             const index = Math.random()
-            * (this.state.subscriptions.length - this.state.start)
+            * (subscriptions.length - this.state.start)
             + this.state.start;
-            this.state.subscriptions.splice(index, 0, temp[i]);
+            subscriptions.splice(index, 0, temp[i]);
         }
-        this.setState((prevState) => ({
-            start: prevState.subscriptions.length,
-        }));
-        if (this.props.subscriptionFinished) {
-            if (this.state.recommendations.length <= 0) {
-                this.setState({
-                    finished: true,
-                });
-            } else {
-                this.setState({
-                    recoNum: 20,
-                });
-            }
+        this.setState({
+            start: subscriptions.length,
+            recommendations,
+            subscriptions,
+        });
+        // finished check
+        if (this.props.subscriptionFinished
+            && this.props.recommendationFinished
+            && this.state.recommendations.length <= 0) {
+            this.setState({
+                finished: true,
+            });
+        } else {
+            this.setState({
+                finished: false,
+            });
         }
     }
 
-    paperCardMaker = (key, paper, actor, verb, target) => (
+    paperCardMaker = (key, paper, actor, verb, target, type) => (
         <PaperCard
           key={key}
           id={paper.id}
@@ -136,14 +149,15 @@ class SubscriptionFeed extends Component {
           addButtonExists
           history={this.props.history}
           headerExists
-          subscription
+          subscription={type === "subscription"}
+          recommendation={type === "recommendation_paper"}
           actor={actor}
           verb={verb}
           target={target}
         />
     )
 
-    collectionCardMaker = (key, collection, actor, verb, target) => (
+    collectionCardMaker = (key, collection, actor, verb, target, type) => (
         <CollectionCard
           key={key}
           id={collection.id}
@@ -154,14 +168,14 @@ class SubscriptionFeed extends Component {
           likeCount={collection.count.likes}
           isLiked={collection.liked}
           headerExists
-          subscription
+          subscription={type === "subscription"}
           actor={actor}
           verb={verb}
           target={target}
         />
     )
 
-    reviewCardMaker = (key, review, actor, verb, target) => (
+    reviewCardMaker = (key, review, actor, verb, target, type) => (
         <ReviewCard
           key={key}
           id={review.id}
@@ -173,28 +187,43 @@ class SubscriptionFeed extends Component {
           likeCount={review.count.likes}
           replyCount={review.count.replies}
           headerExists
-          subscription
+          subscription={type === "subscription"}
+          recommendation={type === "recommendation_review"}
           actor={actor}
           verb={verb}
           target={target}
         />
     )
 
-    cardMaker = (item, index) => {
+    cardMaker = (item) => {
         const itemType = item.action_object.type;
         if (itemType === "paper") {
             return this.paperCardMaker(
-                index, item.action_object.content, item.actor, item.verb, item.target,
+                item.type + String(item.id),
+                item.action_object.content,
+                item.actor, item.verb,
+                item.target,
+                item.type,
             );
         }
         if (itemType === "collection") {
             return this.collectionCardMaker(
-                index, item.action_object.content, item.actor, item.verb, item.target,
+                item.type + String(item.id),
+                item.action_object.content,
+                item.actor,
+                item.verb,
+                item.target,
+                item.type,
             );
         }
         if (itemType === "review") {
             return this.reviewCardMaker(
-                index, item.action_object.content, item.actor, item.verb, item.target,
+                item.type + String(item.id),
+                item.action_object.content,
+                item.actor,
+                item.verb,
+                item.target,
+                item.type,
             );
         }
         return null;
@@ -203,11 +232,11 @@ class SubscriptionFeed extends Component {
     render() {
         const cardsLeft = this.state.subscriptions
             .filter((x) => this.state.subscriptions.indexOf(x) % 2 === 0)
-            .map((item, index) => this.cardMaker(item, index));
+            .map((item) => this.cardMaker(item));
 
         const cardsRight = this.state.subscriptions
             .filter((x) => this.state.subscriptions.indexOf(x) % 2 === 1)
-            .map((item, index) => this.cardMaker(item, index));
+            .map((item) => this.cardMaker(item));
 
         return (
             <div className="SubscriptionFeed">

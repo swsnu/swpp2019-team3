@@ -1,4 +1,4 @@
-/* eslint-disable react/no-array-index-key */
+/* eslint-disable no-await-in-loop */
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -20,13 +20,15 @@ class CollectionDetail extends Component {
             userCount: 0,
             likeCount: 0,
             paperCount: 0,
-            replyCount: 0,
             newReplyContent: "",
             isLiked: false,
             replies: [],
             papers: [],
             thisCollection: {},
             owner: {},
+            newCollectionReplies: [],
+            replyCollectionPageCount: 1,
+            replyCollectionFinished: true,
         };
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
         this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
@@ -48,7 +50,6 @@ class CollectionDetail extends Component {
                         likeCount: this.props.selectedCollection.count.likes,
                         userCount: this.props.selectedCollection.count.users,
                         paperCount: this.props.selectedCollection.count.papers,
-                        replyCount: this.props.selectedCollection.count.replies,
                     });
                 }
             });
@@ -68,6 +69,8 @@ class CollectionDetail extends Component {
             .then(() => {
                 this.setState({
                     replies: this.props.replyList.list,
+                    replyCollectionPageCount: 1,
+                    replyCollectionFinished: this.props.replyList.finished,
                 });
             }).catch(() => {});
     }
@@ -82,7 +85,7 @@ class CollectionDetail extends Component {
                     newReplyContent: "",
                 });
                 this.handleReplies();
-            }).catch(() => {});
+            });
     }
 
     paperCardMaker = (paper) => (
@@ -105,27 +108,50 @@ class CollectionDetail extends Component {
     clickMoreButtonHandler = () => {
         this.props.onGetReplies({
             id: Number(this.props.location.pathname.split("=")[1]),
-            page_number: this.props.replyList.pageNum + 1,
+            page_number: this.state.replyCollectionPageCount + 1,
         })
             .then(() => {
                 const { replies } = this.state;
                 this.setState({
                     replies: replies.concat(this.props.replyList.list),
+                    replyCollectionPageCount: this.props.replyList.pageNum,
+                    replyCollectionFinished: this.props.replyList.finished,
                 });
             });
     }
 
-    handleReplies() {
-        this.props.onGetReplies({
-            id: Number(this.props.location.pathname.split("=")[1]),
-            page_number: this.props.replyList.pageNum,
-        })
-            .then(() => {
-                this.setState({
-                    replies: this.props.replyList.list,
-                });
-            }).catch(() => {});
+
+    async handleReplies() {
+        const end = this.state.replyCollectionPageCount;
+        this.setState({
+            newCollectionReplies: [],
+        });
+        for (let i = 1; (i === 1) || (i < end + 1); i += 1) {
+            await this.forEachHandleReply(i, end);
+            if (i === end || this.props.replyList.finished === true) {
+                this.setState((prevState) => ({
+                    newCollectionReplies: [],
+                    replyCollectionFinished: this.props.replyList.finished,
+                    replyCollectionPageCount: this.props.replyList.pageNum,
+                    replies: prevState.newCollectionReplies.concat(this.props.replyList.list),
+
+                }));
+                break;
+            }
+            this.setState((prevState) => ({
+                newCollectionReplies:
+                prevState.newCollectionReplies.concat(this.props.replyList.list),
+            }));
+        }
     }
+
+    forEachHandleReply(i) {
+        return this.props.onGetReplies({
+            id: Number(this.props.location.pathname.split("=")[1]),
+            page_number: Number(i),
+        });
+    }
+
 
     // handle click 'Like' button
     clickLikeButtonHandler() {
@@ -166,9 +192,9 @@ class CollectionDetail extends Component {
             : (<h5 id="noPapersText">There is no paper in this collection for now.</h5>);
 
         const replies = this.state.replies.length !== 0
-            ? (this.state.replies.map((reply, index) => (
+            ? (this.state.replies.map((reply) => (
                 <Reply
-                  key={index}
+                  key={reply.id}
                   id={reply.id}
                   author={reply.user.username}
                   content={reply.text}
@@ -182,6 +208,11 @@ class CollectionDetail extends Component {
                 />
             )))
             : (<h5 id="noRepliesText">There is no reply in this collection for now.</h5>);
+
+        const replyCount = (this.state.replyCollectionPageCount > 1
+            || (this.state.replyCollectionPageCount === 1
+                && this.state.replyCollectionFinished === false))
+            ? "10+" : this.state.replies.length;
 
         let inviteModal = null;
         if (this.props.selectedCollection.owned
@@ -275,7 +306,7 @@ class CollectionDetail extends Component {
                             <Tab eventKey="paperTab" title={`Papers(${this.state.paperCount})`}>
                                 {paperCards}
                             </Tab>
-                            <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${this.state.replyCount})`}>
+                            <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${replyCount})`}>
                                 <div id="replies">
                                     <div id="createNewReply">
                                         <textarea
@@ -295,7 +326,7 @@ class CollectionDetail extends Component {
                                     </div>
                                     <div id="replyList">
                                         {replies}
-                                        { this.props.replyList.finished ? null
+                                        {this.state.replyCollectionFinished ? null
                                             : (
                                                 <Button
                                                   className="reply-more-button"
