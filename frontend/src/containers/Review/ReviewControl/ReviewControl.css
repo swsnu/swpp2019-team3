@@ -1,6 +1,5 @@
 .review-control .review-control-page{
     background: rgb(242,243,247);
-     
     display: flex;
     min-height: 1000px;
 }
@@ -18,7 +17,7 @@
     flex-direction: column;
 }
 
-.review-control .review-control-page .header{
+.review-control .review-control-page .review-header{
     margin-top: 10%;
     font-size: 200%;
     font-weight: bold;
@@ -52,6 +51,14 @@
     align-items: center;
     font-size: 120%;
     font-weight: bold;
+}
+
+.review-control .board .form-content .anonymous-check{
+    font-size: 80%;
+    font-weight: normal;
+    font-style: italic;
+    align-self: flex-start;
+    margin-top: 2%;
 }
 
 .review-control .board .create-button {

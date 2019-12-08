@@ -99,7 +99,9 @@ const ReviewReducer = (state = initialState, action) => {
             list: {
                 ...state.list,
                 status: reviewStatus.SUCCESS,
-                list: action.target,
+                list: action.target.reviews,
+                pageNum: action.target.page_number,
+                finished: action.target.is_finished,
             },
         };
     case reviewConstants.GET_REVIEW:

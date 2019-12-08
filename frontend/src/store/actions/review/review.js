@@ -49,7 +49,7 @@ export const getReviewsByPaperId = (paperId, pageNum) => (dispatch) => axios.get
 const getReviewsByUserIdSuccess = (reviews) => (
     {
         type: reviewConstants.GET_REVIEWS_BY_USER,
-        target: reviews.reviews,
+        target: reviews,
     }
 );
 

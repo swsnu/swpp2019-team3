@@ -28,6 +28,8 @@ class ProfileDetail extends Component {
         this.reviewCardMaker = this.reviewCardMaker.bind(this);
         this.clickFollowHandler = this.clickFollowHandler.bind(this);
         this.clickUnfollowHandler = this.clickUnfollowHandler.bind(this);
+        this.clickCollectionMoreHandler = this.clickCollectionMoreHandler.bind(this);
+        this.clickReviewMoreHandler = this.clickReviewMoreHandler.bind(this);
     }
 
     componentDidMount() {
@@ -49,12 +51,12 @@ class ProfileDetail extends Component {
             .catch(() => {});
         this.props.onGetCollections({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
-                this.setState({ collections: this.props.collections });
+                this.setState({ collections: this.props.collections.list });
             })
             .catch(() => {});
         this.props.onGetReviews({ id: this.props.location.pathname.split("=")[1] })
             .then(() => {
-                this.setState({ reviews: this.props.reviews });
+                this.setState({ reviews: this.props.reviews.list });
             })
             .catch(() => {});
     }
@@ -78,6 +80,32 @@ class ProfileDetail extends Component {
                 });
             });
     }
+
+    clickCollectionMoreHandler = () => {
+        this.props.onGetCollections({
+            id: this.props.location.pathname.split("=")[1],
+            page_number: this.props.collections.pageNum + 1,
+        })
+            .then(() => {
+                const { collections } = this.state;
+                this.setState({
+                    collections: collections.concat(this.props.collections.list),
+                });
+            });
+    };
+
+    clickReviewMoreHandler = () => {
+        this.props.onGetReviews({
+            id: this.props.location.pathname.split("=")[1],
+            page_number: this.props.reviews.pageNum + 1,
+        })
+            .then(() => {
+                const { reviews } = this.state;
+                this.setState({
+                    reviews: reviews.concat(this.props.reviews.list),
+                });
+            });
+    };
 
     collectionCardMaker = (collection) => (
         <CollectionCard
@@ -195,12 +223,34 @@ class ProfileDetail extends Component {
                                     <div id="collectionCardsLeft">{collectionCardsLeft}</div>
                                     <div id="collectionCardsRight">{collectionCardsRight}</div>
                                 </div>
+                                {this.props.collections.finished ? null
+                                    : (
+                                        <Button
+                                          className="collection-more-button"
+                                          onClick={this.clickCollectionMoreHandler}
+                                          size="lg"
+                                          block
+                                        >
+                View More
+                                        </Button>
+                                    )}
                             </Tab>
                             <Tab eventKey="reviewTab" title={`Review(${this.state.reviews.length})`}>
                                 <div id="reviewCards">
                                     <div id="reviewCardsLeft">{reviewCardsLeft}</div>
                                     <div id="reviewCardsRight">{reviewCardsRight}</div>
                                 </div>
+                                { this.props.reviews.finished ? null
+                                    : (
+                                        <Button
+                                          className="review-more-button"
+                                          onClick={this.clickReviewMoreHandler}
+                                          size="lg"
+                                          block
+                                        >
+                View More
+                                        </Button>
+                                    ) }
                             </Tab>
                         </Tabs>
                     </div>
@@ -212,8 +262,8 @@ class ProfileDetail extends Component {
 
 const mapStateToProps = (state) => ({
     me: state.auth.me,
-    collections: state.collection.list.list,
-    reviews: state.review.list.list,
+    collections: state.collection.list,
+    reviews: state.review.list,
     thisUser: state.user.selectedUser,
     afterFollowCount: state.user.followCount,
     afterUnfollowCount: state.user.unfollowCount,
@@ -235,8 +285,8 @@ ProfileDetail.propTypes = {
     location: PropTypes.objectOf(PropTypes.any),
     me: PropTypes.objectOf(PropTypes.any),
     thisUser: PropTypes.objectOf(PropTypes.any),
-    collections: PropTypes.arrayOf(PropTypes.any),
-    reviews: PropTypes.arrayOf(PropTypes.any),
+    collections: PropTypes.objectOf(PropTypes.any),
+    reviews: PropTypes.objectOf(PropTypes.any),
     onGetCollections: PropTypes.func,
     onGetReviews: PropTypes.func,
     onGetUser: PropTypes.func,
@@ -252,8 +302,8 @@ ProfileDetail.defaultProps = {
     location: null,
     me: null,
     thisUser: {},
-    collections: [],
-    reviews: [],
+    collections: {},
+    reviews: {},
     onGetCollections: () => {},
     onGetReviews: () => {},
     onGetUser: () => {},

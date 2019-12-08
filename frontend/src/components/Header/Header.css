@@ -10,64 +10,64 @@
 }
 
 #header {
+    align-items: center;
     justify-content: space-between;
-    justify-content: flex-start;
-    display: flexbox;
+    display: flex;
 }
 
-.header .logo {
+.header #header .logo {
     font-weight: bold;
     text-decoration-color: #2f87ef;
     font-size: 150%;
     font-style: oblique;
     padding: 1%;
-    margin-right: 5%;
+    margin-right: 20%;
 }
 
-.header .search {
-    width: 50%;
+.header #header  .search {
+    flex: 0 1 700px;
+    justify-self: center;
+    align-self: center;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
 }
 
-.header .search .search-input {
+.header #header .search .search-input {
     /* margin-left:18%; */
-    width: 100%;
+    flex: 0 1 700px;
     background:rgb(242,243,247);
 }
 
-.header .buttons {
-    margin-left: auto;
+.header #header .search .search-button{
+    /* margin-left:18%; */
+    flex: 0 1 100px;
+}
+
+.header #header .header-buttons {
     display: flex;
-    flex-direction: row;
     justify-content: flex-end;
+    align-items: stretch;
+}
+
+.header #header .header-buttons .dropdown-notification {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.header #header .header-buttons .dropdown-notification .notification-button {
+    flex: 0 1 100px;
+    display: flex;
+    justify-content: space-around;
     align-items: center;
-    margin-right: 3%;
 }
 
-.header .buttons .dropdown-notification {
-    display: inline-block;
-    flex-direction: row;
-    justify-content: space-around;
-}
-
-.header .buttons .dropdown-account {
-    display: inline-block;
-    flex-direction: row;
-    justify-content: space-around;
-}
-
-.header .buttons .notification-button {
-    margin-right: 5%;
- }
-
- .header .buttons .notification-menu {
-    height: 200px;
-    width: 250%;
+.header #header .header-buttons .dropdown-notification .notification-menu{
+    width: 100%;
     overflow-y: scroll;
+    height: 200px;
 }
 
-.header .buttons .notification-entry {
+.header #header .header-buttons .dropdown-notification .notification-menu .notification-entry{
     margin-left: 5%;
     margin-right: 5%;
 }
@@ -87,10 +87,18 @@
     text-align: center;
 }
 
-.header .buttons .myaccount-button {
-    margin-left: 5%;
+.header #header .header-buttons .dropdown-account  {
+    display: flex;
+    justify-content: flex-end;
 }
 
-.header .buttons .myaccount-menu {
-    justify-content: flex-end;
+.header #header .header-buttons .dropdown-account .myaccount-button {
+    flex: 0 1 100px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.header #header .header-buttons .dropdown-account .myaccount-menu {
+    width: 100%;
 }

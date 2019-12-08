@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import Navbar from "react-bootstrap/Navbar";
-import Form from "react-bootstrap/Form";
-import Dropdown from "react-bootstrap/Dropdown";
-import Button from "react-bootstrap/Button";
-import Nav from "react-bootstrap/Nav";
+import {
+    Navbar, Form, Dropdown, Button, Nav, Badge, Image,
+} from "react-bootstrap";
+
 import { Link } from "react-router-dom";
 
 import { connect } from "react-redux";
@@ -11,6 +10,8 @@ import PropTypes from "prop-types";
 import { authActions } from "../../store/actions";
 import { signoutStatus } from "../../constants/constants";
 import "./Header.css";
+import SVG from "../svg";
+import SamplePhoto from "../../containers/User/ProfileDetail/sample.jpg";
 
 class Header extends Component {
     constructor(props) {
@@ -73,9 +74,7 @@ class Header extends Component {
         }
 
         let notifications = null;
-        let notificationLabel = "notifcation";
         if (this.props.notifications.length > 0) {
-            notificationLabel = "notification (new)";
             notifications = this.props.notifications.map(
                 (notification) => {
                     let target = null;
@@ -139,15 +138,20 @@ class Header extends Component {
                         >Search
                         </Button>
                     </div>
-                    <div className="buttons">
+                    <div className="header-buttons">
                         <Dropdown className="dropdown-notification">
-                            <Dropdown.Toggle title="notification" className="notification-button">{notificationLabel}</Dropdown.Toggle>
+                            <Dropdown.Toggle className="notification-button" variant="light" title="notification">
+                                <SVG name="bell" height="30%" width="30%" />
+                                <Badge variant="secondary">{notifications.length}</Badge>
+                            </Dropdown.Toggle>
                             <Dropdown.Menu className="notification-menu">
                                 {notifications}
                             </Dropdown.Menu>
                         </Dropdown>
-                        <Dropdown className="dropdown-account">
-                            <Dropdown.Toggle title="myaccount" className="myaccount-button">My Account</Dropdown.Toggle>
+                        <Dropdown className="dropdown-account" alignRight>
+                            <Dropdown.Toggle title="myaccount" variant="light" className="myaccount-button">
+                                <Image className="user-photo" src={SamplePhoto} width={30} height={30} roundedCircle />
+                            </Dropdown.Toggle>
                             <Dropdown.Menu className="myaccount-menu">
                                 <Dropdown.Header className="username-header">{username}</Dropdown.Header>
                                 <Dropdown.Item className="my-profile-button" href={`/profile_id=${id}`}>My Profile</Dropdown.Item>

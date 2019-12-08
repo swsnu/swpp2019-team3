@@ -20,9 +20,11 @@ class ReviewControl extends Component {
             thisReview: { id: 0 },
             paperId: 0,
             keywords: [],
+            anonymous: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.clickButtonHandler = this.clickButtonHandler.bind(this);
+        this.handleAnonymous = this.handleAnonymous.bind(this);
     }
 
     componentDidMount() {
@@ -48,6 +50,7 @@ class ReviewControl extends Component {
                         title: this.props.selectedReview.review.title,
                         content: this.props.selectedReview.review.text,
                         paperId: this.props.selectedReview.review.paper.id,
+                        anonymous: this.props.selectedReview.review.is_anonymous,
                     }));
                     this.props.onGetPaper({ id: this.state.paperId })
                         .then(() => {
@@ -66,10 +69,22 @@ class ReviewControl extends Component {
         }
     }
 
+
+    handleAnonymous = () => {
+        this.setState((prevState) => ({
+            anonymous: !prevState.anonymous,
+        }));
+    }
+
     clickButtonHandler() {
         let review = {};
         if (this.props.mode === 0) {
-            review = { id: this.state.paper.id, title: this.state.title, text: this.state.content };
+            review = {
+                id: this.state.paper.id,
+                title: this.state.title,
+                text: this.state.content,
+                is_anonymous: this.state.anonymous,
+            };
             this.props.onMakeNewReview(review)
                 .then(() => {
                     this.props.history.push(`/review_id=${this.props.newReview.review.id}`);
@@ -80,6 +95,7 @@ class ReviewControl extends Component {
                 id: this.state.thisReview.id,
                 title: this.state.title,
                 text: this.state.content,
+                is_anonymous: this.state.anonymous,
             };
 
             this.props.onSetReview(review)
@@ -109,7 +125,7 @@ class ReviewControl extends Component {
             <div className="review-control">
                 <div className="review-control-page">
                     <div className="board">
-                        <div className="header">{this.props.mode ? "Edit Review For" : "Create Review For"}</div>
+                        <div className="review-header">{this.props.mode ? "Edit Review For" : "Create Review For"}</div>
                         <div className="paper-spec">
                             <PaperSpec
                               id={this.props.selectedPaper.id}
@@ -122,6 +138,7 @@ class ReviewControl extends Component {
                               isLiked={this.props.selectedPaper.liked}
                               link={link}
                               addButtonExists
+                              abstractfoldExists
                               history={this.props.history}
                             />
                         </div>
@@ -132,6 +149,7 @@ class ReviewControl extends Component {
                         <Form.Group className="form-content" controlId="formReviewContent">
                             <Form.Label>Content</Form.Label>
                             <Form.Control name="content" className="content-input" as="textarea" value={this.state.content} rows="7" type="text" placeholder={this.props.mode === 0 ? "Enter content here." : this.props.selectedReview.review.text} onChange={this.handleChange} />
+                            <Form.Check type="checkbox" className="anonymous-check" label="Write it anonymously" checked={this.state.anonymous} onChange={() => this.handleAnonymous()} />
                         </Form.Group>
                         { this.props.mode === 0
                             ? <Button className="create-button" onClick={this.clickButtonHandler} disabled={(this.state.title != null && this.state.content != null) && (this.state.title.length === 0 || this.state.content.length === 0)}>Create</Button>

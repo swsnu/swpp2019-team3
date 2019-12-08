@@ -12,6 +12,8 @@ const stubInitialState = {
         status: reviewStatus.NONE,
         list: [],
         error: null,
+        pageNum: 0,
+        finished: false,
     },
     edit: {
         status: reviewStatus.NONE,
@@ -113,10 +115,16 @@ describe("Review reducer", () => {
     it("should return get_reviews_by_user", () => {
         const newState = ReviewReducer(stubInitialState, {
             type: reviewConstants.GET_REVIEWS_BY_USER,
-            target: stubReview,
+            target: {
+                reviews: [stubReview],
+                page_number: 1,
+                is_finished: false,
+            },
         });
         expect(newState.list.status).toBe(reviewStatus.SUCCESS);
-        expect(newState.list.list).toBe(stubReview);
+        expect(newState.list.list).toStrictEqual([stubReview]);
+        expect(newState.list.pageNum).toBe(1);
+        expect(newState.list.finished).toBe(false);
     });
 
     it("should return get_review", () => {
