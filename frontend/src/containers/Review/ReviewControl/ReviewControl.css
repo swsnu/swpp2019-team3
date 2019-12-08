@@ -53,6 +53,14 @@
     font-weight: bold;
 }
 
+.review-control .board .form-content .anonymous-check{
+    font-size: 80%;
+    font-weight: normal;
+    font-style: italic;
+    align-self: flex-start;
+    margin-top: 2%;
+}
+
 .review-control .board .create-button {
     margin-bottom: 5%;
 }
