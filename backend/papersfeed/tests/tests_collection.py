@@ -129,6 +129,8 @@ class CollectionTestCase(TestCase):
                               content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
+        collection = json.loads(response.content)[constants.COLLECTION]
+        self.assertEqual(collection[constants.OWNER][constants.USERNAME], 'swpp')
 
     def test_edit_collection(self):
         """ EDIT COLLECTION """
@@ -515,3 +517,82 @@ class CollectionTestCase(TestCase):
         # the last action comes first
         self.assertEqual(collections[0]['title'], 'SWPP Papers')
         self.assertEqual(collections[1]['title'], 'collection2')
+
+    def test_collection_user_type(self):
+        """Test Collection User Type"""
+        client = Client()
+
+        collection_id = Collection.objects.filter(title='Private Collection1').first().id
+
+        # Sign In: swpp
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        client.put('/api/collection/type',
+                   data=json.dumps({
+                       constants.ID: collection_id,
+                       constants.TYPE: 'public'
+                   }),
+                   content_type='application/json')
+
+        # Get Collection
+        response = client.get('/api/collection',
+                              data={
+                                  constants.ID: collection_id
+                              },
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        collection = json.loads(response.content)[constants.COLLECTION]
+        self.assertEqual(collection[constants.COLLECTION_USER_TYPE], 'owner')
+
+        # Sign In: swpp_second
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp_second@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Get Collection
+        response = client.get('/api/collection',
+                              data={
+                                  constants.ID: collection_id
+                              },
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        collection = json.loads(response.content)[constants.COLLECTION]
+        self.assertEqual(collection[constants.COLLECTION_USER_TYPE], 'member')
+
+        # Sign Up: swpp_third
+        client.post('/api/user',
+                    json.dumps({
+                        constants.EMAIL: 'swpp_thrid@snu.ac.kr',
+                        constants.USERNAME: 'swpp_third',
+                        constants.PASSWORD: 'iluvswpp1234'
+                    }),
+                    content_type='application/json')
+
+        # Sign In: swpp_third
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp_thrid@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Get Collection
+        response = client.get('/api/collection',
+                              data={
+                                  constants.ID: collection_id
+                              },
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        collection = json.loads(response.content)[constants.COLLECTION]
+        self.assertEqual(collection[constants.COLLECTION_USER_TYPE], None)

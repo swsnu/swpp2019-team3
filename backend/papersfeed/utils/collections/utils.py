@@ -3,7 +3,8 @@
 
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, Exists, OuterRef, Count, Case, When
+from django.db.models import Q, Exists, OuterRef, Count, Case, When, Subquery
+from django.db import models
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
@@ -12,6 +13,7 @@ from papersfeed.models.collections.collection_like import CollectionLike
 from papersfeed.models.collections.collection_user import CollectionUser, COLLECTION_USER_TYPE
 from papersfeed.models.collections.collection_paper import CollectionPaper
 from papersfeed.models.replies.reply_collection import ReplyCollection
+from papersfeed.models.users.user import User
 from papersfeed.models.users.user_action import UserAction, USER_ACTION_TYPE
 from papersfeed.models.subscription.subscription import Subscription
 from papersfeed.models.papers.paper import Paper
@@ -456,7 +458,26 @@ def __get_collections(filter_query, request_user, count, params=None, page_numbe
     ).annotate(
         is_liked=__is_collection_liked('id', request_user),
         is_owned=__is_collection_owned('id', request_user),
-        contains_paper=__contains_paper('id', paper_id)).order_by(order_by)
+        contains_paper=__contains_paper('id', paper_id),
+        owner_id=Subquery(
+            CollectionUser.objects.filter(
+                collection_id=OuterRef('id'),
+                type=COLLECTION_USER_TYPE[0]
+            ).values(
+                'user_id'
+            )[:1],
+            output_field=models.IntegerField()
+        ),
+        collection_user_type=Subquery(
+            CollectionUser.objects.filter(
+                collection_id=OuterRef('id'),
+                user_id=request_user.id,
+            ).values(
+                'type'
+            )[:1],
+            output_field=models.CharField()
+        )
+    ).order_by(order_by)
 
     collections = get_results_from_queryset(queryset, count, page_number)
 
@@ -471,7 +492,8 @@ def __get_collections(filter_query, request_user, count, params=None, page_numbe
     return collections, pagination_value, is_finished
 
 
-def __pack_collections(collections, request_user, paper_id=None):  # pylint: disable=unused-argument
+# pylint: disable=unused-argument, too-many-locals
+def __pack_collections(collections, request_user, paper_id=None):
     """Pack Collections"""
     packed = []
 
@@ -488,6 +510,14 @@ def __pack_collections(collections, request_user, paper_id=None):  # pylint: dis
 
     # Reply Count
     reply_counts = __get_collection_reply_count(collection_ids, 'collection_id')
+
+    # Owner User
+    user_ids = [collection.owner_id for collection in collections]
+    owner_id = int(user_ids[0]) if user_ids else None
+    user = {
+        constants.ID: owner_id,
+        constants.USERNAME: User.objects.get(id=owner_id).username if owner_id else None
+    }
 
     for collection in collections:
         collection_id = collection.id
@@ -506,7 +536,9 @@ def __pack_collections(collections, request_user, paper_id=None):  # pylint: dis
             },
             constants.CREATION_DATE: collection.creation_date,
             constants.MODIFICATION_DATE: collection.modification_date,
-            constants.TYPE: collection.type
+            constants.TYPE: collection.type,
+            constants.COLLECTION_USER_TYPE: collection.collection_user_type,
+            constants.OWNER: user
         }
 
         if paper_id:
@@ -515,6 +547,7 @@ def __pack_collections(collections, request_user, paper_id=None):  # pylint: dis
         packed.append(packed_collection)
 
     return packed
+# pylint: enable=unused-argument, too-many-locals
 
 
 def __is_collection_liked(outer_ref, request_user):
