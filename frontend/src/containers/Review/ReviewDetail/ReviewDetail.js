@@ -199,7 +199,8 @@ class ReviewDetail extends Component {
                         <Card.Body>
                             <div className="review">
                                 <div className="author">
-                                    <Card.Link href={`/profile_id=${this.state.author.id}`} className="text">{this.state.author.username}</Card.Link>
+                                    {this.props.selectedReview.is_anonymous ? "Anonymous User"
+                                        : (<Card.Link href={`/profile_id=${this.state.author.id}`} className="text">{this.state.author.username}</Card.Link>)}
                                 </div>
                                 <div id="date">
                                     <div id="creationDate">Created: {this.state.creationDate}</div>

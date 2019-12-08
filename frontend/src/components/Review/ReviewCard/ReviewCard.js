@@ -44,7 +44,7 @@ class ReviewCard extends Component {
                 header = (
                     <Card.Header id="headerSubscriptionTarget">
                         <div className="CardHeader">
-                            {actorLink}
+                            {this.props.anonymous ? <div className="actorLink">Anonymous User</div> : actorLink}
                             <h5 className="verb">{` ${this.props.verb} this review on `}</h5>
                         </div>
                         <a className="targetLink" href={`/paper_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
@@ -54,7 +54,7 @@ class ReviewCard extends Component {
                 header = (
                     <Card.Header id="headerSubscription">
                         <div className="CardHeader">
-                            {actorLink}
+                            {this.props.anonymous ? <div className="actorLink">Anonymous User</div> : actorLink}
                             <h5 className="verb">{` ${this.props.verb} this review`}</h5>
                         </div>
                     </Card.Header>
@@ -80,7 +80,8 @@ class ReviewCard extends Component {
                         </div>
                         <Card.Text>{this.props.date}</Card.Text>
                         <div className="author">
-                            <Card.Link href={`/profile_id=${this.props.author_id}`} className="text">{this.props.author}</Card.Link>
+                            {this.props.anonymous ? "Anonymous User"
+                                : (<Card.Link href={`/profile_id=${this.props.author_id}`} className="text">{this.props.author}</Card.Link>)}
                         </div>
                     </Card.Body>
                     <Card.Footer className="footer">
@@ -130,6 +131,7 @@ ReviewCard.propTypes = {
     verb: PropTypes.string,
     target: PropTypes.objectOf(PropTypes.any),
     recommendation: PropTypes.bool,
+    anonymous: PropTypes.bool,
 };
 
 ReviewCard.defaultProps = {
@@ -151,4 +153,5 @@ ReviewCard.defaultProps = {
     verb: "",
     target: {},
     recommendation: false,
+    anonymous: false,
 };

@@ -192,6 +192,7 @@ class SubscriptionFeed extends Component {
           actor={actor}
           verb={verb}
           target={target}
+          anonymous={review.is_anonymous}
         />
     )
 

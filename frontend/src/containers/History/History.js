@@ -110,6 +110,7 @@ class History extends Component {
           likeCount={card.count.likes}
           replyCount={card.count.replies}
           headerExists={false}
+          anonymous={card.is_anonymous}
         />
     )
 

@@ -120,4 +120,32 @@ describe("<ReviewCard />", () => {
         const wrapper = component.find("#headerSubscriptionTarget").hostNodes();
         expect(wrapper.length).toBe(1);
     });
+
+    it("should handle anonymous", () => {
+        reviewCard = makeReviewCard(stubInitialState, {
+            headerExists: true,
+            subscription: true,
+            target: { content: { id: 1 } },
+            anonymous: true,
+        });
+        const component = mount(reviewCard);
+        const actor = component.find(".actorLink");
+        expect(actor.text()).toBe("Anonymous User");
+        const author = component.find(".author");
+        expect(author.text()).toBe("Anonymous User");
+    });
+
+    it("should handle anonymous", () => {
+        reviewCard = makeReviewCard(stubInitialState, {
+            headerExists: true,
+            subscription: true,
+            target: {},
+            anonymous: true,
+        });
+        const component = mount(reviewCard);
+        const actor = component.find(".actorLink");
+        expect(actor.text()).toBe("Anonymous User");
+        const author = component.find(".author");
+        expect(author.text()).toBe("Anonymous User");
+    });
 });

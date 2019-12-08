@@ -77,6 +77,7 @@ class PaperDetail extends Component {
           likeCount={review.count.likes}
           replyCount={review.count.replies}
           headerExists={false}
+          anonymous={review.is_anonymous}
         />
     )
 
