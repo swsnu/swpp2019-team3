@@ -143,4 +143,23 @@ describe("<PaperSpec />", () => {
         keywords = component.find(".keyword-tag").hostNodes();
         expect(keywords.length).toBe(10);
     });
+
+    it("should handle abstract fold", () => {
+        paperSpec = makePaperSpec(stubInitialState, {
+            abstractfoldExists: true,
+        });
+        const component = mount(paperSpec);
+
+        let wrapper = component.find(".abstract-more-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+
+        wrapper.simulate("click");
+
+        wrapper = component.find(".abstract-less-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+
+        wrapper.simulate("click");
+        wrapper = component.find(".abstract-more-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+    });
 });
