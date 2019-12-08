@@ -111,4 +111,13 @@ describe("<ReviewCard />", () => {
         const wrapper = component.find("#headerSubscriptionTarget").hostNodes();
         expect(wrapper.length).toBe(1);
     });
+
+    it("if headerExists && recommendations && target, then recommendation header with target should exist", () => {
+        reviewCard = makeReviewCard(stubInitialState, {
+            headerExists: true, recommendation: true, target: { content: { id: 1 } },
+        });
+        const component = mount(reviewCard);
+        const wrapper = component.find("#headerSubscriptionTarget").hostNodes();
+        expect(wrapper.length).toBe(1);
+    });
 });

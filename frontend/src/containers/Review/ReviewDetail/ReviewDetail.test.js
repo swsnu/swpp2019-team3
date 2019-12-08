@@ -5,7 +5,7 @@ import { createBrowserHistory } from "history";
 import ReviewDetail from "./ReviewDetail";
 import { reviewActions, replyActions } from "../../../store/actions";
 import { reviewStatus, getMeStatus } from "../../../constants/constants";
-import { getMockStore, mockPromise } from "../../../test-utils/mocks";
+import { getMockStore, mockPromise, flushPromises } from "../../../test-utils/mocks";
 
 
 const history = createBrowserHistory();
@@ -109,12 +109,35 @@ describe("<ReviewDetail />", () => {
     });
 
 
-    it("should render without errors", () => {
+    it("should render without errors", async () => {
         const component = mount(reviewDetail);
+        await flushPromises();
         const wrapper = component.find("ReviewDetail");
         expect(wrapper.length).toBe(1);
         expect(spyOnGetReview).toHaveBeenCalledTimes(1);
         expect(spyGetReplies).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle review_not_exist", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            review: {
+                ...stubInitialState.review,
+                selected: {
+                    status: reviewStatus.REVIEW_NOT_EXIST,
+                    review: { id: 1 },
+                    error: null,
+                    replies: [],
+                },
+            },
+        };
+        const component = mount(makeReviewDetail(stubInitialState));
+        const spyPush = jest.spyOn(history, "push")
+            .mockImplementation(() => {});
+        await flushPromises();
+        const wrapper = component.find("ReviewDetail");
+        expect(wrapper.length).toBe(1);
+        expect(spyPush).toHaveBeenCalledTimes(1);
     });
 
     it("should handle change on new reply", () => {
@@ -203,31 +226,53 @@ describe("<ReviewDetail />", () => {
         expect(spyClickAdd).toHaveBeenCalledTimes(1);
     });
 
-    it("should handle replies well", () => {
-        const component = mount(reviewDetail);
+    it("should handle replies well repeatedly", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            reply: {
+                ...stubInitialState.reply,
+                list: {
+                    ...stubInitialState.reply.list,
+                    pageNum: 1,
+                    list: [{
+                        id: 1,
+                        user: {
+                            username: "afdaf",
+                        },
+                        count: {
+                            likes: 0,
+                        },
+                    },
+                    {
+                        id: 2,
+                        user: {
+                            username: "afdaf",
+                        },
+                        count: {
+                            likes: 0,
+                        },
+                    },
+                    {
+                        id: 3,
+                        user: {
+                            username: "afdaf",
+                        },
+                        count: {
+                            likes: 0,
+                        },
+                    }],
+                    finished: false,
+                },
+            },
+        };
+        const component = mount(makeReviewDetail(stubInitialState));
         const instance = component.find("ReviewDetail").instance();
         instance.setState(
             {
+                replyFinished: false,
+                replyPageCount: 2,
                 replies: [{
-                    id: 1,
-                    user: {
-                        username: "afdaf",
-                    },
-                    count: {
-                        likes: 0,
-                    },
-                },
-                {
-                    id: 2,
-                    user: {
-                        username: "afdaf",
-                    },
-                    count: {
-                        likes: 0,
-                    },
-                },
-                {
-                    id: 3,
+                    id: 4,
                     user: {
                         username: "afdaf",
                     },
@@ -238,7 +283,57 @@ describe("<ReviewDetail />", () => {
             },
         );
         component.update();
-        const replies = component.find(".replies");
-        expect(replies.length).toBe(1);
+        const spyHandleReplies = jest.spyOn(instance, "handleReplies");
+        const spyForEach = jest.spyOn(instance, "forEachHandleReply");
+
+        expect(instance.state.replyPageCount).toBe(2);
+
+        instance.handleReplies();
+        await flushPromises();
+        component.update();
+        expect(spyGetReplies).toBeCalledTimes(3);
+        expect(spyHandleReplies).toBeCalledTimes(1);
+        expect(spyForEach).toBeCalledTimes(2);
+    });
+
+    it("should handle click more button", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            reply: {
+                ...stubInitialState.reply,
+                list: {
+                    ...stubInitialState.reply.list,
+                    pageNum: 2,
+                    list: [{
+                        id: 3,
+                        user: {
+                            username: "afdaf",
+                        },
+                        count: {
+                            likes: 0,
+                        },
+                    }],
+                    finished: true,
+                },
+            },
+        };
+        const component = mount(makeReviewDetail(stubInitialState));
+        const instance = component.find("ReviewDetail").instance();
+        instance.setState(
+            {
+                replyFinished: false,
+                replyPageCount: 1,
+                replies: [],
+            },
+        );
+        component.update();
+        const button = component.find(".reply-more-button").hostNodes();
+        expect(button.length).toBe(1);
+        button.simulate("click");
+
+        await flushPromises();
+        expect(spyGetReplies).toBeCalledTimes(2);
+        expect(instance.state.replyPageCount).toBe(2);
+        expect(instance.state.replyFinished).toBe(true);
     });
 });

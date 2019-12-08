@@ -76,6 +76,7 @@ def __pack_subscriptions(subscriptions, request_user):
             target = {}
 
         packed_subscription = {
+            constants.TYPE: "subscription",
             constants.ID: subscription.id,
             constants.ACTOR: {
                 constants.ID: subscription.actor.id,

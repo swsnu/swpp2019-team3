@@ -22,8 +22,8 @@ def get_results_from_queryset(queryset, count, page_num=0):
     if count is None:
         results = queryset
     else:
-        # 최대 20개씩 Pagination을 하면서 찾는다
-        pages = Paginator(queryset, min(20, count))
+        # 최대 30개씩 Pagination을 하면서 찾는다
+        pages = Paginator(queryset, min(30, count))
 
         return pages.get_page(page_num)
 

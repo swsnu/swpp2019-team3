@@ -44,9 +44,7 @@ class ReviewCard extends Component {
                 header = (
                     <Card.Header id="headerSubscriptionTarget">
                         <div className="CardHeader">
-                            {this.props.actor.id === 0
-                                ? (<h5 className="actorLink">{this.props.actor.username}</h5>)
-                                : actorLink}
+                            {actorLink}
                             <h5 className="verb">{` ${this.props.verb} this review on `}</h5>
                         </div>
                         <a className="targetLink" href={`/paper_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
@@ -56,16 +54,22 @@ class ReviewCard extends Component {
                 header = (
                     <Card.Header id="headerSubscription">
                         <div className="CardHeader">
-                            {this.props.actor.id === 0
-                                ? (<h5 className="actorLink">{this.props.actor.username}</h5>)
-                                : actorLink}
+                            {actorLink}
                             <h5 className="verb">{` ${this.props.verb} this review`}</h5>
                         </div>
                     </Card.Header>
                 );
             }
+        } else if (this.props.recommendation) {
+            header = (
+                <Card.Header id="headerSubscriptionTarget">
+                    <div className="CardHeader">
+                        <h5 className="verb">{`${this.props.verb} on`}</h5>
+                    </div>
+                    <a className="targetLink" href={`/paper_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
+                </Card.Header>
+            );
         }
-
         return (
             <div className="wrapper">
                 <Card className="review">
@@ -125,6 +129,7 @@ ReviewCard.propTypes = {
     actor: PropTypes.objectOf(PropTypes.any),
     verb: PropTypes.string,
     target: PropTypes.objectOf(PropTypes.any),
+    recommendation: PropTypes.bool,
 };
 
 ReviewCard.defaultProps = {
@@ -145,4 +150,5 @@ ReviewCard.defaultProps = {
     actor: {},
     verb: "",
     target: {},
+    recommendation: false,
 };
