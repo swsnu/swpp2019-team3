@@ -81,7 +81,7 @@ def insert_user_recommendation(args):
         ])
 
     UserRecommendation.objects.filter(
-        modification_date__lt=(datetime.now() + timedelta(hours=-2))
+        modification_date__lt=(datetime.now() + timedelta(hours=-23))
     ).delete()
 
 
