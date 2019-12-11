@@ -121,31 +121,85 @@ describe("<ReviewCard />", () => {
         expect(wrapper.length).toBe(1);
     });
 
-    it("should handle anonymous", () => {
+    it("should handle anonymous if user is not author", () => {
+        stubInitialState = {
+            ...stubInitialState,
+            auth: {
+                ...stubInitialState.auth,
+                me: { id: 1 },
+            },
+        };
         reviewCard = makeReviewCard(stubInitialState, {
             headerExists: true,
             subscription: true,
             target: { content: { id: 1 } },
             anonymous: true,
+            author_id: 2,
         });
         const component = mount(reviewCard);
-        const actor = component.find(".actorLink");
-        expect(actor.text()).toBe("Anonymous User");
         const author = component.find(".author");
         expect(author.text()).toBe("Anonymous User");
     });
 
-    it("should handle anonymous", () => {
+    it("should handle anonymous if user is not author", () => {
+        stubInitialState = {
+            ...stubInitialState,
+            auth: {
+                ...stubInitialState.auth,
+                me: { id: 1 },
+            },
+        };
         reviewCard = makeReviewCard(stubInitialState, {
             headerExists: true,
             subscription: true,
             target: {},
             anonymous: true,
+            author_id: 2,
         });
         const component = mount(reviewCard);
-        const actor = component.find(".actorLink");
-        expect(actor.text()).toBe("Anonymous User");
         const author = component.find(".author");
         expect(author.text()).toBe("Anonymous User");
+    });
+
+    it("should handle not anonymous if user is author", () => {
+        stubInitialState = {
+            ...stubInitialState,
+            auth: {
+                ...stubInitialState.auth,
+                me: { id: 1 },
+            },
+        };
+        reviewCard = makeReviewCard(stubInitialState, {
+            headerExists: true,
+            subscription: true,
+            target: { content: { id: 1 } },
+            anonymous: true,
+            author_id: 1,
+            author: "a",
+        });
+        const component = mount(reviewCard);
+        const author = component.find(".author");
+        expect(author.text()).toBe("a");
+    });
+
+    it("should not handle anonymous if user is author", () => {
+        stubInitialState = {
+            ...stubInitialState,
+            auth: {
+                ...stubInitialState.auth,
+                me: { id: 1 },
+            },
+        };
+        reviewCard = makeReviewCard(stubInitialState, {
+            headerExists: true,
+            subscription: true,
+            target: { content: { id: 1 } },
+            anonymous: true,
+            author_id: 1,
+            author: "a",
+        });
+        const component = mount(reviewCard);
+        const author = component.find(".author");
+        expect(author.text()).toBe("a");
     });
 });
