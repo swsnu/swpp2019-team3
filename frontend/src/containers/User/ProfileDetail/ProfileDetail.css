@@ -1,7 +1,6 @@
 .ProfileDetailContent {
-    min-height: 1000px;
+    min-height: 70vh;;
     background: rgb(242,243,247);
-     
     position: relative;
     display: flex;
     flex-direction: column;
@@ -42,6 +41,7 @@
     margin-left: 5%;
     margin-right: 10%;
     background: rgb(255,255,255);
+    min-height: 52vh;
 }
 
 .itemTabSection #collectionCards {
