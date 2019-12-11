@@ -110,6 +110,7 @@ class History extends Component {
           likeCount={card.count.likes}
           replyCount={card.count.replies}
           headerExists={false}
+          anonymous={card.is_anonymous}
         />
     )
 
@@ -170,6 +171,7 @@ class History extends Component {
         }
         return (
             <div className="history">
+                <div className="history-text">My History</div>
                 <div className="item-list">
                     <Tabs defaultActiveKey="paper-tab" className="item-tabs">
                         <Tab className="paper-tab" eventKey="paper-tab" title="Paper">

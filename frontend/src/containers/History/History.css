@@ -1,11 +1,19 @@
 .history {
-    min-height: 1000px;
+    min-height: 90vh;
     background: rgb(242,243,247);
-     
+    flex-direction: column;
     position: relative;
     display: flex;
 }
 
+.history .history-text {
+    width: 96%;
+    height: 100%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    font-size: 200%;
+    font-weight: 700;
+}
 .item-list {
     margin-top: 1%;
     margin-left: 1%;
@@ -13,6 +21,7 @@
     margin-bottom: 1%;
     width: 100%;
     background: rgb(255,255,255);
+    min-height: 70vh;
 }
 
 .item-list .paper-cards {

@@ -68,7 +68,7 @@ class CollectionCard extends Component {
                               : this.clickCollectionCardLikeHandler}
                         >
                             <div className="heart-image">
-                                <SVG name="heart" height="70%" width="70%" />
+                                <SVG name="heart" height="25px" width="25px" />
                             </div>
                             {this.state.likeCount}
                         </Button>
@@ -78,7 +78,7 @@ class CollectionCard extends Component {
                           href={`/collection_id=${this.props.id}`}
                         >
                             <div className="reply-image">
-                                <SVG name="zoom" height="70%" width="70%" />
+                                <SVG name="zoom" height="25px" width="25px" />
                             </div>
                             {this.props.replyCount}
                         </Button>

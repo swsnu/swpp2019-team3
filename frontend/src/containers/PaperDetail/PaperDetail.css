@@ -15,9 +15,11 @@
     width: 90%;
     background: white;
     border-radius: 0.5em;
+    min-height: 85vh;
 }
-/*
+
 .paperdetail-content .up-review {
+    border-top: 2px solid rgb(242,243,247);
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -59,8 +61,7 @@
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
-} */
-
-/* .paperdetail-page {
+} 
+.paperdetail-page {
     background: wheat;
-} */
+}

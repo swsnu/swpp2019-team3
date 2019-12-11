@@ -139,6 +139,12 @@ class ProfileDetail extends Component {
     );
 
     render() {
+        const collectionCount = (this.props.collections.pageNum > 1
+            || (this.props.collections.pageNum === 1 && this.props.collections.finished === false))
+            ? "10+" : this.props.collections.list.length;
+        const reviewCount = (this.props.reviews.pageNum > 1
+            || (this.props.reviews.pageNum === 1 && this.props.reviews.finished === false))
+            ? "10+" : this.props.reviews.list.length;
         const settingButton = (
             <Link to="/account_setting">
                 <Button id="settingButton">Setting</Button>
@@ -218,7 +224,7 @@ class ProfileDetail extends Component {
                     </div>
                     <div className="itemTabSection">
                         <Tabs defaultActiveKey="collectionTab" id="itemTabs">
-                            <Tab eventKey="collectionTab" title={`Collection(${this.state.collections.length})`}>
+                            <Tab eventKey="collectionTab" title={`Collection(${collectionCount})`}>
                                 <div id="collectionCards">
                                     <div id="collectionCardsLeft">{collectionCardsLeft}</div>
                                     <div id="collectionCardsRight">{collectionCardsRight}</div>
@@ -235,7 +241,7 @@ class ProfileDetail extends Component {
                                         </Button>
                                     )}
                             </Tab>
-                            <Tab eventKey="reviewTab" title={`Review(${this.state.reviews.length})`}>
+                            <Tab eventKey="reviewTab" title={`Review(${reviewCount})`}>
                                 <div id="reviewCards">
                                     <div id="reviewCardsLeft">{reviewCardsLeft}</div>
                                     <div id="reviewCardsRight">{reviewCardsRight}</div>

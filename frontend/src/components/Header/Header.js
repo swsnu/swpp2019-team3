@@ -139,9 +139,9 @@ class Header extends Component {
                         </Button>
                     </div>
                     <div className="header-buttons">
-                        <Dropdown className="dropdown-notification">
+                        <Dropdown className="dropdown-notification" alignRight>
                             <Dropdown.Toggle className="notification-button" variant="light" title="notification">
-                                <SVG name="bell" height="30%" width="30%" />
+                                <SVG name="bell" height="20px" width="20px" />
                                 <Badge variant="secondary">{notifications.length}</Badge>
                             </Dropdown.Toggle>
                             <Dropdown.Menu className="notification-menu">

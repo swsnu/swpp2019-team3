@@ -133,18 +133,18 @@ class Reply extends Component {
             <div className="reply-component">
                 <div className="reply">
                     <div className="author">
-                        <Nav.Link href={`/profile_id=${this.props.authorId}`}>{this.props.author}</Nav.Link>
+                        <Nav.Link className="reply-author-link" href={`/profile_id=${this.props.authorId}`}>{this.props.author}</Nav.Link>
                     </div>
                     <div className="date">{this.state.date}</div>
                     <div className="content">{this.props.content}</div>
                     <div className="buttons">
                         <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickReplyUnlikeButtonHandler : this.clickReplyLikeButtonHandler}>
-                            <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}
+                            <div className="heart-image"><SVG name="heart" height="25px" width="25px" /></div>{this.state.likeCount}
                         </Button>
                         {this.props.authorId === this.props.userId
-                            ? <Button className="edit-button" onClick={this.clickReplyEditButtonHandler}>Edit</Button> : null }
+                            ? <Button className="edit-button" variant="outline-primary" onClick={this.clickReplyEditButtonHandler}>Edit</Button> : null }
                         {this.props.authorId === this.props.userId
-                            ? <Button className="delete-button" onClick={this.clickReplyDeleteButtonHandler}>Delete</Button> : null }
+                            ? <Button className="delete-button" variant="outline-secondary" onClick={this.clickReplyDeleteButtonHandler}>Delete</Button> : null }
                     </div>
                 </div>
                 <div className="edit-modal">

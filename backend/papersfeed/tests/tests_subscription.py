@@ -112,6 +112,25 @@ class SubscriptionTestCase(TestCase):
                         constants.ID: review_id,
                     }),
                     content_type='application/json')
+
+        #User1 wrote anonymous review
+        client.post('/api/review',
+                    data=json.dumps({
+                        constants.ID: paper_id,
+                        constants.TITLE: 'review2',
+                        constants.TEXT: 'Set Up Anonymous Review Text',
+                        constants.IS_ANONYMOUS: True
+                    }),
+                    content_type='application/json')
+
+        # User1 Likes review2
+        review_id2 = Review.objects.filter(title='review2').first().id
+        client.post('/api/like/review',
+                    data=json.dumps({
+                        constants.ID: review_id2,
+                    }),
+                    content_type='application/json')
+
         # User1 created collection1
         client.post('/api/collection',
                     json.dumps({

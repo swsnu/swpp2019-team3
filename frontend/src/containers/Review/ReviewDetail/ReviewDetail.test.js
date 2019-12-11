@@ -336,4 +336,22 @@ describe("<ReviewDetail />", () => {
         expect(instance.state.replyPageCount).toBe(2);
         expect(instance.state.replyFinished).toBe(true);
     });
+
+    it("should handle anonymous", () => {
+        stubInitialState = {
+            ...stubInitialState,
+            review: {
+                ...stubInitialState.review,
+                selected: {
+                    status: reviewStatus.REVIEW_NOT_EXIST,
+                    review: { id: 1, is_anonymous: true },
+                    error: null,
+                    replies: [],
+                },
+            },
+        };
+        const component = mount(makeReviewDetail(stubInitialState));
+        const author = component.find(".author");
+        expect(author.text()).toBe("Anonymous User");
+    });
 });

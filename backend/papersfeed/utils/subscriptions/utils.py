@@ -10,6 +10,7 @@ from papersfeed.utils.collections.utils import get_collections
 from papersfeed.utils.reviews.utils import get_reviews
 from papersfeed.models.users.user_follow import UserFollow
 from papersfeed.models.subscription.subscription import Subscription
+from papersfeed.models.reviews.review import Review
 
 
 def select_subscriptions(args):
@@ -23,7 +24,14 @@ def select_subscriptions(args):
         following_user=request_user.id).values_list('followed_user', flat=True)
 
     # Notification QuerySet
-    subscription_queryset = Subscription.objects.filter(Q(actor__in=followings_queryset))
+    anonymous_reviews = Review.objects.filter(anonymous=True).values_list('id', flat=True)
+    subscription_queryset = Subscription.objects.filter(
+        Q(actor__in=followings_queryset)
+    ).exclude(
+        action_object_content_type__model="Review",
+        action_object_object_id__in=anonymous_reviews,
+        verb="wrote"
+    )
     subscriptions = get_results_from_queryset(subscription_queryset, 20, page_number)
 
     # is_finished

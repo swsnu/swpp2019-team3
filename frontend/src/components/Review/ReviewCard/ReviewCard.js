@@ -80,7 +80,8 @@ class ReviewCard extends Component {
                         </div>
                         <Card.Text>{this.props.date}</Card.Text>
                         <div className="author">
-                            <Card.Link href={`/profile_id=${this.props.author_id}`} className="text">{this.props.author}</Card.Link>
+                            {this.props.me && this.props.author_id !== this.props.me.id && this.props.anonymous ? "Anonymous User"
+                                : (<Card.Link href={`/profile_id=${this.props.author_id}`} className="text">{this.props.author}</Card.Link>)}
                         </div>
                     </Card.Body>
                     <Card.Footer className="footer">
@@ -94,6 +95,7 @@ class ReviewCard extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    me: state.auth.me,
     likeReviewStatus: state.review.like.status,
     afterLikeCount: state.review.like.count,
     unlikeReviewStatus: state.review.unlike.status,
@@ -112,6 +114,7 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(ReviewCard);
 
 ReviewCard.propTypes = {
+    me: PropTypes.objectOf(PropTypes.any),
     author: PropTypes.string,
     author_id: PropTypes.number,
     id: PropTypes.number,
@@ -130,9 +133,11 @@ ReviewCard.propTypes = {
     verb: PropTypes.string,
     target: PropTypes.objectOf(PropTypes.any),
     recommendation: PropTypes.bool,
+    anonymous: PropTypes.bool,
 };
 
 ReviewCard.defaultProps = {
+    me: null,
     author: "",
     author_id: 0,
     id: 0,
@@ -151,4 +156,5 @@ ReviewCard.defaultProps = {
     verb: "",
     target: {},
     recommendation: false,
+    anonymous: false,
 };
