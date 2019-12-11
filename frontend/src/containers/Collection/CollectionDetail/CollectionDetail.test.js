@@ -6,7 +6,9 @@ import { ConnectedRouter } from "connected-react-router";
 import { createBrowserHistory } from "history";
 import { collectionActions, replyActions } from "../../../store/actions";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
-import { getMockStore, mockPromise, flushPromises } from "../../../test-utils/mocks";
+import {
+    getMockStore, mockPromise, flushPromises, idGenerator,
+} from "../../../test-utils/mocks";
 import CollectionDetail from "./CollectionDetail";
 
 
@@ -14,7 +16,7 @@ import CollectionDetail from "./CollectionDetail";
 const makeCollectionDetail = (initialState, props = {}) => (
     <Provider store={getMockStore(initialState)}>
         <ConnectedRouter history={createBrowserHistory()}>
-            <CollectionDetail location={{ pathname: "/paper_id=1" }} {...props} />
+            <CollectionDetail location={{ pathname: "/collection_id=1" }} {...props} />
         </ConnectedRouter>
     </Provider>
 );
@@ -63,7 +65,7 @@ describe("CollectionDetail Test", () => {
                     status: collectionStatus.NONE,
                     error: null,
                     collection: {},
-                    papers: [],
+                    papers: { papers: [], page_number: 0, is_finished: true },
                     replies: [],
                 },
                 like: {
@@ -318,33 +320,7 @@ describe("CollectionDetail Test", () => {
                 list: {
                     ...stubInitialState.reply.list,
                     pageNum: 1,
-                    list: [{
-                        id: 1,
-                        user: {
-                            username: "afdaf",
-                        },
-                        count: {
-                            likes: 0,
-                        },
-                    },
-                    {
-                        id: 2,
-                        user: {
-                            username: "afdaf",
-                        },
-                        count: {
-                            likes: 0,
-                        },
-                    },
-                    {
-                        id: 3,
-                        user: {
-                            username: "afdaf",
-                        },
-                        count: {
-                            likes: 0,
-                        },
-                    }],
+                    list: [], // actually, we don't have to really give some replies for this test
                     finished: false,
                 },
             },
@@ -356,7 +332,7 @@ describe("CollectionDetail Test", () => {
                 replyCollectionFinished: false,
                 replyCollectionPageCount: 2,
                 replies: [{
-                    id: 4,
+                    id: idGenerator(),
                     user: {
                         username: "afdaf",
                     },
@@ -388,15 +364,7 @@ describe("CollectionDetail Test", () => {
                 list: {
                     ...stubInitialState.reply.list,
                     pageNum: 2,
-                    list: [{
-                        id: 3,
-                        user: {
-                            username: "afdaf",
-                        },
-                        count: {
-                            likes: 0,
-                        },
-                    }],
+                    list: [], // actually, we don't have to really give some replies for this test
                     finished: true,
                 },
             },
@@ -419,5 +387,31 @@ describe("CollectionDetail Test", () => {
         expect(spyGetRepliesByCollection).toBeCalledTimes(2);
         expect(instance.state.replyCollectionPageCount).toBe(2);
         expect(instance.state.replyCollectionFinished).toBe(true);
+    });
+
+    it("should show more if paper-more-button clicked", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                ...stubInitialState.collection,
+                selected: {
+                    papers: {
+                        papers: [], page_number: 0, is_finished: false,
+                    },
+                },
+            },
+        };
+        const component = mount(makeCollectionDetail(stubInitialState));
+
+        expect(spyGetCollectionPapers).toBeCalledTimes(1);
+        await flushPromises();
+        component.update();
+
+        const wrapper = component.find(".paper-more-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        expect(spyGetCollectionPapers).toBeCalledTimes(2);
+        await flushPromises();
     });
 });

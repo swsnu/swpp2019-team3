@@ -477,12 +477,14 @@ describe("authActions", () => {
 
     it("makeTasteInit should handle error", (done) => {
         const spy = jest.spyOn(axios, "post")
-            .mockImplementation(() => new Promise((resolve) => {
-                const result = {
-                    status: 403,
-                    data: {},
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 403,
+                        data: {},
+                    },
                 };
-                resolve(result);
+                reject(error);
             }));
 
         mockStore.dispatch(authActions.makeTasteInit({ keywords: [1] }))

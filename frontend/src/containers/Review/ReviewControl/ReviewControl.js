@@ -194,7 +194,7 @@ ReviewControl.defaultProps = {
     history: null,
     match: null,
     mode: 0,
-    selectedReview: {},
+    selectedReview: { review: { is_anonymous: false } },
     onMakeNewReview: () => {},
     onSetReview: () => {},
     onGetReview: () => {},

@@ -68,7 +68,8 @@ class ProfileDetail extends Component {
                     followerCount: this.props.afterFollowCount,
                     doIFollow: true,
                 });
-            });
+            })
+            .catch(() => {});
     }
 
     clickUnfollowHandler = () => {
@@ -78,7 +79,8 @@ class ProfileDetail extends Component {
                     followerCount: this.props.afterUnfollowCount,
                     doIFollow: false,
                 });
-            });
+            })
+            .catch(() => {});
     }
 
     clickCollectionMoreHandler = () => {
@@ -91,7 +93,8 @@ class ProfileDetail extends Component {
                 this.setState({
                     collections: collections.concat(this.props.collections.list),
                 });
-            });
+            })
+            .catch(() => {});
     };
 
     clickReviewMoreHandler = () => {
@@ -104,7 +107,8 @@ class ProfileDetail extends Component {
                 this.setState({
                     reviews: reviews.concat(this.props.reviews.list),
                 });
-            });
+            })
+            .catch(() => {});
     };
 
     collectionCardMaker = (collection) => (

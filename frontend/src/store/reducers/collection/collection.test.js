@@ -29,7 +29,7 @@ const stubInitialState = {
         status: collectionStatus.NONE,
         collection: {},
         error: null,
-        papers: [],
+        papers: {},
         memberCount: 0,
         replies: [],
     },
@@ -127,11 +127,20 @@ describe("Collection reducer", () => {
 
     it("should return get_collection_papers", () => {
         const newState = reducer(stubInitialState, {
-            type: collectionConstants.GET_COLLECTION_PAPERS,
-            target: stubCollection,
+            type: collectionConstants.GET_COLLECTION_PAPERS_SUCCESS,
+            target: { papers: [], page_number: 1, is_finished: true },
         });
         expect(newState.selected.status).toBe(collectionStatus.SUCCESS);
-        expect(newState.selected.papers).toBe(stubCollection);
+        expect(newState.selected.papers.papers).toEqual([]);
+    });
+
+    it("should handle get_collection_papers_failure", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.GET_COLLECTION_PAPERS_FAILURE,
+            target: stubError,
+        });
+        expect(newState.selected.status).toBe(collectionStatus.FAILURE);
+        expect(newState.selected.error).toBe(stubError);
     });
 
     it("should handle get_collection_members_success", () => {

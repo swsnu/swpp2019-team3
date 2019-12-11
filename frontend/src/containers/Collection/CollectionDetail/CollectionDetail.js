@@ -30,6 +30,8 @@ class CollectionDetail extends Component {
             replyCollectionPageCount: 1,
             replyCollectionFinished: true,
         };
+
+        this.getPapersTrigger = this.getPapersTrigger.bind(this);
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
         this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
         this.clickMoreButtonHandler = this.clickMoreButtonHandler.bind(this);
@@ -61,10 +63,6 @@ class CollectionDetail extends Component {
                     }
                 });
             });
-        this.props.onGetCollectionPapers({ id: Number(this.props.location.pathname.split("=")[1]) })
-            .then(() => {
-                this.setState({ papers: this.props.storedPapers });
-            });
         this.props.onGetReplies({ id: Number(this.props.location.pathname.split("=")[1]) })
             .then(() => {
                 this.setState({
@@ -73,6 +71,19 @@ class CollectionDetail extends Component {
                     replyCollectionFinished: this.props.replyList.finished,
                 });
             }).catch(() => {});
+        this.getPapersTrigger(0);
+    }
+
+    getPapersTrigger(pageNum) {
+        this.props.onGetCollectionPapers({
+            id: Number(this.props.location.pathname.split("=")[1]),
+            page_number: pageNum + 1,
+        })
+            .then(() => {
+                const { papers } = this.state;
+                this.setState({ papers: papers.concat(this.props.storedPapers.papers) });
+            })
+            .catch(() => {});
     }
 
     // clickRemovePaperButtonHandler(collection_id: number, paper_id: number)
@@ -127,14 +138,14 @@ class CollectionDetail extends Component {
             newCollectionReplies: [],
         });
         for (let i = 1; (i === 1) || (i < end + 1); i += 1) {
-            await this.forEachHandleReply(i, end);
+            await this.forEachHandleReply(i, end)
+                .catch(() => {});
             if (i === end || this.props.replyList.finished === true) {
                 this.setState((prevState) => ({
                     newCollectionReplies: [],
                     replyCollectionFinished: this.props.replyList.finished,
                     replyCollectionPageCount: this.props.replyList.pageNum,
                     replies: prevState.newCollectionReplies.concat(this.props.replyList.list),
-
                 }));
                 break;
             }
@@ -292,7 +303,7 @@ class CollectionDetail extends Component {
                                     : "No description for this collection."}
                             </p>
                             <div id="owner">
-                                <h id="ownerText">Owned by </h>
+                                Owned by&nbsp;
                                 <a href={`/profile_id=${this.state.owner.id}`}>{this.state.owner.username}</a>
                             </div>
                         </div>
@@ -305,6 +316,19 @@ class CollectionDetail extends Component {
                         <Tabs defaultActiveKey="paperTab" id="itemTabs">
                             <Tab eventKey="paperTab" title={`Papers(${this.state.paperCount})`}>
                                 {paperCards}
+                                { this.props.storedPapers.is_finished ? null
+                                    : (
+                                        <Button
+                                          className="paper-more-button"
+                                          onClick={() => this.getPapersTrigger(
+                                              this.props.storedPapers.page_number,
+                                          )}
+                                          size="lg"
+                                          block
+                                        >
+                            View More
+                                        </Button>
+                                    )}
                             </Tab>
                             <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${replyCount})`}>
                                 <div id="replies">
@@ -394,7 +418,7 @@ CollectionDetail.propTypes = {
     onGetCollectionPapers: PropTypes.func,
     getCollectionStatus: PropTypes.string,
     selectedCollection: PropTypes.objectOf(PropTypes.any),
-    storedPapers: PropTypes.arrayOf(PropTypes.any),
+    storedPapers: PropTypes.objectOf(PropTypes.any),
     afterLikeCount: PropTypes.number,
     afterUnlikeCount: PropTypes.number,
     onLikeCollection: PropTypes.func,
@@ -415,7 +439,7 @@ CollectionDetail.defaultProps = {
     onGetCollectionPapers: null,
     getCollectionStatus: collectionStatus.NONE,
     selectedCollection: {},
-    storedPapers: [],
+    storedPapers: { papers: [], page_number: 0, is_finished: true },
     afterLikeCount: 0,
     afterUnlikeCount: 0,
     onLikeCollection: () => {},

@@ -64,7 +64,7 @@ def select_paper_collection(args):
     collection_id = args[constants.ID]
 
     # Page Number
-    page_number = 1 if constants.PAGE_NUMBER not in args else args[constants.PAGE_NUMBER]
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
     # Papers Queryset
     queryset = CollectionPaper.objects.filter(

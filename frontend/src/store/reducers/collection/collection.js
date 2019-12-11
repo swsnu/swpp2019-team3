@@ -29,7 +29,7 @@ const initialState = {
         status: collectionStatus.NONE,
         collection: {},
         error: null,
-        papers: [],
+        papers: {}, // papers: [], page_number: number, is_finished: bool
         memberCount: 0,
         replies: [],
     },
@@ -96,13 +96,22 @@ const reducer = (state = initialState, action) => {
                 collection: action.target,
             },
         };
-    case collectionConstants.GET_COLLECTION_PAPERS:
+    case collectionConstants.GET_COLLECTION_PAPERS_SUCCESS:
         return {
             ...state,
             selected: {
                 ...state.selected,
                 status: collectionStatus.SUCCESS,
                 papers: action.target,
+            },
+        };
+    case collectionConstants.GET_COLLECTION_PAPERS_FAILURE:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.FAILURE,
+                error: action.target,
             },
         };
     case collectionConstants.GET_COLLECTION_FAILURE_COLLECTION_NOT_EXIST:
