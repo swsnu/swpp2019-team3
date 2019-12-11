@@ -155,7 +155,6 @@ class SubscriptionTestCase(TestCase):
                                   constants.PAGE_NUMBER: 1
                               },
                               content_type='application/json')
-        self.assertIn("dfa", response.content.decode())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content.decode())[constants.IS_FINISHED], True)
         self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 1)
