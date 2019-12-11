@@ -199,33 +199,33 @@ class ReviewDetail extends Component {
                         <Card.Body>
                             <div className="review">
                                 <div className="author">
-                                    {this.props.selectedReview.is_anonymous ? "Anonymous User"
+                                    {this.props.me && this.props.selectedReview.is_anonymous && this.state.author.id !== this.props.me.id ? "Anonymous User"
                                         : (<Card.Link href={`/profile_id=${this.state.author.id}`} className="text">{this.state.author.username}</Card.Link>)}
                                 </div>
                                 <div id="date">
                                     <div id="creationDate">Created: {this.state.creationDate}</div>
-                                    <div id="lastUpdateDate">Last Update: {this.state.modificationDate}</div>
+                                    <div id="lastUpdateDate">Last Updated: {this.state.modificationDate}</div>
                                 </div>
                                 <Card.Title className="title">{this.state.thisReview.title}</Card.Title>
                                 <Card.Text className="content">{this.state.thisReview.text}</Card.Text>
                             </div>
                             <div className="reply">
                                 <div className="review-extra">
-                                    <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
-                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="60%" width="60%" /></div>{replyCount}</Button>
+                                    <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="25px" width="25px" /></div>{this.state.likeCount}</Button>
+                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="25px" width="25px" /></div>{replyCount}</Button>
                                     {this.props.me && this.state.author.id === this.props.me.id
-                                        ? <Button className="edit-button" onClick={this.clickEditButtonHandler}>Edit</Button>
+                                        ? <Button className="edit-button" variant="outline-info" onClick={this.clickEditButtonHandler}>Edit</Button>
 
                                         : null}
                                     {this.props.me && this.state.author.id === this.props.me.id ? (
-                                        <Button className="delete-button" onClick={this.clickDeleteButtonHandler}>Delete</Button>
+                                        <Button className="delete-button" variant="outline-secondary" onClick={this.clickDeleteButtonHandler}>Delete</Button>
                                     ) : null}
                                     <Button className="paper-button" variant="secondary" href={`/paper_id=${this.state.paperId}`}>Paper</Button>
                                 </div>
                                 <Form className="new-reply">
                                     <Form.Label className="username">{this.state.user.username}</Form.Label>
                                     <Form.Control className="reply-input" as="textarea" bsPrefix="reply-input" value={this.state.newReply} onChange={this.handleChange} />
-                                    <Button className="new-reply-button" onClick={this.clickReplyAddButtonHandler} disabled={this.state.newReply.length === 0}>Add</Button>
+                                    <Button className="new-reply-button" variant="info" onClick={this.clickReplyAddButtonHandler} disabled={this.state.newReply.length === 0}>Add</Button>
                                 </Form>
                                 <div className="replies">
                                     {replies}

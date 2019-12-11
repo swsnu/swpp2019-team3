@@ -139,6 +139,7 @@ class ReviewControl extends Component {
                               link={link}
                               addButtonExists
                               abstractfoldExists
+                              foldingNum={300}
                               history={this.props.history}
                             />
                         </div>

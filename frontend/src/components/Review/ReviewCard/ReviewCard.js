@@ -44,7 +44,7 @@ class ReviewCard extends Component {
                 header = (
                     <Card.Header id="headerSubscriptionTarget">
                         <div className="CardHeader">
-                            {this.props.anonymous ? <div className="actorLink">Anonymous User</div> : actorLink}
+                            {actorLink}
                             <h5 className="verb">{` ${this.props.verb} this review on `}</h5>
                         </div>
                         <a className="targetLink" href={`/paper_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
@@ -54,7 +54,7 @@ class ReviewCard extends Component {
                 header = (
                     <Card.Header id="headerSubscription">
                         <div className="CardHeader">
-                            {this.props.anonymous ? <div className="actorLink">Anonymous User</div> : actorLink}
+                            {actorLink}
                             <h5 className="verb">{` ${this.props.verb} this review`}</h5>
                         </div>
                     </Card.Header>
@@ -80,7 +80,7 @@ class ReviewCard extends Component {
                         </div>
                         <Card.Text>{this.props.date}</Card.Text>
                         <div className="author">
-                            {this.props.anonymous ? "Anonymous User"
+                            {this.props.me && this.props.author_id !== this.props.me.id && this.props.anonymous ? "Anonymous User"
                                 : (<Card.Link href={`/profile_id=${this.props.author_id}`} className="text">{this.props.author}</Card.Link>)}
                         </div>
                     </Card.Body>
@@ -95,6 +95,7 @@ class ReviewCard extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    me: state.auth.me,
     likeReviewStatus: state.review.like.status,
     afterLikeCount: state.review.like.count,
     unlikeReviewStatus: state.review.unlike.status,
@@ -113,6 +114,7 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(ReviewCard);
 
 ReviewCard.propTypes = {
+    me: PropTypes.objectOf(PropTypes.any),
     author: PropTypes.string,
     author_id: PropTypes.number,
     id: PropTypes.number,
@@ -135,6 +137,7 @@ ReviewCard.propTypes = {
 };
 
 ReviewCard.defaultProps = {
+    me: null,
     author: "",
     author_id: 0,
     id: 0,

@@ -117,11 +117,13 @@ class PaperDetail extends Component {
                           isLiked={this.props.selectedPaper.liked}
                           link={link}
                           addButtonExists
+                          abstractfoldExists
+                          foldingNum={500}
                           history={this.props.history}
                         />
                         <div className="up-review">
                             <h3 id="review-count">{this.state.reviewCount} reviews</h3>
-                            <Button className="review-add" onClick={this.handleClickReviewAddButton}>Add</Button>
+                            <Button className="review-add" onClick={this.handleClickReviewAddButton}>Create</Button>
                         </div>
                         <div className="reviewcards">
                             <div className="reviewcards-left">{reviewCardsLeft}</div>

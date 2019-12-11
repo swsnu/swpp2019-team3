@@ -39,6 +39,7 @@
 }
 
 .review-detail .board .review-reply .review .title {
+    margin-top: 5%;
     text-align: left;
     font-size: 150%;
     font-weight: bold;
@@ -59,15 +60,17 @@
 }
 
 .review-detail .board .review-reply .reply .review-extra .like-button{
-    width: 15%;
+    flex: 0 1 70px;
     display: flex;
     justify-content: space-around;
+    align-items: center;
 }
 
 .review-detail .board .review-reply .reply .review-extra .replyCount-button{
-    width: 15%;
+    flex: 0 1 70px;
     display: flex;
     justify-content: space-around;
+    align-items: center;
 }
 
 .review-detail .board .review-reply .reply .review-extra .replyCount-button .reply-image{

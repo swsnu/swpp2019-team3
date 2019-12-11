@@ -126,7 +126,7 @@ class PaperSpec extends Component {
             if (this.state.truncateAbstract) {
                 abstract = (
                     <p id="abstract-content">
-                        {this.props.abstract.substring(0, 300)}
+                        {this.props.abstract.substring(0, this.props.foldingNum)}
                         <Button
                           className="abstract-more-button"
                           onClick={() => this.setState({ truncateAbstract: false })}
@@ -235,6 +235,7 @@ PaperSpec.propTypes = {
     onLikePaper: PropTypes.func,
     onUnlikePaper: PropTypes.func,
     abstractfoldExists: PropTypes.bool,
+    foldingNum: PropTypes.number,
 };
 
 PaperSpec.defaultProps = {
@@ -254,4 +255,5 @@ PaperSpec.defaultProps = {
     onLikePaper: () => {},
     onUnlikePaper: () => {},
     abstractfoldExists: false,
+    foldingNum: 0,
 };
