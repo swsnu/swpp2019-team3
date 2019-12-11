@@ -70,13 +70,13 @@ export const getCollection = (collectionId) => (dispatch) => axios.get("/api/col
 
 
 // get papers of a collection
-const getCollectionPapersSuccess = (papers) => ({
-    type: collectionConstants.GET_COLLECTION_PAPERS,
-    target: papers.papers,
+const getCollectionPapersSuccess = (data) => ({
+    type: collectionConstants.GET_COLLECTION_PAPERS_SUCCESS,
+    target: data,
 });
 
 const getCollectionPapersFailure = (error) => ({
-    type: null,
+    type: collectionConstants.GET_COLLECTION_PAPERS_FAILURE,
     target: error,
 });
 
