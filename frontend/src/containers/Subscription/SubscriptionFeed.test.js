@@ -356,7 +356,7 @@ describe("SubscriptionFeed test", () => {
         expect(component.find(".more-button").hostNodes().length).toBe(0);
     });
 
-    it("should handle click view more button witout finish", async () => {
+    it("should handle click view more button without finish", async () => {
         stubInitialState = {
             ...stubInitialState,
             auth: {
@@ -364,12 +364,12 @@ describe("SubscriptionFeed test", () => {
                 subscriptions: {
                     ...stubInitialState.auth.subscriptions,
                     finished: false,
-                    list: stubSubscriptions,
+                    list: [],
                 },
                 recommendations: {
                     ...stubInitialState.auth.recommendations,
                     finished: false,
-                    list: stubRecommendations,
+                    list: [],
                 },
             },
         };
@@ -412,7 +412,7 @@ describe("SubscriptionFeed test", () => {
                 subscriptions: {
                     ...stubInitialState.auth.subscriptions,
                     finished: false,
-                    list: stubSubscriptions,
+                    list: [],
                 },
                 recommendations: {
                     ...stubInitialState.auth.recommendations,

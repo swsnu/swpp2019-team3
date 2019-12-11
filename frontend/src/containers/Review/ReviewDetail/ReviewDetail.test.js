@@ -234,33 +234,7 @@ describe("<ReviewDetail />", () => {
                 list: {
                     ...stubInitialState.reply.list,
                     pageNum: 1,
-                    list: [{
-                        id: 1,
-                        user: {
-                            username: "afdaf",
-                        },
-                        count: {
-                            likes: 0,
-                        },
-                    },
-                    {
-                        id: 2,
-                        user: {
-                            username: "afdaf",
-                        },
-                        count: {
-                            likes: 0,
-                        },
-                    },
-                    {
-                        id: 3,
-                        user: {
-                            username: "afdaf",
-                        },
-                        count: {
-                            likes: 0,
-                        },
-                    }],
+                    list: [], // actually, we don't have to really give some replies for this test
                     finished: false,
                 },
             },
@@ -304,15 +278,7 @@ describe("<ReviewDetail />", () => {
                 list: {
                     ...stubInitialState.reply.list,
                     pageNum: 2,
-                    list: [{
-                        id: 3,
-                        user: {
-                            username: "afdaf",
-                        },
-                        count: {
-                            likes: 0,
-                        },
-                    }],
+                    list: [], // actually, we don't have to really give some replies for this test
                     finished: true,
                 },
             },

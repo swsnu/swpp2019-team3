@@ -94,7 +94,7 @@ describe("<ReviewControl />", () => {
                 },
                 selected: {
                     status: reviewStatus.NONE,
-                    review: { id: 1, paper: { id: 1 } },
+                    review: { id: 1, paper: { id: 1 }, is_anonymous: false },
                     error: null,
                     replies: [],
                 },

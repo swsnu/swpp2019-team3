@@ -138,7 +138,8 @@ class CollectionDetail extends Component {
             newCollectionReplies: [],
         });
         for (let i = 1; (i === 1) || (i < end + 1); i += 1) {
-            await this.forEachHandleReply(i, end);
+            await this.forEachHandleReply(i, end)
+                .catch(() => {});
             if (i === end || this.props.replyList.finished === true) {
                 this.setState((prevState) => ({
                     newCollectionReplies: [],
@@ -303,7 +304,7 @@ class CollectionDetail extends Component {
                                     : "No description for this collection."}
                             </p>
                             <div id="owner">
-                                <h id="ownerText">Owned by </h>
+                                Owned by&nbsp;
                                 <a href={`/profile_id=${this.state.owner.id}`}>{this.state.owner.username}</a>
                             </div>
                         </div>
