@@ -146,7 +146,6 @@ class CollectionDetail extends Component {
                     replyCollectionFinished: this.props.replyList.finished,
                     replyCollectionPageCount: this.props.replyList.pageNum,
                     replies: prevState.newCollectionReplies.concat(this.props.replyList.list),
-
                 }));
                 break;
             }

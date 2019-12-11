@@ -388,4 +388,30 @@ describe("CollectionDetail Test", () => {
         expect(instance.state.replyCollectionPageCount).toBe(2);
         expect(instance.state.replyCollectionFinished).toBe(true);
     });
+
+    it("should show more if paper-more-button clicked", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                ...stubInitialState.collection,
+                selected: {
+                    papers: {
+                        papers: [], page_number: 0, is_finished: false,
+                    },
+                },
+            },
+        };
+        const component = mount(makeCollectionDetail(stubInitialState));
+
+        expect(spyGetCollectionPapers).toBeCalledTimes(1);
+        await flushPromises();
+        component.update();
+
+        const wrapper = component.find(".paper-more-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        expect(spyGetCollectionPapers).toBeCalledTimes(2);
+        await flushPromises();
+    });
 });
