@@ -254,9 +254,9 @@ describe("collectionActions", () => {
                 resolve(result);
             }));
 
-        mockStore.dispatch(collectionActions.getCollectionPapers({ id: stubCollection.id }))
+        mockStore.dispatch(collectionActions.getCollectionPapers({ id: stubCollection.id, page_number: 1 }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/paper/collection", { params: { id: stubCollection.id } });
+                expect(spy).toHaveBeenCalledWith("/api/paper/collection", { params: { id: stubCollection.id, page_number: 1 } });
                 done();
             });
     });
@@ -273,9 +273,9 @@ describe("collectionActions", () => {
                 reject(error);
             }));
 
-        mockStore.dispatch(collectionActions.getCollectionPapers({ id: stubCollection.id }))
+        mockStore.dispatch(collectionActions.getCollectionPapers({ id: stubCollection.id, page_number: 1 }))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/paper/collection", { params: { id: stubCollection.id } });
+                expect(spy).toHaveBeenCalledWith("/api/paper/collection", { params: { id: stubCollection.id, page_number: 1 } });
                 done();
             });
     });

@@ -29,7 +29,7 @@ const initialState = {
         status: collectionStatus.NONE,
         collection: {},
         error: null,
-        papers: [],
+        papers: {}, // papers: [], page_number: number, is_finished: bool
         memberCount: 0,
         replies: [],
     },
