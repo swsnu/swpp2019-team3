@@ -190,6 +190,8 @@ describe("CollectionDetail Test", () => {
         const wrapper = component.find(".CollectionDetail");
         expect(wrapper.length).toBe(1);
         expect(spyGetCollection).toHaveBeenCalledTimes(1);
+        const instance = component.find(CollectionDetail.WrappedComponent).instance();
+        instance.getAuthorizedInfo();
 
         await flushPromises(); // flush onGetCollection
         await flushPromises(); // flush onGetMembers
@@ -198,8 +200,8 @@ describe("CollectionDetail Test", () => {
 
         expect(spyGetCollection).toHaveBeenCalledTimes(1);
         expect(spyGetCollectionMembers).toHaveBeenCalledTimes(1);
-        expect(spyGetCollectionPapers).toHaveBeenCalledTimes(0); // FIXME
-        expect(spyGetRepliesByCollection).toHaveBeenCalledTimes(0); // FIXME
+        expect(spyGetCollectionPapers).toHaveBeenCalledTimes(1);
+        expect(spyGetRepliesByCollection).toHaveBeenCalledTimes(1);
     });
 
     it("should call likeReview when Like Button is clicked", () => {
@@ -422,8 +424,11 @@ describe("CollectionDetail Test", () => {
         };
         const component = mount(makeCollectionDetail(stubInitialState));
         await flushPromises();
+        const instance = component.find(CollectionDetail.WrappedComponent).instance();
+        instance.getAuthorizedInfo();
+        await flushPromises();
 
-        expect(spyGetCollectionPapers).toBeCalledTimes(0); // FIXME
+        expect(spyGetCollectionPapers).toBeCalledTimes(1); // FIXME
         await flushPromises();
         component.update();
 
@@ -431,7 +436,7 @@ describe("CollectionDetail Test", () => {
         expect(wrapper.length).toBe(1);
         wrapper.simulate("click");
 
-        expect(spyGetCollectionPapers).toBeCalledTimes(1); // FIXME
+        expect(spyGetCollectionPapers).toBeCalledTimes(2); // FIXME
         await flushPromises();
     });
 
@@ -448,8 +453,11 @@ describe("CollectionDetail Test", () => {
         };
         const component = mount(makeCollectionDetail(stubInitialState));
         await flushPromises();
+        const instance = component.find(CollectionDetail.WrappedComponent).instance();
+        instance.getAuthorizedInfo();
+        await flushPromises();
 
-        expect(spyGetCollectionPapers).toBeCalledTimes(0); // FIXME
+        expect(spyGetCollectionPapers).toBeCalledTimes(1);
         await flushPromises();
         component.update();
 
@@ -457,7 +465,7 @@ describe("CollectionDetail Test", () => {
         expect(wrapper.length).toBe(1);
         wrapper.simulate("click");
 
-        expect(spyGetCollectionPapers).toBeCalledTimes(1); // FIXME
+        expect(spyGetCollectionPapers).toBeCalledTimes(2);
         await flushPromises();
     });
 
@@ -478,6 +486,9 @@ describe("CollectionDetail Test", () => {
             },
         };
         const component = mount(makeCollectionDetail(stubInitialState));
+        await flushPromises();
+        const instance = component.find(CollectionDetail.WrappedComponent).instance();
+        instance.getAuthorizedInfo();
         await flushPromises();
 
         let wrapper = component.find(".alert");
