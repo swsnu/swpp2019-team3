@@ -58,6 +58,10 @@ class CollectionCard extends Component {
                         </div>
                         <Card.Text>papers: {this.props.paperCount}</Card.Text>
                         <Card.Text>members: {this.props.memberCount}</Card.Text>
+                        <div className="owner">
+                        owner:&nbsp;
+                            <Card.Link href={`/profile_id=${this.props.owner.id}`} className="text">{this.props.owner.username}</Card.Link>
+                        </div>
                     </Card.Body>
                     <Card.Footer className="footer">
                         <Button
@@ -118,6 +122,7 @@ CollectionCard.propTypes = {
     headerExists: PropTypes.bool,
     afterLikeCount: PropTypes.number,
     afterUnlikeCount: PropTypes.number,
+    owner: PropTypes.objectOf(PropTypes.any),
     onLikeCollection: PropTypes.func,
     onUnlikeCollection: PropTypes.func,
     subscription: PropTypes.bool,
@@ -138,6 +143,7 @@ CollectionCard.defaultProps = {
     headerExists: true,
     afterLikeCount: 0,
     afterUnlikeCount: 0,
+    owner: {},
     onLikeCollection: () => {},
     onUnlikeCollection: () => {},
     subscription: false,

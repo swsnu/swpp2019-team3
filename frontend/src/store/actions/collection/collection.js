@@ -26,16 +26,17 @@ export const makeNewCollection = (collection) => (dispatch) => axios.post("/api/
 
 // getCollectionsByUserId
 const getCollectionsByUserIdSuccess = (data) => ({
-    type: collectionConstants.GET_COLLECTIONS,
+    type: collectionConstants.GET_COLLECTIONS_SUCCESS,
     target: {
         collections: data.collections,
         pageNum: data.page_number,
         finished: data.is_finished,
+        totalCount: data.total_count,
     },
 });
 
 const getCollectionsByUserIdFailure = (error) => ({
-    type: null,
+    type: collectionConstants.GET_COLLECTIONS_FAILURE,
     target: error,
 });
 
@@ -43,6 +44,26 @@ const getCollectionsByUserIdFailure = (error) => ({
 export const getCollectionsByUserId = (params) => (dispatch) => axios.get("/api/collection/user", { params })
     .then((res) => { dispatch(getCollectionsByUserIdSuccess(res.data)); })
     .catch((err) => { (dispatch(getCollectionsByUserIdFailure(err))); });
+
+
+const getSharedCollectionsByUserIdSuccess = (data) => ({
+    type: collectionConstants.GET_SHARED_COLLECTIONS_SUCCESS,
+    target: {
+        collections: data.collections,
+        pageNum: data.page_number,
+        finished: data.is_finished,
+        totalCount: data.total_count,
+    },
+});
+
+const getSharedCollectionsByUserIdFailure = (error) => ({
+    type: collectionConstants.GET_SHARED_COLLECTIONS_FAILURE,
+    target: error,
+});
+
+export const getSharedCollectionsByUserId = (userId) => (dispatch) => axios.get("/api/collection/user/shared", { params: userId })
+    .then((res) => { dispatch(getSharedCollectionsByUserIdSuccess(res.data)); })
+    .catch((err) => { (dispatch(getSharedCollectionsByUserIdFailure(err))); });
 
 
 // getCollection
@@ -318,3 +339,19 @@ const getCollectionLikeFailure = (error) => ({
 export const getCollectionLike = (pageNum) => (dispatch) => axios.get("/api/collection/like", { params: pageNum })
     .then((res) => dispatch(getCollectionLikeSuccess(res.data)))
     .catch((err) => dispatch(getCollectionLikeFailure(err)));
+
+
+// Change Collection Type
+const changeCollectionTypeSuccess = (data) => ({
+    type: collectionConstants.CHANGE_COLLECTION_TYPE_SUCCESS,
+    target: data.collection,
+});
+
+const changeCollectionTypeFailure = (error) => ({
+    type: collectionConstants.CHANGE_COLLECTION_TYPE_FAILURE,
+    target: error,
+});
+
+export const changeCollectionType = (collectionId, collectionType) => (dispatch) => axios.put("/api/collection/type", { id: collectionId, type: collectionType })
+    .then((res) => dispatch(changeCollectionTypeSuccess(res.data)))
+    .catch((err) => dispatch(changeCollectionTypeFailure(err)));

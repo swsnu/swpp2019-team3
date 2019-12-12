@@ -224,4 +224,8 @@ describe("InviteToCollectionModal test", () => {
 
         expect(spySearch).toHaveBeenCalledTimes(1);
     });
+
+    it("should handle scroll", () => {
+        
+    })
 });

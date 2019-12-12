@@ -300,7 +300,7 @@ ReviewDetail.defaultProps = {
     history: null,
     match: null,
     selectedReviewStatus: reviewStatus.NONE,
-    selectedReview: {},
+    selectedReview: { creation_date: "", modification_date: "" },
     onGetReview: () => {},
     onDeleteReview: () => {},
     afterLikeCount: 0,
