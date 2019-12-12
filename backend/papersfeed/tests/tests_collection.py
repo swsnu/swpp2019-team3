@@ -64,6 +64,8 @@ class CollectionTestCase(TestCase):
                    }),
                    content_type='application/json')
         swpp_second_user_id = User.objects.filter(email='swpp_second@snu.ac.kr').first().id
+
+        # invite 'swpp2'
         client.post('/api/user/collection',
                     json.dumps({
                         constants.ID: private1_collection_id,
@@ -83,6 +85,23 @@ class CollectionTestCase(TestCase):
                    data=json.dumps({
                        constants.ID: private2_collection_id,
                        constants.TYPE: 'private'
+                   }),
+                   content_type='application/json')
+
+        client.delete('/api/session')
+
+        # sign in as 'swpp2'
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp_second@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # accept invitation from 'swpp'
+        client.put('/api/user/collection/pending',
+                   data=json.dumps({
+                       constants.ID: private1_collection_id,
                    }),
                    content_type='application/json')
 

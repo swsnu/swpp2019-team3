@@ -9,7 +9,8 @@ from papersfeed.models.collections.collection import Collection
 
 COLLECTION_USER_TYPE = [
     'owner',
-    'member'
+    'member',
+    'pending' # not yet accepted by invitee
 ]
 
 

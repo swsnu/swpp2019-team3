@@ -458,7 +458,7 @@ def insert_user_collection(args):
         CollectionUser.objects.update_or_create(
             collection_id=collection_id,
             user_id=user_id,
-            type=COLLECTION_USER_TYPE[1], # member, not owner
+            type=COLLECTION_USER_TYPE[2], # pending until invitees accept
         )
 
     invited_users = User.objects.filter(Q(id__in=user_ids))
@@ -540,6 +540,65 @@ def remove_user_collection(args):
     # Get the number of Members(including owner) Of Collections
     user_counts = __get_collection_user_count([collection_id], 'collection_id')
     return {constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0}
+
+
+def update_user_collection_pending(args):
+    """'pending' user accepts invitation"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    collection_id = int(args[constants.ID])
+
+    request_user = args[constants.USER]
+
+    # Check CollectionUser
+    try:
+        collection_user = CollectionUser.objects.get(collection_id=collection_id, user_id=request_user.id)
+    except ObjectDoesNotExist:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    # Check Collection Id
+    if not Collection.objects.filter(id=collection_id).exists():
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    # if request_user is not 'pending', then raise AUTH_ERROR
+    if collection_user.type != COLLECTION_USER_TYPE[2]:
+        raise ApiError(constants.AUTH_ERROR)
+
+    collection_user.type = COLLECTION_USER_TYPE[1]  # change to member
+    collection_user.save()
+
+    # Get the number of Members(including owner) Of Collections
+    user_counts = __get_collection_user_count([collection_id], 'collection_id')
+    return {constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0}
+
+
+def remove_user_collection_pending(args):
+    """'pending' user dismisses invitation"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    collection_id = int(args[constants.ID])
+
+    request_user = args[constants.USER]
+
+    # Check Collection Id
+    if not Collection.objects.filter(id=collection_id).exists():
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    # Check CollectionUser
+    try:
+        collection_user = CollectionUser.objects.get(collection_id=collection_id, user_id=request_user.id)
+    except ObjectDoesNotExist:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    # if request_user is not 'pending', then raise AUTH_ERROR
+    if collection_user.type != COLLECTION_USER_TYPE[2]:
+        raise ApiError(constants.AUTH_ERROR)
+
+    collection_user.delete()
 
 
 def select_user_following_collection(args):

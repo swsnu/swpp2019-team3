@@ -314,6 +314,16 @@ def delete_user_collection(args):
     return {constants.COUNT: users_utils.remove_user_collection(args)}
 
 
+def put_user_collection_pending(args):
+    """Put User Collection Pending"""
+    return {constants.COUNT: users_utils.update_user_collection_pending(args)}
+
+
+def delete_user_collection_pending(args):
+    """Delete User Collection Pending"""
+    return users_utils.remove_user_collection_pending(args)
+
+
 def get_notification(args):
     """Get Notification"""
     notifications, page_number, is_finished = notification_utils.select_notifications(args)

@@ -140,6 +140,37 @@ export const setOwner = (collectionId, targetUserId) => (dispatch) => axios.put(
     .then(() => dispatch(setOwnerSuccess()))
     .catch((err) => { dispatch(setOwnerFailure(err)); });
 
+
+const acceptInvitationSuccess = (count) => ({
+    type: collectionConstants.ACCEPT_INVITATION_SUCCESS,
+    target: count.count,
+});
+
+const acceptInvitationFailure = (error) => ({
+    type: collectionConstants.ACCEPT_INVITATION_FAILURE,
+    target: error,
+});
+
+export const acceptInvitation = (collectionId) => (dispatch) => axios.put("/api/user/collection/pending", { id: collectionId })
+    .then((res) => dispatch(acceptInvitationSuccess(res.data)))
+    .catch((err) => dispatch(acceptInvitationFailure(err)));
+
+
+const dismissInvitationSuccess = () => ({
+    type: collectionConstants.DISMISS_INVITATION_SUCCESS,
+    target: null,
+});
+
+const dismissInvitationFailure = (error) => ({
+    type: collectionConstants.DISMISS_INVITATION_FAILURE,
+    target: error,
+});
+
+export const dismissInvitation = (collectionId) => (dispatch) => axios.delete("/api/user/collection/pending", { params: { id: collectionId } })
+    .then(() => { dispatch(dismissInvitationSuccess()); })
+    .catch((err) => { dispatch(dismissInvitationFailure(err)); });
+
+
 // setNameAndDescription of collection
 const setTitleAndDescriptionSuccess = (collection) => ({
     type: collectionConstants.EDIT_COLLECTION,

@@ -505,7 +505,7 @@ class UserTestCase(TestCase):
         self.assertEqual(users[0]['username'], "swpp")
 
     def test_post_user_collection(self):
-        """" ADD USERS TO COLLECTION """
+        """" ADD USERS TO COLLECTION & ACCEPT/DISMISS INVITATION"""
 
         client = Client()
 
@@ -541,13 +541,72 @@ class UserTestCase(TestCase):
 
         self.assertEqual(response.status_code, 201)
 
-        self.assertEqual(json.loads(response.content)['count']['users'], 3)
+        # user count is still 1, because invitees don't accept invitation yet
+        self.assertEqual(json.loads(response.content)['count']['users'], 1)
+
+        client.delete('/api/session')
+
+        # sign in as 'swpp2'
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp2@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # accept invitation from 'swpp' (Not Found)
+        response = client.put('/api/user/collection/pending',
+                              data=json.dumps({
+                                  constants.ID: -1,
+                              }),
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 404)
+
+        # accept invitation from 'swpp'
+        response = client.put('/api/user/collection/pending',
+                              data=json.dumps({
+                                  constants.ID: collection_id,
+                              }),
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+        # user count is now 2, because one invitee accepted invitation
+        self.assertEqual(json.loads(response.content)['count']['users'], 2)
+
+        client.delete('/api/session')
+
+        # sign in as 'swpp3'
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp3@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # dismiss invitation from 'swpp' (Not Found)
+        response = client.delete('/api/user/collection/pending',
+                                 json.dumps({
+                                     constants.ID: -1,
+                                 }),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 404)
+
+        # dismiss invitation from 'swpp'
+        response = client.delete('/api/user/collection/pending',
+                                 json.dumps({
+                                     constants.ID: collection_id,
+                                 }),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
 
         collection_user = CollectionUser.objects.get(user_id=user_ids[0])
         self.assertEqual(collection_user.type, "member")
 
-        collection_user = CollectionUser.objects.get(user_id=user_ids[1])
-        self.assertEqual(collection_user.type, "member")
+        self.assertFalse(CollectionUser.objects.filter(user_id=user_ids[1]).exists())
 
         user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
         collection_user = CollectionUser.objects.get(user_id=user_id)
@@ -630,7 +689,6 @@ class UserTestCase(TestCase):
 
         user_ids = []
         user_ids.append(User.objects.filter(email='swpp2@snu.ac.kr').first().id)
-        user_ids.append(User.objects.filter(email='swpp3@snu.ac.kr').first().id)
 
         # Add the User to the Collection
         response = client.post('/api/user/collection',
@@ -641,7 +699,34 @@ class UserTestCase(TestCase):
                                content_type='application/json')
 
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(json.loads(response.content)['count']['users'], 3)
+        self.assertEqual(json.loads(response.content)['count']['users'], 1)
+
+        client.delete('/api/session')
+
+        # sign in as 'swpp2'
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp2@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # accept invitation from 'swpp'
+        response = client.put('/api/user/collection/pending',
+                              data=json.dumps({
+                                  constants.ID: collection_id,
+                              }),
+                              content_type='application/json')
+
+        client.delete('/api/session')
+
+        # sign in as 'swpp' again
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
 
         # Delete the User from the Collection
         response = client.delete('/api/user/collection',
