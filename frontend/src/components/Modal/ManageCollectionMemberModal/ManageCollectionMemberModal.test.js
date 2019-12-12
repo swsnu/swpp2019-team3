@@ -243,4 +243,64 @@ describe("ManageCollectionMemberModal test", () => {
 
         expect(spyDeleteMembers).toHaveBeenCalledTimes(1);
     });
+
+    it("should do uncheck", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                ...stubInitialState.collection,
+                getMembers: {
+                    status: collectionStatus.SUCCESS,
+                    members: [],
+                    pageNum: 1,
+                    finished: false,
+                },
+            },
+        };
+
+        const component = mount(makeManageCollectionMemberModal(stubInitialState));
+        const instance = component.find(ManageCollectionMemberModal.WrappedComponent).instance();
+
+        let wrapper = component.find(".ManageCollectionMemberModal #modalOpenButton").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+        await flushPromises();
+        component.update();
+
+        wrapper = component.find("#kickOffEnableButton").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+        await flushPromises();
+        instance.setState({
+            members: [
+                {
+                    id: 2,
+                    username: "test1",
+                    description: "asdf",
+                    collection_member_type: "owner",
+                },
+                {
+                    id: 3,
+                    username: "test2",
+                    description: "qwer",
+                    collection_member_type: "member",
+                },
+                {
+                    id: 4,
+                    username: "test3",
+                    description: "zxcv",
+                    collection_member_type: "member",
+                },
+            ],
+        });
+        component.update();
+
+        wrapper = component.find("#check").at(0);
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("change", { target: { checked: true } });
+        expect(instance.state.checkedUserIdList).toEqual([2]);
+
+        wrapper.simulate("change", { target: { checked: false } });
+        expect(instance.state.checkedUserIdList).toEqual([]);
+    });
 });

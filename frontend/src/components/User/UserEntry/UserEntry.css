@@ -1,11 +1,16 @@
-
-.collection-entry .check {
+.UserEntry .check {
     font-size: 100%;
 }
-.collection-entry #collection-title {
+
+.UserEntry .entryItem {
     margin-left: 5%;
     float: left;
+    margin-top: 2%;
+}
+.UserEntry .userName {
+    margin-left: 5%;
     font-size: 100%;
+    margin-top: 2%;
 }
 
 .checkButton {

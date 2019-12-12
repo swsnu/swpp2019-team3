@@ -50,6 +50,7 @@ class WarningModal extends Component {
                 <div id="openButtonDiv">
                     {disableMessage}
                     <Button
+                      variant={this.props.variant}
                       id="modalOpenButton"
                       onClick={this.clickOpenHandler}
                       disabled={this.props.disableCondition}
@@ -58,7 +59,7 @@ class WarningModal extends Component {
                     </Button>
                 </div>
                 <Modal id="warningModal" show={this.state.isModalOpen} onHide={this.clickCancelHandler} centered>
-                    <Modal.Header>
+                    <Modal.Header className="ModalHeader">
                         <h5 id="warningHeaderText">Warning</h5>
                     </Modal.Header>
                     <Modal.Body>
@@ -68,10 +69,10 @@ class WarningModal extends Component {
                             <h5 id="continueText">Continue?</h5>
                         </div>
                         <div id="buttons">
-                            <Button id="confirmButton" onClick={this.clickConfirmHandler}>
+                            <Button variant="danger" id="confirmButton" onClick={this.clickConfirmHandler}>
                                 Confirm
                             </Button>
-                            <Button id="cancelButton" onClick={this.clickCancelHandler}>
+                            <Button variant="secondary" id="cancelButton" onClick={this.clickCancelHandler}>
                                 Cancel
                             </Button>
                         </div>
@@ -93,6 +94,7 @@ WarningModal.propTypes = {
     whatActionWillFollow: PropTypes.func,
     disableCondition: PropTypes.bool,
     disableMessage: PropTypes.string,
+    variant: PropTypes.string,
     showWarningContentText: PropTypes.bool,
 };
 
@@ -103,5 +105,6 @@ WarningModal.defaultProps = {
     whatActionWillFollow: () => {},
     disableCondition: false,
     disableMessage: "",
+    variant: "primary",
     showWarningContentText: true,
 };
