@@ -2,6 +2,8 @@ import React from "react";
 import { Form } from "react-bootstrap";
 import PropTypes from "prop-types";
 
+import "./UserEntry.css";
+
 const UserEntry = (props) => (
     <Form.Row className="UserEntry">
         {props.showCheck
@@ -15,7 +17,7 @@ const UserEntry = (props) => (
                 />
             )
             : <div /> }
-        <h5>{props.userName}</h5>
+        <h5 className="userName">{props.userName}</h5>
     </Form.Row>
 );
 

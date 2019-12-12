@@ -27,8 +27,7 @@ class CollectionDetail extends Component {
             isLiked: false,
             replies: [],
             papers: [],
-            thisCollection: {},
-            owner: {},
+            thisCollection: { owner: {} },
             newCollectionReplies: [],
             replyCollectionPageCount: 1,
             replyCollectionFinished: true,
@@ -46,9 +45,11 @@ class CollectionDetail extends Component {
             .then(() => {
                 if (this.props.getCollectionStatus === collectionStatus.COLLECTION_NOT_EXIST) {
                     this.props.history.push("/main");
-                    return;
-                }
-                if (this.props.getCollectionStatus === collectionStatus.SUCCESS) {
+                } else if (this.props.getCollectionStatus === collectionStatus.SUCCESS) {
+                    // if this collection is private and the user is not a member, redirect
+                    if (!this.props.selectedCollection.collection_user_type && this.props.selectedCollection.type === "private") {
+                        this.props.history.goBack();
+                    }
                     this.setState({
                         thisCollection: this.props.selectedCollection,
                         isLiked: this.props.selectedCollection.liked,
@@ -58,14 +59,7 @@ class CollectionDetail extends Component {
                     });
                 }
             });
-        this.props.onGetMembers(this.props.location.pathname.split("=")[1])
-            .then(() => {
-                this.props.members.forEach((x) => {
-                    if (x.collection_user_type === "owner") {
-                        this.setState({ owner: x });
-                    }
-                });
-            });
+        this.props.onGetMembers(this.props.location.pathname.split("=")[1]);
         this.props.onGetReplies({ id: Number(this.props.location.pathname.split("=")[1]) })
             .then(() => {
                 this.setState({
@@ -230,7 +224,7 @@ class CollectionDetail extends Component {
 
         let inviteModal = null;
         if (this.props.selectedCollection.owned
-            || (this.props.me && this.props.members.map((x) => x.id).includes(this.props.me.id))) {
+            || this.props.selectedCollection.collection_user_type === "member") {
             inviteModal = (
                 <InviteToCollectionModal
                   openButtonName="Invite to ..."
@@ -302,7 +296,7 @@ class CollectionDetail extends Component {
                             </p>
                             <div id="owner">
                                 Owned by&nbsp;
-                                <a href={`/profile_id=${this.state.owner.id}`}>{this.state.owner.username}</a>
+                                <a href={`/profile_id=${this.state.thisCollection.owner.id}`}>{this.state.thisCollection.owner.username}</a>
                             </div>
                         </div>
                         <div id="collectionDates">
@@ -436,7 +430,7 @@ CollectionDetail.defaultProps = {
     onGetCollection: null,
     onGetCollectionPapers: null,
     getCollectionStatus: collectionStatus.NONE,
-    selectedCollection: {},
+    selectedCollection: { creation_date: "", modification_date: "" },
     storedPapers: { papers: [], page_number: 0, is_finished: true },
     afterLikeCount: 0,
     afterUnlikeCount: 0,

@@ -187,7 +187,7 @@ describe("CollectionManage test", () => {
 
     it("should call deleteCollection when deleting", async () => {
         const component = mount(collectionManage);
-        let wrapper = component.find(".WarningModal #modalOpenButton").hostNodes();
+        let wrapper = component.find("#delete-warningmodal #modalOpenButton").hostNodes();
         expect(wrapper.length).toBe(1);
         wrapper.simulate("click");
 

@@ -15,6 +15,7 @@ class CollectionManage extends Component {
         this.state = {
             collectionName: "",
             collectionDescription: "",
+            collectionType: "public",
         };
 
         this.updateCollectionHandler = this.updateCollectionHandler.bind(this);
@@ -33,6 +34,7 @@ class CollectionManage extends Component {
                     this.setState({
                         collectionName: this.props.selectedCollection.title,
                         collectionDescription: this.props.selectedCollection.text,
+                        collectionType: this.props.selectedCollection.type,
                     });
                 }
             })
@@ -58,6 +60,17 @@ class CollectionManage extends Component {
         if (this.props.selectedCollection) {
             beforeName = this.props.selectedCollection.title;
             beforeDescription = this.props.selectedCollection.text;
+        }
+
+        let collectionTypeText = "Make this collection Private.";
+        let typeModalOpenButtonText = "Make this collection Private";
+        let typeModalWarnText = `Make Invisible to everyone other than Members: ${this.props.selectedCollection.title}`;
+        let futureType = "private";
+        if (this.state.collectionType === "private") {
+            collectionTypeText = "Make this collection Public.";
+            typeModalOpenButtonText = "Make this collection Public";
+            typeModalWarnText = `Make Visible to everyone: ${this.props.selectedCollection.title}`;
+            futureType = "public";
         }
 
         return (
@@ -130,6 +143,7 @@ class CollectionManage extends Component {
                             <h5>WARNING: This action cannot be undone.</h5>
                         </div>
                         <WarningModal
+                          id="delete-warningmodal"
                           openButtonText="Delete this collection"
                           whatToWarnText={`Delete colelction: ${this.props.selectedCollection.title}`}
                           whatActionWillBeDone={() => this.props.onDeleteCollection(
@@ -137,6 +151,21 @@ class CollectionManage extends Component {
                           )}
                           whatActionWillFollow={() => this.props.history.replace("/collections")}
                           history={this.props.history}
+                        />
+                        <h5 id="collectionTypeText">{collectionTypeText}</h5>
+                        <WarningModal
+                          id="change-type-warningmodal"
+                          openButtonText={typeModalOpenButtonText}
+                          whatToWarnText={typeModalWarnText}
+                          whatActionWillBeDone={() => this.props.onChangeCollectionType(
+                              this.props.selectedCollection.id, futureType,
+                          )}
+                          whatActionWillFollow={() => this.setState({
+                              collectionType:
+                            this.props.selectedCollection.type,
+                          })}
+                          history={this.props.history}
+                          showWarningContentText={false}
                         />
                     </div>
                 </div>
@@ -159,6 +188,9 @@ const mapDispatchToProps = (dispatch) => ({
     onDeleteCollection: (collectionId) => dispatch(
         collectionActions.deleteCollection(collectionId),
     ),
+    onChangeCollectionType: (collectionId, collectionType) => dispatch(
+        collectionActions.changeCollectionType(collectionId, collectionType),
+    ),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionManage);
@@ -173,6 +205,7 @@ CollectionManage.propTypes = {
     onGetCollection: PropTypes.func,
     onUpdateCollectionInfo: PropTypes.func,
     onDeleteCollection: PropTypes.func,
+    onChangeCollectionType: PropTypes.func,
 };
 
 CollectionManage.defaultProps = {
@@ -185,4 +218,5 @@ CollectionManage.defaultProps = {
     onGetCollection: () => {},
     onUpdateCollectionInfo: () => {},
     onDeleteCollection: () => {},
+    onChangeCollectionType: () => {},
 };

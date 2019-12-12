@@ -19,7 +19,6 @@ class Subscription(BaseModel):
 
     verb = models.CharField(max_length=255)
 
-
     action_object_content_type = models.ForeignKey(
         ContentType,
         on_delete=models.CASCADE,

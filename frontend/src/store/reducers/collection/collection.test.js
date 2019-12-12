@@ -15,6 +15,13 @@ const stubInitialState = {
         pageNum: 0,
         finished: true,
     },
+    sharedList: {
+        status: collectionStatus.NONE,
+        list: [],
+        error: null,
+        pageNum: 0,
+        finished: true,
+    },
     edit: {
         status: collectionStatus.NONE,
         collection: {},
@@ -98,14 +105,44 @@ describe("Collection reducer", () => {
         expect(newState.make.error).toBe(stubCollection);
     });
 
+
     it("should return get_collections", () => {
         const newState = reducer(stubInitialState, {
-            type: collectionConstants.GET_COLLECTIONS,
+            type: collectionConstants.GET_COLLECTIONS_SUCCESS,
             target: { collections: [stubCollection], pageNum: 1, finished: true },
         });
         expect(newState.list.status).toBe(collectionStatus.SUCCESS);
         expect(newState.list.list).toEqual([stubCollection]);
     });
+
+    it("should return get_collections_failure", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.GET_COLLECTIONS_FAILURE,
+            target: stubError,
+        });
+        expect(newState.list.status).toBe(collectionStatus.FAILURE);
+        expect(newState.list.error).toBe(stubError);
+    });
+
+
+    it("should return get_shared_collections", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.GET_SHARED_COLLECTIONS_SUCCESS,
+            target: { collections: [stubCollection], pageNum: 1, finished: true },
+        });
+        expect(newState.sharedList.status).toBe(collectionStatus.SUCCESS);
+        expect(newState.sharedList.list).toEqual([stubCollection]);
+    });
+
+    it("should return get_shared_collections_failure", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.GET_SHARED_COLLECTIONS_FAILURE,
+            target: stubError,
+        });
+        expect(newState.sharedList.status).toBe(collectionStatus.FAILURE);
+        expect(newState.sharedList.error).toBe(stubError);
+    });
+
 
     it("should return get_collection", () => {
         const newState = reducer(stubInitialState, {
@@ -371,5 +408,21 @@ describe("Collection reducer", () => {
             target: stubError,
         });
         expect(newState.list.status).toEqual(collectionStatus.FAILURE);
+    });
+
+    it("should handle changeCollectionType success", () => {
+        const newState = reducer(undefined, {
+            type: collectionConstants.CHANGE_COLLECTION_TYPE_SUCCESS,
+            target: stubCollection,
+        });
+        expect(newState.selected.collection).toEqual(stubCollection);
+    });
+
+    it("should handle changeCollectionType failure", () => {
+        const newState = reducer(undefined, {
+            type: collectionConstants.CHANGE_COLLECTION_TYPE_FAILURE,
+            target: stubError,
+        });
+        expect(newState.selected.error).toEqual(stubError);
     });
 });

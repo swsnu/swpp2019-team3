@@ -25,6 +25,7 @@ import {
 import {
     makeNewCollection,
     getCollectionsByUserId,
+    getSharedCollectionsByUserId,
     getCollection,
     getCollectionPapers,
     getCollectionMembers,
@@ -40,6 +41,7 @@ import {
     unlikeCollection,
     searchCollection,
     getCollectionLike,
+    changeCollectionType,
 } from "./collection/collection";
 
 import {
@@ -86,6 +88,7 @@ import {
 export const collectionActions = {
     makeNewCollection,
     getCollectionsByUserId,
+    getSharedCollectionsByUserId,
     getCollection,
     getCollectionPapers,
     getCollectionMembers,
@@ -100,6 +103,7 @@ export const collectionActions = {
     unlikeCollection,
     searchCollection,
     getCollectionLike,
+    changeCollectionType,
 };
 
 export const reviewActions = {

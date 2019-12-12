@@ -141,6 +141,7 @@ describe("CollectionDetail Test", () => {
                         creation_date: "2019-11-26T11:59:41.126",
                         modification_date: "2019-11-26T11:59:41.126",
                         count: {},
+                        owner: { id: 2, username: "test2" },
                     },
                 },
                 like: {},
