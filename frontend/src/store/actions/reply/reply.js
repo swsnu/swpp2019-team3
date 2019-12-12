@@ -95,7 +95,7 @@ const editReplyCollectionFailure = (error) => {
 
     if (error.response.status === 404) {
         actionType = replyConstants.EDIT_REPLY_FAILURE_REPLY_NOT_EXIST;
-    } else if (error.response.status === 401) {
+    } else if (error.response.status === 403) {
         actionType = replyConstants.EDIT_REPLY_FAILURE_AUTH_ERROR;
     }
 
@@ -120,7 +120,7 @@ const editReplyReviewFailure = (error) => {
 
     if (error.response.status === 404) {
         actionType = replyConstants.EDIT_REPLY_FAILURE_REPLY_NOT_EXIST;
-    } else if (error.response.status === 401) {
+    } else if (error.response.status === 403) {
         actionType = replyConstants.EDIT_REPLY_FAILURE_AUTH_ERROR;
     }
 
@@ -145,7 +145,7 @@ const deleteReplyCollectionFailure = (error) => {
 
     if (error.response.status === 404) {
         actionType = replyConstants.DEL_REPLY_FAILURE_REPLY_NOT_EXIST;
-    } else if (error.response.status === 401) {
+    } else if (error.response.status === 403) {
         actionType = replyConstants.DEL_REPLY_FAILURE_AUTH_ERROR;
     }
 
@@ -170,7 +170,7 @@ const deleteReplyReviewFailure = (error) => {
 
     if (error.response.status === 404) {
         actionType = replyConstants.DEL_REPLY_FAILURE_REPLY_NOT_EXIST;
-    } else if (error.response.status === 401) {
+    } else if (error.response.status === 403) {
         actionType = replyConstants.DEL_REPLY_FAILURE_AUTH_ERROR;
     }
 

@@ -45,8 +45,6 @@ class CollectionDetail extends Component {
             .then(() => {
                 if (this.props.getCollectionStatus === collectionStatus.COLLECTION_NOT_EXIST) {
                     this.props.history.push("/main");
-                } else if (this.props.getCollectionStatus === collectionStatus.SUCCESS) {
-                    this.getAuthorizedInfo();
                 }
             });
         this.props.onGetMembers(this.props.location.pathname.split("=")[1]);
