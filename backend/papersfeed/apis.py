@@ -87,18 +87,20 @@ def delete_collection(args):
 
 def get_collection_user(args):
     """Get Collection User"""
-    collections, page_number, is_finished = collections_utils.select_collection_user(args)
+    collections, page_number, is_finished, total_count = collections_utils.select_collection_user(args)
     return {constants.COLLECTIONS: collections,
             constants.PAGE_NUMBER: page_number,
-            constants.IS_FINISHED: is_finished}
+            constants.IS_FINISHED: is_finished,
+            constants.TOTAL_COUNT: total_count}
 
 
 def get_collection_user_shared(args):
     """Get Collection User Shared"""
-    collections, page_number, is_finished = collections_utils.select_collection_user_shared(args)
+    collections, page_number, is_finished, total_count = collections_utils.select_collection_user_shared(args)
     return {constants.COLLECTIONS: collections,
             constants.PAGE_NUMBER: page_number,
-            constants.IS_FINISHED: is_finished}
+            constants.IS_FINISHED: is_finished,
+            constants.TOTAL_COUNT: total_count}
 
 
 def get_paper(args):

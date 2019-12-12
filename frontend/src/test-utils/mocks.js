@@ -51,9 +51,6 @@ export const mockPromise = new Promise((resolve, reject) => { resolve(); });
 
 export const flushPromises = () => new Promise(setImmediate);
 
-export const spyHistoryPush = jest.spyOn(history, "push")
-    .mockImplementation(() => () => mockPromise);
-
 let lastId = 0;
 export const idGenerator = () => {
     lastId += 1;

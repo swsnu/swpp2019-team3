@@ -299,7 +299,7 @@ def __pack_replies(replies, request_user):
         reply_id__in=reply_ids
     )
     collection_ids = [reply.collection_id for reply in collection_replies]
-    collections, _, _ = collections_utils.get_collections(Q(id__in=collection_ids), request_user, None)
+    collections, _, _, _ = collections_utils.get_collections(Q(id__in=collection_ids), request_user, None)
 
     # {collection_id: collection}
     collections = {collection[constants.ID]: collection for collection in collections}

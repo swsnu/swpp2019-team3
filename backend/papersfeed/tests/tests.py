@@ -45,7 +45,7 @@ class ApiEntryTestCase(TestCase):
                                data='{array: [1, 2, 3]}',
                                content_type='application/json')
 
-        self.assertEqual(response.status_code, 520)
+        self.assertEqual(response.status_code, 500)
 
     # pylint: disable=too-many-locals, too-many-statements
     def test_pagination(self):

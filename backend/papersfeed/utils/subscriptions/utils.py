@@ -6,11 +6,12 @@ from django.db.models import Q
 from papersfeed import constants
 from papersfeed.utils.base_utils import get_results_from_queryset
 from papersfeed.utils.papers.utils import get_papers
-from papersfeed.utils.collections.utils import get_collections
+from papersfeed.utils.collections.utils import get_collections, __is_member
 from papersfeed.utils.reviews.utils import get_reviews
 from papersfeed.models.users.user_follow import UserFollow
 from papersfeed.models.subscription.subscription import Subscription
 from papersfeed.models.reviews.review import Review
+from papersfeed.models.collections.collection import Collection
 
 
 def select_subscriptions(args):
@@ -23,15 +24,26 @@ def select_subscriptions(args):
     followings_queryset = UserFollow.objects.filter(
         following_user=request_user.id).values_list('followed_user', flat=True)
 
-    # Notification QuerySet
+    # anonymous reviews should not be seen
     anonymous_reviews = Review.objects.filter(anonymous=True).values_list('id', flat=True)
+
+    # private collections where the user is not a member should not be seen
+    private_collections = Collection.objects.annotate(
+        is_member=__is_member('id', request_user.id)
+    ).filter(
+        type="private", is_member=False).values_list('id', flat=True)
+
+    # Subscription QuerySet
     subscription_queryset = Subscription.objects.filter(
         Q(actor__in=followings_queryset)
     ).exclude(
         action_object_content_type__model="Review",
         action_object_object_id__in=anonymous_reviews,
-        verb="wrote"
+    ).exclude(
+        action_object_content_type__model="Collection",
+        action_object_object_id__in=private_collections,
     )
+
     subscriptions = get_results_from_queryset(subscription_queryset, 20, page_number)
 
     # is_finished
