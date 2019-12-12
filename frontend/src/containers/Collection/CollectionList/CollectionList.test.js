@@ -93,6 +93,13 @@ describe("CollectionList test", () => {
                     ],
                     error: null,
                 },
+                sharedList: {
+                    status: collectionStatus.NONE,
+                    list: [],
+                    error: null,
+                    pageNum: 0,
+                    finished: true,
+                },
                 edit: {
                     status: collectionStatus.NONE,
                     collection: {},

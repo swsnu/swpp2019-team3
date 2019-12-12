@@ -197,6 +197,43 @@ describe("collectionActions", () => {
     });
 
 
+    it("getSharedCollectionsByUserId should call axios.get", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: stubCollection,
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.getSharedCollectionsByUserId({ id: stubUser.id }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/collection/user/shared", { params: { id: stubUser.id } });
+                done();
+            });
+    });
+
+    it("getSharedCollectionsByUserId should handle error", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(collectionActions.getSharedCollectionsByUserId({ id: stubUser.id }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/collection/user/shared", { params: { id: 1 } });
+                done();
+            });
+    });
+
+
     it("get collection should call axios.get", (done) => {
         const spy = jest.spyOn(axios, "get")
             .mockImplementation(() => new Promise((resolve) => {
