@@ -6,6 +6,7 @@ from django.test import TestCase, Client
 from papersfeed import constants
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.collections.collection import Collection
+from papersfeed.models.collections.collection_user import CollectionUser
 from papersfeed.models.users.user import User
 
 
@@ -483,10 +484,19 @@ class CollectionTestCase(TestCase):
                    },
                    content_type='application/json')
 
+        user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
+
         # Creating a collection
-        Collection.objects.create(
+        collection = Collection(
             title="collection2",
             text="collection2_text"
+        )
+        collection.save()
+
+        CollectionUser.objects.create(
+            user_id=user_id,
+            collection_id=collection.id,
+            type="owner"
         )
 
         # Like collection2
