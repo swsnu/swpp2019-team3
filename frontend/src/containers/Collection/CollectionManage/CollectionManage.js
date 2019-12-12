@@ -138,20 +138,6 @@ class CollectionManage extends Component {
                         <TransferOwnershipModal history={this.props.history} />
                     </div>
                     <div className="ManageButtonItems">
-                        <div className="ManageButtonText" id="deleteCollectionText">
-                            <h5>Delete this collection.</h5>
-                            <h5>WARNING: This action cannot be undone.</h5>
-                        </div>
-                        <WarningModal
-                          id="delete-warningmodal"
-                          openButtonText="Delete this collection"
-                          whatToWarnText={`Delete colelction: ${this.props.selectedCollection.title}`}
-                          whatActionWillBeDone={() => this.props.onDeleteCollection(
-                              this.props.selectedCollection.id,
-                          )}
-                          whatActionWillFollow={() => this.props.history.replace("/collections")}
-                          history={this.props.history}
-                        />
                         <h5 id="collectionTypeText">{collectionTypeText}</h5>
                         <WarningModal
                           id="change-type-warningmodal"
@@ -166,6 +152,22 @@ class CollectionManage extends Component {
                           })}
                           history={this.props.history}
                           showWarningContentText={false}
+                        />
+                    </div>
+                    <div className="ManageButtonItems">
+                        <div className="ManageButtonText" id="deleteCollectionText">
+                            <h5>Delete this collection.</h5>
+                            <h5>WARNING: This action cannot be undone.</h5>
+                        </div>
+                        <WarningModal
+                          id="delete-warningmodal"
+                          openButtonText="Delete this collection"
+                          whatToWarnText={`Delete colelction: ${this.props.selectedCollection.title}`}
+                          whatActionWillBeDone={() => this.props.onDeleteCollection(
+                              this.props.selectedCollection.id,
+                          )}
+                          whatActionWillFollow={() => this.props.history.replace("/collections")}
+                          history={this.props.history}
                         />
                     </div>
                 </div>
