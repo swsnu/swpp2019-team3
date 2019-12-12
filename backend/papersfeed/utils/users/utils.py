@@ -584,14 +584,14 @@ def remove_user_collection_pending(args):
 
     request_user = args[constants.USER]
 
+    # Check Collection Id
+    if not Collection.objects.filter(id=collection_id).exists():
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
     # Check CollectionUser
     try:
         collection_user = CollectionUser.objects.get(collection_id=collection_id, user_id=request_user.id)
     except ObjectDoesNotExist:
-        raise ApiError(constants.NOT_EXIST_OBJECT)
-
-    # Check Collection Id
-    if not Collection.objects.filter(id=collection_id).exists():
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
     # if request_user is not 'pending', then raise AUTH_ERROR
