@@ -458,7 +458,7 @@ def insert_user_collection(args):
         CollectionUser.objects.update_or_create(
             collection_id=collection_id,
             user_id=user_id,
-            type=COLLECTION_USER_TYPE[1], # member, not owner
+            type=COLLECTION_USER_TYPE[2], # pending until invitees accept
         )
 
     invited_users = User.objects.filter(Q(id__in=user_ids))

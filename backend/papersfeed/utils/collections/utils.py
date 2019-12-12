@@ -560,9 +560,10 @@ def __is_collection_liked(outer_ref, request_user):
 
 def __is_member(outer_ref, user_id):
     """Check If Collection is Member by User"""
+    # decide if the user is a member of the collection (except 'pending')
     return Exists(
-        CollectionUser.objects.filter(collection_id=OuterRef(outer_ref),
-                                      user_id=user_id)
+        CollectionUser.objects.filter(
+            Q(collection_id=OuterRef(outer_ref), user_id=user_id), ~Q(type=COLLECTION_USER_TYPE[2]))
     )
 
 
