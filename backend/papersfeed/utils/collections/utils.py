@@ -612,7 +612,7 @@ def __get_collection_like_count(collection_ids, group_by_field):
 def __get_collection_user_count(collection_ids, group_by_field):
     """Get Number of Users in Collections"""
     collection_users = CollectionUser.objects.filter(
-        collection_id__in=collection_ids
+        Q(collection_id__in=collection_ids), ~Q(type=COLLECTION_USER_TYPE[2])
     ).values(
         group_by_field
     ).annotate(

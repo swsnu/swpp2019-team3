@@ -44,7 +44,10 @@ class CollectionDetail extends Component {
                     this.props.history.push("/main");
                 } else if (this.props.getCollectionStatus === collectionStatus.SUCCESS) {
                     // if this collection is private and the user is not a member, redirect
-                    if (!this.props.selectedCollection.collection_user_type && this.props.selectedCollection.type === "private") {
+                    // NOTE: 'pending' users can see this page,
+                    //       but cannot see 'Invite' or 'Manage' button and is not included in member list/count
+                    if (this.props.selectedCollection.type === "private"
+                    && !this.props.selectedCollection.collection_user_type) {
                         this.props.history.goBack();
                     }
                     this.setState({
