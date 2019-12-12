@@ -43,9 +43,10 @@ class CollectionDetail extends Component {
             .then(() => {
                 if (this.props.getCollectionStatus === collectionStatus.COLLECTION_NOT_EXIST) {
                     this.props.history.push("/main");
-                    return;
-                }
-                if (this.props.getCollectionStatus === collectionStatus.SUCCESS) {
+                } else if (this.props.getCollectionStatus === collectionStatus.SUCCESS) {
+                    if (!this.props.selectedCollection.collection_user_type && this.props.selectedCollection.type === "private") {
+                        this.props.history.goBack();
+                    }
                     this.setState({
                         thisCollection: this.props.selectedCollection,
                         isLiked: this.props.selectedCollection.liked,
@@ -438,7 +439,7 @@ CollectionDetail.defaultProps = {
     onGetCollection: null,
     onGetCollectionPapers: null,
     getCollectionStatus: collectionStatus.NONE,
-    selectedCollection: {},
+    selectedCollection: { creation_date: "", modification_date: "" },
     storedPapers: { papers: [], page_number: 0, is_finished: true },
     afterLikeCount: 0,
     afterUnlikeCount: 0,

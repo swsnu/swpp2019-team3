@@ -40,6 +40,7 @@ import {
     unlikeCollection,
     searchCollection,
     getCollectionLike,
+    changeCollectionType,
 } from "./collection/collection";
 
 import {
@@ -100,6 +101,7 @@ export const collectionActions = {
     unlikeCollection,
     searchCollection,
     getCollectionLike,
+    changeCollectionType,
 };
 
 export const reviewActions = {

@@ -826,4 +826,40 @@ describe("collectionActions", () => {
                 done();
             });
     });
+
+    it("changeCollectionType should call axios.put", (done) => {
+        const spy = jest.spyOn(axios, "put")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: { collection: stubCollection },
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.changeCollectionType(1, "private"))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/collection/type", { id: 1, type: "private" });
+                done();
+            });
+    });
+
+    it("changeCollectionType should handle error", (done) => {
+        const spy = jest.spyOn(axios, "put")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(collectionActions.changeCollectionType(1, "private"))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/collection/type", { id: 1, type: "private" });
+                done();
+            });
+    });
 });

@@ -318,3 +318,19 @@ const getCollectionLikeFailure = (error) => ({
 export const getCollectionLike = (pageNum) => (dispatch) => axios.get("/api/collection/like", { params: pageNum })
     .then((res) => dispatch(getCollectionLikeSuccess(res.data)))
     .catch((err) => dispatch(getCollectionLikeFailure(err)));
+
+
+// Change Collection Type
+const changeCollectionTypeSuccess = (data) => ({
+    type: collectionConstants.CHANGE_COLLECTION_TYPE_SUCCESS,
+    target: data.collection,
+});
+
+const changeCollectionTypeFailure = (error) => ({
+    type: collectionConstants.CHANGE_COLLECTION_TYPE_FAILURE,
+    target: error,
+});
+
+export const changeCollectionType = (collectionId, collectionType) => (dispatch) => axios.put("/api/collection/type", { id: collectionId, type: collectionType })
+    .then((res) => dispatch(changeCollectionTypeSuccess(res.data)))
+    .catch((err) => dispatch(changeCollectionTypeFailure(err)));

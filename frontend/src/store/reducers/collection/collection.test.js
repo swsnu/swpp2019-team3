@@ -372,4 +372,20 @@ describe("Collection reducer", () => {
         });
         expect(newState.list.status).toEqual(collectionStatus.FAILURE);
     });
+
+    it("should handle changeCollectionType success", () => {
+        const newState = reducer(undefined, {
+            type: collectionConstants.CHANGE_COLLECTION_TYPE_SUCCESS,
+            target: stubCollection,
+        });
+        expect(newState.selected.collection).toEqual(stubCollection);
+    });
+
+    it("should handle changeCollectionType failure", () => {
+        const newState = reducer(undefined, {
+            type: collectionConstants.CHANGE_COLLECTION_TYPE_FAILURE,
+            target: stubError,
+        });
+        expect(newState.selected.error).toEqual(stubError);
+    });
 });

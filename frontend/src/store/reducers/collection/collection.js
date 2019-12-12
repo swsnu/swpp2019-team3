@@ -363,6 +363,24 @@ const reducer = (state = initialState, action) => {
                 finished: false,
             },
         };
+    case collectionConstants.CHANGE_COLLECTION_TYPE_SUCCESS:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.SUCCESS,
+                collection: action.target,
+            },
+        };
+    case collectionConstants.CHANGE_COLLECTION_TYPE_FAILURE:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
     default:
         return { ...state };
     }

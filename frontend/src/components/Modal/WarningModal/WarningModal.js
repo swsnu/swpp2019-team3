@@ -41,6 +41,12 @@ class WarningModal extends Component {
                 </div>
             )
             : <div />;
+        const warningContentText = this.props.showWarningContentText
+            ? (
+                <h5 id="warningContentText">
+                    The following action will be done, however it cannot be undone after you press Confirm:
+                </h5>
+            ) : null;
         return (
             <div className="WarningModal">
                 <div id="openButtonDiv">
@@ -59,7 +65,7 @@ class WarningModal extends Component {
                     </Modal.Header>
                     <Modal.Body>
                         <div id="texts">
-                            <h5 id="warningContentText">The following action will be done, however it cannot be undone after you press Confirm:</h5>
+                            {warningContentText}
                             <h5 id="warningWhatWillBeDone">{this.props.whatToWarnText}</h5>
                             <h5 id="continueText">Continue?</h5>
                         </div>
@@ -89,6 +95,7 @@ WarningModal.propTypes = {
     whatActionWillFollow: PropTypes.func,
     disableCondition: PropTypes.bool,
     disableMessage: PropTypes.string,
+    showWarningContentText: PropTypes.bool,
 };
 
 WarningModal.defaultProps = {
@@ -98,4 +105,5 @@ WarningModal.defaultProps = {
     whatActionWillFollow: () => {},
     disableCondition: false,
     disableMessage: "",
+    showWarningContentText: true,
 };

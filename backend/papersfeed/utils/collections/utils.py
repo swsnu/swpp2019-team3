@@ -132,7 +132,7 @@ def update_collection_type(args):
     # Collection Id
     collection_id = args[constants.ID]
 
-    # Revoke ownership from request_user
+    # Check CollectionUser
     try:
         collection_user = CollectionUser.objects.get(collection_id=collection_id, user_id=request_user.id)
     except ObjectDoesNotExist:
