@@ -153,7 +153,10 @@ class CollectionManage extends Component {
                           whatActionWillBeDone={() => this.props.onChangeCollectionType(
                               this.props.selectedCollection.id, futureType,
                           )}
-                          whatActionWillFollow={() => this.setState({ collectionType: this.props.selectedCollection.type })}
+                          whatActionWillFollow={() => this.setState({
+                              collectionType:
+                            this.props.selectedCollection.type,
+                          })}
                           history={this.props.history}
                           showWarningContentText={false}
                         />

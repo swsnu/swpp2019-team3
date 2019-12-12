@@ -21,6 +21,7 @@ describe("CollectionList test", () => {
     let stubInitialState;
     let collectionList;
     let spyGetCollections;
+    let spyGetSharedCollections;
 
     beforeEach(() => {
         stubInitialState = {
@@ -39,55 +40,47 @@ describe("CollectionList test", () => {
                     status: collectionStatus.NONE,
                     list: [
                         {
-                            type: "Collection",
-                            source: "liked",
                             id: 1,
                             title: "dfad",
                             user: "Dfafdaf",
-                            numPapers: 14,
-                            numReplies: 15,
                             count: {
-                                users: 0,
+                                users: 1,
                                 papers: 0,
+                                replies: 0,
+                                likes: 0,
                             },
                         },
                         {
-                            type: "Collection",
-                            source: "liked",
                             id: 2,
                             title: "dfad",
                             user: "Dfafdaf",
-                            numPapers: 14,
-                            numReplies: 15,
                             count: {
-                                users: 0,
+                                users: 1,
                                 papers: 0,
+                                replies: 0,
+                                likes: 0,
                             },
                         },
                         {
-                            type: "Collection",
-                            source: "liked",
                             id: 3,
                             title: "dfad",
                             user: "Dfafdaf",
-                            numPapers: 14,
-                            numReplies: 15,
                             count: {
-                                users: 0,
+                                users: 1,
                                 papers: 0,
+                                replies: 0,
+                                likes: 0,
                             },
                         },
                         {
-                            type: "Collection",
-                            source: "liked",
                             id: 4,
                             title: "dfad",
                             user: "Dfafdaf",
-                            numPapers: 14,
-                            numReplies: 15,
                             count: {
-                                users: 0,
+                                users: 1,
                                 papers: 0,
+                                replies: 0,
+                                likes: 0,
                             },
                         },
                     ],
@@ -95,7 +88,30 @@ describe("CollectionList test", () => {
                 },
                 sharedList: {
                     status: collectionStatus.NONE,
-                    list: [],
+                    list: [
+                        {
+                            id: 1,
+                            title: "dfad",
+                            user: "Dfafdaf",
+                            count: {
+                                users: 2,
+                                papers: 0,
+                                replies: 0,
+                                likes: 0,
+                            },
+                        },
+                        {
+                            id: 2,
+                            title: "dfad",
+                            user: "Dfafdaf",
+                            count: {
+                                users: 2,
+                                papers: 0,
+                                replies: 0,
+                                likes: 0,
+                            },
+                        },
+                    ],
                     error: null,
                     pageNum: 0,
                     finished: true,
@@ -137,6 +153,8 @@ describe("CollectionList test", () => {
         collectionList = makeCollectionList(stubInitialState);
         spyGetCollections = jest.spyOn(collectionActions, "getCollectionsByUserId")
             .mockImplementation(() => () => mockPromise);
+        spyGetSharedCollections = jest.spyOn(collectionActions, "getSharedCollectionsByUserId")
+            .mockImplementation(() => () => mockPromise);
     });
 
     afterEach(() => {
@@ -153,6 +171,7 @@ describe("CollectionList test", () => {
         expect(wrapperRight.length).toBe(1);
 
         expect(spyGetCollections).toHaveBeenCalledTimes(1);
+        expect(spyGetSharedCollections).toHaveBeenCalledTimes(1);
     });
 
     it("should show more if collection-more-button clicked", async () => {
@@ -179,6 +198,33 @@ describe("CollectionList test", () => {
         wrapper.simulate("click");
 
         expect(spyGetCollections).toBeCalledTimes(2);
+        await flushPromises();
+    });
+
+    it("should show more if shared-collection-more-button clicked", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                ...stubInitialState.collection,
+                sharedList: {
+                    status: collectionStatus.SUCCESS,
+                    list: [],
+                    pageNum: 1,
+                    finished: false,
+                },
+            },
+        };
+        const component = mount(makeCollectionList(stubInitialState));
+
+        expect(spyGetSharedCollections).toBeCalledTimes(1);
+        await flushPromises();
+        component.update();
+
+        const wrapper = component.find(".shared-collection-more-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        expect(spyGetSharedCollections).toBeCalledTimes(2);
         await flushPromises();
     });
 });

@@ -43,9 +43,7 @@ class WarningModal extends Component {
             : <div />;
         const warningContentText = this.props.showWarningContentText
             ? (
-                <h5 id="warningContentText">
-                    The following action will be done, however it cannot be undone after you press Confirm:
-                </h5>
+                <h5 id="warningContentText">The following action will be done, however it cannot be undone after you press Confirm:</h5>
             ) : null;
         return (
             <div className="WarningModal">
