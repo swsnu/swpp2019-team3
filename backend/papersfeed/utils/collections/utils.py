@@ -43,8 +43,13 @@ def insert_collection(args):
     if not title or not text:
         raise ApiError(constants.PARAMETER_ERROR)
 
+    # default type is 'public'
+    collection_share_type = args[constants.TYPE] if constants.TYPE in args else COLLECTION_SHARE_TYPE[0]
+    if collection_share_type not in COLLECTION_SHARE_TYPE:
+        raise ApiError(constants.PARAMETER_ERROR)
+
     # Create New Collection
-    collection = Collection.objects.create(title=title, text=text, type=COLLECTION_SHARE_TYPE[0])
+    collection = Collection.objects.create(title=title, text=text, type=collection_share_type)
 
     # store an action for subscription feed
     Subscription.objects.create(

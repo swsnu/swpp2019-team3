@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Form } from "react-bootstrap";
 
 import { collectionActions } from "../../../store/actions";
 
@@ -12,10 +12,12 @@ class CreateNewCollectionModal extends Component {
             isModalOpen: false,
             newCollectionName: "",
             newCollectionDesc: "",
+            type: "public",
         };
         this.clickOpenHandler = this.clickOpenHandler.bind(this);
         this.clickCreateHandler = this.clickCreateHandler.bind(this);
         this.clickCancelHandler = this.clickCancelHandler.bind(this);
+        this.handleCheckPrivate = this.handleCheckPrivate.bind(this);
     }
 
     clickOpenHandler = () => {
@@ -29,6 +31,7 @@ class CreateNewCollectionModal extends Component {
         this.props.onCreateNewCollection({
             title: this.state.newCollectionName,
             text: newCollectionDesc,
+            type: this.state.type,
         })
             .then(() => {
                 this.props.whatActionWillFollow();
@@ -46,6 +49,14 @@ class CreateNewCollectionModal extends Component {
             newCollectionName: "",
             newCollectionDesc: "",
         });
+    }
+
+    handleCheckPrivate() {
+        if (this.state.type === "public") {
+            this.setState({ type: "private" });
+        } else {
+            this.setState({ type: "public" });
+        }
     }
 
     render() {
@@ -87,6 +98,13 @@ class CreateNewCollectionModal extends Component {
                               })}
                             />
                         </div>
+                        <Form.Check
+                          type="checkbox"
+                          className="private-check"
+                          label="Make Invisible to everyone other than Members"
+                          checked={this.state.private}
+                          onChange={() => this.handleCheckPrivate()}
+                        />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button
