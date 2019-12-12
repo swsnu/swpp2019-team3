@@ -165,6 +165,7 @@ class ManageCollectionMemberModal extends Component {
                 <div id="kickOffButtons">
                     <WarningModal
                       openButtonText="Confirm"
+                      variant="info"
                       whatToWarnText={`Kick off the users from "${this.props.thisCollection.title}"`}
                       whatActionWillBeDone={() => this.props.onDeleteMembers(
                           this.props.thisCollection.id,
@@ -174,7 +175,7 @@ class ManageCollectionMemberModal extends Component {
                       disableCondition={this.state.checkedUserIdList.length === 0}
                       disableMessage="Select users"
                     />
-                    <Button id="kickOffCancelButton" onClick={this.clickKickOffCancelHandler}>
+                    <Button variant="secondary" id="kickOffCancelButton" onClick={this.clickKickOffCancelHandler}>
                         Cancel
                     </Button>
                 </div>
@@ -182,6 +183,7 @@ class ManageCollectionMemberModal extends Component {
             : (
                 <Button
                   id="kickOffEnableButton"
+                  variant="secondary"
                   onClick={this.clickKickOffEnableHandler}
                 >
                     Kick Off...
@@ -195,23 +197,32 @@ class ManageCollectionMemberModal extends Component {
                         Manage Members
                     </Button>
                 </div>
-                <Modal scrollable id="memberModal" show={this.state.isModalOpen} onHide={this.clickCloseHandler} centered>
+                <Modal
+                  scrollable
+                  id="memberModal"
+                  show={this.state.isModalOpen}
+                  onHide={this.clickCloseHandler}
+                  centered
+                >
                     <Modal.Header className="memberModalHeader">
                         <h5 id="createHeaderText">Manage members of {this.props.thisCollection.title}</h5>
                     </Modal.Header>
                     <Modal.Body ref={this.modal} className="memberModalBody">
-                        <InviteToCollectionModal
-                          openButtonName="Invite New Users"
-                          members={this.state.members}
-                          whatActionWillFollow={this.refreshMembers}
-                        />
+                        <div className="memtoinviteButton">
+                            <InviteToCollectionModal
+                              openButtonName="Invite New Users"
+                              members={this.state.members}
+                              whatActionWillFollow={this.refreshMembers}
+                              variant="info"
+                            />
+                        </div>
                         <div id="membersListDiv">
                             {memberList}
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
                         {kickOffSupporter}
-                        <Button id="closeButton" onClick={this.clickCloseHandler}>Close</Button>
+                        <Button variant="outline-dark" id="closeButton" onClick={this.clickCloseHandler}>Close</Button>
                     </Modal.Footer>
                 </Modal>
             </div>

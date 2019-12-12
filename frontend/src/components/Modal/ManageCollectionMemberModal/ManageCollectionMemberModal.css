@@ -1,3 +1,4 @@
+
 #memberModal .memberModalHeader{
     display:flex;
     align-items: center;
@@ -10,5 +11,17 @@
     max-height: 400px;
     display:flex;
     flex-direction: column;
-    align-content: center;
+}
+
+#memberModal .memberModalBody .memtoinviteButton{
+    align-self: flex-end;
+}
+
+#memberModal #kickOffButtons{
+    display: flex;
+    align-items: flex-end;
+}
+
+#memberModal #closeButton{
+    align-self: flex-end;
 }

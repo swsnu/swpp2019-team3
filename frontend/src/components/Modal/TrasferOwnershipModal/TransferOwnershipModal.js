@@ -7,6 +7,8 @@ import { collectionActions } from "../../../store/actions";
 import WarningModal from "../WarningModal/WarningModal";
 import UserEntry from "../../User/UserEntry/UserEntry";
 
+import "./TransferOwnershipModal.css";
+
 class TransferOwnershipModal extends Component {
     constructor(props) {
         super(props);
@@ -17,12 +19,27 @@ class TransferOwnershipModal extends Component {
             members: [],
             memberPageNum: 0,
             memberFinished: true,
+            loading: false,
         };
 
+        this.modal = React.createRef();
         this.getMembersTrigger = this.getMembersTrigger.bind(this);
         this.clickOpenHandler = this.clickOpenHandler.bind(this);
         this.clickCancelHandler = this.clickCancelHandler.bind(this);
         this.checkHandler = this.checkHandler.bind(this);
+        this.handleScroll = this.handleScroll.bind(this);
+    }
+
+    handleScroll = () => {
+        if (!this.state.loading
+            && !this.state.memberFinished
+            && this.modal.current.scrollTop + this.modal.current.clientHeight + 50
+            > this.modal.current.scrollHeight) {
+            this.setState({
+                loading: true,
+            });
+            this.getMembersTrigger(this.state.memberPageNum);
+        }
     }
 
     getMembersTrigger = (pageNum) => {
@@ -33,6 +50,7 @@ class TransferOwnershipModal extends Component {
                     members: members.concat(this.props.members),
                     memberPageNum: this.props.memberPageNum,
                     memberFinished: this.props.memberFinished,
+                    loading: false,
                 });
             })
             .catch(() => {});
@@ -40,7 +58,11 @@ class TransferOwnershipModal extends Component {
 
     clickOpenHandler = () => {
         this.getMembersTrigger(0);
-        this.setState({ isModalOpen: true });
+        this.setState({
+            isModalOpen: true,
+        }, () => {
+            this.modal.current.addEventListener("scroll", this.handleScroll);
+        });
     }
 
     clickCancelHandler = () => {
@@ -51,6 +73,8 @@ class TransferOwnershipModal extends Component {
             members: [],
             memberPageNum: 0,
             memberFinished: true,
+        }, () => {
+            this.modal.current.removeEventListener("scroll", this.handleScroll);
         });
     }
 
@@ -74,7 +98,7 @@ class TransferOwnershipModal extends Component {
                       userDesc={user.descrpition}
                       isChecked={this.state.selectedUserId === user.id}
                       checkhandler={() => this.checkHandler(user)}
-                      type="radio"
+                      type="checkbox"
                     />
                 ));
         }
@@ -86,24 +110,14 @@ class TransferOwnershipModal extends Component {
                         Transfer Ownership
                     </Button>
                 </div>
-                <Modal id="transferModal" show={this.state.isModalOpen} onHide={this.clickCancelHandler} centered>
-                    <Modal.Header>
-                        <h5 id="transferHeaderText">Transfer ownership of {this.collectionName}</h5>
+                <Modal scrollable id="transferModal" show={this.state.isModalOpen} onHide={this.clickCancelHandler} centered>
+                    <Modal.Header className="ModalHeader">
+                        <h5 id="transferHeaderText">Transfer ownership to {this.collectionName}</h5>
                     </Modal.Header>
-                    <Modal.Body>
+                    <Modal.Body ref={this.modal} className="ModalBody">
                         {memberList}
-                        { this.state.memberFinished ? null
-                            : (
-                                <Button
-                                  className="user-more-button"
-                                  onClick={() => this.getMembersTrigger(this.state.memberPageNum)}
-                                  block
-                                >
-                            View More
-                                </Button>
-                            )}
                     </Modal.Body>
-                    <Modal.Footer>
+                    <Modal.Footer className="modalFooter">
                         <WarningModal
                           openButtonText="Transfer to ..."
                           whatToWarnText={`Transfer "${this.props.thisCollection.title}" to "${this.state.selectedUserName}"`}
@@ -114,10 +128,11 @@ class TransferOwnershipModal extends Component {
                           whatActionWillFollow={() => {
                               this.props.history.replace(`/collection_id=${this.props.thisCollection.id}`);
                           }}
+                          variant="info"
                           disableCondition={this.state.selectedUserId <= 0}
                           disableMessage="Select a user"
                         />
-                        <Button id="cancelButton" onClick={this.clickCancelHandler}>
+                        <Button variant="secondary" id="cancelButton" onClick={this.clickCancelHandler}>
                             Cancel
                         </Button>
                     </Modal.Footer>

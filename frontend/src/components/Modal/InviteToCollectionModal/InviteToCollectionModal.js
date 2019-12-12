@@ -170,7 +170,7 @@ class InviteToCollectionModal extends Component {
         return (
             <div className="InviteToCollectionModal">
                 <div className="OpenButtonDiv">
-                    <Button id="modalOpenButton" onClick={this.clickOpenHandler}>
+                    <Button variant={this.props.variant} id="modalOpenButton" onClick={this.clickOpenHandler}>
                         {this.props.openButtonName}
                     </Button>
                 </div>
@@ -280,6 +280,7 @@ InviteToCollectionModal.propTypes = {
     onInviteUsers: PropTypes.func,
 
     whatActionWillFollow: PropTypes.func,
+    variant: PropTypes.string,
 };
 
 InviteToCollectionModal.defaultProps = {
@@ -299,4 +300,5 @@ InviteToCollectionModal.defaultProps = {
     onInviteUsers: () => {},
 
     whatActionWillFollow: () => {},
+    variant: "primary",
 };

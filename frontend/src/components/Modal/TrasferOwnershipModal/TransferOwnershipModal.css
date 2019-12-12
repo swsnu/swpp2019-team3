@@ -1,18 +1,18 @@
-.InviteToCollectionModal .OpenButtonDiv #modalOpenButton {
+.TransferOwnership .OpenButtonDiv #modalOpenButton {
     max-width: 150px;
     height: 40px;
 }
 
-#inviteModal .ModalHeader{
+#transferModal .ModalHeader{
     display:flex;
     align-items: center;
     justify-content: space-around;
 }
 
-#inviteModal .ModalBody{
+#transferModal .ModalBody{
     overflow-y: scroll;
     overflow-x: hidden;
-    max-height: 400px;
+    max-height: 300px;
     display:flex;
     flex-direction: column;
     align-content: center;
@@ -27,4 +27,9 @@
 
 #inviteModal .ModalBody #searchArea #userSearchBar{
     flex: 0 1 300px;
+}
+
+#transferModal .modalFooter{
+    display: flex;
+    align-items: flex-end;
 }
