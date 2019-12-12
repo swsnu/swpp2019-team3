@@ -38,6 +38,7 @@ class GoMyCollectionsModal extends Component {
                   className="update-button"
                   onClick={this.clickUpdateButtonHandler}
                   disabled={this.props.disableCondition}
+                  variant={this.props.variant}
                 >
                     Update
                 </Button>
@@ -47,23 +48,21 @@ class GoMyCollectionsModal extends Component {
                   className="modal"
                   centered
                 >
-                    <Modal.Header>
+                    <Modal.Header className="ModalHeader">
                         <h2 id="updated-paper-to-collections">Updated collections!</h2>
 
                     </Modal.Header>
                     <Modal.Body>
                         <div className="buttons">
                             <Button
+                              variant="info"
                               className="go-button"
                               onClick={this.clickGotoButtonHandler}
                             >My Collection
                             </Button>
-                            <Button className="cancel-button" onClick={this.clickCancelHandler}>Cancel</Button>
+                            <Button variant="outline-dark" className="cancel-button" onClick={this.clickCancelHandler}>Cancel</Button>
                         </div>
                     </Modal.Body>
-                    <Modal.Footer>
-                        <div />
-                    </Modal.Footer>
                 </Modal>
             </div>
         );
@@ -76,10 +75,12 @@ GoMyCollectionsModal.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
     whatActionWillBeDone: PropTypes.func,
     disableCondition: PropTypes.bool,
+    variant: PropTypes.string,
 };
 
 GoMyCollectionsModal.defaultProps = {
     history: null,
     whatActionWillBeDone: () => {},
     disableCondition: true,
+    variant: "primary",
 };

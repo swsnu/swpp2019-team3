@@ -30,6 +30,7 @@ describe("ManageCollectionMemberModal test", () => {
     let stubInitialState;
     let manageCollectionMemberModal;
     let spyDeleteMembers;
+    let spyGetMembers;
 
     beforeEach(() => {
         stubInitialState = {
@@ -111,6 +112,8 @@ describe("ManageCollectionMemberModal test", () => {
         };
         manageCollectionMemberModal = makeManageCollectionMemberModal(stubInitialState);
         spyDeleteMembers = jest.spyOn(collectionActions, "deleteMembers")
+            .mockImplementation(() => () => mockPromise);
+        spyGetMembers = jest.spyOn(collectionActions, "getCollectionMembers")
             .mockImplementation(() => () => mockPromise);
     });
 
@@ -302,5 +305,63 @@ describe("ManageCollectionMemberModal test", () => {
 
         wrapper.simulate("change", { target: { checked: false } });
         expect(instance.state.checkedUserIdList).toEqual([]);
+    });
+
+    it("should not handle scroll", () => {
+        const ref = { current: { scrollTop: 0, clientHeight: 0, scrollHeight: 500 } };
+        const spyCreateRef = jest.spyOn(React, "createRef")
+            .mockImplementation(() => ref);
+        const component = mount(manageCollectionMemberModal);
+        expect(spyCreateRef).toBeCalledTimes(1);
+        const instance = component.find(ManageCollectionMemberModal.WrappedComponent).instance();
+        instance.setState({
+            isModal: true, loading: false, showFollowings: true, memberFinished: false,
+        });
+
+        component.update();
+
+        instance.handleScroll();
+
+        expect(spyCreateRef).toBeCalledTimes(1);
+        expect(spyGetMembers).toBeCalledTimes(0);
+    });
+
+    it("should handle scroll in remove mode", async () => {
+        const ref = { current: { scrollTop: 700, clientHeight: 800, scrollHeight: 500 } };
+        const spyCreateRef = jest.spyOn(React, "createRef")
+            .mockImplementation(() => ref);
+        const component = mount(manageCollectionMemberModal);
+
+        expect(spyCreateRef).toBeCalledTimes(1);
+        const instance = component.find(ManageCollectionMemberModal.WrappedComponent).instance();
+        instance.setState({
+            isModal: true, loading: false, removeMode: true, memberFinished: false,
+        });
+        component.update();
+
+        instance.handleScroll();
+
+        expect(spyGetMembers).toBeCalledTimes(1);
+    });
+
+    it("should handle scroll not in remove mode", async () => {
+        const ref = { current: { scrollTop: 700, clientHeight: 800, scrollHeight: 500 } };
+        const spyCreateRef = jest.spyOn(React, "createRef")
+            .mockImplementation(() => ref);
+        const component = mount(manageCollectionMemberModal);
+
+        expect(spyCreateRef).toBeCalledTimes(1);
+
+
+        expect(spyGetMembers).toBeCalledTimes(0);
+        const instance = component.find(ManageCollectionMemberModal.WrappedComponent).instance();
+        instance.setState({
+            isModal: true, loading: false, removeMode: false, memberFinished: false,
+        });
+        component.update();
+
+        instance.handleScroll();
+
+        expect(spyGetMembers).toBeCalledTimes(1);
     });
 });

@@ -79,24 +79,12 @@ describe("InviteToCollectionModal test", () => {
                 getFollowers: {},
                 getFollowings: {
                     followings: [
-                        {
-                            id: 1,
-                            username: "test1",
-                            description: "asdf",
-                        },
-                        {
-                            id: 2,
-                            username: "test2",
-                            description: "qwer",
-                        },
-                        {
-                            id: 3,
-                            username: "test3",
-                            description: "zxcv",
-                        },
                     ],
+                    finished: false,
                 },
-                search: {},
+                search: {
+                    finished: false,
+                },
             },
             review: {},
             reply: {},
@@ -259,6 +247,40 @@ describe("InviteToCollectionModal test", () => {
         expect(spySearch).toHaveBeenCalledTimes(1);
     });
 
+    it("should handle search with keypress", () => {
+        const component = mount(inviteToCollectionModal);
+
+        const instance = component.find(InviteToCollectionModal.WrappedComponent).instance();
+        instance.setState({ isModalOpen: true });
+        component.update();
+
+        const wrapper = component.find("#userSearchBar").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("change", { target: { value: "qwer" } });
+
+        expect(instance.state.searchKeyWord).toBe("qwer");
+        wrapper.simulate("keypress", { charCode: 13 });
+
+        expect(spySearch).toHaveBeenCalledTimes(1);
+    });
+
+    it("should not handle search with key press", () => {
+        const component = mount(inviteToCollectionModal);
+
+        const instance = component.find(InviteToCollectionModal.WrappedComponent).instance();
+        instance.setState({ isModalOpen: true });
+        component.update();
+
+        const wrapper = component.find("#userSearchBar").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("change", { target: { value: "" } });
+
+        expect(instance.state.searchKeyWord).toBe("");
+        wrapper.simulate("keypress", { key: "Enter" });
+
+        expect(spySearch).toHaveBeenCalledTimes(0);
+    });
+
     it("should not handle search", () => {
         const component = mount(inviteToCollectionModal);
 
@@ -275,5 +297,82 @@ describe("InviteToCollectionModal test", () => {
         wrapper.simulate("click");
 
         expect(spySearch).toHaveBeenCalledTimes(0);
+    });
+
+    it("should not handle scroll", () => {
+        const ref = { current: { scrollTop: 0, clientHeight: 0, scrollHeight: 500 } };
+        const spyCreateRef = jest.spyOn(React, "createRef")
+            .mockImplementation(() => ref);
+        const component = mount(inviteToCollectionModal);
+        expect(spyCreateRef).toBeCalledTimes(1);
+        const instance = component.find(InviteToCollectionModal.WrappedComponent).instance();
+        instance.setState({ isModal: true, loading: false, showFollowings: true });
+
+        component.update();
+
+        instance.handleScroll();
+
+        expect(spyCreateRef).toBeCalledTimes(1);
+        expect(spyGetFollowings).toBeCalledTimes(0);
+    });
+
+    it("should handle scroll when showing followings", async () => {
+        const ref = { current: { scrollTop: 700, clientHeight: 800, scrollHeight: 500 } };
+        const spyCreateRef = jest.spyOn(React, "createRef")
+            .mockImplementation(() => ref);
+        const component = mount(inviteToCollectionModal);
+
+        expect(spyCreateRef).toBeCalledTimes(1);
+        const instance = component.find(InviteToCollectionModal.WrappedComponent).instance();
+        instance.setState({
+            isModal: true, loading: false, showFollowings: true, finished: false,
+        });
+        component.update();
+        const button = component.find("#modalOpenButton").hostNodes();
+        expect(button.length).toBe(1);
+        button.simulate("click");
+        expect(spyGetFollowings).toBeCalledTimes(1);
+
+
+        instance.setState({
+            isModal: true, loading: false, showFollowings: true, finished: false,
+        });
+        component.update();
+        instance.handleScroll();
+
+        expect(spyGetFollowings).toBeCalledTimes(2);
+    });
+
+    it("should handle scroll when search", async () => {
+        const ref = { current: { scrollTop: 700, clientHeight: 800, scrollHeight: 500 } };
+        const spyCreateRef = jest.spyOn(React, "createRef")
+            .mockImplementation(() => ref);
+        const component = mount(inviteToCollectionModal);
+        expect(spyCreateRef).toBeCalledTimes(1);
+
+        const instance = component.find(InviteToCollectionModal.WrappedComponent).instance();
+        const button = component.find("#modalOpenButton").hostNodes();
+        expect(button.length).toBe(1);
+
+        button.simulate("click");
+
+        expect(spyGetFollowings).toBeCalledTimes(1);
+
+        const button2 = component.find("#searchButton").hostNodes();
+        expect(button2.length).toBe(1);
+        const wrapper = component.find("#userSearchBar").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("change", { target: { value: "qwer" } });
+
+        button2.simulate("click");
+        expect(spySearch).toBeCalledTimes(1);
+
+        instance.setState({
+            isModal: true, loading: false, showFollowings: false, finished: false,
+        });
+        component.update();
+        instance.handleScroll();
+
+        expect(spySearch).toBeCalledTimes(2);
     });
 });

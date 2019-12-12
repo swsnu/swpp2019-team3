@@ -33,8 +33,8 @@ class TransferOwnershipModal extends Component {
     handleScroll = () => {
         if (!this.state.loading
             && !this.state.memberFinished
-            && this.modal.current.scrollTop + this.modal.current.clientHeight + 50
-            > this.modal.current.scrollHeight) {
+            && (this.modal.current.scrollTop + this.modal.current.clientHeight + 50
+            > this.modal.current.scrollHeight)) {
             this.setState({
                 loading: true,
             });

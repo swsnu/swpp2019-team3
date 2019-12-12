@@ -8,15 +8,26 @@
     white-space: nowrap;
 }
 
-.modal-header {
+.modal-header .header-content{
     display: flex;
-    justify-content: space-between;
+    width: 100%;
+    flex-direction: column;
     align-items: center;
+}
+
+.modal-header .header-content #add-paper-to-my-collections{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 .modal-header #header-buttons {
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-end;
+    justify-self: flex-end;
+    align-self: flex-end;
 }
 
 #add-paper-to-my-collections {
@@ -31,3 +42,15 @@
     justify-content: flex-start;
     align-items: center;
 }
+
+.addpaper-modal .ModalBody{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 300px;
+    display:flex;
+    flex-direction: column;
+    align-content: center;
+}
+
+
+
