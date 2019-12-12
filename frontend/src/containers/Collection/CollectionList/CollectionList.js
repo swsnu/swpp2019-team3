@@ -55,6 +55,7 @@ class CollectionList extends Component {
           replyCount={collection.count.replies}
           likeCount={collection.count.likes}
           isLiked={collection.liked}
+          owner={collection.owner}
           headerExists={false}
         />
     )

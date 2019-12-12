@@ -123,6 +123,7 @@ class ProfileDetail extends Component {
           replyCount={collection.replyCount}
           likeCount={collection.count.likes}
           isLiked={collection.liked}
+          owner={collection.owner}
           headerExists={false}
         />
     );

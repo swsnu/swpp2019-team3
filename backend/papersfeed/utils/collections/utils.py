@@ -519,16 +519,15 @@ def __pack_collections(collections, request_user, paper_id=None):
     # Reply Count
     reply_counts = __get_collection_reply_count(collection_ids, 'collection_id')
 
-    # Owner User
-    user_ids = [collection.owner_id for collection in collections]
-    owner_id = int(user_ids[0]) if user_ids else None
-    user = {
-        constants.ID: owner_id,
-        constants.USERNAME: User.objects.get(id=owner_id).username if owner_id else None
-    }
-
     for collection in collections:
         collection_id = collection.id
+
+        # Owner User
+        owner_id = collection.owner_id
+        user = {
+            constants.ID: owner_id,
+            constants.USERNAME: User.objects.get(id=owner_id).username
+        }
 
         packed_collection = {
             constants.ID: collection_id,
