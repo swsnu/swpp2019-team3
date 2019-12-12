@@ -207,6 +207,40 @@ describe("InviteToCollectionModal test", () => {
         expect(spyAddNewMemers).toHaveBeenCalledTimes(1);
     });
 
+    it("should do uncheck", () => {
+        const component = mount(inviteToCollectionModal);
+        const instance = component.find(InviteToCollectionModal.WrappedComponent).instance();
+        instance.setState({
+            isModalOpen: true,
+            users: [
+                {
+                    id: 1,
+                    username: "test1",
+                    description: "asdf",
+                },
+                {
+                    id: 2,
+                    username: "test2",
+                    description: "qwer",
+                },
+                {
+                    id: 3,
+                    username: "test3",
+                    description: "zxcv",
+                },
+            ],
+        });
+        component.update();
+
+        const wrapper = component.find("#check").at(0); // test1
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("change", { target: { checked: true } });
+        expect(instance.state.checkedUserIdList).toEqual([1]);
+
+        wrapper.simulate("change", { target: { checked: false } });
+        expect(instance.state.checkedUserIdList).toEqual([]);
+    });
+
     it("should handle search", () => {
         const component = mount(inviteToCollectionModal);
 
@@ -225,7 +259,21 @@ describe("InviteToCollectionModal test", () => {
         expect(spySearch).toHaveBeenCalledTimes(1);
     });
 
-    it("should handle scroll", () => {
-        
-    })
+    it("should not handle search", () => {
+        const component = mount(inviteToCollectionModal);
+
+        const instance = component.find(InviteToCollectionModal.WrappedComponent).instance();
+        instance.setState({ isModalOpen: true });
+        component.update();
+
+        let wrapper = component.find("#userSearchBar").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("change", { target: { value: "" } });
+
+        expect(instance.state.searchKeyWord).toBe("");
+        wrapper = component.find("#searchButton").hostNodes();
+        wrapper.simulate("click");
+
+        expect(spySearch).toHaveBeenCalledTimes(0);
+    });
 });
