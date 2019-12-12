@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 
 import { collectionActions } from "../../../store/actions";
@@ -76,8 +75,11 @@ class CollectionManage extends Component {
 
         return (
             <div className="CollectionManage">
+                <h2 id="collectionManageTitle">
+                        Manage Collection: {this.props.selectedCollection.title}
+                </h2>
                 <div className="EditCollectionInfo">
-                    <div className="EditCollectionName">
+                    <div className="EditCollectionItem">
                         <h3 id="editNameTag">Collection Name</h3>
                         <input
                           id="editName"
@@ -88,7 +90,7 @@ class CollectionManage extends Component {
                           })}
                         />
                     </div>
-                    <div className="EditCollectionDesc">
+                    <div className="EditCollectionItem">
                         <h3 id="editDescTag">Collection Description</h3>
                         <textarea
                           id="editDescription"
@@ -102,49 +104,40 @@ class CollectionManage extends Component {
                     </div>
                     <div className="EditButtons">
                         <Button
-                          id="UpdateCollectionButton"
+                          id="updateCollectionButton"
                           onClick={this.updateCollectionHandler}
                           disabled={this.state.collectionName === ""
                             || (beforeName === this.state.collectionName
                                 && beforeDescription === this.state.collectionDescription)}
                         >Update Collection
                         </Button>
-                        <Link to={`/collection_id=${this.props.selectedCollection.id}`}>
-                            <Button id="cancelButton">Cancel</Button>
-                        </Link>
+                        <Button id="cancelButton" href={`/collection_id=${this.props.selectedCollection.id}`}>
+                            Cancel
+                        </Button>
                         {this.state.collectionName === ""
                             ? <h5 id="updateButtonDisableMessage">The name of collection should not be null</h5>
                             : <div />}
                     </div>
                 </div>
                 <div className="CollectionManageButtons">
-                    <div className="ManageMember">
-                        <h5 id="manageMemberText">Looks for current members of this collections,
+                    <div className="ManageButtonItems">
+                        <h5 className="ManageButtonText" id="manageMemberText">
+                            Looks for current members of this collections,
                             invite new members, or kick off some.
                         </h5>
                         <ManageCollectionMemberModal />
                     </div>
-                    <div className="TransferOwnership">
-                        <h5 id="transferOwnershipText">Transfer the ownership of this collection
-                            to the other member of this collection.
-                            WARNING: This action cannot be undone.
-                        </h5>
+                    <div className="ManageButtonItems">
+                        <div className="ManageButtonText" id="transferOwnershipText">
+                            <h5>
+                                Transfer the ownership of this collection
+                                to the other member of this collection.
+                            </h5>
+                            <h5>WARNING: This action cannot be undone.</h5>
+                        </div>
                         <TransferOwnershipModal history={this.props.history} />
                     </div>
-                    <div className="DeleteCollection">
-                        <h5 id="deleteCollectionText">Delete this collection.
-                            WARNING: This action cannot be undone.
-                        </h5>
-                        <WarningModal
-                          id="delete-warningmodal"
-                          openButtonText="Delete this collection"
-                          whatToWarnText={`Delete colelction: ${this.props.selectedCollection.title}`}
-                          whatActionWillBeDone={() => this.props.onDeleteCollection(
-                              this.props.selectedCollection.id,
-                          )}
-                          whatActionWillFollow={() => this.props.history.replace("/collections")}
-                          history={this.props.history}
-                        />
+                    <div className="ManageButtonItems">
                         <h5 id="collectionTypeText">{collectionTypeText}</h5>
                         <WarningModal
                           id="change-type-warningmodal"
@@ -159,6 +152,22 @@ class CollectionManage extends Component {
                           })}
                           history={this.props.history}
                           showWarningContentText={false}
+                        />
+                    </div>
+                    <div className="ManageButtonItems">
+                        <div className="ManageButtonText" id="deleteCollectionText">
+                            <h5>Delete this collection.</h5>
+                            <h5>WARNING: This action cannot be undone.</h5>
+                        </div>
+                        <WarningModal
+                          id="delete-warningmodal"
+                          openButtonText="Delete this collection"
+                          whatToWarnText={`Delete colelction: ${this.props.selectedCollection.title}`}
+                          whatActionWillBeDone={() => this.props.onDeleteCollection(
+                              this.props.selectedCollection.id,
+                          )}
+                          whatActionWillFollow={() => this.props.history.replace("/collections")}
+                          history={this.props.history}
                         />
                     </div>
                 </div>

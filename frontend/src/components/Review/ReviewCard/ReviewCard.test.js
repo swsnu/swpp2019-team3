@@ -65,7 +65,7 @@ describe("<ReviewCard />", () => {
 
     it("should call likeReview when Like Button is clicked", () => {
         const component = mount(reviewCard);
-        const wrapper = component.find(".like-button").hostNodes();
+        const wrapper = component.find("#likeButton");
         expect(wrapper.length).toBe(1);
 
         wrapper.simulate("click");
@@ -79,7 +79,7 @@ describe("<ReviewCard />", () => {
         instance.setState({ isLiked: true });
         component.update();
 
-        const wrapper = component.find(".like-button").hostNodes();
+        const wrapper = component.find("#likeButton");
         expect(wrapper.length).toBe(1);
 
         wrapper.simulate("click");

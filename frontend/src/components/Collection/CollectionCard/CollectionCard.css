@@ -53,11 +53,16 @@
     justify-content: flex-start;
 }
 
-.collection .like-button{
+/* .collection .like-button{
     width: 17%;
     display: flex;
     justify-content: space-around;
 }
+
+#replyButton {
+    height: 40px;
+    width: 80px;
+} */
 
 .collection .reply-button{
     width: 17%;

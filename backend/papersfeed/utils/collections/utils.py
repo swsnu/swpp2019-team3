@@ -573,9 +573,10 @@ def __is_collection_liked(outer_ref, request_user):
 
 def __is_member(outer_ref, user_id):
     """Check If Collection is Member by User"""
+    # decide if the user is a member of the collection (except 'pending')
     return Exists(
-        CollectionUser.objects.filter(collection_id=OuterRef(outer_ref),
-                                      user_id=user_id)
+        CollectionUser.objects.filter(
+            Q(collection_id=OuterRef(outer_ref), user_id=user_id), ~Q(type=COLLECTION_USER_TYPE[2]))
     )
 
 
@@ -611,7 +612,7 @@ def __get_collection_like_count(collection_ids, group_by_field):
 def __get_collection_user_count(collection_ids, group_by_field):
     """Get Number of Users in Collections"""
     collection_users = CollectionUser.objects.filter(
-        collection_id__in=collection_ids
+        Q(collection_id__in=collection_ids), ~Q(type=COLLECTION_USER_TYPE[2])
     ).values(
         group_by_field
     ).annotate(

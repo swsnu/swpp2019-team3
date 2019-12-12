@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { collectionActions } from "../../../store/actions";
 import "./CollectionCard.css";
 import SVG from "../../svg";
+import LikeButton from "../../Button/LikeButton/LikeButton";
 
 class CollectionCard extends Component {
     constructor(props) {
@@ -64,18 +65,13 @@ class CollectionCard extends Component {
                         </div>
                     </Card.Body>
                     <Card.Footer className="footer">
-                        <Button
-                          variant="light"
-                          className="like-button"
-                          onClick={this.state.isLiked
-                              ? this.clickCollectionCardUnlikeHandler
-                              : this.clickCollectionCardLikeHandler}
-                        >
-                            <div className="heart-image">
-                                <SVG name="heart" height="25px" width="25px" />
-                            </div>
-                            {this.state.likeCount}
-                        </Button>
+                        <LikeButton
+                          id="likeButton"
+                          isLiked={this.state.isLiked}
+                          likeFn={this.clickCollectionCardLikeHandler}
+                          unlikeFn={this.clickCollectionCardUnlikeHandler}
+                          likeCount={this.state.likeCount}
+                        />
                         <Button
                           variant="light"
                           className="reply-button"

@@ -12,21 +12,58 @@ const svg = {
 /* eslint-disable react/prefer-stateless-function */
 class SVG extends Component {
     render() {
-        return (
-            <svg
-              x="0px"
-              y="0px"
-              width={this.props.width}
-              height={this.props.height}
-              viewBox="0 0 8 8"
-            >
-                <path
-                  fill={this.props.color}
-                  d={svg[this.props.name]}
-                />
-      &gt;
-            </svg>
-        );
+        let result = null;
+        switch (this.props.name) {
+        case "heart-fill":
+            result = (
+                <svg
+                  preserveAspectRatio="xMidYMid meet"
+                  viewBox="0 0 30 30"
+                  width={this.props.width}
+                  height={this.props.height}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                      d="m63 250c-12-5-27-18-33-30-20-37-2-77 58-130 31-27 58-50 61-50 4 0 32 24 64 54 54 49 58 56 55 91-2 28-11 44-31 59-27 20-29 20-57 4-26-15-33-15-57-3-32 17-31 17-60 5z"
+                      transform="matrix(.1 0 0 -.1 0 30)"
+                    />
+                </svg>
+            );
+            break;
+        case "heart-blank":
+            result = (
+                <svg
+                  preserveAspectRatio="xMidYMid meet"
+                  viewBox="0 0 30 30"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width={this.props.width}
+                  height={this.props.height}
+                >
+                    <path
+                      d="m63 250c-12-5-27-18-33-30-20-37-2-77 58-130 31-27 58-50 61-50 4 0 32 24 64 54 54 49 58 56 55 91-2 28-11 44-31 59-27 20-29 20-57 4-26-15-33-15-57-3-32 17-31 17-60 5zm69-37c17-15 19-15 36 0 36 32 82 15 82-30 0-20-83-113-101-113-3 0-27 18-53 41-37 33-46 47-46 73 0 18 3 36 7 39 12 13 56 7 75-10z"
+                      transform="matrix(.1 0 0 -.1 0 30)"
+                    />
+                </svg>
+            );
+            break;
+        default:
+            result = (
+                <svg
+                  x="0px"
+                  y="0px"
+                  width={this.props.width}
+                  height={this.props.height}
+                  viewBox="0 0 8 8"
+                >
+                    <path
+                      fill={this.props.color}
+                      d={svg[this.props.name]}
+                    />
+          &gt;
+                </svg>
+            );
+        }
+        return result;
     }
 }
 

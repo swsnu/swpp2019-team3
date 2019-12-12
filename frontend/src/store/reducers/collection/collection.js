@@ -36,9 +36,11 @@ const initialState = {
     },
     selected: {
         status: collectionStatus.NONE,
-        collection: {},
+        collection: {
+            creation_date: "", modification_date: "", type: "private", collection_user_type: null,
+        },
         error: null,
-        papers: {}, // papers: [], page_number: number, is_finished: bool
+        papers: { papers: [], page_number: 0, is_finished: true },
         memberCount: 0,
         replies: [],
     },

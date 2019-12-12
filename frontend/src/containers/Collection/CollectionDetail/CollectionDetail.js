@@ -3,15 +3,18 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { Button, Tabs, Tab } from "react-bootstrap";
-import { PaperCard, Reply, InviteToCollectionModal } from "../../../components";
+import {
+    Button, Tabs, Tab,
+} from "react-bootstrap";
+import {
+    PaperCard, Reply, InviteToCollectionModal, LikeButton,
+} from "../../../components";
 
 import { collectionActions, replyActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
 import SVG from "../../../components/svg";
 
 import "./CollectionDetail.css";
-
 
 class CollectionDetail extends Component {
     constructor(props) {
@@ -42,30 +45,48 @@ class CollectionDetail extends Component {
             .then(() => {
                 if (this.props.getCollectionStatus === collectionStatus.COLLECTION_NOT_EXIST) {
                     this.props.history.push("/main");
-                } else if (this.props.getCollectionStatus === collectionStatus.SUCCESS) {
-                    // if this collection is private and the user is not a member, redirect
-                    if (!this.props.selectedCollection.collection_user_type && this.props.selectedCollection.type === "private") {
-                        this.props.history.goBack();
-                    }
-                    this.setState({
-                        thisCollection: this.props.selectedCollection,
-                        isLiked: this.props.selectedCollection.liked,
-                        likeCount: this.props.selectedCollection.count.likes,
-                        userCount: this.props.selectedCollection.count.users,
-                        paperCount: this.props.selectedCollection.count.papers,
-                    });
                 }
             });
         this.props.onGetMembers(this.props.location.pathname.split("=")[1]);
-        this.props.onGetReplies({ id: Number(this.props.location.pathname.split("=")[1]) })
-            .then(() => {
-                this.setState({
-                    replies: this.props.replyList.list,
-                    replyCollectionPageCount: 1,
-                    replyCollectionFinished: this.props.replyList.finished,
-                });
-            }).catch(() => {});
-        this.getPapersTrigger(0);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.selectedCollection !== prevProps.selectedCollection) {
+            this.getAuthorizedInfo();
+        }
+    }
+
+    getAuthorizedInfo() {
+        // if this collection is private and the user is not a member, redirect
+        // NOTE: 'pending' users can see this page although the collection is 'private',
+        if (this.props.selectedCollection.type === "private"
+                    && !this.props.selectedCollection.collection_user_type) {
+            this.props.history.push("/main");
+        }
+
+        this.setState({
+            thisCollection: this.props.selectedCollection,
+            isLiked: this.props.selectedCollection.liked,
+            likeCount: this.props.selectedCollection.count.likes,
+            userCount: this.props.selectedCollection.count.users,
+            paperCount: this.props.selectedCollection.count.papers,
+        });
+
+        // if the collection is 'private',
+        // only owner and members can see its papers and replies (excluding 'pending' users)
+        // NOTE: collection_user_type: 'owner' > 'member' > 'pending' > null
+        if (this.props.selectedCollection.type !== "private"
+        || (this.props.selectedCollection.collection_user_type && this.props.selectedCollection.collection_user_type !== "pending")) {
+            this.props.onGetReplies({ id: Number(this.props.location.pathname.split("=")[1]) })
+                .then(() => {
+                    this.setState({
+                        replies: this.props.replyList.list,
+                        replyCollectionPageCount: 1,
+                        replyCollectionFinished: this.props.replyList.finished,
+                    });
+                }).catch(() => {});
+            this.getPapersTrigger(0);
+        }
     }
 
     getPapersTrigger(pageNum) {
@@ -178,6 +199,7 @@ class CollectionDetail extends Component {
 
     render() {
         let paperCards = null;
+        let replies = null;
 
         const paperCardsLeft = this.state.papers
             .filter((x) => this.state.papers.indexOf(x) % 2 === 0)
@@ -187,38 +209,58 @@ class CollectionDetail extends Component {
             .filter((x) => this.state.papers.indexOf(x) % 2 === 1)
             .map((paper) => this.paperCardMaker(paper));
 
-        paperCards = this.state.papers.length !== 0
-            ? (
-                <div id="paperCards">
-                    <div id="paperCardsLeft">{paperCardsLeft}</div>
-                    <div id="paperCardsRight">{paperCardsRight}</div>
+        // if the collection is 'private',
+        // 'pending' users cannot see its papers and replies
+        if (this.props.selectedCollection.type === "private"
+            && this.props.selectedCollection.collection_user_type === "pending") {
+            paperCards = (
+                <div className="alert alert-warning" role="alert">
+                    Only members of this private collection can see papers.
                 </div>
-            )
-            : (<h5 id="noPapersText">There is no paper in this collection for now.</h5>);
+            );
 
-        const replies = this.state.replies.length !== 0
-            ? (this.state.replies.map((reply) => (
-                <Reply
-                  key={reply.id}
-                  id={reply.id}
-                  author={reply.user.username}
-                  content={reply.text}
-                  authorId={reply.user.id}
-                  likeCount={reply.count.likes}
-                  isLiked={reply.liked}
-                  onChange={this.handleReplies}
-                  userId={this.props.me.id}
-                  date={reply.modification_date}
-                  type="collection"
-                />
-            )))
-            : (<h5 id="noRepliesText">There is no reply in this collection for now.</h5>);
+            replies = (
+                <div className="alert alert-warning" role="alert">
+                    Only members of this private collection can add or see replies.
+                </div>
+            );
+        } else {
+            paperCards = this.state.papers.length !== 0
+                ? (
+                    <div id="paperCards">
+                        <div id="paperCardsLeft">{paperCardsLeft}</div>
+                        <div id="paperCardsRight">{paperCardsRight}</div>
+                    </div>
+                )
+                : (<h5 id="noPapersText">There is no paper in this collection for now.</h5>);
+
+            replies = this.state.replies.length !== 0
+                ? (this.state.replies.map((reply) => (
+                    <Reply
+                      key={reply.id}
+                      id={reply.id}
+                      author={reply.user.username}
+                      content={reply.text}
+                      authorId={reply.user.id}
+                      likeCount={reply.count.likes}
+                      isLiked={reply.liked}
+                      onChange={this.handleReplies}
+                      userId={this.props.me.id}
+                      date={reply.modification_date}
+                      type="collection"
+                    />
+                )))
+                : (<h5 id="noRepliesText">There is no reply in this collection for now.</h5>);
+        }
 
         const replyCount = (this.state.replyCollectionPageCount > 1
             || (this.state.replyCollectionPageCount === 1
                 && this.state.replyCollectionFinished === false))
             ? "10+" : this.state.replies.length;
 
+        // 'pending' users cannot see 'Invite' or 'Manage' button
+        // and are not included in member list/count
+        // instead, they can see accept/dismiss buttons about invitation
         let inviteModal = null;
         if (this.props.selectedCollection.owned
             || this.props.selectedCollection.collection_user_type === "member") {
@@ -250,6 +292,44 @@ class CollectionDetail extends Component {
             );
         }
 
+        let inviteeAlert = null;
+        let inviteeButtons = null;
+        if (this.props.selectedCollection.collection_user_type === "pending") {
+            inviteeAlert = (
+                <div className="alert alert-info" role="alert">
+                    You were invited to this collection.
+                </div>
+            );
+            inviteeButtons = (
+                <div className="inviteButtons">
+                    <Button
+                      id="acceptButton"
+                      variant="success"
+                      onClick={() => this.props.onAcceptInvitation(
+                          this.props.selectedCollection.id,
+                      )
+                          .then(() => this.props.onGetCollection(
+                              { id: this.props.selectedCollection.id },
+                          ))}
+                    >
+                        Accept
+                    </Button>
+                    <Button
+                      id="dismissButton"
+                      variant="danger"
+                      onClick={() => this.props.onDismissInvitation(
+                          this.props.selectedCollection.id,
+                      )
+                          .then(() => this.props.onGetCollection(
+                              { id: this.props.selectedCollection.id },
+                          ))}
+                    >
+                        Dismiss
+                    </Button>
+                </div>
+            );
+        }
+
         let creationDate = "";
         let modificationDate = "";
         if (Object.keys(this.props.selectedCollection).length > 0) {
@@ -262,19 +342,15 @@ class CollectionDetail extends Component {
         return (
             <div className="CollectionDetail">
                 <div className="CollectionDetailContent">
+                    {inviteeAlert}
                     <div id="header">
-                        <Button
-                          id="LikeButton"
-                          variant="light"
-                          onClick={this.state.isLiked
-                              ? this.clickUnlikeButtonHandler
-                              : this.clickLikeButtonHandler}
-                        >
-                            <div className="heart-image">
-                                <SVG name="heart" height="70%" width="70%" />
-                            </div>
-                            {this.state.likeCount}
-                        </Button>
+                        <LikeButton
+                          id="likeButton"
+                          isLiked={this.state.isLiked}
+                          likeFn={this.clickLikeButtonHandler}
+                          unlikeFn={this.clickUnlikeButtonHandler}
+                          likeCount={this.state.likeCount}
+                        />
                         <Button
                           id="memberButton"
                           variant="light"
@@ -287,6 +363,7 @@ class CollectionDetail extends Component {
                         </Button>
                         {inviteModal}
                         {manageButton}
+                        {inviteeButtons}
                     </div>
                     <div className="CollectionInfo">
                         <div id="collectionBasicInfo">
@@ -320,7 +397,7 @@ class CollectionDetail extends Component {
                                           size="lg"
                                           block
                                         >
-                            View More
+                                            View More
                                         </Button>
                                     )}
                             </Tab>
@@ -334,6 +411,10 @@ class CollectionDetail extends Component {
                                           onChange={(event) => this.setState({
                                               newReplyContent: event.target.value,
                                           })}
+                                          disabled={
+                                              this.props.selectedCollection.type === "private"
+                                            && this.props.selectedCollection.collection_user_type === "pending"
+                                          }
                                         />
                                         <Button
                                           onClick={this.addNewReplyHandler}
@@ -352,7 +433,7 @@ class CollectionDetail extends Component {
                                                   size="lg"
                                                   block
                                                 >
-                                                View More
+                                                    View More
                                                 </Button>
                                             ) }
                                     </div>
@@ -400,6 +481,12 @@ const mapDispatchToProps = (dispatch) => ({
     onMakeNewReply: (reply) => dispatch(
         replyActions.makeNewReplyCollection(reply),
     ),
+    onAcceptInvitation: (collectionId) => dispatch(
+        collectionActions.acceptInvitation(collectionId),
+    ),
+    onDismissInvitation: (collectionId) => dispatch(
+        collectionActions.dismissInvitation(collectionId),
+    ),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionDetail);
@@ -420,6 +507,8 @@ CollectionDetail.propTypes = {
     onGetReplies: PropTypes.func,
     onGetMembers: PropTypes.func,
     onMakeNewReply: PropTypes.func,
+    onAcceptInvitation: PropTypes.func,
+    onDismissInvitation: PropTypes.func,
     replyList: PropTypes.objectOf(PropTypes.any),
     members: PropTypes.arrayOf(PropTypes.any),
     memberCount: PropTypes.number,
@@ -432,7 +521,9 @@ CollectionDetail.defaultProps = {
     onGetCollection: null,
     onGetCollectionPapers: null,
     getCollectionStatus: collectionStatus.NONE,
-    selectedCollection: { creation_date: "", modification_date: "" },
+    selectedCollection: {
+        creation_date: "", modification_date: "", type: "private", collection_user_type: null,
+    },
     storedPapers: { papers: [], page_number: 0, is_finished: true },
     afterLikeCount: 0,
     afterUnlikeCount: 0,
@@ -441,6 +532,8 @@ CollectionDetail.defaultProps = {
     onGetReplies: () => {},
     onGetMembers: () => {},
     onMakeNewReply: () => {},
+    onAcceptInvitation: () => {},
+    onDismissInvitation: () => {},
     replyList: {},
     members: [],
     memberCount: 0,
