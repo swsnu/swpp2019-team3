@@ -125,6 +125,7 @@ class History extends Component {
           replyCount={card.count.replies}
           likeCount={card.count.likes}
           isLiked={card.liked}
+          owner={card.owner}
           headerExists={false}
         />
     )
