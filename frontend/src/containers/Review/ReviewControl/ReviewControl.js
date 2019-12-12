@@ -87,7 +87,7 @@ class ReviewControl extends Component {
             };
             this.props.onMakeNewReview(review)
                 .then(() => {
-                    this.props.history.push(`/review_id=${this.props.newReview.review.id}`);
+                    this.props.history.push(`/paper_id=${this.state.paper.id}`);
                 }).catch(() => {
                 });
         } else if (this.props.mode === 1) {
@@ -186,6 +186,7 @@ ReviewControl.propTypes = {
     onGetReview: PropTypes.func,
     selectedPaper: PropTypes.objectOf(PropTypes.any),
     onGetPaper: PropTypes.func,
+    // eslint-disable-next-line react/no-unused-prop-types
     newReview: PropTypes.objectOf(PropTypes.any),
     keywords: PropTypes.arrayOf(PropTypes.any),
 };

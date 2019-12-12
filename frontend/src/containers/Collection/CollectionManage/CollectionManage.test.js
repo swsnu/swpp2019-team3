@@ -180,7 +180,7 @@ describe("CollectionManage test", () => {
         expect(instance.state.collectionName).toBe("asdf");
         expect(instance.state.collectionDescription).toBe("qwer");
 
-        wrapper = component.find("#UpdateCollectionButton").hostNodes();
+        wrapper = component.find("#updateCollectionButton").hostNodes();
         wrapper.simulate("click");
         expect(spySetTitleAndDescription).toHaveBeenCalledTimes(1);
     });

@@ -1,18 +1,22 @@
 .sidebar {
     position: sticky;
-    top: 9vh;
     width: 100%;
-    min-height: 91vh;
-    /* background: rgb(245, 245, 245) */
-    /* border-right: 2px solid rgb(220,224,227); */
-    /* width: 500px; */
+    top: 9vh;
 }
  
 .sidebar #sidebar {
-    min-height: 81vh;
     width: 100%;
-    /* background: red; */
     display: inline-block;
+}
+
+@media (min-width: 576px) {
+  .sidebar{
+    min-height: 91vh;
+  }
+
+  .sidebar #sidebar {
+    min-height: 81vh;
+  }
 }
 
 .sidebar-link {

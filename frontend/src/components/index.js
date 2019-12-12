@@ -15,6 +15,7 @@ import TransferOwnershipModal from "./Modal/TrasferOwnershipModal/TransferOwners
 import UserEntry from "./User/UserEntry/UserEntry";
 import InviteToCollectionModal from "./Modal/InviteToCollectionModal/InviteToCollectionModal";
 import ManageCollectionMemberModal from "./Modal/ManageCollectionMemberModal/ManageCollectionMemberModal";
+import LikeButton from "./Button/LikeButton/LikeButton";
 
 export {
     SideBar,
@@ -34,4 +35,5 @@ export {
     UserEntry,
     InviteToCollectionModal,
     ManageCollectionMemberModal,
+    LikeButton,
 };
