@@ -312,6 +312,9 @@ def select_collection_like(args):
     collection_ids = CollectionLike.objects.filter(Q(user_id=request_user.id)).order_by(
         '-creation_date').values_list('collection_id', flat=True)
 
+    # Collections Queryset
+    queryset = Q(id__in=collection_ids) & (Q(type=COLLECTION_SHARE_TYPE[0]) | Q(is_member=True))
+
     # need to maintain the order
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(collection_ids)])
 
@@ -319,7 +322,7 @@ def select_collection_like(args):
     params = {
         constants.ORDER_BY: preserved
     }
-    collections, _, is_finished = __get_collections(Q(id__in=collection_ids), request_user, 10, params=params,
+    collections, _, is_finished = __get_collections(queryset, request_user, 10, params=params,
                                                     page_number=page_number)
 
     return collections, page_number, is_finished

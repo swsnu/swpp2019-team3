@@ -44,6 +44,7 @@ class CollectionDetail extends Component {
                 if (this.props.getCollectionStatus === collectionStatus.COLLECTION_NOT_EXIST) {
                     this.props.history.push("/main");
                 } else if (this.props.getCollectionStatus === collectionStatus.SUCCESS) {
+                    // if this collection is private and the user is not a member, redirect
                     if (!this.props.selectedCollection.collection_user_type && this.props.selectedCollection.type === "private") {
                         this.props.history.goBack();
                     }
