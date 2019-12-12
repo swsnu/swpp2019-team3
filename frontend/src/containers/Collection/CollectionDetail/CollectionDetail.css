@@ -21,20 +21,20 @@
     margin-top: 2%;
 }
 
-.CollectionDetailContent #header #LikeButton {
-    width: 80px;
+.CollectionDetailContent #header #memberButton {
+    width: 70px;
     height: 40px;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
-.CollectionDetailContent #header #memberButton {
+#manageButton {
     width: 80px;
     height: 40px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    margin-left: 5px;
 }
 
 .CollectionInfo {
@@ -68,6 +68,12 @@
     background: white;
     border-radius: 2%;
 }
+
+@media (min-width: 576px) {
+    .itemList {
+        min-height: 50vh;
+    }
+  }
 
 .itemList #paperCards {
     width: 100%;

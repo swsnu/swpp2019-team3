@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { reviewActions } from "../../../store/actions";
 import "./ReviewCard.css";
 import SVG from "../../svg";
+import LikeButton from "../../Button/LikeButton/LikeButton";
 
 class ReviewCard extends Component {
     constructor(props) {
@@ -85,7 +86,13 @@ class ReviewCard extends Component {
                         </div>
                     </Card.Body>
                     <Card.Footer className="footer">
-                        <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickReviewCardUnlikeHandler : this.clickReviewCardLikeHandler}> <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
+                        <LikeButton
+                          id="likeButton"
+                          isLiked={this.state.isLiked}
+                          likeFn={this.clickReviewCardLikeHandler}
+                          unlikeFn={this.clickReviewCardUnlikeHandler}
+                          likeCount={this.state.likeCount}
+                        />
                         <Button className="reply-button" variant="light" href={`/review_id=${this.props.id}`}><div className="reply-image"><SVG name="zoom" height="70%" width="70%" /></div>{this.props.replyCount}</Button>
                     </Card.Footer>
                 </Card>

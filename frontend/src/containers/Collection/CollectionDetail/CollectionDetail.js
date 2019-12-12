@@ -3,15 +3,18 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { Button, Tabs, Tab } from "react-bootstrap";
-import { PaperCard, Reply, InviteToCollectionModal } from "../../../components";
+import {
+    Button, Tabs, Tab,
+} from "react-bootstrap";
+import {
+    PaperCard, Reply, InviteToCollectionModal, LikeButton,
+} from "../../../components";
 
 import { collectionActions, replyActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
 import SVG from "../../../components/svg";
 
 import "./CollectionDetail.css";
-
 
 class CollectionDetail extends Component {
     constructor(props) {
@@ -343,18 +346,13 @@ class CollectionDetail extends Component {
                 <div className="CollectionDetailContent">
                     {inviteeAlert}
                     <div id="header">
-                        <Button
-                          id="LikeButton"
-                          variant="light"
-                          onClick={this.state.isLiked
-                              ? this.clickUnlikeButtonHandler
-                              : this.clickLikeButtonHandler}
-                        >
-                            <div className="heart-image">
-                                <SVG name="heart" height="70%" width="70%" />
-                            </div>
-                            {this.state.likeCount}
-                        </Button>
+                        <LikeButton
+                          id="likeButton"
+                          isLiked={this.state.isLiked}
+                          likeFn={this.clickLikeButtonHandler}
+                          unlikeFn={this.clickUnlikeButtonHandler}
+                          likeCount={this.state.likeCount}
+                        />
                         <Button
                           id="memberButton"
                           variant="light"

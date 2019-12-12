@@ -4,9 +4,9 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import "./PaperSpec.css";
-import SVG from "../../svg";
 import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
 import { paperActions } from "../../../store/actions";
+import LikeButton from "../../Button/LikeButton/LikeButton";
 
 class PaperSpec extends Component {
     constructor(props) {
@@ -185,10 +185,13 @@ class PaperSpec extends Component {
                     </div>
                 </div>
                 <div className="buttons">
-                    <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickPaperSpecUnlikeHandler : this.clickPaperSpecLikeHandler}>
-                        <div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>
-                        {this.state.likeCount}
-                    </Button>
+                    <LikeButton
+                      id="likeButton"
+                      isLiked={this.state.isLiked}
+                      likeFn={this.clickPaperSpecLikeHandler}
+                      unlikeFn={this.clickPaperSpecUnlikeHandler}
+                      likeCount={this.state.likeCount}
+                    />
                     {addButton}
                 </div>
                 <div className="abstract">

@@ -8,6 +8,7 @@ import { paperActions } from "../../../store/actions";
 import "./PaperCard.css";
 import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
 import SVG from "../../svg";
+import LikeButton from "../../Button/LikeButton/LikeButton";
 
 class PaperCard extends Component {
     constructor(props) {
@@ -136,21 +137,16 @@ class PaperCard extends Component {
                     <Card.Footer className="footer">
                         <div id="footer-flex">
                             <div id="footer-left-buttons">
+                                <LikeButton
+                                  id="likeButton"
+                                  isLiked={this.state.isLiked}
+                                  likeFn={this.clickPaperCardLikeHandler}
+                                  unlikeFn={this.clickPaperCardUnlikeHandler}
+                                  likeCount={this.state.likeCount}
+                                />
                                 <Button
                                   variant="light"
-                                  className="like-button"
-                                  onClick={this.state.isLiked
-                                      ? this.clickPaperCardUnlikeHandler
-                                      : this.clickPaperCardLikeHandler}
-                                >
-                                    <div id="likeButtonInside">
-                                        <SVG name="heart" height="25px" width="25px" />
-                                        {this.state.likeCount}
-                                    </div>
-                                </Button>
-                                <Button
-                                  variant="light"
-                                  className="review-button"
+                                  id="reviewButton"
                                   href={`/paper_id=${this.props.id}`}
                                 >
                                     <div id="reviewButtonInside">
