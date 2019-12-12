@@ -23,6 +23,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    margin-right: 5px;
 }
 
 .CollectionDetailContent #header #memberButton {
@@ -31,6 +32,13 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    margin-right: 5px;
+}
+
+#manageButton {
+    width: 80px;
+    height: 40px;
+    margin-left: 5px;
 }
 
 .CollectionInfo {
@@ -64,6 +72,12 @@
     background: white;
     border-radius: 2%;
 }
+
+@media (min-width: 576px) {
+    .itemList {
+        min-height: 50vh;
+    }
+  }
 
 .itemList #paperCards {
     width: 100%;

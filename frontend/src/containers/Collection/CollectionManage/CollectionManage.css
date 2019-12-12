@@ -1,8 +1,41 @@
 .CollectionManage {
-    min-height: 1000px;
     background: rgb(242,243,247);
+    min-height: 91vh;
      
     position: relative;
     display: flex;
     flex-direction: column;
+
+    padding: 15px;
+}
+
+#collectionManageTitle {
+    margin: 20px;
+}
+
+.EditCollectionInfo {
+    margin-bottom: 20px;
+}
+.EditCollectionInfo .EditCollectionItem {
+    margin: 10px;
+}
+
+#editDescription {
+    width: 85%;
+}
+
+#updateCollectionButton{
+    margin-right: 10px;
+}
+
+.ManageButtonItems {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px;
+}
+
+.ManageButtonText {
+    width: 80%;
+    text-align: center;
 }
