@@ -44,8 +44,7 @@ class CollectionDetail extends Component {
                     this.props.history.push("/main");
                 } else if (this.props.getCollectionStatus === collectionStatus.SUCCESS) {
                     // if this collection is private and the user is not a member, redirect
-                    // NOTE: 'pending' users can see this page,
-                    //       but cannot see 'Invite' or 'Manage' button and is not included in member list/count
+                    // NOTE: 'pending' users can see this page even though the collection is 'private',
                     if (this.props.selectedCollection.type === "private"
                     && !this.props.selectedCollection.collection_user_type) {
                         this.props.history.goBack();
@@ -60,15 +59,32 @@ class CollectionDetail extends Component {
                 }
             });
         this.props.onGetMembers(this.props.location.pathname.split("=")[1]);
-        this.props.onGetReplies({ id: Number(this.props.location.pathname.split("=")[1]) })
-            .then(() => {
-                this.setState({
-                    replies: this.props.replyList.list,
-                    replyCollectionPageCount: 1,
-                    replyCollectionFinished: this.props.replyList.finished,
-                });
-            }).catch(() => {});
-        this.getPapersTrigger(0);
+
+        this.getAuthorizedInfo();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.selectedCollection !== prevProps.selectedCollection) {
+            this.getAuthorizedInfo();
+        }
+    }
+
+    // if the collection is 'private',
+    // only owner and members can see its papers and replies (excluding 'pending' users)
+    // NOTE: collection_user_type: 'owner' > 'member' > 'pending' > null
+    getAuthorizedInfo() {
+        if (this.props.selectedCollection.type !== "private"
+        || (this.props.selectedCollection.collection_user_type && this.props.selectedCollection.collection_user_type !== "pending")) {
+            this.props.onGetReplies({ id: Number(this.props.location.pathname.split("=")[1]) })
+                .then(() => {
+                    this.setState({
+                        replies: this.props.replyList.list,
+                        replyCollectionPageCount: 1,
+                        replyCollectionFinished: this.props.replyList.finished,
+                    });
+                }).catch(() => {});
+            this.getPapersTrigger(0);
+        }
     }
 
     getPapersTrigger(pageNum) {
@@ -190,6 +206,8 @@ class CollectionDetail extends Component {
             .filter((x) => this.state.papers.indexOf(x) % 2 === 1)
             .map((paper) => this.paperCardMaker(paper));
 
+        // if the collection is 'private',
+        // 'pending' users cannot see its papers and replies
         paperCards = this.state.papers.length !== 0
             ? (
                 <div id="paperCards">
@@ -222,6 +240,9 @@ class CollectionDetail extends Component {
                 && this.state.replyCollectionFinished === false))
             ? "10+" : this.state.replies.length;
 
+        // 'pending' users cannot see 'Invite' or 'Manage' button
+        // and are not included in member list/count
+        // instead, they can see accept/dismiss buttons about invitation
         let inviteModal = null;
         if (this.props.selectedCollection.owned
             || this.props.selectedCollection.collection_user_type === "member") {
@@ -253,6 +274,26 @@ class CollectionDetail extends Component {
             );
         }
 
+        let inviteeAlert = null;
+        let inviteeButtons = null;
+        if (this.props.selectedCollection.collection_user_type === "pending") {
+            inviteeAlert = (
+                <div className="alert alert-info" role="alert">
+                    You were invited to this collection.
+                </div>
+            );
+            inviteeButtons = (
+                <div className="inviteButtons">
+                    <Button id="acceptButton" variant="success">
+                    Accept
+                    </Button>
+                    <Button id="dismissButton" variant="danger">
+                    Dismiss
+                    </Button>
+                </div>
+            );
+        }
+
         let creationDate = "";
         let modificationDate = "";
         if (Object.keys(this.props.selectedCollection).length > 0) {
@@ -265,6 +306,7 @@ class CollectionDetail extends Component {
         return (
             <div className="CollectionDetail">
                 <div className="CollectionDetailContent">
+                    {inviteeAlert}
                     <div id="header">
                         <Button
                           id="LikeButton"
@@ -290,6 +332,7 @@ class CollectionDetail extends Component {
                         </Button>
                         {inviteModal}
                         {manageButton}
+                        {inviteeButtons}
                     </div>
                     <div className="CollectionInfo">
                         <div id="collectionBasicInfo">
@@ -323,7 +366,7 @@ class CollectionDetail extends Component {
                                           size="lg"
                                           block
                                         >
-                            View More
+                                            View More
                                         </Button>
                                     )}
                             </Tab>
@@ -355,7 +398,7 @@ class CollectionDetail extends Component {
                                                   size="lg"
                                                   block
                                                 >
-                                                View More
+                                                    View More
                                                 </Button>
                                             ) }
                                     </div>
@@ -435,7 +478,9 @@ CollectionDetail.defaultProps = {
     onGetCollection: null,
     onGetCollectionPapers: null,
     getCollectionStatus: collectionStatus.NONE,
-    selectedCollection: { creation_date: "", modification_date: "" },
+    selectedCollection: {
+        creation_date: "", modification_date: "", type: "private", collection_user_type: null,
+    },
     storedPapers: { papers: [], page_number: 0, is_finished: true },
     afterLikeCount: 0,
     afterUnlikeCount: 0,

@@ -17,6 +17,10 @@
     margin-top: 1vh;
 }
 
+.CollectionDetailContent .alert {
+    margin-top: 2%;
+}
+
 .CollectionDetailContent #header #LikeButton {
     width: 80px;
     height: 40px;
