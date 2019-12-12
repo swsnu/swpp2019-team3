@@ -554,6 +554,15 @@ class UserTestCase(TestCase):
                    },
                    content_type='application/json')
 
+        # accept invitation from 'swpp' (wrong)
+        response = client.put('/api/user/collection/pending',
+                              data=json.dumps({
+                                  constants.ID: -1,
+                              }),
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 404)
+
         # accept invitation from 'swpp'
         response = client.put('/api/user/collection/pending',
                               data=json.dumps({
@@ -576,12 +585,23 @@ class UserTestCase(TestCase):
                    },
                    content_type='application/json')
 
+        # dismiss invitation from 'swpp' (wrong)
+        response = client.delete('/api/user/collection/pending',
+                                 json.dumps({
+                                     constants.ID: -1,
+                                 }),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 404)
+
         # dismiss invitation from 'swpp'
         response = client.delete('/api/user/collection/pending',
                                  json.dumps({
                                      constants.ID: collection_id,
                                  }),
                                  content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
 
         collection_user = CollectionUser.objects.get(user_id=user_ids[0])
         self.assertEqual(collection_user.type, "member")
