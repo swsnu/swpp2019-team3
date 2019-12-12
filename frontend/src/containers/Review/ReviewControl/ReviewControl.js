@@ -186,6 +186,7 @@ ReviewControl.propTypes = {
     onGetReview: PropTypes.func,
     selectedPaper: PropTypes.objectOf(PropTypes.any),
     onGetPaper: PropTypes.func,
+    // eslint-disable-next-line react/no-unused-prop-types
     newReview: PropTypes.objectOf(PropTypes.any),
     keywords: PropTypes.arrayOf(PropTypes.any),
 };

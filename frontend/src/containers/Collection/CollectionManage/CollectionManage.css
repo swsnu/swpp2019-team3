@@ -20,6 +20,10 @@
     margin: 10px;
 }
 
+#editName {
+    width: 25%;
+}
+
 #editDescription {
     width: 85%;
 }

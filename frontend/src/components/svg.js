@@ -12,21 +12,58 @@ const svg = {
 /* eslint-disable react/prefer-stateless-function */
 class SVG extends Component {
     render() {
-        return (
-            <svg
-              x="0px"
-              y="0px"
-              width={this.props.width}
-              height={this.props.height}
-              viewBox="0 0 8 8"
-            >
-                <path
-                  fill={this.props.color}
-                  d={svg[this.props.name]}
-                />
-      &gt;
-            </svg>
-        );
+        let result = null;
+        switch (this.props.name) {
+        case "heart-fill":
+            result = (
+                <svg
+                  preserveAspectRatio="xMidYMid meet"
+                  viewBox="0 0 160 160"
+                  height={this.props.height}
+                  width={this.props.width}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                      d="m347 1336c-152-64-222-174-222-346 1-191 76-299 385-557 80-67 170-146 200-177 36-37 62-56 79-56 16 0 51 27 115 88 50 49 141 130 202 180 158 129 256 237 302 330 36 75 37 79 37 192 0 103-3 121-26 171-34 72-96 134-168 168-49 23-69 26-156 26-90 0-105-3-155-28-30-16-77-48-105-71l-50-44-49 45c-81 73-136 96-241 100-78 3-98 0-148-21z"
+                      transform="matrix(.1 0 0 -.1 0 160)"
+                    />
+                </svg>
+            );
+            break;
+        case "heart-blank":
+            result = (
+                <svg
+                  preserveAspectRatio="xMidYMid meet"
+                  viewBox="0 0 160 160"
+                  height={this.props.height}
+                  width={this.props.width}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                      d="m428 1359c-207-28-339-221-299-436 29-157 105-257 359-472 97-82 199-172 227-200 67-70 83-68 165 16 36 36 126 117 201 179 183 152 276 252 325 351 39 77 39 79 39 193 0 103-3 121-26 171-52 110-157 184-282 199-111 13-214-23-302-105l-48-45-49 46c-55 51-153 100-213 106-22 2-66 1-97-3zm151-139c23-11 76-51 115-90 47-46 81-70 96-70s44 22 86 64c34 36 86 77 115 91 45 23 62 27 119 23 92-5 153-42 193-118 26-50 28-63 25-135-5-136-66-226-266-396-53-46-138-120-188-166l-91-82-39 41c-21 22-102 95-179 162-159 137-214 192-258 255-34 49-67 146-67 195 0 51 28 132 57 167 62 73 191 100 282 59z"
+                      transform="matrix(.1 0 0 -.1 0 160)"
+                    />
+                </svg>
+            );
+            break;
+        default:
+            result = (
+                <svg
+                  x="0px"
+                  y="0px"
+                  width={this.props.width}
+                  height={this.props.height}
+                  viewBox="0 0 8 8"
+                >
+                    <path
+                      fill={this.props.color}
+                      d={svg[this.props.name]}
+                    />
+          &gt;
+                </svg>
+            );
+        }
+        return result;
     }
 }
 

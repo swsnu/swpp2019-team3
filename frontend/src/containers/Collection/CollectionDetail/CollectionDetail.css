@@ -17,15 +17,6 @@
     margin-top: 1vh;
 }
 
-.CollectionDetailContent #header #LikeButton {
-    width: 80px;
-    height: 40px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    margin-right: 5px;
-}
-
 .CollectionDetailContent #header #memberButton {
     width: 80px;
     height: 40px;
