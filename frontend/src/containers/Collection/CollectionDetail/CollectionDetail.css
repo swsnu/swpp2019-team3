@@ -18,11 +18,12 @@
 }
 
 .CollectionDetailContent #header #memberButton {
-    width: 80px;
+    width: 70px;
     height: 40px;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    margin-left: 5px;
     margin-right: 5px;
 }
 
