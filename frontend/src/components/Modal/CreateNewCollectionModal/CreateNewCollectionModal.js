@@ -63,7 +63,7 @@ class CreateNewCollectionModal extends Component {
         return (
             <div className="CreateNewCollectionModal">
                 <div id="openButtonDiv">
-                    <Button id="modalOpenButton" onClick={this.clickOpenHandler}>
+                    <Button id="createModalOpenButton" onClick={this.clickOpenHandler}>
                         Create New...
                     </Button>
                 </div>

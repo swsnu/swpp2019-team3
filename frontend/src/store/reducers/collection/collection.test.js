@@ -15,6 +15,13 @@ const stubInitialState = {
         pageNum: 0,
         finished: true,
     },
+    sharedList: {
+        status: collectionStatus.NONE,
+        list: [],
+        error: null,
+        pageNum: 0,
+        finished: true,
+    },
     edit: {
         status: collectionStatus.NONE,
         collection: {},

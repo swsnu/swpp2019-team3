@@ -144,9 +144,6 @@ class ProfileDetail extends Component {
     );
 
     render() {
-        const collectionCount = (this.props.collections.pageNum > 1
-            || (this.props.collections.pageNum === 1 && this.props.collections.finished === false))
-            ? "10+" : this.props.collections.list.length;
         const reviewCount = (this.props.reviews.pageNum > 1
             || (this.props.reviews.pageNum === 1 && this.props.reviews.finished === false))
             ? "10+" : this.props.reviews.list.length;
@@ -229,7 +226,7 @@ class ProfileDetail extends Component {
                     </div>
                     <div className="itemTabSection">
                         <Tabs defaultActiveKey="collectionTab" id="itemTabs">
-                            <Tab eventKey="collectionTab" title={`Collection(${collectionCount})`}>
+                            <Tab eventKey="collectionTab" title={`Collection(${this.props.collections.totalCount})`}>
                                 <div id="collectionCards">
                                     <div id="collectionCardsLeft">{collectionCardsLeft}</div>
                                     <div id="collectionCardsRight">{collectionCardsRight}</div>
@@ -242,7 +239,7 @@ class ProfileDetail extends Component {
                                           size="lg"
                                           block
                                         >
-                View More
+                                            View More
                                         </Button>
                                     )}
                             </Tab>
@@ -259,7 +256,7 @@ class ProfileDetail extends Component {
                                           size="lg"
                                           block
                                         >
-                View More
+                                            View More
                                         </Button>
                                     ) }
                             </Tab>

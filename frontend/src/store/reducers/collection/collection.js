@@ -14,6 +14,15 @@ const initialState = {
         error: null,
         pageNum: 0,
         finished: true,
+        totalCount: 0,
+    },
+    sharedList: {
+        status: collectionStatus.NONE,
+        list: [],
+        error: null,
+        pageNum: 0,
+        finished: true,
+        totalCount: 0,
     },
     edit: {
         status: collectionStatus.NONE,
@@ -76,7 +85,7 @@ const reducer = (state = initialState, action) => {
                 error: action.target,
             },
         };
-    case collectionConstants.GET_COLLECTIONS:
+    case collectionConstants.GET_COLLECTIONS_SUCCESS:
         return {
             ...state,
             list: {
@@ -85,6 +94,37 @@ const reducer = (state = initialState, action) => {
                 list: action.target.collections,
                 pageNum: action.target.pageNum,
                 finished: action.target.finished,
+                totalCount: action.target.totalCount,
+            },
+        };
+    case collectionConstants.GET_COLLECTIONS_FAILURE:
+        return {
+            ...state,
+            list: {
+                ...state.selected,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
+    case collectionConstants.GET_SHARED_COLLECTIONS_SUCCESS:
+        return {
+            ...state,
+            sharedList: {
+                ...state.selected,
+                status: collectionStatus.SUCCESS,
+                list: action.target.collections,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
+                totalCount: action.target.totalCount,
+            },
+        };
+    case collectionConstants.GET_SHARED_COLLECTIONS_FAILURE:
+        return {
+            ...state,
+            sharedList: {
+                ...state.selected,
+                status: collectionStatus.FAILURE,
+                error: action.target,
             },
         };
     case collectionConstants.GET_COLLECTION:

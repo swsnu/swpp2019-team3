@@ -25,6 +25,7 @@ import {
 import {
     makeNewCollection,
     getCollectionsByUserId,
+    getSharedCollectionsByUserId,
     getCollection,
     getCollectionPapers,
     getCollectionMembers,
@@ -87,6 +88,7 @@ import {
 export const collectionActions = {
     makeNewCollection,
     getCollectionsByUserId,
+    getSharedCollectionsByUserId,
     getCollection,
     getCollectionPapers,
     getCollectionMembers,

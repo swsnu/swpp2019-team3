@@ -17,7 +17,16 @@ const stubInitialState = {
         list: {
             status: collectionStatus.NONE,
             list: [],
-            error: -1,
+            error: null,
+            pageNum: 0,
+            finished: true,
+        },
+        sharedList: {
+            status: collectionStatus.NONE,
+            list: [],
+            error: null,
+            pageNum: 0,
+            finished: true,
         },
         edit: {
             status: collectionStatus.NONE,

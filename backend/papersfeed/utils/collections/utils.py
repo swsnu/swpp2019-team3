@@ -63,7 +63,7 @@ def insert_collection(args):
 
     collection_id = collection.id
 
-    collections, _, _ = __get_collections(Q(id=collection_id), request_user, None)
+    collections, _, _, _ = __get_collections(Q(id=collection_id), request_user, None)
 
     # Does Not Exist
     if not collections:
@@ -113,7 +113,7 @@ def update_collection(args):
 
     collection.save()
 
-    collections, _, _ = __get_collections(Q(id=collection.id), request_user, None)
+    collections, _, _, _ = __get_collections(Q(id=collection.id), request_user, None)
 
     if not collections:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -162,7 +162,7 @@ def update_collection_type(args):
 
     collection.save()
 
-    collections, _, _ = __get_collections(Q(id=collection.id), request_user, None)
+    collections, _, _, _ = __get_collections(Q(id=collection.id), request_user, None)
 
     if not collections:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -209,7 +209,7 @@ def select_collection(args):
     collection_id = args[constants.ID]
 
     # Collections
-    collections, _, _ = __get_collections(Q(id=collection_id), request_user, None)
+    collections, _, _, _ = __get_collections(Q(id=collection_id), request_user, None)
 
     # Does Not Exist
     if not collections:
@@ -245,11 +245,12 @@ def select_collection_user(args):
     # Collections
     params = {
         constants.PAPER_ID: paper_id,
-        constants.USER_ID: user_id
+        constants.USER_ID: user_id,
+        constants.TOTAL_COUNT: True # count whole collections
     }
-    collections, _, is_finished = __get_collections(queryset, request_user, 10, page_number=page_number, params=params)
+    collections, _, is_finished, total_count = __get_collections(queryset, request_user, 10, page_number=page_number, params=params)
 
-    return collections, page_number, is_finished
+    return collections, page_number, is_finished, total_count
 
 
 def select_collection_user_shared(args):
@@ -272,11 +273,12 @@ def select_collection_user_shared(args):
 
     # Collections
     params = {
-        constants.USER_ID: user_id
+        constants.USER_ID: user_id,
+        constants.TOTAL_COUNT: True # count whole shared collections
     }
-    collections, _, is_finished = __get_collections(queryset, request_user, 10, page_number=page_number, params=params)
+    collections, _, is_finished, total_count = __get_collections(queryset, request_user, 10, page_number=page_number, params=params)
 
-    return collections, page_number, is_finished
+    return collections, page_number, is_finished, total_count
 
 
 def select_collection_search(args):
@@ -487,6 +489,8 @@ def __get_collections(filter_query, request_user, count, params=None, page_numbe
         )
     ).order_by(order_by)
 
+    total_count = queryset.count() if constants.TOTAL_COUNT in params else None
+
     collections = get_results_from_queryset(queryset, count, page_number)
 
     is_finished = True
@@ -497,7 +501,7 @@ def __get_collections(filter_query, request_user, count, params=None, page_numbe
 
     collections = __pack_collections(collections, request_user, paper_id=paper_id)
 
-    return collections, pagination_value, is_finished
+    return collections, pagination_value, is_finished, total_count
 
 
 # pylint: disable=unused-argument, too-many-locals
