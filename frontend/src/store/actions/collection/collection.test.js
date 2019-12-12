@@ -17,7 +17,16 @@ const stubInitialState = {
         list: {
             status: collectionStatus.NONE,
             list: [],
-            error: -1,
+            error: null,
+            pageNum: 0,
+            finished: true,
+        },
+        sharedList: {
+            status: collectionStatus.NONE,
+            list: [],
+            error: null,
+            pageNum: 0,
+            finished: true,
         },
         edit: {
             status: collectionStatus.NONE,
@@ -183,6 +192,43 @@ describe("collectionActions", () => {
         mockStore.dispatch(collectionActions.getCollectionsByUserId({ id: stubUser.id }))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/collection/user", { params: { id: 1 } });
+                done();
+            });
+    });
+
+
+    it("getSharedCollectionsByUserId should call axios.get", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: stubCollection,
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.getSharedCollectionsByUserId({ id: stubUser.id }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/collection/user/shared", { params: { id: stubUser.id } });
+                done();
+            });
+    });
+
+    it("getSharedCollectionsByUserId should handle error", (done) => {
+        const spy = jest.spyOn(axios, "get")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(collectionActions.getSharedCollectionsByUserId({ id: stubUser.id }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/collection/user/shared", { params: { id: 1 } });
                 done();
             });
     });
@@ -823,6 +869,42 @@ describe("collectionActions", () => {
         mockStore.dispatch(collectionActions.getCollectionLike({ page_number: 1 }))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/collection/like", { params: { page_number: 1 } });
+                done();
+            });
+    });
+
+    it("changeCollectionType should call axios.put", (done) => {
+        const spy = jest.spyOn(axios, "put")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: { collection: stubCollection },
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.changeCollectionType(1, "private"))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/collection/type", { id: 1, type: "private" });
+                done();
+            });
+    });
+
+    it("changeCollectionType should handle error", (done) => {
+        const spy = jest.spyOn(axios, "put")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 404,
+                        data: {},
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(collectionActions.changeCollectionType(1, "private"))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/collection/type", { id: 1, type: "private" });
                 done();
             });
     });

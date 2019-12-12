@@ -75,7 +75,7 @@ describe("CreateNewCollection test", () => {
 
     it("should set state to open/close modal", () => {
         const component = mount(createNewCollection);
-        let wrapper = component.find("#modalOpenButton").hostNodes();
+        let wrapper = component.find("#createModalOpenButton").hostNodes();
         expect(wrapper.length).toBe(1);
         wrapper.simulate("click");
         const instance = component.find("CreateNewCollectionModal").instance();
@@ -88,7 +88,7 @@ describe("CreateNewCollection test", () => {
 
     it("should handle text inputs", () => {
         const component = mount(createNewCollection);
-        let wrapper = component.find("#modalOpenButton").hostNodes();
+        let wrapper = component.find("#createModalOpenButton").hostNodes();
         wrapper.simulate("click");
         wrapper = component.find("#newCollectionNameInput").hostNodes();
         expect(wrapper.length).toBe(1);
@@ -104,7 +104,7 @@ describe("CreateNewCollection test", () => {
     it("should handle making new collection", async () => {
         // change state and click button
         const component = mount(createNewCollection);
-        let wrapper = component.find("#modalOpenButton").hostNodes();
+        let wrapper = component.find("#createModalOpenButton").hostNodes();
         wrapper.simulate("click");
         wrapper = component.find("#newCollectionNameInput").hostNodes();
         wrapper.simulate("change", { target: { value: "asdf" } });
