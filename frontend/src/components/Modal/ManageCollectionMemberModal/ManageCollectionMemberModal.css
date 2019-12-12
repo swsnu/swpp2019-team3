@@ -1,0 +1,14 @@
+#memberModal .memberModalHeader{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#memberModal .memberModalBody{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 400px;
+    display:flex;
+    flex-direction: column;
+    align-content: center;
+}

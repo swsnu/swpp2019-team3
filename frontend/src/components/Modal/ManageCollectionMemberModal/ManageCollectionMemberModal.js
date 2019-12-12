@@ -10,6 +10,8 @@ import WarningModal from "../WarningModal/WarningModal";
 import { collectionActions } from "../../../store/actions";
 import UserEntry from "../../User/UserEntry/UserEntry";
 
+import "./ManageCollectionMemberModal.css";
+
 class ManageCollectionMemberModal extends Component {
     constructor(props) {
         super(props);
@@ -20,8 +22,10 @@ class ManageCollectionMemberModal extends Component {
             members: [],
             memberPageNum: 0,
             memberFinished: true,
+            loading: true,
         };
 
+        this.modal = React.createRef();
         this.getMembersTrigger = this.getMembersTrigger.bind(this);
         this.refreshMembers = this.refreshMembers.bind(this);
         this.clickOpenHandler = this.clickOpenHandler.bind(this);
@@ -29,6 +33,7 @@ class ManageCollectionMemberModal extends Component {
         this.clickKickOffCancelHandler = this.clickKickOffCancelHandler.bind(this);
         this.clickKickOffEnableHandler = this.clickKickOffEnableHandler.bind(this);
         this.checkHandler = this.checkHandler.bind(this);
+        this.handleScroll = this.handleScroll.bind(this);
     }
 
     getMembersTrigger = (pageNum, includesMe) => {
@@ -39,9 +44,30 @@ class ManageCollectionMemberModal extends Component {
                     members: members.concat(this.props.members),
                     memberPageNum: this.props.memberPageNum,
                     memberFinished: this.props.memberFinished,
+                    loading: false,
                 });
             })
             .catch(() => {});
+    }
+
+    handleScroll = () => {
+        if (!this.state.loading
+            && !this.state.memberFinished
+            && this.modal.current.scrollTop + this.modal.current.clientHeight + 200
+            > this.modal.current.scrollHeight) {
+            this.setState({
+                loading: true,
+            });
+            if (this.state.removeMode) {
+                this.getMembersTrigger(
+                    this.state.memberPageNum, false,
+                );
+            } else {
+                this.getMembersTrigger(
+                    this.state.memberPageNum, true,
+                );
+            }
+        }
     }
 
     refreshMembers = () => {
@@ -63,6 +89,8 @@ class ManageCollectionMemberModal extends Component {
         this.getMembersTrigger(0, true);
         this.setState({
             isModalOpen: true,
+        }, () => {
+            this.modal.current.addEventListener("scroll", this.handleScroll);
         });
     }
 
@@ -75,6 +103,7 @@ class ManageCollectionMemberModal extends Component {
             memberPageNum: 0,
             memberFinished: true,
         });
+        this.modal.current.removeEventListener("scroll", this.handleScroll);
     }
 
     // deleting user feature handlers
@@ -166,11 +195,11 @@ class ManageCollectionMemberModal extends Component {
                         Manage Members
                     </Button>
                 </div>
-                <Modal id="memberModal" show={this.state.isModalOpen} onHide={this.clickCloseHandler} centered>
-                    <Modal.Header>
+                <Modal scrollable id="memberModal" show={this.state.isModalOpen} onHide={this.clickCloseHandler} centered>
+                    <Modal.Header className="memberModalHeader">
                         <h5 id="createHeaderText">Manage members of {this.props.thisCollection.title}</h5>
                     </Modal.Header>
-                    <Modal.Body>
+                    <Modal.Body ref={this.modal} className="memberModalBody">
                         <InviteToCollectionModal
                           openButtonName="Invite New Users"
                           members={this.state.members}
@@ -178,26 +207,6 @@ class ManageCollectionMemberModal extends Component {
                         />
                         <div id="membersListDiv">
                             {memberList}
-                            { this.state.memberFinished ? null
-                                : (
-                                    <Button
-                                      className="user-more-button"
-                                      onClick={() => {
-                                          if (this.state.removeMode) {
-                                              this.getMembersTrigger(
-                                                  this.state.memberPageNum, false,
-                                              );
-                                          } else {
-                                              this.getMembersTrigger(
-                                                  this.state.memberPageNum, true,
-                                              );
-                                          }
-                                      }}
-                                      block
-                                    >
-                            View More
-                                    </Button>
-                                )}
                         </div>
                     </Modal.Body>
                     <Modal.Footer>

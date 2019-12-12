@@ -19,8 +19,9 @@ class InviteToCollectionModal extends Component {
             pageNum: 0,
             finished: true,
             showFollowings: true,
+            loading: false,
         };
-
+        this.modal = React.createRef();
         this.getFollowingsTrigger = this.getFollowingsTrigger.bind(this);
         this.searchUsersTrigger = this.searchUsersTrigger.bind(this);
         this.clickOpenHandler = this.clickOpenHandler.bind(this);
@@ -29,14 +30,33 @@ class InviteToCollectionModal extends Component {
         this.clickInviteUsersHandler = this.clickInviteUsersHandler.bind(this);
         this.checkHandler = this.checkHandler.bind(this);
         this.userEntryMapper = this.userEntryMapper.bind(this);
+        this.handleScroll = this.handleScroll.bind(this);
+    }
+
+    handleScroll = () => {
+        if (!this.state.loading
+            && !this.state.finished
+            && this.modal.current.scrollTop + this.modal.current.clientHeight + 50
+            > this.modal.current.scrollHeight) {
+            this.setState({
+                loading: true,
+            });
+            if (this.state.showFollowings) {
+                this.getFollowingsTrigger(this.state.pageNum);
+            } else {
+                this.searchUsersTrigger(this.state.pageNum);
+            }
+        }
     }
 
     // handler functions for buttons
     clickOpenHandler = () => {
         this.setState({
             isModalOpen: true,
+        }, () => {
+            this.modal.current.addEventListener("scroll", this.handleScroll);
+            this.getFollowingsTrigger(0);
         });
-        this.getFollowingsTrigger(0);
     }
 
     getFollowingsTrigger = (pageNum) => {
@@ -51,6 +71,7 @@ class InviteToCollectionModal extends Component {
                     users: users.concat(this.props.myFollowings),
                     pageNum: this.props.followingPageNum,
                     finished: this.props.followingFinished,
+                    loading: false,
                 });
             })
             .catch(() => {});
@@ -63,6 +84,7 @@ class InviteToCollectionModal extends Component {
             pageNum: 0,
             finished: true,
             showFollowings: false,
+            loading: false,
         });
         this.searchUsersTrigger(0);
     }
@@ -94,6 +116,7 @@ class InviteToCollectionModal extends Component {
             finished: true,
             showFollowings: true,
         });
+        this.modal.current.removeEventListener("scroll", this.handleScroll);
     }
 
     clickInviteUsersHandler = () => {
@@ -151,21 +174,33 @@ class InviteToCollectionModal extends Component {
                         {this.props.openButtonName}
                     </Button>
                 </div>
-                <Modal id="inviteModal" show={this.state.isModalOpen} onHide={this.clickCancelHandler} centered>
-                    <Modal.Header>
+                <Modal
+                  scrollable
+                  id="inviteModal"
+                  show={this.state.isModalOpen}
+                  onHide={this.clickCancelHandler}
+                  centered
+                >
+                    <Modal.Header className="ModalHeader">
                         <h5 id="inviteHeaderText">Invite users to {this.props.thisCollection.title}</h5>
-                        <Button
-                          id="inviteButton"
-                          onClick={this.clickInviteUsersHandler}
-                          disabled={this.state.checkedUserIdList.length === 0}
-                        >
+                        <div className="inviteButtons">
+                            <Button
+                              variant="info"
+                              id="inviteButton"
+                              onClick={this.clickInviteUsersHandler}
+                              disabled={this.state.checkedUserIdList.length === 0}
+                            >
                             Invite
-                        </Button>
-                        <Button id="cancelButton" onClick={this.clickCancelHandler}>
+                            </Button>
+                            <Button variant="secondary" id="cancelButton" onClick={this.clickCancelHandler}>
                             Cancel
-                        </Button>
+                            </Button>
+                        </div>
                     </Modal.Header>
-                    <Modal.Body className="ModalBody">
+                    <Modal.Body
+                      ref={this.modal}
+                      className="ModalBody"
+                    >
                         <div id="searchArea">
                             <input
                               id="userSearchBar"
@@ -183,6 +218,7 @@ class InviteToCollectionModal extends Component {
                             />
                             <Button
                               id="searchButton"
+                              variant="outline-info"
                               onClick={this.clickSearchHandler}
                               disabled={this.state.searchKeyWord.length === 0}
                             >
@@ -193,22 +229,6 @@ class InviteToCollectionModal extends Component {
                             <Form.Group controlId="A" id="userList">
                                 {userEntries}
                             </Form.Group>
-                            { this.state.finished ? null
-                                : (
-                                    <Button
-                                      className="user-more-button"
-                                      onClick={() => {
-                                          if (this.state.showFollowings) {
-                                              this.getFollowingsTrigger(this.state.pageNum);
-                                          } else {
-                                              this.searchUsersTrigger(this.state.pageNum);
-                                          }
-                                      }}
-                                      block
-                                    >
-                            View More
-                                    </Button>
-                                )}
                         </Form>
                     </Modal.Body>
                 </Modal>
