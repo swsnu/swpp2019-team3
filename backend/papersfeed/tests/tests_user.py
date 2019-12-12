@@ -554,7 +554,7 @@ class UserTestCase(TestCase):
                    },
                    content_type='application/json')
 
-        # accept invitation from 'swpp' (wrong)
+        # accept invitation from 'swpp' (Not Found)
         response = client.put('/api/user/collection/pending',
                               data=json.dumps({
                                   constants.ID: -1,
@@ -585,7 +585,7 @@ class UserTestCase(TestCase):
                    },
                    content_type='application/json')
 
-        # dismiss invitation from 'swpp' (wrong)
+        # dismiss invitation from 'swpp' (Not Found)
         response = client.delete('/api/user/collection/pending',
                                  json.dumps({
                                      constants.ID: -1,
