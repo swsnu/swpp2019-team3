@@ -122,7 +122,7 @@ describe("<History />", () => {
             },
             reply: {},
         };
-        history = makeHistory(stubInitialState);
+        thisHistory = makeHistory(stubInitialState);
         spyGetPaperLike = jest.spyOn(paperActions, "getPaperLike")
             .mockImplementation(() => () => mockPromise);
         spyGetCollectionLike = jest.spyOn(collectionActions, "getCollectionLike")
@@ -137,7 +137,7 @@ describe("<History />", () => {
 
 
     it("should render without errors and call Paper,Collection,Review", () => {
-        const component = mount(history);
+        const component = mount(thisHistory);
         const wrapper = component.find(".history");
         expect(wrapper.length).toBe(1);
         expect(spyGetCollectionLike).toBeCalledTimes(1);
