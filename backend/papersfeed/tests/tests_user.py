@@ -107,7 +107,7 @@ class UserTestCase(TestCase):
 
         self.assertIn(
             '{"id": ' + str(user_id)
-            + ', "username": "swpp", "email": "swpp@snu.ac.kr", "description": "",'
+            + ', "username": "swpp", "email": "swpp@snu.ac.kr", "description": "", "photo_index": 0,'
             + ' "count": {"follower": 0, "following": 0}}',
             response.content.decode())
 
@@ -132,7 +132,7 @@ class UserTestCase(TestCase):
 
         self.assertIn(
             '{"id": ' + str(user_id)
-            + ', "username": "swpp", "email": "swpp@snu.ac.kr", "description": "",'
+            + ', "username": "swpp", "email": "swpp@snu.ac.kr", "description": "", "photo_index": 0,'
             + ' "count": {"follower": 0, "following": 0}}',
             response.content.decode())
 

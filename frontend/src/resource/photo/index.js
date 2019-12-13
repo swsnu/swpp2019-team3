@@ -16,5 +16,4 @@ export const samplePic13 = require("./sample_13.jpg");
 export const samplePic14 = require("./sample_14.jpg");
 /* eslint-enable global-require */
 
-// Images are came from 'https://unsplash.com/',
-// except for the sample_0.jpg, the photo of Girin the Adorable Cat.
+// Sample Images(4~14) are came from 'https://unsplash.com/',
