@@ -22,7 +22,6 @@ const makeHistory = (initialState, props = {}) => (
 
 describe("<History />", () => {
     let stubInitialState;
-    let history;
     let spyGetCollectionLike;
     let spyGetReviewLike;
     let spyGetPaperLike;
