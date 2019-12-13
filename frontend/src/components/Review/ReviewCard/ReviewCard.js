@@ -93,7 +93,7 @@ class ReviewCard extends Component {
                           unlikeFn={this.clickReviewCardUnlikeHandler}
                           likeCount={this.state.likeCount}
                         />
-                        <Button className="reply-button" variant="light" href={`/review_id=${this.props.id}`}><div className="reply-image"><SVG name="zoom" height="70%" width="70%" /></div>{this.props.replyCount}</Button>
+                        <Button className="reply-button" variant="light" href={`/review_id=${this.props.id}`}><div className="reply-image"><SVG name="zoom" height="25px" width="25px" /></div>{this.props.replyCount}</Button>
                     </Card.Footer>
                 </Card>
             </div>
