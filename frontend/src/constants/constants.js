@@ -99,6 +99,7 @@ export const userStatus = {
     USER_NOT_EXIST: "USER_NOT_EXIST",
     SELF_FOLLOWING: "SELF_FOLLOWING",
     DUPLICATE_EMAIL: "DUPLICATE_EMAIL",
+    USERNAME_ALREADY_EXIST: "USERNAME_ALREADY_EXIST",
 };
 
 export const replyStatus = {

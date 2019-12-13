@@ -17,6 +17,10 @@
     margin-top: 1vh;
 }
 
+.CollectionDetailContent .alert {
+    margin-top: 2%;
+}
+
 .CollectionDetailContent #header #memberButton {
     width: 70px;
     height: 40px;

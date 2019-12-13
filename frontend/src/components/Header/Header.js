@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {
-    Navbar, Form, Dropdown, Button, Nav, Badge, Image,
+    Navbar, Form, Dropdown, Button, Nav, Badge,
 } from "react-bootstrap";
 
 import { Link } from "react-router-dom";
@@ -11,7 +11,7 @@ import { authActions } from "../../store/actions";
 import { signoutStatus } from "../../constants/constants";
 import "./Header.css";
 import SVG from "../svg";
-import SamplePhoto from "../../containers/User/ProfileDetail/sample.jpg";
+import PhotoDisplayer from "../Photo/PhotoDisplayer/PhotoDisplayer";
 
 class Header extends Component {
     constructor(props) {
@@ -68,9 +68,18 @@ class Header extends Component {
     render() {
         let username = null;
         let id = null;
+        let profilePhoto = <div />;
         if (this.props.me) {
             username = this.props.me.username;
             id = this.props.me.id;
+            profilePhoto = (
+                <PhotoDisplayer
+                  index={this.props.me.photo_index}
+                  width="30px"
+                  height="30px"
+                  roundedCircle
+                />
+            );
         }
 
         let notifications = null;
@@ -150,7 +159,7 @@ class Header extends Component {
                         </Dropdown>
                         <Dropdown className="dropdown-account" alignRight>
                             <Dropdown.Toggle title="myaccount" variant="light" className="myaccount-button">
-                                <Image className="user-photo" src={SamplePhoto} width={30} height={30} roundedCircle />
+                                {profilePhoto}
                             </Dropdown.Toggle>
                             <Dropdown.Menu className="myaccount-menu">
                                 <Dropdown.Header className="username-header">{username}</Dropdown.Header>

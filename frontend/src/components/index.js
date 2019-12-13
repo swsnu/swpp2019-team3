@@ -16,6 +16,9 @@ import UserEntry from "./User/UserEntry/UserEntry";
 import InviteToCollectionModal from "./Modal/InviteToCollectionModal/InviteToCollectionModal";
 import ManageCollectionMemberModal from "./Modal/ManageCollectionMemberModal/ManageCollectionMemberModal";
 import LikeButton from "./Button/LikeButton/LikeButton";
+import SubItemButton from "./Button/SubItemButton/SubItemButton";
+import PhotoDisplayer from "./Photo/PhotoDisplayer/PhotoDisplayer";
+import PhotoCheckBox from "./Photo/PhotoCheckBox/PhotoCheckBox";
 
 export {
     SideBar,
@@ -36,4 +39,7 @@ export {
     InviteToCollectionModal,
     ManageCollectionMemberModal,
     LikeButton,
+    SubItemButton,
+    PhotoDisplayer,
+    PhotoCheckBox,
 };

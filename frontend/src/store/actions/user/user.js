@@ -111,6 +111,8 @@ const editUserInfoFailure = (error) => {
     let actionType = null;
     if (error.response.status === 404) {
         actionType = userConstants.EDIT_USER_FAILURE_USER_NOT_EXIST;
+    } else if (error.response.status === 419) {
+        actionType = userConstants.EDIT_USER_FAILURE_USERNAME_ALREADY_EXIST;
     } else if (error.response.status === 420) {
         actionType = userConstants.EDIT_USER_FAILURE_DUPLICATE_EMAIL;
     }

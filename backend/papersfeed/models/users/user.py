@@ -27,6 +27,8 @@ class User(AbstractBaseUser):
 
     # 이메일
     email = models.CharField(max_length=190, unique=True, null=True, default=None)
+    # 유저 프로필 (샘플)사진 인덱스
+    photoIndex = models.IntegerField(default=0)
 
     # 비밀번호 sha256 Digest의 결과물
     password = models.TextField(null=True, default=None)

@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { Card, Button } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { reviewActions } from "../../../store/actions";
 import "./ReviewCard.css";
-import SVG from "../../svg";
-import LikeButton from "../../Button/LikeButton/LikeButton";
+import { LikeButton, SubItemButton } from "../../Button/index";
 
 class ReviewCard extends Component {
     constructor(props) {
@@ -93,7 +92,11 @@ class ReviewCard extends Component {
                           unlikeFn={this.clickReviewCardUnlikeHandler}
                           likeCount={this.state.likeCount}
                         />
-                        <Button className="reply-button" variant="light" href={`/review_id=${this.props.id}`}><div className="reply-image"><SVG name="zoom" height="70%" width="70%" /></div>{this.props.replyCount}</Button>
+                        <SubItemButton
+                          id="replyButton"
+                          href={`/review_id=${this.props.id}`}
+                          count={this.props.replyCount}
+                        />
                     </Card.Footer>
                 </Card>
             </div>

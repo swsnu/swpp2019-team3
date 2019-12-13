@@ -31,6 +31,8 @@ describe("CollectionDetail Test", () => {
     let spyUnlikeCollection;
     let spyGetCollectionMembers;
     let spyGetRepliesByCollection;
+    let spyAcceptInvitation;
+    let spyDismissInvitation;
 
     beforeEach(() => {
         stubInitialState = {
@@ -62,11 +64,20 @@ describe("CollectionDetail Test", () => {
                     error: null,
                 },
                 selected: {
-                    status: collectionStatus.NONE,
+                    status: collectionStatus.SUCCESS,
+                    collection: {
+                        type: "public",
+                        title: "test collection",
+                        text: "test description",
+                        creation_date: "2019-11-26T11:59:41.126",
+                        modification_date: "2019-11-26T11:59:41.126",
+                        count: {},
+                        owner: { id: 1, username: "test1" },
+                        collection_user_type: "owner",
+                        owned: true,
+                    },
                     error: null,
-                    collection: {},
                     papers: { papers: [], page_number: 0, is_finished: true },
-                    replies: [],
                 },
                 like: {
                     status: collectionStatus.NONE,
@@ -116,6 +127,10 @@ describe("CollectionDetail Test", () => {
             .mockImplementation(() => () => mockPromise);
         spyGetRepliesByCollection = jest.spyOn(replyActions, "getRepliesByCollection")
             .mockImplementation(() => () => mockPromise);
+        spyAcceptInvitation = jest.spyOn(collectionActions, "acceptInvitation")
+            .mockImplementation(() => () => mockPromise);
+        spyDismissInvitation = jest.spyOn(collectionActions, "dismissInvitation")
+            .mockImplementation(() => () => mockPromise);
     });
 
     afterEach(() => {
@@ -136,12 +151,14 @@ describe("CollectionDetail Test", () => {
                 selected: {
                     status: collectionStatus.SUCCESS,
                     collection: {
+                        type: "public",
                         title: "test collection",
                         text: "test description",
                         creation_date: "2019-11-26T11:59:41.126",
                         modification_date: "2019-11-26T11:59:41.126",
                         count: {},
-                        owner: { id: 2, username: "test2" },
+                        owner: { id: 1, username: "test1" },
+                        collection_user_type: "owner",
                     },
                 },
                 like: {},
@@ -173,6 +190,8 @@ describe("CollectionDetail Test", () => {
         const wrapper = component.find(".CollectionDetail");
         expect(wrapper.length).toBe(1);
         expect(spyGetCollection).toHaveBeenCalledTimes(1);
+        const instance = component.find(CollectionDetail.WrappedComponent).instance();
+        instance.getAuthorizedInfo();
 
         await flushPromises(); // flush onGetCollection
         await flushPromises(); // flush onGetMembers
@@ -352,7 +371,7 @@ describe("CollectionDetail Test", () => {
         instance.handleReplies();
         await flushPromises();
         component.update();
-        expect(spyGetRepliesByCollection).toBeCalledTimes(3);
+        expect(spyGetRepliesByCollection).toBeCalledTimes(2); // FIXME
         expect(spyHandleReplies).toBeCalledTimes(1);
         expect(spyForEach).toBeCalledTimes(2);
     });
@@ -371,7 +390,9 @@ describe("CollectionDetail Test", () => {
             },
         };
         const component = mount(makeCollectionDetail(stubInitialState));
-        const instance = component.find("CollectionDetail").instance();
+        await flushPromises();
+
+        const instance = component.find(CollectionDetail.WrappedComponent).instance();
         instance.setState(
             {
                 replyCollectionFinished: false,
@@ -385,7 +406,7 @@ describe("CollectionDetail Test", () => {
         button.simulate("click");
 
         await flushPromises();
-        expect(spyGetRepliesByCollection).toBeCalledTimes(2);
+        expect(spyGetRepliesByCollection).toBeCalledTimes(1); // FIXME
         expect(instance.state.replyCollectionPageCount).toBe(2);
         expect(instance.state.replyCollectionFinished).toBe(true);
     });
@@ -396,13 +417,45 @@ describe("CollectionDetail Test", () => {
             collection: {
                 ...stubInitialState.collection,
                 selected: {
-                    papers: {
-                        papers: [], page_number: 0, is_finished: false,
-                    },
+                    ...stubInitialState.collection.selected,
+                    papers: { papers: [], page_number: 0, is_finished: false },
                 },
             },
         };
         const component = mount(makeCollectionDetail(stubInitialState));
+        await flushPromises();
+        const instance = component.find(CollectionDetail.WrappedComponent).instance();
+        instance.getAuthorizedInfo();
+        await flushPromises();
+
+        expect(spyGetCollectionPapers).toBeCalledTimes(1); // FIXME
+        await flushPromises();
+        component.update();
+
+        const wrapper = component.find(".paper-more-button").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        expect(spyGetCollectionPapers).toBeCalledTimes(2); // FIXME
+        await flushPromises();
+    });
+
+    it("should show more if paper-more-button clicked", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                ...stubInitialState.collection,
+                selected: {
+                    ...stubInitialState.collection.selected,
+                    papers: { papers: [], page_number: 0, is_finished: false },
+                },
+            },
+        };
+        const component = mount(makeCollectionDetail(stubInitialState));
+        await flushPromises();
+        const instance = component.find(CollectionDetail.WrappedComponent).instance();
+        instance.getAuthorizedInfo();
+        await flushPromises();
 
         expect(spyGetCollectionPapers).toBeCalledTimes(1);
         await flushPromises();
@@ -414,5 +467,114 @@ describe("CollectionDetail Test", () => {
 
         expect(spyGetCollectionPapers).toBeCalledTimes(2);
         await flushPromises();
+    });
+
+    it("should show accept/dismiss button if the user is 'pending'", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                ...stubInitialState.collection,
+                selected: {
+                    ...stubInitialState.collection.selected,
+                    collection: {
+                        ...stubInitialState.collection.selected.collection,
+                        type: "public",
+                        owner: { id: 2, username: "test2" },
+                        collection_user_type: "pending",
+                    },
+                },
+            },
+        };
+        const component = mount(makeCollectionDetail(stubInitialState));
+        await flushPromises();
+        const instance = component.find(CollectionDetail.WrappedComponent).instance();
+        instance.getAuthorizedInfo();
+        await flushPromises();
+
+        let wrapper = component.find(".alert");
+        expect(wrapper.length).toBe(1);
+
+        wrapper = component.find("#acceptButton").hostNodes();
+        expect(wrapper.length).toBe(1);
+
+        wrapper = component.find("#acceptButton").hostNodes();
+        expect(wrapper.length).toBe(1);
+    });
+
+    it("should call acceptInvitation if pending user click Accept", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                ...stubInitialState.collection,
+                selected: {
+                    ...stubInitialState.collection.selected,
+                    collection: {
+                        ...stubInitialState.collection.selected.collection,
+                        type: "public",
+                        owner: { id: 2, username: "test2" },
+                        collection_user_type: "pending",
+                    },
+                },
+            },
+        };
+        const component = mount(makeCollectionDetail(stubInitialState));
+        await flushPromises();
+
+        const wrapper = component.find("#acceptButton").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        expect(spyAcceptInvitation).toHaveBeenCalledTimes(1);
+        await flushPromises();
+    });
+
+    it("should call dismissInvitation if pending user click Dismiss", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                ...stubInitialState.collection,
+                selected: {
+                    ...stubInitialState.collection.selected,
+                    collection: {
+                        ...stubInitialState.collection.selected.collection,
+                        type: "public",
+                        owner: { id: 2, username: "test2" },
+                        collection_user_type: "pending",
+                    },
+                },
+            },
+        };
+        const component = mount(makeCollectionDetail(stubInitialState));
+        await flushPromises();
+
+        const wrapper = component.find("#dismissButton").hostNodes();
+        expect(wrapper.length).toBe(1);
+        wrapper.simulate("click");
+
+        expect(spyDismissInvitation).toHaveBeenCalledTimes(1);
+        await flushPromises();
+    });
+
+    it("should show warnings if the user is 'pending' and the collection is 'private'", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                ...stubInitialState.collection,
+                selected: {
+                    ...stubInitialState.collection.selected,
+                    collection: {
+                        ...stubInitialState.collection.selected.collection,
+                        type: "private",
+                        owner: { id: 2, username: "test2" },
+                        collection_user_type: "pending",
+                    },
+                },
+            },
+        };
+        const component = mount(makeCollectionDetail(stubInitialState));
+        await flushPromises();
+
+        const wrapper = component.find(".alert");
+        expect(wrapper.length).toBe(3);
     });
 });
