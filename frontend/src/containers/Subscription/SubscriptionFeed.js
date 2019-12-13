@@ -50,6 +50,10 @@ class SubscriptionFeed extends Component {
         window.addEventListener("scroll", this.handleScroll);
     }
 
+    componentWillUnmount() {
+        window.removeEventListener("scroll", this.handleScroll);
+    }
+
     handleScroll = () => {
         const { scrollHeight } = document.documentElement;
         const { scrollTop } = document.documentElement;

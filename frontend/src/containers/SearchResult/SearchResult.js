@@ -21,10 +21,14 @@ class SearchResult extends Component {
             collections: [],
             users: [],
             searchPaperStatus: paperStatus.WAITING,
+            activeTab: 0, // default tab is 'Paper'
+            paperLoading: true,
+            collectionLoading: true,
+            peopleLoading: true,
         };
 
         this.searchTrigger = this.searchTrigger.bind(this);
-        this.clickPaperMoreHandler = this.clickPaperMoreHandler.bind(this);
+        this.viewPaperMoreHandler = this.viewPaperMoreHandler.bind(this);
         this.paperCardsMaker = this.paperCardsMaker.bind(this);
         this.paperCardsDistributor = this.paperCardsDistributor.bind(this);
         this.collectionCardsMaker = this.collectionCardsMaker.bind(this);
@@ -33,12 +37,14 @@ class SearchResult extends Component {
 
     componentDidMount() {
         this.searchTrigger();
+        window.addEventListener("scroll", this.handleScroll);
     }
 
     // when users search another word on SearchResult
     /* eslint-disable react/no-did-update-set-state */
     componentDidUpdate(prevProps) {
         if (this.props.location !== prevProps.location) {
+            window.scrollTo(0, 0);
             this.setState({
                 searchPaperStatus: paperStatus.WAITING,
                 paperHeadMessage: "wait",
@@ -46,11 +52,71 @@ class SearchResult extends Component {
                 paperCardsLeft: [],
                 paperCardsRight: [],
                 paperCardsLeftPushed: false,
+                paperLoading: true,
+                collectionLoading: true,
+                peopleLoading: true,
             });
             this.searchTrigger();
         }
     }
     /* eslint-enable react/no-did-update-set-state */
+
+    componentWillUnmount() {
+        window.removeEventListener("scroll", this.handleScroll);
+    }
+
+    handleScroll = () => {
+        const { scrollHeight } = document.documentElement;
+        const { scrollTop } = document.documentElement;
+        const { clientHeight } = document.documentElement;
+
+        if (this.state.activeTab === 0) {
+            if (!this.state.paperLoading
+            && !this.props.paperFinished
+            && ((scrollTop + clientHeight + 1500)
+            > scrollHeight)) {
+                this.setState({ paperLoading: true });
+                this.viewPaperMoreHandler();
+            }
+        } else if (this.state.activeTab === 1) {
+            if (!this.state.collectionLoading
+                && !this.props.collectionFinished
+                && ((scrollTop + clientHeight + 1000)
+                > scrollHeight)) {
+                this.setState({ collectionLoading: true });
+
+                this.props.onSearchCollection(
+                    this.state.searchWord,
+                    this.props.collectionPageNum + 1,
+                )
+                    .then(() => {
+                        const { collections } = this.state;
+                        this.setState({
+                            collections: collections.concat(
+                                this.props.searchedCollections,
+                            ),
+                            collectionLoading: false,
+                        });
+                    });
+            }
+        } else if (!this.state.peopleLoading
+                && !this.props.userFinished
+                && ((scrollTop + clientHeight + 1000)
+                > scrollHeight)) {
+            this.setState({ peopleLoading: true });
+
+            this.props.onSearchUser(
+                this.state.searchWord, this.props.userPageNum + 1,
+            )
+                .then(() => {
+                    const { users } = this.state;
+                    this.setState({
+                        users: users.concat(this.props.searchedUsers),
+                        peopleLoading: false,
+                    });
+                });
+        }
+    }
 
     searchTrigger = () => {
         const searchWord = this.props.location.pathname.split("=")[1];
@@ -59,44 +125,48 @@ class SearchResult extends Component {
             .then(() => {
                 // if searchWord is changed while waiting promise, don't update state
                 if (this.state.searchWord === searchWord) {
-                    this.setState({
-                        searchPaperStatus: paperStatus.NONE,
-                    });
                     if (this.props.searchedPapers.length > 0) {
                         this.setState({ paperHeadMessage: null });
                     } else {
                         this.setState({ paperHeadMessage: "no papers" });
                     }
                     this.paperCardsDistributor(this.props.searchedPapers);
+                    this.setState({
+                        searchPaperStatus: paperStatus.NONE,
+                        paperLoading: false,
+                    });
                 }
             });
         this.props.onSearchCollection(searchWord, 1)
             .then(() => {
                 // if searchWord is changed while waiting promise, don't update state
                 if (this.state.searchWord === searchWord) {
-                    this.setState({ collections: this.props.searchedCollections });
+                    this.setState({
+                        collections: this.props.searchedCollections, collectionLoading: false,
+                    });
                 }
             });
         this.props.onSearchUser(searchWord, 1)
             .then(() => {
                 // if searchWord is changed while waiting promise, don't update state
                 if (this.state.searchWord === searchWord) {
-                    this.setState({ users: this.props.searchedUsers });
+                    this.setState({ users: this.props.searchedUsers, peopleLoading: false });
                 }
             });
     }
 
-    clickPaperMoreHandler = () => {
+    viewPaperMoreHandler = () => {
         this.setState({ searchPaperStatus: paperStatus.WAITING });
         this.props.onSearchPaper({
             text: this.state.searchWord,
             page_number: this.props.paperPageNum + 1,
         })
             .then(() => {
+                this.paperCardsDistributor(this.props.searchedPapers);
                 this.setState({
                     searchPaperStatus: paperStatus.NONE,
+                    paperLoading: false,
                 });
-                this.paperCardsDistributor(this.props.searchedPapers);
             });
     };
 
@@ -265,7 +335,7 @@ class SearchResult extends Component {
             paperMoreButton = (
                 <Button
                   className="paper-more-button"
-                  onClick={this.clickPaperMoreHandler}
+                  onClick={null}
                   size="lg"
                   block
                 >View More
@@ -291,8 +361,24 @@ class SearchResult extends Component {
         return (
             <div className="search-result">
                 <div className="item-list">
-                    <Tabs defaultActiveKey="paper-tab" className="item-tabs">
-                        <Tab className="paper-tab" eventKey="paper-tab" title={`Paper(${this.state.paperIds.length + paperPlus})`}>
+                    <Tabs
+                      defaultActiveKey="paper-tab"
+                      className="item-tabs"
+                      onSelect={(key) => {
+                          if (key === "paper-tab") {
+                              this.setState({ activeTab: 0 });
+                          } else if (key === "collection-tab") {
+                              this.setState({ activeTab: 1 });
+                          } else {
+                              this.setState({ activeTab: 2 });
+                          }
+                      }}
+                    >
+                        <Tab
+                          className="paper-tab"
+                          eventKey="paper-tab"
+                          title={`Paper(${this.state.paperIds.length + paperPlus})`}
+                        >
                             {paperMessage}
                             <div id="paper-cards">
                                 <div id="paper-cards-left">{paperCardsLeft}</div>
@@ -300,7 +386,11 @@ class SearchResult extends Component {
                             </div>
                             {paperMoreButton}
                         </Tab>
-                        <Tab className="collection-tab" eventKey="collection-tab" title={`Collection(${this.state.collections.length + collectionPlus})`}>
+                        <Tab
+                          className="collection-tab"
+                          eventKey="collection-tab"
+                          title={`Collection(${this.state.collections.length + collectionPlus})`}
+                        >
                             {collectionMessage}
                             <div id="collection-cards">
                                 <div id="collection-cards-left">{collectionCardsLeft}</div>
@@ -310,20 +400,7 @@ class SearchResult extends Component {
                                 : (
                                     <Button
                                       className="collection-more-button"
-                                      onClick={() => {
-                                          this.props.onSearchCollection(
-                                              this.state.searchWord,
-                                              this.props.collectionPageNum + 1,
-                                          )
-                                              .then(() => {
-                                                  const { collections } = this.state;
-                                                  this.setState({
-                                                      collections: collections.concat(
-                                                          this.props.searchedCollections,
-                                                      ),
-                                                  });
-                                              });
-                                      }}
+                                      onClick={null}
                                       size="lg"
                                       block
                                     >
@@ -331,7 +408,11 @@ class SearchResult extends Component {
                                     </Button>
                                 )}
                         </Tab>
-                        <Tab className="user-tab" eventKey="user-tab" title={`People(${this.state.users.length + userPlus})`}>
+                        <Tab
+                          className="user-tab"
+                          eventKey="user-tab"
+                          title={`People(${this.state.users.length + userPlus})`}
+                        >
                             {userMessage}
                             <div id="user-cards">
                                 <div id="user-cards-left">{userCardsLeft}</div>
@@ -341,17 +422,7 @@ class SearchResult extends Component {
                                 : (
                                     <Button
                                       className="user-more-button"
-                                      onClick={() => {
-                                          this.props.onSearchUser(
-                                              this.state.searchWord, this.props.userPageNum + 1,
-                                          )
-                                              .then(() => {
-                                                  const { users } = this.state;
-                                                  this.setState({
-                                                      users: users.concat(this.props.searchedUsers),
-                                                  });
-                                              });
-                                      }}
+                                      onClick={null}
                                       size="lg"
                                       block
                                     >
