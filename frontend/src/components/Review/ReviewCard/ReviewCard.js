@@ -43,7 +43,7 @@ class ReviewCard extends Component {
             const actorLink = (<a className="actorLink" href={`/profile_id=${this.props.actor.id}`}>{this.props.actor.username}</a>);
             if (Object.keys(this.props.target).length !== 0) {
                 header = (
-                    <Card.Header style={{ backgroundColor: "#9DC3C1" }} id="headerSubscriptionTarget">
+                    <Card.Header id="headerSubscriptionTarget">
                         <div className="CardHeader">
                             {actorLink}
                             <h5 className="verb">{` ${this.props.verb} this review on `}</h5>
@@ -53,7 +53,7 @@ class ReviewCard extends Component {
                 );
             } else {
                 header = (
-                    <Card.Header style={{ backgroundColor: "#9DC3C1" }} id="headerSubscription">
+                    <Card.Header id="headerSubscription">
                         <div className="CardHeader">
                             {actorLink}
                             <h5 className="verb">{` ${this.props.verb} this review`}</h5>
@@ -63,7 +63,7 @@ class ReviewCard extends Component {
             }
         } else if (this.props.recommendation) {
             header = (
-                <Card.Header style={{ backgroundColor: "#9DC3C1" }} id="headerSubscriptionTarget">
+                <Card.Header id="headerSubscriptionTarget">
                     <div className="CardHeader">
                         <h5 className="verb">{`${this.props.verb} on`}</h5>
                     </div>
