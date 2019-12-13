@@ -25,6 +25,7 @@ describe("<History />", () => {
     let spyGetCollectionLike;
     let spyGetReviewLike;
     let spyGetPaperLike;
+    let thisHistory;
 
     beforeEach(() => {
         stubInitialState = {
