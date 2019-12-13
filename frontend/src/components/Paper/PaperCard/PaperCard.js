@@ -87,7 +87,7 @@ class PaperCard extends Component {
                 const actorLink = (<a className="actorLink" href={`/profile_id=${this.props.actor.id}`}>{this.props.actor.username}</a>);
                 if (Object.keys(this.props.target).length !== 0) {
                     header = (
-                        <Card.Header id="headerSubscriptionTarget">
+                        <Card.Header style={{ backgroundColor: "#F0E5DE" }} id="headerSubscriptionTarget">
                             <div className="CardHeader">
                                 {actorLink}
                                 <h5 className="verb">{` ${this.props.verb} this paper to`}</h5>
@@ -97,7 +97,7 @@ class PaperCard extends Component {
                     );
                 } else {
                     header = (
-                        <Card.Header id="headerSubscription">
+                        <Card.Header style={{ backgroundColor: "#D9D4CF" }} id="headerSubscription">
                             <div className="CardHeader">
                                 {actorLink}
                                 <h5 className="verb">{` ${this.props.verb} this paper`}</h5>
@@ -107,14 +107,14 @@ class PaperCard extends Component {
                 }
             } else if (this.props.recommendation) {
                 header = (
-                    <Card.Header id="headerSubscription">
+                    <Card.Header style={{ backgroundColor: "#D9D4CF" }} id="headerSubscription">
                         <div className="CardHeader">
                             <h5 className="verb">{`${this.props.verb}`}</h5>
                         </div>
                     </Card.Header>
                 );
             } else if (this.props.paperSource) {
-                header = <Card.Header id="header">{`from ${this.props.paperSource}`}</Card.Header>;
+                header = <Card.Header style={{ backgroundColor: "#D9D4CF" }} id="header">{`from ${this.props.paperSource}`}</Card.Header>;
             }
         }
         let addButton = null;
