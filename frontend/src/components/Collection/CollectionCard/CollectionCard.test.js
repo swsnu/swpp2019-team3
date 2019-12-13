@@ -9,8 +9,6 @@ import { collectionActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
 import { history } from "../../../store/store";
 
-const mockHistory = { push: jest.fn() };
-
 /* eslint-disable react/jsx-props-no-spreading */
 const makeCollectionCard = (initialState, props = {}) => (
     <Router location={{ state: "paperTab" }} history={history}>
