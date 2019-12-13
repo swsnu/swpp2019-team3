@@ -38,7 +38,7 @@ const initialState = {
     },
     makeTasteInitStatus: makeTasteInitStatus.NONE,
     notifications: [],
-    me: null,
+    me: {},
 };
 
 const reducer = (state = initialState, action) => {

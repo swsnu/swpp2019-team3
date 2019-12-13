@@ -738,6 +738,8 @@ def __pack_users(users, request_user, collection_id=None):
 
 def __is_in_collection(outer_ref, collection_id):
     """Check User in Collection"""
+    # NOTE: This function assume 'pending' users are members of the collection.
+    #       So, 'pending' users don't appear on InviteToCollectionModal
     return Exists(
         CollectionUser.objects.filter(
             user_id=OuterRef(outer_ref),

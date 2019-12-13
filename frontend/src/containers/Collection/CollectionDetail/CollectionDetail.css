@@ -110,13 +110,29 @@
 }
 
 .itemList #replies #createNewReply {
+    margin-top: 2%;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    text-align: left;
+    margin-left: 5%;
+    height: 100%;
+    width: 90%;
+}
+
+.itemList #replies #createNewReply .username{
+    font-weight: bold;
+    font-size: 100%;
 }
 
 .itemList #replies #createNewReply #newReplyContentInput {
-    width: 90%;
+    min-height: 80%;
+    margin-bottom: 1%;
+}
+
+.itemList #replies #createNewReply .new-reply-button {
+    min-width: 60px;
+    align-self: flex-end;
 }
 
 .itemList #replies #replyList {
