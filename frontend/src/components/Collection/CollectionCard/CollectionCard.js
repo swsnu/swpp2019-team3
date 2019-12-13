@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Button, Card } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-
+import { withRouter } from "react-router-dom";
 import { collectionActions } from "../../../store/actions";
 import "./CollectionCard.css";
 import SVG from "../../svg";
@@ -75,7 +75,7 @@ class CollectionCard extends Component {
                         <Button
                           variant="light"
                           className="reply-button"
-                          href={`/collection_id=${this.props.id}`}
+                          onClick={() => { this.props.history.push({ pathname: `/collection_id=${this.props.id}`, state: "replyTab" }); }}
                         >
                             <div className="reply-image">
                                 <SVG name="zoom" height="25px" width="25px" />
@@ -105,10 +105,11 @@ const mapDispatchToProps = (dispatch) => ({
     ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CollectionCard);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CollectionCard));
 
 CollectionCard.propTypes = {
     id: PropTypes.number,
+    history: PropTypes.objectOf(PropTypes.any),
     title: PropTypes.string,
     memberCount: PropTypes.number,
     paperCount: PropTypes.number,
@@ -146,4 +147,5 @@ CollectionCard.defaultProps = {
     actor: {},
     verb: "",
     target: {},
+    history: null,
 };

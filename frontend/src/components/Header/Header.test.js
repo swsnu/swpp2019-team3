@@ -1,27 +1,26 @@
 import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Router } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
-import { createBrowserHistory } from "history";
 
 import { authActions } from "../../store/actions";
 import { signoutStatus } from "../../constants/constants";
 import { getMockStore } from "../../test-utils/mocks";
 import Header from "./Header";
-
-
-const history = createBrowserHistory();
+import { history } from "../../store/store";
 
 /* eslint-disable react/jsx-props-no-spreading */
 const makeHeader = (initialState, props = {}) => (
-    <Provider store={getMockStore(initialState)}>
-        <ConnectedRouter history={history}>
-            <Switch>
-                <Route path="/" exact render={() => (<Header {...props} />)} />
-            </Switch>
-        </ConnectedRouter>
-    </Provider>
+    <Router history={history}>
+        <Provider store={getMockStore(initialState)}>
+            <ConnectedRouter history={history}>
+                <Switch>
+                    <Route path="/" exact render={() => (<Header {...props} />)} />
+                </Switch>
+            </ConnectedRouter>
+        </Provider>
+    </Router>
 );
 /* eslint-enable react/jsx-props-no-spreading */
 
@@ -226,18 +225,16 @@ describe("<Header />", () => {
     });
 
     it("should redirect if enter is pressed and search-input exists", () => {
-        const mockHistory = { push: jest.fn() };
-        const component = mount(makeHeader(stubInitialState,
-            { history: mockHistory }));
+        const spyPush = jest.spyOn(history, "push");
+        const component = mount(makeHeader(stubInitialState));
 
         const wrapper = component.find(".search-input").hostNodes();
         wrapper.simulate("change", { target: { value: "abc" } });
-
         // if press other key, nothing should happen
         wrapper.simulate("keypress", { charCode: 17 });
-        expect(mockHistory.push).toHaveBeenCalledTimes(0);
+        expect(spyPush).toHaveBeenCalledTimes(0);
 
         wrapper.simulate("keypress", { charCode: 13 });
-        expect(mockHistory.push).toHaveBeenCalledTimes(1);
+        expect(spyPush).toHaveBeenCalledTimes(1);
     });
 });

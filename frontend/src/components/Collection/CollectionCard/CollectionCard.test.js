@@ -2,18 +2,22 @@ import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
 
+import { Router } from "react-router-dom";
 import CollectionCard from "./CollectionCard";
 import { getMockStore } from "../../../test-utils/mocks";
 import { collectionActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
+import { history } from "../../../store/store";
 
 const mockHistory = { push: jest.fn() };
 
 /* eslint-disable react/jsx-props-no-spreading */
 const makeCollectionCard = (initialState, props = {}) => (
-    <Provider store={getMockStore(initialState)}>
-        <CollectionCard id={1} history={mockHistory} {...props} />
-    </Provider>
+    <Router location={{ state: "paperTab" }} history={history}>
+        <Provider store={getMockStore(initialState)}>
+            <CollectionCard id={1} history={history} {...props} />
+        </Provider>
+    </Router>
 );
 /* eslint-enable react/jsx-props-no-spreading */
 

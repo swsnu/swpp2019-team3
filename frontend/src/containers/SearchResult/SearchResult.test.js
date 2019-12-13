@@ -1,20 +1,21 @@
 import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
-
+import { Router } from "react-router-dom";
 import SearchResult from "./SearchResult";
 import { paperActions, collectionActions, userActions } from "../../store/actions";
 import {
     paperStatus, collectionStatus, userStatus,
 } from "../../constants/constants";
 import { getMockStore, mockPromise, flushPromises } from "../../test-utils/mocks";
+import { history } from "../../store/store";
 
-
-const mockHistory = { push: jest.fn() };
 const makeSearchResult = (initialState) => (
-    <Provider store={getMockStore(initialState)}>
-        <SearchResult history={mockHistory} location={{ pathname: "/search=abc" }} />
-    </Provider>
+    <Router location={{ state: "paperTab" }} history={history}>
+        <Provider store={getMockStore(initialState)}>
+            <SearchResult history={history} location={{ pathname: "/search=abc" }} />
+        </Provider>
+    </Router>
 );
 
 describe("<SearchResult />", () => {

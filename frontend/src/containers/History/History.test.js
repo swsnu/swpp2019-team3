@@ -2,20 +2,22 @@
 import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
-
+import { Router } from "react-router-dom";
 import History from "./History";
 import { paperActions, collectionActions, reviewActions } from "../../store/actions";
 import {
     paperStatus, collectionStatus, reviewStatus,
 } from "../../constants/constants";
 import { getMockStore, mockPromise, flushPromises } from "../../test-utils/mocks";
+import { history } from "../../store/store";
 
 
-const mockHistory = { push: jest.fn() };
 const makeHistory = (initialState, props = {}) => (
-    <Provider store={getMockStore(initialState)}>
-        <History history={mockHistory} {...props} />
-    </Provider>
+    <Router location={{ state: "paperTab" }} history={history}>
+        <Provider store={getMockStore(initialState)}>
+            <History history={history} {...props} />
+        </Provider>
+    </Router>
 );
 
 describe("<History />", () => {
