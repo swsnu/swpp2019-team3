@@ -156,6 +156,7 @@ class Header extends Component {
                                 <Dropdown.Header className="username-header">{username}</Dropdown.Header>
                                 <Dropdown.Item className="my-profile-button" href={`/profile_id=${id}`}>My Profile</Dropdown.Item>
                                 <Dropdown.Item className="account-setting" href="/account_setting">Account Setting</Dropdown.Item>
+                                <Dropdown.Item className="tutorial-link" href="/tutorial">Tutorial</Dropdown.Item>
                                 <Dropdown.Item className="signout-button" onClick={this.clickSignoutButtonHandler}>Logout</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
