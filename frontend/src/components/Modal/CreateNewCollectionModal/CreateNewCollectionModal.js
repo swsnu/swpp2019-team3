@@ -77,6 +77,7 @@ class CreateNewCollectionModal extends Component {
                             <textarea
                               id="newCollectionNameInput"
                               rows="1"
+                              cols="62"
                               type="text"
                               placeholder="enter new collection name"
                               value={this.state.newCollectionName}
@@ -90,6 +91,7 @@ class CreateNewCollectionModal extends Component {
                             <textarea
                               id="newCollectionDescInput"
                               rows="3"
+                              cols="62"
                               type="text"
                               placeholder="enter new collection description (optional)"
                               value={this.state.newCollectionDesc}
@@ -114,7 +116,7 @@ class CreateNewCollectionModal extends Component {
                         >
                             Create
                         </Button>
-                        <Button id="cancelButton" onClick={this.clickCancelHandler}>
+                        <Button variant="outline-dark" id="cancelButton" onClick={this.clickCancelHandler}>
                             Cancel
                         </Button>
                     </Modal.Footer>

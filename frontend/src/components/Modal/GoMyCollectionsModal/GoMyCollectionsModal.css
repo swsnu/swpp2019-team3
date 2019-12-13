@@ -1,0 +1,9 @@
+.modal .buttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal .ModalHeader {
+    display: flex;
+    justify-content: center;
+}

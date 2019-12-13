@@ -22,14 +22,17 @@ class AddPaperModal extends Component {
             collectionName: "",
             collectionPageNum: 0,
             collectionFinished: true,
+            loading: false,
         };
 
+        this.modal = React.createRef();
         this.getCollectionsTrigger = this.getCollectionsTrigger.bind(this);
         this.equalTwoChecked = this.equalTwoChecked.bind(this);
         this.openAddPaperHandler = this.openAddPaperHandler.bind(this);
         this.checkHandler = this.checkHandler.bind(this);
         this.clickCancelHandler = this.clickCancelHandler.bind(this);
         this.clickUpdateButtonHandler = this.clickUpdateButtonHandler.bind(this);
+        this.handleScroll = this.handleScroll.bind(this);
     }
 
     getCollectionsTrigger(pageNum) {
@@ -48,16 +51,36 @@ class AddPaperModal extends Component {
                     checkedCollections,
                     collectionPageNum: this.props.collectionPageNum,
                     collectionFinished: this.props.collectionFinished,
+                    loading: false,
                 });
             })
             .catch(() => {});
+    }
+
+
+    handleScroll = () => {
+        if (!this.state.loading
+            && !this.state.collectionFinished
+            && ((this.modal.current.scrollTop + this.modal.current.clientHeight + 200)
+            > this.modal.current.scrollHeight)) {
+            this.setState({
+                loading: true,
+            });
+            this.getCollectionsTrigger(
+                this.state.collectionPageNum,
+            );
+        }
     }
 
     equalTwoChecked = (before, curr) => before.sort().toString() === curr.sort().toString()
 
     openAddPaperHandler() {
         this.getCollectionsTrigger(0);
-        this.setState({ isAddPaperOpen: true });
+        this.setState({
+            isAddPaperOpen: true,
+        }, () => {
+            this.modal.current.addEventListener("scroll", this.handleScroll);
+        });
     }
 
     checkHandler(collection) {
@@ -83,6 +106,7 @@ class AddPaperModal extends Component {
             collectionFinished: true,
             collections: [],
         });
+        this.modal.current.removeEventListener("scroll", this.handleScroll);
     }
 
     clickUpdateButtonHandler() {
@@ -165,11 +189,11 @@ class AddPaperModal extends Component {
                                     && this.equalTwoChecked(this.state.beforeCheckedCollections,
                                         this.state.checkedCollections)}
                                 />
-                                <Button className="cancel-button" onClick={this.clickCancelHandler}>Cancel</Button>
+                                <Button variant="secondary" className="cancel-button" onClick={this.clickCancelHandler}>Cancel</Button>
                             </div>
                         </div>
                     </Modal.Header>
-                    <Modal.Body>
+                    <Modal.Body ref={this.modal} className="ModalBody">
                         <FormControl
                           className="collection-name-input"
                           type="text"
@@ -178,18 +202,6 @@ class AddPaperModal extends Component {
                           onChange={(e) => this.setState({ collectionName: e.target.value })}
                         />
                         <Form><Form.Group controlId="A" className="entry-board">{collectionEntries}</Form.Group></Form>
-                        { this.state.collectionFinished ? null
-                            : (
-                                <Button
-                                  className="collection-more-button"
-                                  onClick={() => this.getCollectionsTrigger(
-                                      this.state.collectionPageNum,
-                                  )}
-                                  block
-                                >
-                            View More
-                                </Button>
-                            )}
                     </Modal.Body>
                 </Modal>
             </div>
