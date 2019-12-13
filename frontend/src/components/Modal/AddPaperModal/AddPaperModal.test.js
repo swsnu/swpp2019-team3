@@ -349,4 +349,42 @@ describe("<AddPaperModal />", () => {
         expect(spyAddPaper).toHaveBeenCalledTimes(0);
         expect(spyMakeNewCollection).toHaveBeenCalledTimes(0);
     });
+
+    it("should handle scroll", () => {
+        const ref = { current: { scrollTop: 700, clientHeight: 800, scrollHeight: 500 } };
+        const spyCreateRef = jest.spyOn(React, "createRef")
+            .mockImplementation(() => ref);
+        const component = mount(addPaperModal);
+
+        expect(spyCreateRef).toBeCalledTimes(1);
+        const instance = component.find(AddPaperModal.WrappedComponent).instance();
+        instance.setState({
+            isAddPaperOpen: true, loading: false, collectionFinished: false,
+        });
+        component.update();
+
+        instance.handleScroll();
+
+        expect(spyGetCollections).toBeCalledTimes(1);
+    });
+
+    it("should not handle scroll", () => {
+        const ref = { current: { scrollTop: 0, clientHeight: 0, scrollHeight: 500 } };
+        const spyCreateRef = jest.spyOn(React, "createRef")
+            .mockImplementation(() => ref);
+        const component = mount(addPaperModal);
+        expect(spyCreateRef).toBeCalledTimes(1);
+        const instance = component.find(AddPaperModal.WrappedComponent).instance();
+        instance.setState({
+            isAddPaperOpen: true, loading: false, collectionFinished: true,
+        });
+
+        component.update();
+
+        expect(spyGetCollections).toBeCalledTimes(0);
+        instance.handleScroll();
+
+        expect(spyCreateRef).toBeCalledTimes(1);
+        expect(spyGetCollections).toBeCalledTimes(0);
+    });
 });

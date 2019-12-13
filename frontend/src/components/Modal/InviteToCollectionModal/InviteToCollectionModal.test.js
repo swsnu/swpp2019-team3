@@ -79,24 +79,12 @@ describe("InviteToCollectionModal test", () => {
                 getFollowers: {},
                 getFollowings: {
                     followings: [
-                        {
-                            id: 1,
-                            username: "test1",
-                            description: "asdf",
-                        },
-                        {
-                            id: 2,
-                            username: "test2",
-                            description: "qwer",
-                        },
-                        {
-                            id: 3,
-                            username: "test3",
-                            description: "zxcv",
-                        },
                     ],
+                    finished: false,
                 },
-                search: {},
+                search: {
+                    finished: false,
+                },
             },
             review: {},
             reply: {},

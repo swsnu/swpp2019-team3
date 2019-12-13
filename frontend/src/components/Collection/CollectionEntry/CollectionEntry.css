@@ -4,8 +4,12 @@
 }
 .collection-entry #collection-title {
     margin-left: 5%;
-    float: left;
     font-size: 100%;
+}
+
+.collection-entry {
+    margin-left: 5%;
+    margin-top: 2%;
 }
 
 .checkButton {

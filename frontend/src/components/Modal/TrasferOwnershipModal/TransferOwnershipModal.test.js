@@ -4,9 +4,10 @@ import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
 
-import { getMockStore } from "../../../test-utils/mocks";
+import { getMockStore, mockPromise } from "../../../test-utils/mocks";
 import { collectionStatus, signinStatus } from "../../../constants/constants";
 import TransferOwnershipModal from "./TransferOwnershipModal";
+import { collectionActions } from "../../../store/actions";
 
 const makeTransferModal = (initialState) => (
     <Provider store={getMockStore(initialState)}>
@@ -36,6 +37,7 @@ jest.mock("../../User/UserEntry/UserEntry", () => jest.fn((props) => (
 describe("TransferOwnershipModal test", () => {
     let stubInitialState;
     let transferModal;
+    let spyGetMembers;
 
     beforeEach(() => {
         stubInitialState = {
@@ -81,21 +83,6 @@ describe("TransferOwnershipModal test", () => {
                 getMembers: {
                     status: collectionStatus.NONE,
                     members: [
-                        {
-                            id: 1,
-                            username: "test1",
-                            description: "asdf",
-                        },
-                        {
-                            id: 2,
-                            username: "test2",
-                            description: "qwer",
-                        },
-                        {
-                            id: 3,
-                            username: "test3",
-                            description: "zxcv",
-                        },
                     ],
                     pageNum: 0,
                     finished: true,
@@ -107,6 +94,12 @@ describe("TransferOwnershipModal test", () => {
             reply: {},
         };
         transferModal = makeTransferModal(stubInitialState);
+        spyGetMembers = jest.spyOn(collectionActions, "getCollectionMembers")
+            .mockImplementation(() => () => mockPromise);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     it("should render without errors", () => {
@@ -173,4 +166,38 @@ describe("TransferOwnershipModal test", () => {
     // it("clickWarningConfirmAction should be called in WarningModal", () => {
     //     TODO: Implement this test
     // })
+
+    it("should handle scroll", () => {
+        const ref = { current: { scrollTop: 700, clientHeight: 800, scrollHeight: 500 } };
+        const spyCreateRef = jest.spyOn(React, "createRef")
+            .mockImplementation(() => ref);
+        const component = mount(transferModal);
+
+        expect(spyCreateRef).toBeCalledTimes(1);
+        const instance = component.find(TransferOwnershipModal.WrappedComponent).instance();
+        instance.setState({
+            isModalOpen: true, loading: false, memberFinished: false,
+        });
+        component.update();
+
+        instance.handleScroll();
+
+        expect(spyGetMembers).toBeCalledTimes(1);
+    });
+
+    it("should not handle scroll", () => {
+        const ref = { current: { scrollTop: 0, clientHeight: 0, scrollHeight: 500 } };
+        const spyCreateRef = jest.spyOn(React, "createRef")
+            .mockImplementation(() => ref);
+        const component = mount(transferModal);
+        expect(spyCreateRef).toBeCalledTimes(1);
+        const instance = component.find(TransferOwnershipModal.WrappedComponent).instance();
+        instance.setState({ isModalOpen: true, loading: false, memberFinished: true });
+
+        component.update();
+        instance.handleScroll();
+
+        expect(spyCreateRef).toBeCalledTimes(1);
+        expect(spyGetMembers).toBeCalledTimes(0);
+    });
 });
