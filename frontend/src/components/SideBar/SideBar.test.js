@@ -1,5 +1,5 @@
 import React from "react";
-import { shallow, mount } from "enzyme";
+import { shallow } from "enzyme";
 import SideBar from "./SideBar";
 
 const mockHistory = { push: jest.fn(), goBack: jest.fn(), location: { pathname: "/main" } };
