@@ -5,7 +5,7 @@ import {
 } from "react-bootstrap";
 
 import "./Tutorial.css";
-import Slide1 from "./Slide1.PNG";
+import Slide1 from "./Slide1.png";
 import Slide2 from "./Slide2.PNG";
 import Slide3 from "./Slide3.PNG";
 import Slide4 from "./Slide4.PNG";
