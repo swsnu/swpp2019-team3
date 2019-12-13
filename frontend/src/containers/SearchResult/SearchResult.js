@@ -13,7 +13,7 @@ class SearchResult extends Component {
         super(props);
         this.state = {
             searchWord: "",
-            paperHeadMessage: "please wait...",
+            paperHeadMessage: "wait",
             paperIds: [],
             paperCardsLeft: [],
             paperCardsRight: [],
@@ -41,7 +41,7 @@ class SearchResult extends Component {
         if (this.props.location !== prevProps.location) {
             this.setState({
                 searchPaperStatus: paperStatus.WAITING,
-                paperHeadMessage: "please wait...",
+                paperHeadMessage: "wait",
                 paperIds: [],
                 paperCardsLeft: [],
                 paperCardsRight: [],
@@ -211,8 +211,30 @@ class SearchResult extends Component {
         let collectionCardsRight = null;
         let userCardsLeft = null;
         let userCardsRight = null;
-        let collectionMessage = "no collections";
-        let userMessage = "no users";
+        let paperMessage = null;
+        if (this.state.paperHeadMessage === "wait") {
+            paperMessage = (
+                <div className="alert alert-info" role="alert">
+                    Please wait...
+                </div>
+            );
+        } else if (this.state.paperHeadMessage === "no papers") {
+            paperMessage = (
+                <div className="alert alert-warning" role="alert">
+                No papers.
+                </div>
+            );
+        }
+        let collectionMessage = (
+            <div className="alert alert-warning" role="alert">
+                No collections.
+            </div>
+        );
+        let userMessage = (
+            <div className="alert alert-warning" role="alert">
+                No users.
+            </div>
+        );
         let paperPlus = "";
         let collectionPlus = "";
         let userPlus = "";
@@ -253,7 +275,9 @@ class SearchResult extends Component {
         } else if (this.state.searchPaperStatus === paperStatus.WAITING
             && !paperEmpty) {
             paperMoreButton = (
-                <h3 id="paper-more-waiting-message">please wait...</h3>
+                <div className="alert alert-info" role="alert">
+                    Please wait...
+                </div>
             );
         }
 
@@ -269,16 +293,16 @@ class SearchResult extends Component {
                 <div className="item-list">
                     <Tabs defaultActiveKey="paper-tab" className="item-tabs">
                         <Tab className="paper-tab" eventKey="paper-tab" title={`Paper(${this.state.paperIds.length + paperPlus})`}>
+                            {paperMessage}
                             <div id="paper-cards">
-                                <h3 id="paper-message">{this.state.paperHeadMessage}</h3>
                                 <div id="paper-cards-left">{paperCardsLeft}</div>
                                 <div id="paper-cards-right">{paperCardsRight}</div>
                             </div>
                             {paperMoreButton}
                         </Tab>
                         <Tab className="collection-tab" eventKey="collection-tab" title={`Collection(${this.state.collections.length + collectionPlus})`}>
+                            {collectionMessage}
                             <div id="collection-cards">
-                                <h3 id="collection-message">{collectionMessage}</h3>
                                 <div id="collection-cards-left">{collectionCardsLeft}</div>
                                 <div id="collection-cards-right">{collectionCardsRight}</div>
                             </div>
@@ -308,8 +332,8 @@ class SearchResult extends Component {
                                 )}
                         </Tab>
                         <Tab className="user-tab" eventKey="user-tab" title={`People(${this.state.users.length + userPlus})`}>
+                            {userMessage}
                             <div id="user-cards">
-                                <h3 id="user-message">{userMessage}</h3>
                                 <div id="user-cards-left">{userCardsLeft}</div>
                                 <div id="user-cards-right">{userCardsRight}</div>
                             </div>
