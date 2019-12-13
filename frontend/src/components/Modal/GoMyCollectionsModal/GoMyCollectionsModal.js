@@ -40,7 +40,7 @@ class GoMyCollectionsModal extends Component {
                   disabled={this.props.disableCondition}
                   variant={this.props.variant}
                 >
-                    Update
+                    Confirm
                 </Button>
                 <Modal
                   show={this.state.isModalOpen}
