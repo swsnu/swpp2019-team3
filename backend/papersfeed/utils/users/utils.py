@@ -178,7 +178,7 @@ def update_user(args):
         user.password = hashed
         user.salt = salt
 
-    if photo_index:
+    if photo_index is not None:
         user.photoIndex = photo_index
 
     user.save()
