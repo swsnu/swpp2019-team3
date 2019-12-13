@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Button } from "react-bootstrap";
 
 import { PaperCard, CollectionCard, ReviewCard } from "../../components";
 import { authActions } from "../../store/actions";
@@ -17,11 +16,15 @@ class SubscriptionFeed extends Component {
             finished: true,
             start: 0,
             recoCount: 10,
+            loading: false,
         };
+
+        this.handleScroll = this.handleScroll.bind(this);
         this.paperCardMaker = this.paperCardMaker.bind(this);
         this.reviewCardMaker = this.reviewCardMaker.bind(this);
         this.collectionCardMaker = this.collectionCardMaker.bind(this);
-        this.clickMoreButton = this.clickMoreButton.bind(this);
+        this.viewMore = this.viewMore.bind(this);
+        this.viewMoreNext = this.viewMoreNext.bind(this);
         this.addRecoToSub = this.addRecoToSub.bind(this);
     }
 
@@ -44,9 +47,24 @@ class SubscriptionFeed extends Component {
                         });
                     }).catch(() => {});
             }).catch(() => {});
+        window.addEventListener("scroll", this.handleScroll);
     }
 
-    clickMoreButton = () => {
+    handleScroll = () => {
+        const { scrollHeight } = document.documentElement;
+        const { scrollTop } = document.documentElement;
+        const { clientHeight } = document.documentElement;
+
+        if (!this.state.loading
+            && !this.state.finished
+            && ((scrollTop + clientHeight + 1000)
+            > scrollHeight)) {
+            this.setState({ loading: true });
+            this.viewMore();
+        }
+    }
+
+    viewMore = () => {
         // get new subscription
         if (!this.props.subscriptionFinished) {
             this.props.onGetSubscriptions({
@@ -58,7 +76,7 @@ class SubscriptionFeed extends Component {
                         // To maintain the number of feeds as 30
                         recoCount: 30 - this.props.subscriptionItems.length,
                     }), () => {
-                        this.clickMoreButtonNext();
+                        this.viewMoreNext();
                     });
                 }).catch(() => {});
         } else {
@@ -66,11 +84,11 @@ class SubscriptionFeed extends Component {
                 // To maintain the number of feeds as 30 at least there are more than 30 feeds
                 recoCount: 30,
             });
-            this.clickMoreButtonNext();
+            this.viewMoreNext();
         }
     }
 
-    clickMoreButtonNext = () => {
+    viewMoreNext = () => {
         // get new recommendation
         if (!this.props.recommendationFinished) {
             this.props.onGetRecommendations({
@@ -134,6 +152,8 @@ class SubscriptionFeed extends Component {
                 finished: false,
             });
         }
+
+        this.setState({ loading: false });
     }
 
     paperCardMaker = (key, paper, actor, verb, target, type) => (
@@ -247,17 +267,6 @@ class SubscriptionFeed extends Component {
                     <div id="subscriptionCardsLeft">{cardsLeft}</div>
                     <div id="subscriptionCardsRight">{cardsRight}</div>
                 </div>
-                { this.state.finished ? null
-                    : (
-                        <Button
-                          className="more-button"
-                          onClick={this.clickMoreButton}
-                          size="lg"
-                          block
-                        >
-                View More
-                        </Button>
-                    ) }
             </div>
         );
     }
