@@ -305,7 +305,6 @@ class SearchResult extends Component {
                 No users.
             </div>
         );
-        let paperPlus = "";
 
         if (this.state.collections.length > 0) {
             collectionCardsLeft = this.state.collections
@@ -328,10 +327,7 @@ class SearchResult extends Component {
         }
 
         let paperMoreButton = null;
-        if (this.state.searchPaperStatus !== paperStatus.WAITING
-            && !this.props.paperFinished) {
-            paperPlus = "+";
-        } else if (this.state.searchPaperStatus === paperStatus.WAITING
+        if (this.state.searchPaperStatus === paperStatus.WAITING
             && !paperEmpty) {
             paperMoreButton = (
                 <div className="alert alert-info" role="alert">
@@ -359,7 +355,7 @@ class SearchResult extends Component {
                         <Tab
                           className="paper-tab"
                           eventKey="paper-tab"
-                          title={`Paper(${this.state.paperIds.length + paperPlus})`}
+                          title={`Paper`}
                         >
                             {paperMessage}
                             <div id="paper-cards">
