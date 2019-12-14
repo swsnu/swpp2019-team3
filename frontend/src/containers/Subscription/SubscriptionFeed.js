@@ -281,6 +281,7 @@ class SubscriptionFeed extends Component {
                     <div id="subscriptionCardsLeft">{cardsLeft}</div>
                     <div id="subscriptionCardsRight">{cardsRight}</div>
                 </div>
+                {alertSub}
             </div>
         );
     }
