@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import {
-    Button, Tabs, Tab,
+    Button, Tabs, Tab, Form,
 } from "react-bootstrap";
 import {
     PaperCard, Reply, InviteToCollectionModal, LikeButton,
@@ -26,13 +26,14 @@ class CollectionDetail extends Component {
             newReplyContent: "",
             isLiked: false,
             replies: [],
+            newCollectionReplies: [],
             papers: [],
             thisCollection: { owner: {} },
-            newCollectionReplies: [],
             replyCollectionPageCount: 1,
             replyCollectionFinished: true,
         };
 
+        this.initCollectionDetail = this.initCollectionDetail.bind(this);
         this.getPapersTrigger = this.getPapersTrigger.bind(this);
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
         this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
@@ -41,20 +42,26 @@ class CollectionDetail extends Component {
     }
 
     componentDidMount() {
-        this.props.onGetCollection({ id: Number(this.props.location.pathname.split("=")[1]) })
-            .then(() => {
-                if (this.props.getCollectionStatus === collectionStatus.COLLECTION_NOT_EXIST) {
-                    this.props.history.push("/main");
-                }
-            });
-        this.props.onGetMembers(this.props.location.pathname.split("=")[1]);
+        this.initCollectionDetail();
     }
 
+    /* eslint-disable react/no-did-update-set-state */
     componentDidUpdate(prevProps) {
         if (this.props.selectedCollection !== prevProps.selectedCollection) {
             this.getAuthorizedInfo();
         }
+
+        if (this.props.location !== prevProps.location) {
+            this.setState({
+                newReplyContent: "",
+                replies: [],
+                newCollectionReplies: [],
+                papers: [],
+            });
+            this.initCollectionDetail();
+        }
     }
+    /* eslint-enable react/no-did-update-set-state */
 
     getAuthorizedInfo() {
         // if this collection is private and the user is not a member, redirect
@@ -146,6 +153,15 @@ class CollectionDetail extends Component {
             });
     }
 
+    initCollectionDetail() {
+        this.props.onGetCollection({ id: Number(this.props.location.pathname.split("=")[1]) })
+            .then(() => {
+                if (this.props.getCollectionStatus === collectionStatus.COLLECTION_NOT_EXIST) {
+                    this.props.history.push("/main");
+                }
+            });
+        this.props.onGetMembers(this.props.location.pathname.split("=")[1]);
+    }
 
     async handleReplies() {
         const end = this.state.replyCollectionPageCount;
@@ -404,6 +420,7 @@ class CollectionDetail extends Component {
                             <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${replyCount})`}>
                                 <div id="replies">
                                     <div id="createNewReply">
+                                        <Form.Label className="username">{this.props.me.username}</Form.Label>
                                         <textarea
                                           id="newReplyContentInput"
                                           type="text"
@@ -417,6 +434,7 @@ class CollectionDetail extends Component {
                                           }
                                         />
                                         <Button
+                                          className="new-reply-button"
                                           onClick={this.addNewReplyHandler}
                                           disabled={this.state.newReplyContent.length === 0}
                                         >

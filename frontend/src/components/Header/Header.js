@@ -101,7 +101,6 @@ class Header extends Component {
                             <Link
                               id="target-link"
                               to={targetLink + notification.target.id}
-                              onClick={() => this.readNotiHandler(notification.id)}
                             >
                                 {notification.target.string}&nbsp;
                             </Link>
@@ -112,7 +111,6 @@ class Header extends Component {
                             <Link
                               id="actor-link"
                               to={`/profile_id=${notification.actor.id}`}
-                              onClick={() => this.readNotiHandler(notification.id)}
                             >
                                 {notification.actor.username}
                             </Link>

@@ -42,7 +42,7 @@ const initialState = {
         pageNum: 0,
         finished: true,
     },
-    me: null,
+    me: {},
 };
 
 const reducer = (state = initialState, action) => {
