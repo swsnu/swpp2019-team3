@@ -93,7 +93,7 @@ describe("<Reply />", () => {
 
     it("should handle Like/Unlike Button", () => {
         const component = mount(reply);
-        const wrapper = component.find(".like-button").hostNodes();
+        const wrapper = component.find("#likeButton");
         const instance = component.find("Reply").instance();
         expect(wrapper.length).toBe(1);
 

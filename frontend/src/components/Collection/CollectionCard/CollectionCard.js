@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { Button, Card } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { collectionActions } from "../../../store/actions";
 import "./CollectionCard.css";
-import SVG from "../../svg";
-import LikeButton from "../../Button/LikeButton/LikeButton";
+import { LikeButton, SubItemButton } from "../../Button/index";
 
 class CollectionCard extends Component {
     constructor(props) {

@@ -23,9 +23,6 @@ const UserEntry = (props) => (
 
 UserEntry.propTypes = {
     userName: PropTypes.string,
-    /* eslint-disable react/no-unused-prop-types */
-    userDesc: PropTypes.string,
-    /* eslint-enable react/no-unused-prop-types */
     type: PropTypes.string,
     isChecked: PropTypes.bool,
     checkhandler: PropTypes.func,
@@ -34,7 +31,6 @@ UserEntry.propTypes = {
 
 UserEntry.defaultProps = {
     userName: "",
-    userDesc: "",
     type: "checkbox",
     isChecked: false,
     checkhandler: null,
