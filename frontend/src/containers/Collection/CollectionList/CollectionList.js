@@ -117,6 +117,7 @@ class CollectionList extends Component {
                             { this.props.collectionFinished ? null
                                 : (
                                     <Button
+                                      variant="outline-info"
                                       className="collection-more-button"
                                       onClick={() => this.getCollectionsTrigger(
                                           this.props.collectionPageNum,
@@ -139,6 +140,7 @@ class CollectionList extends Component {
                             { this.props.sharedFinished ? null
                                 : (
                                     <Button
+                                      variant="outline-info"
                                       className="shared-collection-more-button"
                                       onClick={() => this.getSharedCollectionsTrigger(
                                           this.props.sharedPageNum,

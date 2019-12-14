@@ -196,6 +196,7 @@ class History extends Component {
                             { this.props.paperList.finished ? null
                                 : (
                                     <Button
+                                      variant="outline-info"
                                       className="paper-more-button"
                                       onClick={this.clickPaperMoreHandler}
                                       size="lg"
@@ -214,6 +215,7 @@ class History extends Component {
                             {this.props.collectionList.finished ? null
                                 : (
                                     <Button
+                                      variant="outline-info"
                                       className="collection-more-button"
                                       onClick={this.clickCollectionMoreHandler}
                                       size="lg"
@@ -232,6 +234,7 @@ class History extends Component {
                             { this.props.reviewList.finished ? null
                                 : (
                                     <Button
+                                      variant="outline-info"
                                       className="review-more-button"
                                       onClick={this.clickReviewMoreHandler}
                                       size="lg"

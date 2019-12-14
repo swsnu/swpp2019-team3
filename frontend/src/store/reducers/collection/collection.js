@@ -298,6 +298,24 @@ const reducer = (state = initialState, action) => {
                 error: action.target,
             },
         };
+    case collectionConstants.LEAVE_COLLECTION_SUCCESS:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.SUCCESS,
+                memberCount: action.target.users,
+            },
+        };
+    case collectionConstants.LEAVE_COLLECTION_FAILURE:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
     case collectionConstants.DEL_COLLECTION:
         return {
             ...state,

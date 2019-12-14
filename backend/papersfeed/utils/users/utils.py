@@ -579,6 +579,12 @@ def remove_user_collection_self(args):
     if collection_user.type != COLLECTION_USER_TYPE[1]:
         raise ApiError(constants.AUTH_ERROR)
 
+    collection_user.delete()
+
+    # Get the number of Members(including owner) Of Collections
+    user_counts = __get_collection_user_count([collection_id], 'collection_id')
+    return {constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0}
+
 
 def update_user_collection_pending(args):
     """'pending' user accepts invitation"""

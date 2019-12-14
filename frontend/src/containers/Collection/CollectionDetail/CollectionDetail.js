@@ -23,6 +23,7 @@ class CollectionDetail extends Component {
             userCount: 0,
             likeCount: 0,
             paperCount: 0,
+            replyCount: 0,
             newReplyContent: "",
             isLiked: false,
             replies: [],
@@ -77,6 +78,7 @@ class CollectionDetail extends Component {
             likeCount: this.props.selectedCollection.count.likes,
             userCount: this.props.selectedCollection.count.users,
             paperCount: this.props.selectedCollection.count.papers,
+            replyCount: this.props.selectedCollection.count.replies,
         });
 
         // if the collection is 'private',
@@ -269,11 +271,6 @@ class CollectionDetail extends Component {
                 : (<h5 id="noRepliesText">There is no reply in this collection for now.</h5>);
         }
 
-        const replyCount = (this.state.replyCollectionPageCount > 1
-            || (this.state.replyCollectionPageCount === 1
-                && this.state.replyCollectionFinished === false))
-            ? "10+" : this.state.replies.length;
-
         // 'pending' users cannot see 'Invite' or 'Manage' button
         // and are not included in member list/count
         // instead, they can see accept/dismiss buttons about invitation
@@ -282,7 +279,8 @@ class CollectionDetail extends Component {
             || this.props.selectedCollection.collection_user_type === "member") {
             inviteModal = (
                 <InviteToCollectionModal
-                  openButtonName="Invite to ..."
+                  variant="info"
+                  openButtonName="Invite"
                   members={this.props.members}
                   whatActionWillFollow={
                       () => {
@@ -302,8 +300,19 @@ class CollectionDetail extends Component {
             manageButton = (
                 <Button
                   id="manageButton"
+                  variant="outline-success"
                   href={`/collection_id=${this.props.selectedCollection.id}/manage`}
                 >Manage
+                </Button>
+            );
+        } else if (this.props.selectedCollection.collection_user_type === "member") {
+            manageButton = (
+                <Button
+                  id="leaveButton"
+                  variant="outline-danger"
+                  onClick={() => {}}
+                >
+                Leave
                 </Button>
             );
         }
@@ -406,6 +415,7 @@ class CollectionDetail extends Component {
                                 { this.props.storedPapers.is_finished ? null
                                     : (
                                         <Button
+                                          variant="outline-info"
                                           className="paper-more-button"
                                           onClick={() => this.getPapersTrigger(
                                               this.props.storedPapers.page_number,
@@ -417,7 +427,7 @@ class CollectionDetail extends Component {
                                         </Button>
                                     )}
                             </Tab>
-                            <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${replyCount})`}>
+                            <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${this.state.replyCount})`}>
                                 <div id="replies">
                                     <div id="createNewReply">
                                         <Form.Label className="username">{this.props.me.username}</Form.Label>
@@ -446,6 +456,7 @@ class CollectionDetail extends Component {
                                         {this.state.replyCollectionFinished ? null
                                             : (
                                                 <Button
+                                                  variant="outline-info"
                                                   className="reply-more-button"
                                                   onClick={this.clickMoreButtonHandler}
                                                   size="lg"

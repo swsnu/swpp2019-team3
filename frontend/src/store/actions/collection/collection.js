@@ -229,6 +229,21 @@ export const removeCollectionPaper = (collectionsAndPaper) => (dispatch) => axio
     .catch((err) => { dispatch(removeCollectionPaperFailure(err)); });
 
 
+const leaveCollectionSuccess = (count) => ({
+    type: collectionConstants.LEAVE_COLLECTION_SUCCESS,
+    target: count.count,
+});
+
+const leaveCollectionFailure = (error) => ({
+    type: collectionConstants.LEAVE_COLLECTION_FAILURE,
+    target: error,
+});
+
+export const leaveCollection = (collectionId) => (dispatch) => axios.delete("/api/paper/collection/self", { params: { id: collectionId } })
+    .then((res) => { dispatch(leaveCollectionSuccess(res.data)); })
+    .catch((err) => { dispatch(leaveCollectionFailure(err)); });
+
+
 const addNewMembersSuccess = (count) => ({
     type: collectionConstants.ADD_COLLECTION_MEMBER,
     target: count.count,

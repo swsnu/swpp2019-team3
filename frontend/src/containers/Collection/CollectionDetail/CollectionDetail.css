@@ -37,6 +37,12 @@
     margin-left: 5px;
 }
 
+#leaveButton {
+    width: 80px;
+    height: 40px;
+    margin-left: 5px;
+}
+
 .CollectionInfo {
     text-align: left;
     margin-left: 5%;
