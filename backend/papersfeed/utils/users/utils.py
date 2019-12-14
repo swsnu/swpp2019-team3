@@ -144,8 +144,11 @@ def update_user(args):
     # Password
     password = args[constants.PASSWORD] if constants.PASSWORD in args else None
 
+    # User Photo Index
+    photo_index = args[constants.PHOTO_INDEX] if constants.PHOTO_INDEX in args else None
+
     # Update Descrpition
-    if description:
+    if description is not None: #deleting description also should be supported
         # Change Description
         user.description = description
 
@@ -174,6 +177,9 @@ def update_user(args):
         # Change Password
         user.password = hashed
         user.salt = salt
+
+    if photo_index is not None:
+        user.photoIndex = photo_index
 
     user.save()
 
@@ -715,6 +721,7 @@ def __pack_users(users, request_user, collection_id=None):
             constants.USERNAME: user.username,
             constants.EMAIL: user.email,
             constants.DESCRIPTION: user.description if user.description else '',
+            constants.PHOTO_INDEX: user.photoIndex,
             constants.COUNT: {
                 constants.FOLLOWER: follower_counts[user_id] if user_id in follower_counts else 0,
                 constants.FOLLOWING: following_counts[user_id] if user_id in following_counts else 0

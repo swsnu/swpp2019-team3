@@ -156,6 +156,15 @@ describe("UserReducer Test", () => {
 
     it("should handle 'EDIT_USER_FAILURE_DUPLICATE_EMAIL'", () => {
         const newState = UserReducer(stubInitialState, {
+            type: userConstants.EDIT_USER_FAILURE_USERNAME_ALREADY_EXIST,
+            target: stubError,
+        });
+        expect(newState.status).toBe(userStatus.USERNAME_ALREADY_EXIST);
+        expect(newState.error).toBe(stubError);
+    });
+
+    it("should handle 'EDIT_USER_FAILURE_DUPLICATE_EMAIL'", () => {
+        const newState = UserReducer(stubInitialState, {
             type: userConstants.EDIT_USER_FAILURE_DUPLICATE_EMAIL,
             target: stubError,
         });

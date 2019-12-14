@@ -7,8 +7,7 @@ import { connect } from "react-redux";
 import { paperActions } from "../../../store/actions";
 import "./PaperCard.css";
 import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
-import SVG from "../../svg";
-import LikeButton from "../../Button/LikeButton/LikeButton";
+import { LikeButton, SubItemButton } from "../../Button/index";
 
 class PaperCard extends Component {
     constructor(props) {
@@ -135,8 +134,8 @@ class PaperCard extends Component {
                         <Card.Text className="keywords">{this.state.keywords}</Card.Text>
                     </Card.Body>
                     <Card.Footer className="footer">
-                        <div id="footer-flex">
-                            <div id="footer-left-buttons">
+                        <span id="footer-flex">
+                            <span id="footer-left-buttons">
                                 <LikeButton
                                   id="likeButton"
                                   isLiked={this.state.isLiked}
@@ -144,21 +143,16 @@ class PaperCard extends Component {
                                   unlikeFn={this.clickPaperCardUnlikeHandler}
                                   likeCount={this.state.likeCount}
                                 />
-                                <Button
-                                  variant="light"
-                                  id="reviewButton"
+                                <SubItemButton
+                                  id="replyButton"
                                   href={`/paper_id=${this.props.id}`}
-                                >
-                                    <div id="reviewButtonInside">
-                                        <SVG name="zoom" height="25px" width="25px" />
-                                        {this.props.reviewCount}
-                                    </div>
-                                </Button>
-                            </div>
+                                  count={this.props.reviewCount}
+                                />
+                            </span>
                             <div>
                                 {addButton}
                             </div>
-                        </div>
+                        </span>
                     </Card.Footer>
                 </Card>
             </div>

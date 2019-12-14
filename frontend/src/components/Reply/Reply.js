@@ -5,7 +5,7 @@ import {
     Modal, FormControl, Button, Nav,
 } from "react-bootstrap";
 import "./Reply.css";
-import SVG from "../svg";
+import LikeButton from "../Button/LikeButton/LikeButton";
 
 import { replyActions } from "../../store/actions";
 
@@ -138,9 +138,13 @@ class Reply extends Component {
                     <div className="date">{this.state.date}</div>
                     <div className="content">{this.props.content}</div>
                     <div className="buttons">
-                        <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickReplyUnlikeButtonHandler : this.clickReplyLikeButtonHandler}>
-                            <div className="heart-image"><SVG name="heart" height="25px" width="25px" /></div>{this.state.likeCount}
-                        </Button>
+                        <LikeButton
+                          id="likeButton"
+                          isLiked={this.state.isLiked}
+                          likeFn={this.clickReplyLikeButtonHandler}
+                          unlikeFn={this.clickReplyUnlikeButtonHandler}
+                          likeCount={this.state.likeCount}
+                        />
                         {this.props.authorId === this.props.userId
                             ? <Button className="edit-button" variant="outline-primary" onClick={this.clickReplyEditButtonHandler}>Edit</Button> : null }
                         {this.props.authorId === this.props.userId

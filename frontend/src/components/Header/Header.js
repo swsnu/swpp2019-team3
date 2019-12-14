@@ -1,17 +1,18 @@
 import React, { Component } from "react";
 import {
-    Navbar, Form, Dropdown, Button, Nav, Badge, Image,
+    Navbar, Form, Dropdown, Button, Nav, Badge,
 } from "react-bootstrap";
 
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+
 import { authActions } from "../../store/actions";
 import { signoutStatus } from "../../constants/constants";
 import "./Header.css";
 import SVG from "../svg";
-import SamplePhoto from "../../containers/User/ProfileDetail/sample.jpg";
+import PhotoDisplayer from "../Photo/PhotoDisplayer/PhotoDisplayer";
 
 class Header extends Component {
     constructor(props) {
@@ -68,9 +69,18 @@ class Header extends Component {
     render() {
         let username = null;
         let id = null;
+        let profilePhoto = <div />;
         if (this.props.me) {
             username = this.props.me.username;
             id = this.props.me.id;
+            profilePhoto = (
+                <PhotoDisplayer
+                  index={this.props.me.photo_index}
+                  width="30px"
+                  height="30px"
+                  roundedCircle
+                />
+            );
         }
 
         let notifications = null;
@@ -119,7 +129,7 @@ class Header extends Component {
         return (
             <div className="header">
                 <Navbar id="header">
-                    <Nav.Link className="logo" href="/main">PapersFeed</Nav.Link>
+                    <Nav.Link disabled={this.props.history.location.state != null && this.props.history.location.state.previous === "signup"} className="logo" href="/main">PapersFeed</Nav.Link>
                     <div className="search"> {/* if 'Form', 'enter' triggers calls twice} */}
                         <Form.Control
                           className="search-input"
@@ -132,7 +142,7 @@ class Header extends Component {
                         <Button
                           className="search-button"
                           href={`/search=${this.state.searchWord}`}
-                          disabled={!this.state.searchWord}
+                          disabled={!this.state.searchWord || (this.props.history.location.state != null && this.props.history.location.state.previous === "signup")}
                         >Search
                         </Button>
                     </div>
@@ -148,13 +158,14 @@ class Header extends Component {
                         </Dropdown>
                         <Dropdown className="dropdown-account" alignRight>
                             <Dropdown.Toggle title="myaccount" variant="light" className="myaccount-button">
-                                <Image className="user-photo" src={SamplePhoto} width={30} height={30} roundedCircle />
+                                {profilePhoto}
                             </Dropdown.Toggle>
                             <Dropdown.Menu className="myaccount-menu">
                                 <Dropdown.Header className="username-header">{username}</Dropdown.Header>
-                                <Dropdown.Item className="my-profile-button" href={`/profile_id=${id}`}>My Profile</Dropdown.Item>
-                                <Dropdown.Item className="account-setting" href="/account_setting">Account Setting</Dropdown.Item>
-                                <Dropdown.Item className="signout-button" onClick={this.clickSignoutButtonHandler}>Logout</Dropdown.Item>
+                                <Dropdown.Item className="my-profile-button" href={(this.props.history.location.state != null && this.props.history.location.state.previous === "signup") ? null : `/profile_id=${id}`}>My Profile</Dropdown.Item>
+                                <Dropdown.Item className="account-setting" href={(this.props.history.location.state != null && this.props.history.location.state.previous === "signup") ? null : "/account_setting"}>Account Setting</Dropdown.Item>
+                                <Dropdown.Item className="tutorial-link" href={(this.props.history.location.state != null && this.props.history.location.state.previous === "signup") ? null : "/tutorial"}>Tutorial</Dropdown.Item>
+                                <Dropdown.Item className="signout-button" onClick={(this.props.history.location.state != null && this.props.history.location.state.previous === "signup") ? null : this.clickSignoutButtonHandler}>Logout</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                     </div>
@@ -176,7 +187,7 @@ const mapDispatchToProps = (dispatch) => ({
     onReadNoti: (notificationId) => dispatch(authActions.readNoti(notificationId)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));
 
 Header.propTypes = {
     me: PropTypes.objectOf(PropTypes.any),

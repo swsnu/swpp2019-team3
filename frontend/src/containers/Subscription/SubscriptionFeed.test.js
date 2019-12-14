@@ -1,7 +1,7 @@
 import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
-
+import { Router } from "react-router-dom";
 import SubscriptionFeed from "./SubscriptionFeed";
 import {
     signinStatus, signoutStatus, signupStatus, getMeStatus,
@@ -13,12 +13,14 @@ import { history } from "../../store/store";
 import { authActions } from "../../store/actions";
 
 const makeFeed = (initialState, props = {}) => (
-    <Provider store={getMockStore(initialState)}>
-        <SubscriptionFeed
-          history={history}
-          props={props}
-        />
-    </Provider>
+    <Router location={{ state: "paperTab" }} history={history}>
+        <Provider store={getMockStore(initialState)}>
+            <SubscriptionFeed
+              history={history}
+              props={props}
+            />
+        </Provider>
+    </Router>
 );
 
 describe("SubscriptionFeed test", () => {

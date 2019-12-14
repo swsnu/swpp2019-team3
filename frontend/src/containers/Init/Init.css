@@ -32,7 +32,7 @@
     font-size: 1vw;
     margin-bottom: 2vh;
     font-style: italic;
-    color: gray;
+    color: rgb(	203, 65, 84);
 }
 
 .init .keywordCheckbox div[class^='checkbox'], div[class*='checkbox'] {

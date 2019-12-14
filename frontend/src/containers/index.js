@@ -11,6 +11,7 @@ import SearchResult from "./SearchResult/SearchResult";
 import UserList from "./User/UserList/UserList";
 import History from "./History/History";
 import Init from "./Init/Init";
+import Tutorial from "./Tutorial/Tutorial";
 
 export {
     Intro,
@@ -26,4 +27,5 @@ export {
     UserList,
     History,
     Init,
+    Tutorial,
 };

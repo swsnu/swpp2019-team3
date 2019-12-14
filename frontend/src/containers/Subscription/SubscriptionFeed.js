@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { Alert } from "react-bootstrap";
 
 import { PaperCard, CollectionCard, ReviewCard } from "../../components";
 import { authActions } from "../../store/actions";
@@ -263,6 +264,15 @@ class SubscriptionFeed extends Component {
         const cardsRight = this.state.subscriptions
             .filter((x) => this.state.subscriptions.indexOf(x) % 2 === 1)
             .map((item) => this.cardMaker(item));
+
+        let alertSub = null;
+        if (this.state.subscriptions.length <= 0) {
+            alertSub = (
+                <Alert key={1} variant="danger">
+        There is nothing for your subscription feed.
+                </Alert>
+            );
+        }
 
         return (
             <div className="SubscriptionFeed">

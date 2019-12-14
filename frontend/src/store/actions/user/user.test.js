@@ -423,6 +423,35 @@ describe("userActions", () => {
             });
     });
 
+    it("'editUserInfo' should handle username_already_exist error", (done) => {
+        const spy = jest.spyOn(axios, "put")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const result = {
+                    response: {
+                        status: 419,
+                        data: {},
+                    },
+                };
+                reject(result);
+            }));
+
+        mockStore.dispatch(userActions.editUserInfo(
+            {
+                description: stubUserEdited.description,
+                email: stubUserEdited.email,
+                id: stubUserEdited.id,
+            },
+        ))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user",
+                    {
+                        description: "Meoooowwwwwww",
+                        email: "gggg@snu.ac.kr",
+                        id: 1,
+                    });
+                done();
+            });
+    });
 
     it("'editUserInfo' should handle duplicate-email error", (done) => {
         const spy = jest.spyOn(axios, "put")
