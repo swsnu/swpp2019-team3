@@ -1,17 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-    Button, Image, Tabs, Tab,
-} from "react-bootstrap";
+import { Button, Tabs, Tab } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import { CollectionCard, ReviewCard } from "../../../components";
+import { CollectionCard, ReviewCard, PhotoDisplayer } from "../../../components";
 import { userStatus } from "../../../constants/constants";
 import { collectionActions, reviewActions, userActions } from "../../../store/actions";
 
 import "./ProfileDetail.css";
-import SamplePhoto from "./sample.jpg";
 
 class ProfileDetail extends Component {
     constructor(props) {
@@ -147,6 +144,7 @@ class ProfileDetail extends Component {
         const reviewCount = (this.props.reviews.pageNum > 1
             || (this.props.reviews.pageNum === 1 && this.props.reviews.finished === false))
             ? "10+" : this.props.reviews.list.length;
+
         const settingButton = (
             <Link to="/account_setting">
                 <Button id="settingButton">Setting</Button>
@@ -199,7 +197,12 @@ class ProfileDetail extends Component {
                     <div className="userInfo">
                         <div className="userStatistic">
                             <div className="userPhotoName">
-                                <Image id="userPhoto" src={SamplePhoto} width={150} height={150} roundedCircle />
+                                <PhotoDisplayer
+                                  index={this.props.thisUser.photo_index}
+                                  width="150px"
+                                  height="150px"
+                                  roundedCircle
+                                />
                                 <h2 id="userName">{this.props.thisUser.username}</h2>
                             </div>
                             <div id="collectionStat">

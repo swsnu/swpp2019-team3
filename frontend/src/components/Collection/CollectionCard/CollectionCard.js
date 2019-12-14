@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { Button, Card } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { collectionActions } from "../../../store/actions";
 import "./CollectionCard.css";
-import SVG from "../../svg";
-import LikeButton from "../../Button/LikeButton/LikeButton";
+import { LikeButton, SubItemButton } from "../../Button/index";
 
 class CollectionCard extends Component {
     constructor(props) {
@@ -72,16 +71,11 @@ class CollectionCard extends Component {
                           unlikeFn={this.clickCollectionCardUnlikeHandler}
                           likeCount={this.state.likeCount}
                         />
-                        <Button
-                          variant="light"
-                          className="reply-button"
+                        <SubItemButton
+                          id="replyButton"
                           onClick={() => { this.props.history.push({ pathname: `/collection_id=${this.props.id}`, state: "replyTab" }); }}
-                        >
-                            <div className="reply-image">
-                                <SVG name="zoom" height="25px" width="25px" />
-                            </div>
-                            {this.props.replyCount}
-                        </Button>
+                          count={this.props.replyCount}
+                        />
                     </Card.Footer>
                 </Card>
             </div>

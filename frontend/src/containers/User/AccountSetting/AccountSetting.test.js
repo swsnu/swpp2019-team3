@@ -52,7 +52,7 @@ describe("AccountSetting Test", () => {
 
     it("should render without errors", () => {
         const component = mount(accountSetting);
-        const wrapper = component.find(".AccountSettingContent");
+        const wrapper = component.find(".AccountSetting");
         expect(wrapper.length).toBe(1);
     });
 
@@ -84,7 +84,16 @@ describe("AccountSetting Test", () => {
         const instance = component.find(AccountSetting.WrappedComponent).instance();
         instance.setState({ editUserStatus: userStatus.DUPLICATE_EMAIL });
         component.update();
-        const wrapper = component.find("#edituser-message");
+        const wrapper = component.find("#editEmailMessage");
         expect(wrapper.text()).toEqual("This email already exists");
+    });
+
+    it("when status is USERNAME_ALREADY_EXIST, show the corresponding message", () => {
+        const component = mount(accountSetting);
+        const instance = component.find(AccountSetting.WrappedComponent).instance();
+        instance.setState({ editUserStatus: userStatus.USERNAME_ALREADY_EXIST });
+        component.update();
+        const wrapper = component.find("#editUserNameMessage");
+        expect(wrapper.text()).toEqual("This username already exists");
     });
 });

@@ -116,6 +116,12 @@ const UserReducer = (state = initialState, action) => {
             status: userStatus.USER_NOT_EXIST,
             error: action.target,
         };
+    case userConstants.EDIT_USER_FAILURE_USERNAME_ALREADY_EXIST:
+        return {
+            ...state,
+            status: userStatus.USERNAME_ALREADY_EXIST,
+            error: action.target,
+        };
     case userConstants.EDIT_USER_FAILURE_DUPLICATE_EMAIL:
         return {
             ...state,

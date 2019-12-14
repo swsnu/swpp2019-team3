@@ -1,42 +1,39 @@
-.AccountSettingContent {
-    min-height: 1000px;
+.AccountSetting {
+    min-height: 91vh;
     background: rgb(242,243,247);
-    margin-left: 250px;
-    position: relative;
+}
+
+.AccountEditArea {
+    padding: 10px;
+}
+
+#headerText {
+    font-size: 250%;
+    font-weight: bolder;
+}
+
+#editEmailNotice {
+    font-size: 100%;
+    font-style: italic;
+}
+
+.editMessage {
+    font-size: 100%;
+    color: #DC143C;
+}
+
+#editPhotoArea {
     display: flex;
     flex-direction: column;
 }
 
-.EditDescArea {
-    display:flex;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-top: 20px;
-    flex-direction: column;
+#photoList {
+    position: relative;
+    left: 10%;
+    padding-left: 0px;
+    width: 80%;
 }
 
-.EditDescArea #editDescTag {
-    align-self: flex-start;
-}
-
-.EditEmailArea {
-    display:flex;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-top: 20px;
-    flex-direction: column;
-}
-
-.EditEmailArea #editEmailTag {
-    align-self: flex-start;
-}
-
-#edituser-message {
-    font-size: 100%;
-    color: #DC143C;
-    margin-top: 2%;
-}
-
-.ButtonArea {
-    margin: 20px;
+.AccountButtons {
+    margin: 5px;
 }
