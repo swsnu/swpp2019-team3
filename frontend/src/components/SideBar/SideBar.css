@@ -9,6 +9,23 @@
     display: inline-block;
 }
 
+.sidebar-link {
+    color: black;
+    font-size: 120%;
+    font-weight: bold;
+    /* padding: 12%; */
+    height: 5vh;
+    flex-basis: 50%;
+    
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.sidebar-link:hover {
+    background:rgb(207, 207, 207);
+}
+
 @media (min-width: 576px) {
   .sidebar{
     min-height: 91vh;
@@ -17,22 +34,10 @@
   .sidebar #sidebar {
     min-height: 81vh;
   }
-}
 
-.sidebar-link {
-    color: black;
-    font-size: 120%;
-    font-weight: bold;
-    padding: 12%;
-
-    flex-basis: 50%;
-    height: 5vh;
+  .sidebar-link {
     min-height: 40px;
     margin-top: 2vh;
     margin-bottom: 2vh;
-    width: 100%;
-}
-
-.sidebar-link:hover {
-    background:rgb(207, 207, 207);
+  }
 }
