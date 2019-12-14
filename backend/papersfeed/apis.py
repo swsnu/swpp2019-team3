@@ -177,10 +177,11 @@ def get_collection_search(args):
 
 def get_user_search(args):
     """Get User Search"""
-    users, page_number, is_finished = users_utils.select_user_search(args)
+    users, page_number, is_finished, total_count = users_utils.select_user_search(args)
     return {constants.USERS: users,
             constants.PAGE_NUMBER: page_number,
-            constants.IS_FINISHED: is_finished}
+            constants.IS_FINISHED: is_finished,
+            constants.TOTAL_COUNT: total_count}
 
 
 def post_like_paper(args):

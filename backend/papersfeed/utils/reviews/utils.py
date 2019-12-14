@@ -337,7 +337,7 @@ def __pack_reviews(reviews, request_user):
 
     # Users
     user_ids = [review.user_id for review in reviews]
-    users, _ = users_utils.get_users(Q(id__in=user_ids), request_user, None)
+    users, _, _ = users_utils.get_users(Q(id__in=user_ids), request_user, None)
 
     # {user_id: user}
     users = {user[constants.ID]: user for user in users}
