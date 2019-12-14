@@ -303,9 +303,13 @@ def select_collection_search(args):
                                                                              | Q(is_member=True))
 
     # Collections
-    collections, _, is_finished, _ = __get_collections(queryset, request_user, 10, page_number=page_number)
+    params = {
+        constants.TOTAL_COUNT: True # count whole collections
+    }
+    collections, _, is_finished, total_count = __get_collections(queryset, request_user, 10, params=params,
+                                                                 page_number=page_number)
 
-    return collections, page_number, is_finished
+    return collections, page_number, is_finished, total_count
 
 
 def select_collection_like(args):

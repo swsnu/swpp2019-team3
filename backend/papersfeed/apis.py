@@ -151,10 +151,11 @@ def get_review_paper(args):
 
 def get_review_user(args):
     """Get Review User"""
-    reviews, page_number, is_finished = reviews_utils.select_review_user(args)
+    reviews, page_number, is_finished, total_count = reviews_utils.select_review_user(args)
     return {constants.REVIEWS: reviews,
             constants.PAGE_NUMBER: page_number,
-            constants.IS_FINISHED: is_finished}
+            constants.IS_FINISHED: is_finished,
+            constants.TOTAL_COUNT: total_count}
 
 
 def get_paper_search(args):
@@ -167,10 +168,11 @@ def get_paper_search(args):
 
 def get_collection_search(args):
     """Get Collection Search"""
-    collections, page_number, is_finished = collections_utils.select_collection_search(args)
+    collections, page_number, is_finished, total_count = collections_utils.select_collection_search(args)
     return {constants.COLLECTIONS: collections,
             constants.PAGE_NUMBER: page_number,
-            constants.IS_FINISHED: is_finished}
+            constants.IS_FINISHED: is_finished,
+            constants.TOTAL_COUNT: total_count}
 
 
 def get_user_search(args):

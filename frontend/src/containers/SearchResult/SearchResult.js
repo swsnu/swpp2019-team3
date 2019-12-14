@@ -306,8 +306,6 @@ class SearchResult extends Component {
             </div>
         );
         let paperPlus = "";
-        let collectionPlus = "";
-        let userPlus = "";
 
         if (this.state.collections.length > 0) {
             collectionCardsLeft = this.state.collections
@@ -342,13 +340,6 @@ class SearchResult extends Component {
             );
         }
 
-        if (!this.props.collectionFinished) {
-            collectionPlus = "+";
-        }
-        if (!this.props.userFinished) {
-            userPlus = "+";
-        }
-
         return (
             <div className="search-result">
                 <div className="item-list">
@@ -380,7 +371,7 @@ class SearchResult extends Component {
                         <Tab
                           className="collection-tab"
                           eventKey="collection-tab"
-                          title={`Collection(${this.state.collections.length + collectionPlus})`}
+                          title={`Collection(${this.props.collectionTotalCount})`}
                         >
                             {collectionMessage}
                             <div id="collection-cards">
@@ -391,7 +382,7 @@ class SearchResult extends Component {
                         <Tab
                           className="user-tab"
                           eventKey="user-tab"
-                          title={`People(${this.state.users.length + userPlus})`}
+                          title={`People(${this.props.userTotalCount})`}
                         >
                             {userMessage}
                             <div id="user-cards">
@@ -419,6 +410,8 @@ const mapStateToProps = (state) => ({
     collectionFinished: state.collection.list.finished,
     userPageNum: state.user.search.pageNum,
     userFinished: state.user.search.finished,
+    collectionTotalCount: state.collection.list.totalCount,
+    userTotalCount: state.user.search.totalCount,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -446,6 +439,8 @@ SearchResult.propTypes = {
     collectionFinished: PropTypes.bool,
     userPageNum: PropTypes.number,
     userFinished: PropTypes.bool,
+    collectionTotalCount: PropTypes.number,
+    userTotalCount: PropTypes.number,
 };
 
 SearchResult.defaultProps = {
@@ -463,4 +458,6 @@ SearchResult.defaultProps = {
     collectionFinished: true,
     userPageNum: 0,
     userFinished: true,
+    collectionTotalCount: 0,
+    userTotalCount: 0,
 };
