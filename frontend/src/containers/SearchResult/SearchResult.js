@@ -355,7 +355,7 @@ class SearchResult extends Component {
                         <Tab
                           className="paper-tab"
                           eventKey="paper-tab"
-                          title={`Paper`}
+                          title="Paper"
                         >
                             {paperMessage}
                             <div id="paper-cards">
