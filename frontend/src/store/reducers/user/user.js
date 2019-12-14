@@ -23,6 +23,7 @@ const initialState = {
         pageNum: 0,
         finished: true,
         error: null,
+        totalCount: 0,
     },
     followCount: 0,
     unfollowCount: 0,
@@ -136,6 +137,7 @@ const UserReducer = (state = initialState, action) => {
                 users: action.target.users,
                 pageNum: action.target.pageNum,
                 finished: action.target.finished,
+                totalCount: action.target.totalCount,
             },
         };
     case userConstants.SEARCH_USER_FAILURE:
@@ -147,6 +149,7 @@ const UserReducer = (state = initialState, action) => {
                 pageNum: 0,
                 finished: false,
                 error: action.target,
+                totalCount: 0,
             },
         };
     default:

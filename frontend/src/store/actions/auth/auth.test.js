@@ -28,10 +28,15 @@ describe("authActions", () => {
                 signinStatus: signinStatus.NONE,
                 signoutStatus: signoutStatus.NONE,
                 getMeStatus: getMeStatus.NONE,
-                getNotiStatus: notiStatus.NONE,
-                readNotiStatus: notiStatus.NONE,
                 getSubscriptionsStatus: getSubscriptionsStatus.NONE,
-                notifications: [],
+                notifications: {
+                    getStatus: notiStatus.NONE,
+                    readStatus: notiStatus.NONE,
+                    notifications: [],
+                    pageNum: 0,
+                    finished: true,
+                    totalCount: 0,
+                },
                 subscriptions: [],
                 me: null,
             },
@@ -286,9 +291,9 @@ describe("authActions", () => {
                 resolve(result);
             }));
 
-        mockStore.dispatch(authActions.getNoti())
+        mockStore.dispatch(authActions.getNoti(1))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/notification");
+                expect(spy).toHaveBeenCalledWith("/api/notification", { params: { page_number: 1 } });
                 done();
             });
     });
@@ -305,9 +310,9 @@ describe("authActions", () => {
                 reject(error);
             }));
 
-        mockStore.dispatch(authActions.getNoti())
+        mockStore.dispatch(authActions.getNoti(1))
             .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/notification");
+                expect(spy).toHaveBeenCalledWith("/api/notification", { params: { page_number: 1 } });
                 done();
             });
     });

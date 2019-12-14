@@ -158,10 +158,6 @@ class ProfileDetail extends Component {
     }
 
     render() {
-        const reviewCount = (this.props.reviews.pageNum > 1
-            || (this.props.reviews.pageNum === 1 && this.props.reviews.finished === false))
-            ? "10+" : this.props.reviews.list.length;
-
         const settingButton = (
             <Link to="/account_setting">
                 <Button id="settingButton">Setting</Button>
@@ -263,7 +259,7 @@ class ProfileDetail extends Component {
                                         </Button>
                                     )}
                             </Tab>
-                            <Tab eventKey="reviewTab" title={`Review(${reviewCount})`}>
+                            <Tab eventKey="reviewTab" title={`Review(${this.props.reviews.totalCount})`}>
                                 <div id="reviewCards">
                                     <div id="reviewCardsLeft">{reviewCardsLeft}</div>
                                     <div id="reviewCardsRight">{reviewCardsRight}</div>
