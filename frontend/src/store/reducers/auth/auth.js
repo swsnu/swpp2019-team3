@@ -41,6 +41,7 @@ const initialState = {
         notifications: [],
         pageNum: 0,
         finished: true,
+        totalCount: 0,
     },
     me: {},
 };
@@ -80,6 +81,7 @@ const reducer = (state = initialState, action) => {
                 notifications: action.target.notifications,
                 pageNum: action.target.page_number,
                 finished: action.target.is_finished,
+                totalCount: action.target.total_count,
             },
         };
     case authConstants.GET_NOTI_FAILURE:

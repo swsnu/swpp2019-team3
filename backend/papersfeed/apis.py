@@ -326,10 +326,11 @@ def delete_user_collection_pending(args):
 
 def get_notification(args):
     """Get Notification"""
-    notifications, page_number, is_finished = notification_utils.select_notifications(args)
+    notifications, page_number, is_finished, total_count = notification_utils.select_notifications(args)
     return {constants.NOTIFICATIONS: notifications,
             constants.PAGE_NUMBER: page_number,
-            constants.IS_FINISHED: is_finished}
+            constants.IS_FINISHED: is_finished,
+            constants.TOTAL_COUNT: total_count}
 
 
 def put_notification(args):
