@@ -1,0 +1,8 @@
+.tutorial {
+    min-height: 1000px;
+    margin-top: 5%;
+    background: rgb(242,243,247);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Card } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-
+import { withRouter } from "react-router-dom";
 import { collectionActions } from "../../../store/actions";
 import "./CollectionCard.css";
 import { LikeButton, SubItemButton } from "../../Button/index";
@@ -73,7 +73,7 @@ class CollectionCard extends Component {
                         />
                         <SubItemButton
                           id="replyButton"
-                          href={`/collection_id=${this.props.id}`}
+                          onClick={() => { this.props.history.push({ pathname: `/collection_id=${this.props.id}`, state: "replyTab" }); }}
                           count={this.props.replyCount}
                         />
                     </Card.Footer>
@@ -99,10 +99,11 @@ const mapDispatchToProps = (dispatch) => ({
     ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CollectionCard);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CollectionCard));
 
 CollectionCard.propTypes = {
     id: PropTypes.number,
+    history: PropTypes.objectOf(PropTypes.any),
     title: PropTypes.string,
     memberCount: PropTypes.number,
     paperCount: PropTypes.number,
@@ -140,4 +141,5 @@ CollectionCard.defaultProps = {
     actor: {},
     verb: "",
     target: {},
+    history: null,
 };

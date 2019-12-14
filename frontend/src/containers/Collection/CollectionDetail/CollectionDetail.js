@@ -384,7 +384,7 @@ class CollectionDetail extends Component {
                         </div>
                     </div>
                     <div className="itemList">
-                        <Tabs defaultActiveKey="paperTab" id="itemTabs">
+                        <Tabs defaultActiveKey={this.props.location != null ? this.props.location.state : "paperTab"} id="itemTabs">
                             <Tab eventKey="paperTab" title={`Papers(${this.state.paperCount})`}>
                                 {paperCards}
                                 { this.props.storedPapers.is_finished ? null
@@ -517,7 +517,7 @@ CollectionDetail.propTypes = {
 CollectionDetail.defaultProps = {
     me: {},
     history: null,
-    location: null,
+    location: { state: "paperTab" },
     onGetCollection: null,
     onGetCollectionPapers: null,
     getCollectionStatus: collectionStatus.NONE,
