@@ -129,7 +129,12 @@ export const editUserInfo = (newUserInfo) => (dispatch) => axios.put("/api/user"
 
 const searchUserSuccess = (data) => ({
     type: userConstants.SEARCH_USER_SUCCESS,
-    target: { users: data.users, pageNum: data.page_number, finished: data.is_finished },
+    target: {
+        users: data.users,
+        pageNum: data.page_number,
+        finished: data.is_finished,
+        totalCount: data.total_count,
+    },
 });
 
 const searchUserFailure = (error) => ({

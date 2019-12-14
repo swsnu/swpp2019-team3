@@ -24,13 +24,15 @@ def select_notifications(args):
     # Notification QuerySet
     queryset = user.notifications.unread().filter(~Q(actor_object_id=request_user.id))
 
+    total_count = queryset.count()
+
     notifications = get_results_from_queryset(queryset, 10, page_number)
 
     is_finished = not notifications.has_next()
 
     notifications = __pack_notifications(notifications)
 
-    return notifications, page_number, is_finished
+    return notifications, page_number, is_finished, total_count
 
 
 def read_notification(args):

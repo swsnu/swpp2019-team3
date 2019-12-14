@@ -370,6 +370,7 @@ const reducer = (state = initialState, action) => {
                 list: action.target.collections,
                 pageNum: action.target.pageNum,
                 finished: action.target.finished,
+                totalCount: action.target.totalCount,
             },
         };
     case collectionConstants.SEARCH_COLLECTION_FAILURE:
@@ -381,6 +382,7 @@ const reducer = (state = initialState, action) => {
                 error: action.target,
                 pageNum: 0,
                 finished: false,
+                totalCount: 0,
             },
         };
     case collectionConstants.GET_COLLECTION_LIKE_SUCCESS:

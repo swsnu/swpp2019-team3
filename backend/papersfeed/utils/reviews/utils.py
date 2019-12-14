@@ -29,7 +29,7 @@ def select_review(args):
     request_user = args[constants.USER]
 
     # Reviews
-    reviews, _, _ = __get_reviews(Q(id=review_id), request_user, None)
+    reviews, _, _, _ = __get_reviews(Q(id=review_id), request_user, None)
 
     # Not Exists
     if not reviews:
@@ -113,7 +113,7 @@ def insert_review(args):
             count=1,
         )
 
-    reviews, _, _ = __get_reviews(Q(id=review.id), request_user, None)
+    reviews, _, _, _ = __get_reviews(Q(id=review.id), request_user, None)
 
     if not reviews:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -167,7 +167,7 @@ def update_review(args):
 
     review.save()
 
-    reviews, _, _ = __get_reviews(Q(id=review.id), request_user, None)
+    reviews, _, _, _ = __get_reviews(Q(id=review.id), request_user, None)
 
     if not reviews:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -229,7 +229,7 @@ def select_review_paper(args):
     # Reviews Queryset
     queryset = Q(paper_id=paper_id)
 
-    reviews, _, is_finished = __get_reviews(queryset, request_user, 10, page_number=page_number)
+    reviews, _, is_finished, _ = __get_reviews(queryset, request_user, 10, page_number=page_number)
 
     return reviews, page_number, is_finished
 
@@ -255,9 +255,13 @@ def select_review_user(args):
     else:
         queryset = Q(user_id=user_id) & Q(anonymous=False)
 
-    reviews, _, is_finished = __get_reviews(queryset, request_user, 10, page_number=page_number)
+    params = {
+        constants.TOTAL_COUNT: True # count whole reviews
+    }
+    reviews, _, is_finished, total_count = __get_reviews(queryset, request_user, 10, params=params,
+                                                         page_number=page_number)
 
-    return reviews, page_number, is_finished
+    return reviews, page_number, is_finished, total_count
 
 
 def select_review_like(args):
@@ -277,8 +281,11 @@ def select_review_like(args):
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(review_ids)])
 
     # Reviews
-    reviews, _, is_finished = __get_reviews(Q(id__in=review_ids), request_user, 10, order_by=preserved,
-                                            page_number=page_number)
+    params = {
+        constants.ORDER_BY: preserved
+    }
+    reviews, _, is_finished, _ = __get_reviews(Q(id__in=review_ids), request_user, 10, params=params,
+                                               page_number=page_number)
 
     return reviews, page_number, is_finished
 
@@ -287,17 +294,24 @@ def get_reviews(filter_query, request_user, count, page_number=1):
     """Get Reviews"""
     return __get_reviews(filter_query, request_user, count, page_number=page_number)
 
+
 def get_review_like_count(review_ids, group_by_field):
     """Get Review like Count"""
     return __get_review_like_count(review_ids, group_by_field)
 
-def __get_reviews(filter_query, request_user, count, page_number=1, order_by='-pk'):
+
+def __get_reviews(filter_query, request_user, count, params=None, page_number=1):
     """Get Reviews By Query"""
+    params = {} if params is None else params
+    order_by = '-pk' if constants.ORDER_BY not in params else params[constants.ORDER_BY]
+
     queryset = Review.objects.filter(
         filter_query
     ).annotate(
         is_liked=__is_review_liked('id', request_user)
     ).order_by(order_by)
+
+    total_count = queryset.count() if constants.TOTAL_COUNT in params else None
 
     reviews = get_results_from_queryset(queryset, count, page_number)
 
@@ -309,7 +323,7 @@ def __get_reviews(filter_query, request_user, count, page_number=1, order_by='-p
 
     reviews = __pack_reviews(reviews, request_user)
 
-    return reviews, pagination_value, is_finished
+    return reviews, pagination_value, is_finished, total_count
 
 
 # pylint: disable-msg=too-many-locals
@@ -323,7 +337,7 @@ def __pack_reviews(reviews, request_user):
 
     # Users
     user_ids = [review.user_id for review in reviews]
-    users, _ = users_utils.get_users(Q(id__in=user_ids), request_user, None)
+    users, _, _ = users_utils.get_users(Q(id__in=user_ids), request_user, None)
 
     # {user_id: user}
     users = {user[constants.ID]: user for user in users}

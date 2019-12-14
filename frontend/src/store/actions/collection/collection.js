@@ -339,6 +339,7 @@ const searchCollectionSuccess = (data) => ({
         collections: data.collections,
         pageNum: data.page_number,
         finished: data.is_finished,
+        totalCount: data.total_count,
     },
 });
 

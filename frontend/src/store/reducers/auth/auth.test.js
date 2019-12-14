@@ -17,8 +17,6 @@ const stubInitialState = {
     signinStatus: signinStatus.NONE,
     signoutStatus: signoutStatus.NONE,
     getMeStatus: getMeStatus.NONE,
-    getNotiStatus: notiStatus.NONE,
-    readNotiStatus: notiStatus.NONE,
     subscriptions: {
         status: getSubscriptionsStatus.NONE,
         pageNum: 0,
@@ -38,7 +36,14 @@ const stubInitialState = {
         finished: true,
     },
     makeTasteInitStatus: makeTasteInitStatus.NONE,
-    notifications: [],
+    notifications: {
+        getStatus: notiStatus.NONE,
+        readStatus: notiStatus.NONE,
+        notifications: [],
+        pageNum: 0,
+        finished: true,
+        totalCount: 0,
+    },
     me: null,
 };
 
@@ -173,12 +178,17 @@ describe("Auth reducer", () => {
     it("should process getNotifications", () => {
         const newState = reducer(stubInitialState, {
             type: authConstants.GET_NOTI_SUCCESS,
-            target: [{
-                id: 1, actor: { id: 1 }, action_object: { id: 1 }, verb: "liked",
-            }],
+            target: {
+                notifications: [{
+                    id: 1, actor: { id: 1 }, action_object: { id: 1 }, verb: "liked",
+                }],
+                page_number: 1,
+                total_count: 1,
+                is_finished: true,
+            },
         });
-        expect(newState.getNotiStatus).toEqual(notiStatus.SUCCESS);
-        expect(newState.notifications).toEqual([{
+        expect(newState.notifications.getStatus).toEqual(notiStatus.SUCCESS);
+        expect(newState.notifications.notifications).toEqual([{
             id: 1, actor: { id: 1 }, action_object: { id: 1 }, verb: "liked",
         }]);
     });
@@ -188,7 +198,7 @@ describe("Auth reducer", () => {
             type: authConstants.GET_NOTI_FAILURE,
             target: stubError,
         });
-        expect(newState.getNotiStatus).toEqual(notiStatus.FAILURE);
+        expect(newState.notifications.getStatus).toEqual(notiStatus.FAILURE);
     });
 
 
@@ -197,7 +207,7 @@ describe("Auth reducer", () => {
             type: authConstants.READ_NOTI_SUCCESS,
             target: null,
         });
-        expect(newState.readNotiStatus).toEqual(notiStatus.SUCCESS);
+        expect(newState.notifications.readStatus).toEqual(notiStatus.SUCCESS);
     });
 
     it("should handle readNotification failure", () => {
@@ -205,7 +215,7 @@ describe("Auth reducer", () => {
             type: authConstants.READ_NOTI_FAILURE,
             target: stubError,
         });
-        expect(newState.readNotiStatus).toEqual(notiStatus.FAILURE);
+        expect(newState.notifications.readStatus).toEqual(notiStatus.FAILURE);
     });
 
     it("should handle getSubscription", () => {

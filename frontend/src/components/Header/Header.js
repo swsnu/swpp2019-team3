@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import {
     Navbar, Form, Dropdown, Button, Nav, Badge,
 } from "react-bootstrap";
-
 import { Link, withRouter } from "react-router-dom";
-
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
@@ -20,8 +18,17 @@ class Header extends Component {
 
         this.state = {
             searchWord: "",
+            openNoti: false,
+            notiLoading: true,
+            notifications: [],
+            newNotifications: [],
+            notiPageNum: 0,
+            notiFinished: true,
         };
 
+        this.notiMenu = React.createRef();
+        this.handleScroll = this.handleScroll.bind(this);
+        this.openNoti = this.openNoti.bind(this);
         this.keyPressHandler = this.keyPressHandler.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.clickSignoutButtonHandler = this.clickSignoutButtonHandler.bind(this);
@@ -29,8 +36,20 @@ class Header extends Component {
     }
 
     componentDidMount() {
-        this.props.onGetNoti()
-            .then(() => {})
+        this.props.onGetNoti(0);
+    }
+
+    getNotiTrigger(pageNum) {
+        this.props.onGetNoti(pageNum + 1)
+            .then(() => {
+                const { notifications } = this.state;
+                this.setState({
+                    notifications: notifications.concat(this.props.notifications),
+                    notiPageNum: this.props.notiPageNum,
+                    notiFinished: this.props.notiFinished,
+                    notiLoading: false,
+                });
+            })
             .catch(() => {});
     }
 
@@ -39,6 +58,68 @@ class Header extends Component {
             this.props.history.push(`/search=${this.state.searchWord}`);
         }
     };
+
+    handleScroll = () => {
+        const { scrollHeight } = this.notiMenu.current.childNodes[1];
+        const { scrollTop } = this.notiMenu.current.childNodes[1];
+        const { clientHeight } = this.notiMenu.current.childNodes[1];
+
+        if (!this.state.notiLoading
+            && !this.state.notiFinished
+            && ((scrollTop + clientHeight + 50)
+            > scrollHeight)) {
+            this.setState({
+                notiLoading: true,
+            });
+            this.getNotiTrigger(this.state.notiPageNum);
+        }
+    }
+
+    openNoti() {
+        if (!this.state.openNoti) {
+            this.getNotiTrigger(0);
+            this.setState({ openNoti: true });
+            this.notiMenu.current.childNodes[1].addEventListener("scroll", this.handleScroll);
+        } else {
+            this.notiMenu.current.childNodes[1].removeEventListener("scroll", this.handleScroll);
+            this.setState({
+                openNoti: false,
+                notifications: [],
+                newNotifications: [],
+                notiPageNum: 0,
+                notiFinished: true,
+            });
+        }
+    }
+
+    /* eslint-disable no-await-in-loop */
+    async handleNotis() {
+        // get notifications until previous pageCount
+        const end = this.state.notiPageNum;
+        this.setState({
+            newNotifications: [],
+        });
+        for (let i = 1; (i === 1) || (i < end + 1); i += 1) {
+            await this.forEachHandleNoti(i, end);
+            if (i === end || this.props.notiFinished === true) {
+                this.setState((prevState) => ({
+                    notifications: prevState.newNotifications.concat(this.props.notifications),
+                    notiPageNum: this.props.notiPageNum,
+                    newNotifications: [],
+                    notiFinished: this.props.notiFinished,
+                }));
+                break;
+            }
+            this.setState((prevState) => ({
+                newNotifications: prevState.newNotifications.concat(this.props.notifications),
+            }));
+        }
+    }
+    /* eslint-enable no-await-in-loop */
+
+    forEachHandleNoti(i) {
+        return this.props.onGetNoti(i);
+    }
 
     // for search input change
     handleChange(e) {
@@ -61,7 +142,7 @@ class Header extends Component {
     readNotiHandler(notificationId) {
         this.props.onReadNoti({ id: notificationId })
             .then(() => {
-                this.props.onGetNoti();
+                this.handleNotis();
             })
             .catch(() => {});
     }
@@ -84,8 +165,8 @@ class Header extends Component {
         }
 
         let notifications = null;
-        if (this.props.notifications.length > 0) {
-            notifications = this.props.notifications.map(
+        if (this.state.notifications.length > 0) {
+            notifications = this.state.notifications.map(
                 (notification) => {
                     let target = null;
                     let targetLink = "";
@@ -147,10 +228,10 @@ class Header extends Component {
                         </Button>
                     </div>
                     <div className="header-buttons">
-                        <Dropdown className="dropdown-notification" alignRight>
+                        <Dropdown ref={this.notiMenu} className="dropdown-notification" alignRight onToggle={() => this.openNoti()}>
                             <Dropdown.Toggle className="notification-button" variant="light" title="notification">
                                 <SVG name="bell" height="20px" width="20px" />
-                                <Badge variant="secondary">{notifications.length}</Badge>
+                                <Badge variant="secondary">{this.props.notiTotalCount}</Badge>
                             </Dropdown.Toggle>
                             <Dropdown.Menu className="notification-menu">
                                 {notifications}
@@ -178,12 +259,15 @@ class Header extends Component {
 const mapStateToProps = (state) => ({
     me: state.auth.me,
     signoutStatus: state.auth.signoutStatus,
-    notifications: state.auth.notifications,
+    notifications: state.auth.notifications.notifications,
+    notiPageNum: state.auth.notifications.pageNum,
+    notiFinished: state.auth.notifications.finished,
+    notiTotalCount: state.auth.notifications.totalCount,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onSignout: () => dispatch(authActions.signout()),
-    onGetNoti: () => dispatch(authActions.getNoti()),
+    onGetNoti: (pageNum) => dispatch(authActions.getNoti(pageNum)),
     onReadNoti: (notificationId) => dispatch(authActions.readNoti(notificationId)),
 });
 
@@ -197,6 +281,9 @@ Header.propTypes = {
     onReadNoti: PropTypes.func,
     signoutStatus: PropTypes.string,
     notifications: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
+    notiPageNum: PropTypes.number,
+    notiFinished: PropTypes.bool,
+    notiTotalCount: PropTypes.number,
 };
 
 Header.defaultProps = {
@@ -207,4 +294,7 @@ Header.defaultProps = {
     onReadNoti: () => {},
     signoutStatus: signoutStatus.NONE,
     notifications: [],
+    notiPageNum: 0,
+    notiFinished: true,
+    notiTotalCount: 0,
 };
