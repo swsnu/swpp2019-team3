@@ -17,7 +17,12 @@ const UserEntry = (props) => (
                 />
             )
             : <div /> }
-        <h5 className="userName">{props.userName}</h5>
+        <label
+          className="userName"
+          htmlFor={`check-${props.userName}`}
+        >
+            {props.userName}
+        </label>
     </Form.Row>
 );
 

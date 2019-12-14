@@ -23,7 +23,7 @@ const PhotoCheckBox = (props) => {
               checked={props.checked}
               onChange={props.checkHandler}
             />
-            <label htmlFor={`checked${props.index}`}>
+            <label className="PhotoCheckBoxLable" htmlFor={`checked${props.index}`}>
                 {checkBoxPhoto}
             </label>
         </li>
