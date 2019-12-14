@@ -29,7 +29,7 @@ class Header extends Component {
     }
 
     componentDidMount() {
-        this.props.onGetNoti()
+        this.props.onGetNoti(0)
             .then(() => {})
             .catch(() => {});
     }
@@ -180,12 +180,14 @@ class Header extends Component {
 const mapStateToProps = (state) => ({
     me: state.auth.me,
     signoutStatus: state.auth.signoutStatus,
-    notifications: state.auth.notifications,
+    notifications: state.auth.notifications.notifications,
+    notiPageNum: state.auth.notifications.pageNum,
+    notiFinished: state.auth.notifications.finished,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onSignout: () => dispatch(authActions.signout()),
-    onGetNoti: () => dispatch(authActions.getNoti()),
+    onGetNoti: (pageNum) => dispatch(authActions.getNoti(pageNum)),
     onReadNoti: (notificationId) => dispatch(authActions.readNoti(notificationId)),
 });
 
