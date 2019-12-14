@@ -153,6 +153,8 @@ describe("<Header />", () => {
         wrapper.simulate("click");
 
         expect(spyReadNoti).toHaveBeenCalledTimes(1);
+
+        instance.openNoti();
     });
 
     it("should not call readNoti if actor-link is clicked", async () => {
@@ -296,5 +298,44 @@ describe("<Header />", () => {
 
         wrapper.simulate("keypress", { charCode: 13 });
         expect(spyPush).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle scroll", () => {
+        const ref = { current: { scrollTop: 700, clientHeight: 800, scrollHeight: 500 } };
+        const spyCreateRef = jest.spyOn(React, "createRef")
+            .mockImplementation(() => ref);
+        const component = mount(makeHeader(stubInitialState));
+        expect(spyCreateRef).toHaveBeenCalled();
+
+        const instance = component.find(Header.WrappedComponent).instance();
+        instance.setState({
+            openNoti: true, notiLoading: false, notiFinished: false,
+        });
+        component.update();
+
+        instance.handleScroll();
+
+        expect(spyGetNoti).toHaveBeenCalled();
+    });
+
+    it("should not handle scroll", () => {
+        const ref = { current: { scrollTop: 0, clientHeight: 0, scrollHeight: 500 } };
+        const spyCreateRef = jest.spyOn(React, "createRef")
+            .mockImplementation(() => ref);
+        const component = mount(makeHeader(stubInitialState));
+        expect(spyCreateRef).toHaveBeenCalled();
+
+        const instance = component.find(Header.WrappedComponent).instance();
+        instance.setState({
+            openNoti: true, notiLoading: false, notiFinished: true,
+        });
+
+        component.update();
+
+        expect(spyGetNoti).toBeCalledTimes(1);
+        instance.handleScroll();
+
+        expect(spyCreateRef).toBeCalledTimes(1);
+        expect(spyGetNoti).toBeCalledTimes(1);
     });
 });
