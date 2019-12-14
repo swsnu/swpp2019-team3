@@ -21,6 +21,7 @@ class ProfileDetail extends Component {
             doIFollow: false,
         };
 
+        this.initProfileDetail = this.initProfileDetail.bind(this);
         this.collectionCardMaker = this.collectionCardMaker.bind(this);
         this.reviewCardMaker = this.reviewCardMaker.bind(this);
         this.clickFollowHandler = this.clickFollowHandler.bind(this);
@@ -30,33 +31,20 @@ class ProfileDetail extends Component {
     }
 
     componentDidMount() {
-        this.props.onGetUser({ id: this.props.location.pathname.split("=")[1] })
-            .then(() => {
-                if (this.props.userStatus === userStatus.USER_NOT_EXIST) {
-                    this.props.history.push("/main");
-                    return;
-                }
-
-                this.setState({ doIFollow: this.props.thisUser.is_following });
-                if (this.props.thisUser.count) {
-                    this.setState({
-                        followerCount: this.props.thisUser.count.follower,
-                        followingCount: this.props.thisUser.count.following,
-                    });
-                }
-            })
-            .catch(() => {});
-        this.props.onGetCollections({ id: this.props.location.pathname.split("=")[1] })
-            .then(() => {
-                this.setState({ collections: this.props.collections.list });
-            })
-            .catch(() => {});
-        this.props.onGetReviews({ id: this.props.location.pathname.split("=")[1] })
-            .then(() => {
-                this.setState({ reviews: this.props.reviews.list });
-            })
-            .catch(() => {});
+        this.initProfileDetail();
     }
+
+    /* eslint-disable react/no-did-update-set-state */
+    componentDidUpdate(prevProps) {
+        if (this.props.location !== prevProps.location) {
+            this.setState({
+                collections: [],
+                reviews: [],
+            });
+            this.initProfileDetail();
+        }
+    }
+    /* eslint-enable react/no-did-update-set-state */
 
     clickFollowHandler = () => {
         this.props.onFollow({ id: this.props.thisUser.id })
@@ -139,6 +127,35 @@ class ProfileDetail extends Component {
           headerExists={false}
         />
     );
+
+    initProfileDetail() {
+        this.props.onGetUser({ id: this.props.location.pathname.split("=")[1] })
+            .then(() => {
+                if (this.props.userStatus === userStatus.USER_NOT_EXIST) {
+                    this.props.history.push("/main");
+                    return;
+                }
+
+                this.setState({ doIFollow: this.props.thisUser.is_following });
+                if (this.props.thisUser.count) {
+                    this.setState({
+                        followerCount: this.props.thisUser.count.follower,
+                        followingCount: this.props.thisUser.count.following,
+                    });
+                }
+            })
+            .catch(() => {});
+        this.props.onGetCollections({ id: this.props.location.pathname.split("=")[1] })
+            .then(() => {
+                this.setState({ collections: this.props.collections.list });
+            })
+            .catch(() => {});
+        this.props.onGetReviews({ id: this.props.location.pathname.split("=")[1] })
+            .then(() => {
+                this.setState({ reviews: this.props.reviews.list });
+            })
+            .catch(() => {});
+    }
 
     render() {
         const reviewCount = (this.props.reviews.pageNum > 1

@@ -358,7 +358,7 @@ describe("SubscriptionFeed test", () => {
         expect(component.find(".more-button").hostNodes().length).toBe(0);
     });
 
-    it("should handle click view more button without finish", async () => {
+    it("should handle scroll for viewing more without finish", async () => {
         stubInitialState = {
             ...stubInitialState,
             auth: {
@@ -390,10 +390,11 @@ describe("SubscriptionFeed test", () => {
         expect(spyAdd).toBeCalledTimes(1);
 
         expect(instance.state.finished).toBe(false);
-        const spyClickNext = jest.spyOn(instance, "clickMoreButtonNext");
+        const spyClickNext = jest.spyOn(instance, "viewMoreNext");
 
-        const button = component.find(".more-button").hostNodes();
-        button.simulate("click");
+        global.document.documentElement.scrollTop = 1500;
+        component.update();
+        instance.handleScroll();
 
         expect(spyGetSubscription).toBeCalledTimes(2);
         await flushPromises();
@@ -436,10 +437,11 @@ describe("SubscriptionFeed test", () => {
         expect(spyAdd).toBeCalledTimes(1);
 
         expect(instance.state.finished).toBe(false);
-        const spyClickNext = jest.spyOn(instance, "clickMoreButtonNext");
+        const spyClickNext = jest.spyOn(instance, "viewMoreNext");
 
-        const button = component.find(".more-button").hostNodes();
-        button.simulate("click");
+        global.document.documentElement.scrollTop = 1500;
+        component.update();
+        instance.handleScroll();
 
         expect(spyGetSubscription).toBeCalledTimes(2);
         await flushPromises();
@@ -482,9 +484,12 @@ describe("SubscriptionFeed test", () => {
         expect(instance.state.recommendations.length).toBe(0);
         expect(spyAdd).toBeCalledTimes(1);
         expect(instance.state.finished).toBe(false);
-        const spyClickNext = jest.spyOn(instance, "clickMoreButtonNext");
-        const button = component.find(".more-button").hostNodes();
-        button.simulate("click");
+        const spyClickNext = jest.spyOn(instance, "viewMoreNext");
+
+        global.document.documentElement.scrollTop = 1500;
+        component.update();
+        instance.handleScroll();
+
         expect(spyGetSubscription).toBeCalledTimes(1);
         expect(instance.state.subscriptions).toStrictEqual(stubSubscriptions);
         expect(spyClickNext).toBeCalledTimes(1);
@@ -524,6 +529,7 @@ describe("SubscriptionFeed test", () => {
         expect(instance.state.recommendations.length).toBe(0);
         expect(spyAdd).toBeCalledTimes(1);
         expect(instance.state.finished).toBe(true);
+
         const button = component.find(".more-button").hostNodes();
         expect(button.length).toBe(0);
     });
