@@ -145,6 +145,41 @@ class PaperTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_delete_paper_collection(self):
+        """Delete Paper from Collection"""
+        client = Client()
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        paper_id = Paper.objects.filter(title='paper1').first().id
+        test_collection_2_id = Collection.objects.filter(title='test_collection_2').first().id
+
+        # Add paper to test_collection_2
+        response = client.put('/api/paper/collection',
+                              data=json.dumps({
+                                  constants.ID: paper_id,
+                                  constants.COLLECTION_IDS: [test_collection_2_id]
+                              }),
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+        # Delete paper from test_collection_2
+        response = client.delete('/api/paper/collection',
+                                 data=json.dumps({
+                                     constants.ID: test_collection_2_id,
+                                     constants.PAPER_ID: paper_id,
+                                 }),
+                                 content_type='application/json')
+
+        self.assertJSONEqual(response.content, {"count" : {"papers": 0}})
+        self.assertEqual(response.status_code, 200)
+
 
     def test_paper_like(self):
         """ PAPER LIKE """

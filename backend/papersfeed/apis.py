@@ -424,3 +424,7 @@ def get_user_search_collection(args):
     return {constants.USERS: users,
             constants.PAGE_NUMBER: page_number,
             constants.IS_FINISHED: is_finished}
+
+def delete_paper_collection(args):
+    """Delete Paper Collection"""
+    return {constants.COUNT: papers_utils.remove_paper_collection(args)}
