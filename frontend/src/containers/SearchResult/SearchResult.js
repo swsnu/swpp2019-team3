@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Tabs, Tab, Button } from "react-bootstrap";
+import { Tabs, Tab } from "react-bootstrap";
 
 import { PaperCard, CollectionCard, UserCard } from "../../components";
 import { paperStatus } from "../../constants/constants";
@@ -73,7 +73,7 @@ class SearchResult extends Component {
         if (this.state.activeTab === 0) {
             if (!this.state.paperLoading
             && !this.props.paperFinished
-            && ((scrollTop + clientHeight + 1500)
+            && ((scrollTop + clientHeight + 2000)
             > scrollHeight)) {
                 this.setState({ paperLoading: true });
                 this.viewPaperMoreHandler();
@@ -332,15 +332,6 @@ class SearchResult extends Component {
         let paperMoreButton = null;
         if (this.state.searchPaperStatus !== paperStatus.WAITING
             && !this.props.paperFinished) {
-            paperMoreButton = (
-                <Button
-                  className="paper-more-button"
-                  onClick={null}
-                  size="lg"
-                  block
-                >View More
-                </Button>
-            );
             paperPlus = "+";
         } else if (this.state.searchPaperStatus === paperStatus.WAITING
             && !paperEmpty) {
@@ -396,17 +387,6 @@ class SearchResult extends Component {
                                 <div id="collection-cards-left">{collectionCardsLeft}</div>
                                 <div id="collection-cards-right">{collectionCardsRight}</div>
                             </div>
-                            { this.props.collectionFinished ? null
-                                : (
-                                    <Button
-                                      className="collection-more-button"
-                                      onClick={null}
-                                      size="lg"
-                                      block
-                                    >
-                            View More
-                                    </Button>
-                                )}
                         </Tab>
                         <Tab
                           className="user-tab"
@@ -418,17 +398,6 @@ class SearchResult extends Component {
                                 <div id="user-cards-left">{userCardsLeft}</div>
                                 <div id="user-cards-right">{userCardsRight}</div>
                             </div>
-                            { this.props.userFinished ? null
-                                : (
-                                    <Button
-                                      className="user-more-button"
-                                      onClick={null}
-                                      size="lg"
-                                      block
-                                    >
-                            View More
-                                    </Button>
-                                )}
                         </Tab>
                     </Tabs>
                 </div>

@@ -289,14 +289,15 @@ describe("<SearchResult />", () => {
             },
         };
         const component = mount(makeSearchResult(stubInitialState));
+        const instance = component.find(SearchResult.WrappedComponent).instance();
 
         expect(spySearchPaper).toBeCalledTimes(1);
         await flushPromises();
         component.update();
 
-        const wrapper = component.find(".paper-more-button").hostNodes();
-        expect(wrapper.length).toBe(1);
-        wrapper.simulate("click");
+        global.document.documentElement.scrollTop = 1500;
+        component.update();
+        instance.handleScroll();
 
         expect(spySearchPaper).toBeCalledTimes(2);
         await flushPromises();
@@ -315,14 +316,17 @@ describe("<SearchResult />", () => {
             },
         };
         const component = mount(makeSearchResult(stubInitialState));
+        const instance = component.find(SearchResult.WrappedComponent).instance();
+        instance.setState({ activeTab: 1 });
+        component.update();
 
         expect(spySearchCollection).toBeCalledTimes(1);
         await flushPromises();
         component.update();
 
-        const wrapper = component.find(".collection-more-button").hostNodes();
-        expect(wrapper.length).toBe(1);
-        wrapper.simulate("click");
+        global.document.documentElement.scrollTop = 1500;
+        component.update();
+        instance.handleScroll();
 
         expect(spySearchCollection).toBeCalledTimes(2);
         await flushPromises();
@@ -341,14 +345,17 @@ describe("<SearchResult />", () => {
             },
         };
         const component = mount(makeSearchResult(stubInitialState));
+        const instance = component.find(SearchResult.WrappedComponent).instance();
+        instance.setState({ activeTab: 2 });
+        component.update();
 
         expect(spySearchUser).toBeCalledTimes(1);
         await flushPromises();
         component.update();
 
-        const wrapper = component.find(".user-more-button").hostNodes();
-        expect(wrapper.length).toBe(1);
-        wrapper.simulate("click");
+        global.document.documentElement.scrollTop = 1500;
+        component.update();
+        instance.handleScroll();
 
         expect(spySearchUser).toBeCalledTimes(2);
         await flushPromises();

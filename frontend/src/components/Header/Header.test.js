@@ -123,7 +123,7 @@ describe("<Header />", () => {
         expect(spyReadNoti).toHaveBeenCalledTimes(1);
     });
 
-    it("should call readNoti if actor-link is clicked", () => {
+    it("should not call readNoti if actor-link is clicked", () => {
         stubInitialState = {
             ...stubInitialState,
             auth: {
@@ -143,10 +143,10 @@ describe("<Header />", () => {
         expect(wrapper.length).toBe(1);
         wrapper.simulate("click");
 
-        expect(spyReadNoti).toHaveBeenCalledTimes(1);
+        expect(spyReadNoti).toHaveBeenCalledTimes(0);
     });
 
-    it("should call readNoti if target-link is clicked", () => {
+    it("should call not readNoti if target-link is clicked", () => {
         stubInitialState = {
             ...stubInitialState,
             auth: {
@@ -166,7 +166,7 @@ describe("<Header />", () => {
         expect(wrapper.length).toBe(1);
         wrapper.simulate("click");
 
-        expect(spyReadNoti).toHaveBeenCalledTimes(1);
+        expect(spyReadNoti).toHaveBeenCalledTimes(0);
     });
 
     it("should handle input change in searchbar", () => {
