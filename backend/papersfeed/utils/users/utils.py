@@ -44,7 +44,7 @@ def select_session(args):
         # Set Session Id
         request.session[constants.ID] = user.id
 
-    users, _ = __get_users(Q(id=user.id), user, None)
+    users, _, _ = __get_users(Q(id=user.id), user, None)
     if not users:
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
@@ -71,7 +71,7 @@ def select_me(args):
     # User ID
     user_id = request_user.id
 
-    users, _ = __get_users(Q(id=user_id), request_user, None)
+    users, _, _ = __get_users(Q(id=user_id), request_user, None)
 
     if not users:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -118,7 +118,7 @@ def insert_user(args):
     except IntegrityError:
         raise ApiError(constants.USERNAME_ALREADY_EXISTS)
 
-    users, _ = __get_users(Q(id=user.id), user, None)
+    users, _, _ = __get_users(Q(id=user.id), user, None)
 
     if not users:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -183,7 +183,7 @@ def update_user(args):
 
     user.save()
 
-    users, _ = __get_users(Q(id=user.id), user, None)
+    users, _, _ = __get_users(Q(id=user.id), user, None)
 
     if not users:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -222,7 +222,7 @@ def select_user(args):
     # User ID
     user_id = args[constants.ID]
 
-    users, _ = __get_users(Q(id=user_id), request_user, None)
+    users, _, _ = __get_users(Q(id=user_id), request_user, None)
 
     if not users:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -248,6 +248,8 @@ def select_user_search(args):
     # User Queryset
     queryset = User.objects.filter(Q(username__icontains=keyword)).values_list('id', flat=True)
 
+    total_count = queryset.count() # count whole users
+
     # User Ids
     user_ids = get_results_from_queryset(queryset, 10, page_number)
 
@@ -255,9 +257,9 @@ def select_user_search(args):
     is_finished = not user_ids.has_next()
 
     # Users
-    users, _ = __get_users(Q(id__in=user_ids), request_user, 10)
+    users, _, _ = __get_users(Q(id__in=user_ids), request_user, 10)
 
-    return users, page_number, is_finished
+    return users, page_number, is_finished, total_count
 
 
 def select_user_following(args):
@@ -292,7 +294,7 @@ def select_user_following(args):
     filter_query = Q(id__in=user_ids)
 
     # Users
-    users, _ = __get_users(filter_query, request_user, 10)
+    users, _, _ = __get_users(filter_query, request_user, 10)
 
     return users, page_number, is_finished
 
@@ -329,7 +331,7 @@ def select_user_followed(args):
     filter_query = Q(id__in=user_ids)
 
     # Users
-    users, _ = __get_users(filter_query, request_user, 10)
+    users, _, _ = __get_users(filter_query, request_user, 10)
 
     return users, page_number, is_finished
 
@@ -433,7 +435,10 @@ def select_user_collection(args):
     member_ids = list(set(member_ids))
 
     # Get Members
-    members, _ = __get_users(Q(id__in=member_ids), request_user, 10, collection_id=collection_id)
+    params = {
+        constants.COLLECTION_ID: collection_id
+    }
+    members, _, _ = __get_users(Q(id__in=member_ids), request_user, 10, params=params)
 
     return members, page_number, is_finished
 
@@ -640,7 +645,7 @@ def select_user_following_collection(args):
     filter_query = Q(id__in=user_ids)
 
     # Users
-    users, _ = __get_users(filter_query, request_user, 10)
+    users, _, _ = __get_users(filter_query, request_user, 10)
 
     return users, page_number, is_finished
 
@@ -678,13 +683,16 @@ def select_user_search_collection(args):
     is_finished = not user_ids.has_next()
 
     # Users
-    users, _ = __get_users(Q(id__in=user_ids), request_user, 10)
+    users, _, _ = __get_users(Q(id__in=user_ids), request_user, 10)
 
     return users, page_number, is_finished
 
 
-def __get_users(filter_query, request_user, count, collection_id=None):
+def __get_users(filter_query, request_user, count, params=None):
     """Get Users By Query"""
+    params = {} if params is None else params
+    collection_id = None if constants.COLLECTION_ID not in params else params[constants.COLLECTION_ID]
+
     queryset = User.objects.filter(
         filter_query
     ).annotate(
@@ -692,13 +700,16 @@ def __get_users(filter_query, request_user, count, collection_id=None):
         is_followed=__is_followed('id', request_user)
     )
 
+    # FIXME: This function needs refactoring so that it works like that of collections/utils or reviews/utils
+    total_count = queryset.count() if constants.TOTAL_COUNT in params else None
+
     users = get_results_from_queryset(queryset, count)
 
     pagination_value = users[len(users) - 1].id if users else 0
 
     users = __pack_users(users, request_user, collection_id=collection_id)
 
-    return users, pagination_value
+    return users, pagination_value, total_count
 
 
 def __pack_users(users, request_user, collection_id=None):

@@ -289,7 +289,7 @@ def __pack_replies(replies, request_user):
 
     # Users
     user_ids = [reply.user_id for reply in replies]
-    users, _ = users_utils.get_users(Q(id__in=user_ids), request_user, None)
+    users, _, _ = users_utils.get_users(Q(id__in=user_ids), request_user, None)
 
     # {user_id: user}
     users = {user[constants.ID]: user for user in users}
@@ -309,7 +309,7 @@ def __pack_replies(replies, request_user):
         reply_id__in=reply_ids
     )
     review_ids = [reply.review_id for reply in review_replies]
-    reviews, _, _ = reviews_utils.get_reviews(Q(id__in=review_ids), request_user, None)
+    reviews, _, _, _ = reviews_utils.get_reviews(Q(id__in=review_ids), request_user, None)
     # {review_id: review}
     reviews = {review[constants.ID]: review for review in reviews}
 

@@ -151,10 +151,11 @@ def get_review_paper(args):
 
 def get_review_user(args):
     """Get Review User"""
-    reviews, page_number, is_finished = reviews_utils.select_review_user(args)
+    reviews, page_number, is_finished, total_count = reviews_utils.select_review_user(args)
     return {constants.REVIEWS: reviews,
             constants.PAGE_NUMBER: page_number,
-            constants.IS_FINISHED: is_finished}
+            constants.IS_FINISHED: is_finished,
+            constants.TOTAL_COUNT: total_count}
 
 
 def get_paper_search(args):
@@ -167,18 +168,20 @@ def get_paper_search(args):
 
 def get_collection_search(args):
     """Get Collection Search"""
-    collections, page_number, is_finished = collections_utils.select_collection_search(args)
+    collections, page_number, is_finished, total_count = collections_utils.select_collection_search(args)
     return {constants.COLLECTIONS: collections,
             constants.PAGE_NUMBER: page_number,
-            constants.IS_FINISHED: is_finished}
+            constants.IS_FINISHED: is_finished,
+            constants.TOTAL_COUNT: total_count}
 
 
 def get_user_search(args):
     """Get User Search"""
-    users, page_number, is_finished = users_utils.select_user_search(args)
+    users, page_number, is_finished, total_count = users_utils.select_user_search(args)
     return {constants.USERS: users,
             constants.PAGE_NUMBER: page_number,
-            constants.IS_FINISHED: is_finished}
+            constants.IS_FINISHED: is_finished,
+            constants.TOTAL_COUNT: total_count}
 
 
 def post_like_paper(args):
@@ -326,10 +329,11 @@ def delete_user_collection_pending(args):
 
 def get_notification(args):
     """Get Notification"""
-    notifications, page_number, is_finished = notification_utils.select_notifications(args)
+    notifications, page_number, is_finished, total_count = notification_utils.select_notifications(args)
     return {constants.NOTIFICATIONS: notifications,
             constants.PAGE_NUMBER: page_number,
-            constants.IS_FINISHED: is_finished}
+            constants.IS_FINISHED: is_finished,
+            constants.TOTAL_COUNT: total_count}
 
 
 def put_notification(args):

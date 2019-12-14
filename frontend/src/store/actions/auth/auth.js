@@ -87,9 +87,9 @@ export const getMe = () => (dispatch) => axios.get("/api/user/me")
     .catch((err) => dispatch(getMeFailure(err)));
 
 
-const getNotiSuccess = (notifications) => ({
+const getNotiSuccess = (data) => ({
     type: authConstants.GET_NOTI_SUCCESS,
-    target: notifications.notifications,
+    target: data,
 });
 
 const getNotiFailure = (error) => ({
@@ -97,7 +97,7 @@ const getNotiFailure = (error) => ({
     target: error,
 });
 
-export const getNoti = () => (dispatch) => axios.get("/api/notification")
+export const getNoti = (pageNum) => (dispatch) => axios.get("/api/notification", { params: { page_number: pageNum } })
     .then((res) => dispatch(getNotiSuccess(res.data)))
     .catch((err) => dispatch(getNotiFailure(err)));
 
