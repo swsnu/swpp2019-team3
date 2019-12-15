@@ -416,11 +416,11 @@ def select_user_collection(args):
     if not Collection.objects.filter(id=collection_id).exists():
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
-    # Members QuerySet
+    # Members QuerySet (except 'pending')
     if includes_me:
-        query = Q(collection_id=collection_id)
+        query = Q(collection_id=collection_id) & ~Q(type=COLLECTION_USER_TYPE[2])
     else:
-        query = Q(collection_id=collection_id) & ~Q(user_id=request_user.id)
+        query = Q(collection_id=collection_id) & ~Q(user_id=request_user.id) & ~Q(type=COLLECTION_USER_TYPE[2])
 
     queryset = CollectionUser.objects.filter(query)
 
@@ -547,6 +547,39 @@ def remove_user_collection(args):
         raise ApiError(constants.UNPROCESSABLE_ENTITY)
 
     CollectionUser.objects.filter(user_id__in=user_ids, collection_id=collection_id).delete()
+
+    # Get the number of Members(including owner) Of Collections
+    user_counts = __get_collection_user_count([collection_id], 'collection_id')
+    return {constants.USERS: user_counts[collection_id] if collection_id in user_counts else 0}
+
+
+def remove_user_collection_self(args):
+    """Leave the collection (member)"""
+    is_parameter_exists([
+        constants.ID
+    ], args)
+
+    collection_id = int(args[constants.ID])
+
+    request_user = args[constants.USER]
+
+    # Check Collection Id
+    if not Collection.objects.filter(id=collection_id).exists():
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    try:
+        collection_user = CollectionUser.objects.get(collection_id=collection_id, user_id=request_user.id)
+    except ObjectDoesNotExist:
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    # if request_user is not member, then raise AUTH_ERROR
+    # the owner cannot delete himself or herself
+    # if the owner want to leave a collection, he or she must transfer it to other user
+    # or deleting the collection would be a solution
+    if collection_user.type != COLLECTION_USER_TYPE[1]:
+        raise ApiError(constants.AUTH_ERROR)
+
+    collection_user.delete()
 
     # Get the number of Members(including owner) Of Collections
     user_counts = __get_collection_user_count([collection_id], 'collection_id')

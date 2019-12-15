@@ -10,6 +10,7 @@
 }
 
 #collectionManageTitle {
+    font-weight: bold;
     margin: 20px;
 }
 
@@ -28,6 +29,10 @@
     width: 85%;
 }
 
+.CollectionManageButtons {
+    margin-top: 5%;
+}
+
 #updateCollectionButton{
     margin-right: 10px;
 }
@@ -41,10 +46,29 @@
 
 .ManageButtonText {
     width: 80%;
-    text-align: center;
+    text-align: left;
 }
 
-#collectionTypeText {
-    width: 80%;
-    text-align: center;
+.collectionTypeBlock #collectionTypeText {
+    display: inline-block;
+    text-align: left;
+}
+
+.collectionTypeBlock #collectionTypeContent {
+    display: inline-block;
+    text-align: left;
+    color: #2f87ef;
+}
+
+.warning-block #warning-text {
+    font-size: 100%;
+    display: inline-block;
+    font-weight: bold;
+    color: red;
+}
+
+.warning-block #warning-content {
+    font-size: 100%;
+    display: inline-block;
+    
 }

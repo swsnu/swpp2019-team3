@@ -739,6 +739,90 @@ class UserTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content)['count']['users'], 1)
 
+    def test_remove_user_collection_self(self):
+        """" LEAVE COLLECTION """
+
+        client = Client()
+
+        # Sign In
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Make Collection
+        client.post('/api/collection',
+                    json.dumps({
+                        constants.TITLE: 'SWPP Papers',
+                        constants.TEXT: 'papers for swpp 2019 class'
+                    }),
+                    content_type='application/json')
+
+        collection_id = Collection.objects.filter(title='SWPP Papers').first().id
+
+        user_ids = []
+        user_ids.append(User.objects.filter(email='swpp2@snu.ac.kr').first().id)
+
+        # Add the User to the Collection
+        response = client.post('/api/user/collection',
+                               json.dumps({
+                                   constants.ID: collection_id,
+                                   constants.USER_IDS: user_ids
+                               }),
+                               content_type='application/json')
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(json.loads(response.content)['count']['users'], 1)
+
+        client.delete('/api/session')
+
+        # sign in as 'swpp2'
+        client.get('/api/session',
+                   data={
+                       constants.EMAIL: 'swpp2@snu.ac.kr',
+                       constants.PASSWORD: 'iluvswpp1234'
+                   },
+                   content_type='application/json')
+
+        # Delete the User from the Collection (Not Found - CollectionUser)
+        response = client.delete('/api/user/collection/self',
+                                 json.dumps({
+                                     constants.ID: collection_id,
+                                 }),
+                                 content_type='application/json')
+
+        # accept invitation from 'swpp'
+        response = client.put('/api/user/collection/pending',
+                              data=json.dumps({
+                                  constants.ID: collection_id,
+                              }),
+                              content_type='application/json')
+
+        # now, members of the collection are two users
+        self.assertEqual(json.loads(response.content)['count']['users'], 2)
+
+        # Delete the User from the Collection (Not Found - Collection)
+        response = client.delete('/api/user/collection/self',
+                                 json.dumps({
+                                     constants.ID: -1,
+                                 }),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 404)
+
+        # Delete the User from the Collection
+        response = client.delete('/api/user/collection/self',
+                                 json.dumps({
+                                     constants.ID: collection_id,
+                                 }),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content)['count']['users'], 1)
+
+
     def test_get_user_following_collection(self):
         """Get Users User is Following that Not in Collection"""
         client = Client()

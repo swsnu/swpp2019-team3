@@ -17,7 +17,7 @@ class SubscriptionFeed extends Component {
             finished: true,
             start: 0,
             recoCount: 10,
-            loading: false,
+            loading: true,
         };
 
         this.handleScroll = this.handleScroll.bind(this);
@@ -198,6 +198,7 @@ class SubscriptionFeed extends Component {
           actor={actor}
           verb={verb}
           target={target}
+          type={collection.type}
         />
     )
 
@@ -267,11 +268,19 @@ class SubscriptionFeed extends Component {
 
         let alertSub = null;
         if (this.state.subscriptions.length <= 0) {
-            alertSub = (
-                <Alert key={1} variant="danger">
-        There is nothing for your subscription feed.
-                </Alert>
-            );
+            if ((this.state.loading === false)) {
+                alertSub = (
+                    <Alert key={1} variant="danger">
+                        There is nothing for your subscription feed.
+                    </Alert>
+                );
+            } else {
+                alertSub = (
+                    <Alert key={1} variant="info">
+                        Please wait...
+                    </Alert>
+                );
+            }
         }
 
         return (

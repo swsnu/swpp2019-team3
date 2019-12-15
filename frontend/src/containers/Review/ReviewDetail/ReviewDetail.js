@@ -20,6 +20,7 @@ class ReviewDetail extends Component {
             replies: [],
             isLiked: false,
             likeCount: 0,
+            replyCount: 0,
             author: {
                 id: 0,
                 username: "",
@@ -117,6 +118,7 @@ class ReviewDetail extends Component {
                     thisReview: this.props.selectedReview,
                     isLiked: this.props.selectedReview.liked,
                     likeCount: this.props.selectedReview.count.likes,
+                    replyCount: this.props.selectedReview.count.replies,
                     author: this.props.selectedReview.user,
                     paperId: this.props.selectedReview.paper.id,
                     newReply: "",
@@ -202,9 +204,7 @@ class ReviewDetail extends Component {
               type="review"
             />
         ));
-        const replyCount = (this.state.replyPageCount > 1
-            || (this.state.replyPageCount === 1 && this.state.replyFinished === false))
-            ? "10+" : this.state.replies.length;
+
         return (
             <div className="review-detail">
                 <div className="board">
@@ -226,7 +226,7 @@ class ReviewDetail extends Component {
                             <div className="reply">
                                 <div className="review-extra">
                                     <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="25px" width="25px" /></div>{this.state.likeCount}</Button>
-                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="25px" width="25px" /></div>{replyCount}</Button>
+                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="25px" width="25px" /></div>{this.state.replyCount}</Button>
                                     {this.props.me && this.state.author.id === this.props.me.id
                                         ? <Button className="edit-button" variant="outline-info" onClick={this.clickEditButtonHandler}>Edit</Button>
 
@@ -246,6 +246,7 @@ class ReviewDetail extends Component {
                                     { this.state.replyFinished ? null
                                         : (
                                             <Button
+                                              variant="outline-info"
                                               className="reply-more-button"
                                               onClick={this.clickMoreButtonHandler}
                                               size="lg"
