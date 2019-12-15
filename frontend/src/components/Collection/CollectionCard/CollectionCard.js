@@ -6,7 +6,7 @@ import { withRouter } from "react-router-dom";
 import { collectionActions } from "../../../store/actions";
 import "./CollectionCard.css";
 import { LikeButton, SubItemButton } from "../../Button/index";
-
+//
 class CollectionCard extends Component {
     constructor(props) {
         super(props);
