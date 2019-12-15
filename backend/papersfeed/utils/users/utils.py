@@ -416,11 +416,11 @@ def select_user_collection(args):
     if not Collection.objects.filter(id=collection_id).exists():
         raise ApiError(constants.NOT_EXIST_OBJECT)
 
-    # Members QuerySet
+    # Members QuerySet (except 'pending')
     if includes_me:
-        query = Q(collection_id=collection_id)
+        query = Q(collection_id=collection_id) & ~Q(type=COLLECTION_USER_TYPE[2])
     else:
-        query = Q(collection_id=collection_id) & ~Q(user_id=request_user.id)
+        query = Q(collection_id=collection_id) & ~Q(user_id=request_user.id) & ~Q(type=COLLECTION_USER_TYPE[2])
 
     queryset = CollectionUser.objects.filter(query)
 
