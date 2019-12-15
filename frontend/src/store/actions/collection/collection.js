@@ -239,7 +239,7 @@ const leaveCollectionFailure = (error) => ({
     target: error,
 });
 
-export const leaveCollection = (collectionId) => (dispatch) => axios.delete("/api/paper/collection/self", { params: { id: collectionId } })
+export const leaveCollection = (collectionId) => (dispatch) => axios.delete("/api/user/collection/self", { params: { id: collectionId } })
     .then((res) => { dispatch(leaveCollectionSuccess(res.data)); })
     .catch((err) => { dispatch(leaveCollectionFailure(err)); });
 

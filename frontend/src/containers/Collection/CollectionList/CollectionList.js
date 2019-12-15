@@ -22,18 +22,21 @@ class CollectionList extends Component {
     }
 
     componentDidMount() {
-        if (this.props.me) {
+        if (Object.keys(this.props.me).length !== 0) {
             this.getCollectionsTrigger(0);
             this.getSharedCollectionsTrigger(0);
         }
     }
 
+    /* eslint-disable react/no-did-update-set-state */
     componentDidUpdate(prevProps) {
-        if (this.props.me !== prevProps.me) {
+        if (Object.keys(this.props.me).length !== 0 && this.props.me !== prevProps.me) {
+            this.setState({ collections: [] });
             this.getCollectionsTrigger(0);
             this.getSharedCollectionsTrigger(0);
         }
     }
+    /* eslint-enable react/no-did-update-set-state */
 
     getCollectionsTrigger(pageNum) {
         this.props.onGetCollections({
@@ -75,6 +78,7 @@ class CollectionList extends Component {
           likeCount={collection.count.likes}
           isLiked={collection.liked}
           owner={collection.owner}
+          type={collection.type}
           headerExists={false}
         />
     )
@@ -199,7 +203,7 @@ CollectionList.propTypes = {
 };
 
 CollectionList.defaultProps = {
-    me: null,
+    me: {},
     storedCollections: [],
     sharedCollections: [],
     onGetCollections: () => {},

@@ -109,6 +109,7 @@ class ProfileDetail extends Component {
           likeCount={collection.count.likes}
           isLiked={collection.liked}
           owner={collection.owner}
+          type={collection.type}
           headerExists={false}
         />
     );
