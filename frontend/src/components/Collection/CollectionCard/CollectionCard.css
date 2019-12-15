@@ -7,22 +7,8 @@
     text-align: left;
 }
 
-#headerSubscriptionTarget {
-    display: inline-flex;
-    flex-direction: row;
-    /* align-items: center; */
-}
-
-#headerSubscription {
-    display: inline-flex;
-    flex-direction: row;
-    /* align-items: center; */
-}
-
-#headerLine {
-    display: inline-flex;
-    flex-direction: row;
-    /* align-items: center; */
+#headerCollectionSubscription {
+    background-color: rgb(234, 239, 255)
 }
 
 .actorLink {
@@ -51,21 +37,4 @@
 .collection .footer {
     display: flex;
     justify-content: flex-start;
-}
-
-/* .collection .like-button{
-    width: 17%;
-    display: flex;
-    justify-content: space-around;
-}
-
-#replyButton {
-    height: 40px;
-    width: 80px;
-} */
-
-.collection .reply-button{
-    width: 17%;
-    display: flex;
-    justify-content: space-around;
 }

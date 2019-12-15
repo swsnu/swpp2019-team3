@@ -86,7 +86,7 @@ class PaperCard extends Component {
                 const actorLink = (<a className="actorLink" href={`/profile_id=${this.props.actor.id}`}>{this.props.actor.username}</a>);
                 if (Object.keys(this.props.target).length !== 0) {
                     header = (
-                        <Card.Header id="headerSubscriptionTarget">
+                        <Card.Header id="headerPaperSubscriptionTarget">
                             <div className="CardHeader">
                                 {actorLink}
                                 <h5 className="verb">{` ${this.props.verb} this paper to`}</h5>
@@ -96,7 +96,7 @@ class PaperCard extends Component {
                     );
                 } else {
                     header = (
-                        <Card.Header id="headerSubscription">
+                        <Card.Header id="headerPaperSubscription">
                             <div className="CardHeader">
                                 {actorLink}
                                 <h5 className="verb">{` ${this.props.verb} this paper`}</h5>
@@ -106,14 +106,14 @@ class PaperCard extends Component {
                 }
             } else if (this.props.recommendation) {
                 header = (
-                    <Card.Header id="headerSubscription">
+                    <Card.Header id="headerPaperSubscription">
                         <div className="CardHeader">
                             <h5 className="verb">{`${this.props.verb}`}</h5>
                         </div>
                     </Card.Header>
                 );
             } else if (this.props.paperSource) {
-                header = <Card.Header id="header">{`from ${this.props.paperSource}`}</Card.Header>;
+                header = <Card.Header id="headerPaper">{`from ${this.props.paperSource}`}</Card.Header>;
             }
         }
         let addButton = null;

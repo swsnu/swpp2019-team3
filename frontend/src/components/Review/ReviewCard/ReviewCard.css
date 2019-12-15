@@ -8,17 +8,17 @@
 }
 
 .CardHeader {
-    display: flex;
+    display: inline-block;
 }
 
-#headerSubscriptionTarget {
+#headerReviewSubscriptionTarget {
     display: inline-block;
-    flex-direction: row;
+    background-color: rgb(235, 250, 254);
 }
 
-#headerSubscription {
+#headerReviewSubscription {
     display: inline-block;
-    flex-direction: row;
+    background-color: rgb(235, 250, 254);
 }
 
 #headerLine {

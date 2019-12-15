@@ -42,31 +42,31 @@ class ReviewCard extends Component {
             const actorLink = (<a className="actorLink" href={`/profile_id=${this.props.actor.id}`}>{this.props.actor.username}</a>);
             if (Object.keys(this.props.target).length !== 0) {
                 header = (
-                    <Card.Header id="headerSubscriptionTarget">
-                        <div className="CardHeader">
+                    <Card.Header id="headerReviewSubscriptionTarget">
+                        <span className="CardHeader">
                             {actorLink}
                             <h5 className="verb">{` ${this.props.verb} this review on `}</h5>
-                        </div>
-                        <a className="targetLink" href={`/paper_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
+                            <a className="targetLink" href={`/paper_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
+                        </span>
                     </Card.Header>
                 );
             } else {
                 header = (
-                    <Card.Header id="headerSubscription">
-                        <div className="CardHeader">
+                    <Card.Header id="headerReviewSubscription">
+                        <span className="CardHeader">
                             {actorLink}
                             <h5 className="verb">{` ${this.props.verb} this review`}</h5>
-                        </div>
+                        </span>
                     </Card.Header>
                 );
             }
         } else if (this.props.recommendation) {
             header = (
-                <Card.Header id="headerSubscriptionTarget">
-                    <div className="CardHeader">
+                <Card.Header id="headerReviewSubscriptionTarget">
+                    <span className="CardHeader">
                         <h5 className="verb">{`${this.props.verb} on`}</h5>
-                    </div>
-                    <a className="targetLink" href={`/paper_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
+                        <a className="targetLink" href={`/paper_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
+                    </span>
                 </Card.Header>
             );
         }
