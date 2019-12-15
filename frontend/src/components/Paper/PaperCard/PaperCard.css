@@ -10,10 +10,9 @@
     background-color: rgb(232, 240, 247);
 }
 
-#headerLine {
-    display: inline-block;
-    flex-direction: row;
-    justify-content: space-around;
+.PaperCardHeaderText {
+    font-size: 100%;
+    font-weight: bold;
 }
 
 .paper {

@@ -21,22 +21,6 @@
     background-color: rgb(235, 250, 254);
 }
 
-#headerLine {
-    display: inline-block;
-    flex-direction: row;
-}
-
-.actorLink {
-    /* This is interval between texts: DO NOT MODIFY IT */
-    margin-right: 5px;
-    font-size: 120%;
-}
-
-.verb {
-    /* This is interval between texts: DO NOT MODIFY IT */
-    margin-right: 5px;
-}
-
 .review .body {
     padding-bottom: 10%;
 }

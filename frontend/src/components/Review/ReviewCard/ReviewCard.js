@@ -43,9 +43,9 @@ class ReviewCard extends Component {
             if (Object.keys(this.props.target).length !== 0) {
                 header = (
                     <Card.Header id="headerReviewSubscriptionTarget">
-                        <span className="CardHeader">
+                        <span className="CardHeaderText">
                             {actorLink}
-                            <h5 className="verb">{` ${this.props.verb} this review on `}</h5>
+                            {` ${this.props.verb} this review on `}
                             <a className="targetLink" href={`/paper_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
                         </span>
                     </Card.Header>
@@ -53,9 +53,9 @@ class ReviewCard extends Component {
             } else {
                 header = (
                     <Card.Header id="headerReviewSubscription">
-                        <span className="CardHeader">
+                        <span className="CardHeaderText">
                             {actorLink}
-                            <h5 className="verb">{` ${this.props.verb} this review`}</h5>
+                            {` ${this.props.verb} this review`}
                         </span>
                     </Card.Header>
                 );
@@ -63,8 +63,8 @@ class ReviewCard extends Component {
         } else if (this.props.recommendation) {
             header = (
                 <Card.Header id="headerReviewSubscriptionTarget">
-                    <span className="CardHeader">
-                        <h5 className="verb">{`${this.props.verb} on`}</h5>
+                    <span className="CardHeaderText">
+                        {` ${this.props.verb} on`}
                         <a className="targetLink" href={`/paper_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
                     </span>
                 </Card.Header>

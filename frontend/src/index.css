@@ -56,3 +56,8 @@ code {
   justify-content: center;
   flex-direction: column;
 }
+
+.CardHeaderText {
+  font-size: 110%;
+  font-weight: 500;
+}

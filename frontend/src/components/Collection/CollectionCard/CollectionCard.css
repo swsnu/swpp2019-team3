@@ -11,17 +11,6 @@
     background-color: rgb(234, 239, 255)
 }
 
-.actorLink {
-    /* This is interval between texts: DO NOT MODIFY IT */
-    margin-right: 5px;
-    font-size: 120%;
-}
-
-.verb {
-    /* This is interval between texts: DO NOT MODIFY IT */
-    margin-right: 5px;
-}
-
 .collection .body {
     padding: 10%;
 }

@@ -195,10 +195,16 @@ class Header extends Component {
                             >
                                 {notification.actor.username}
                             </Link>
-                                &nbsp;{notification.verb}&nbsp;
+                            {` ${notification.verb} `}
                             {target}
-                            {notification.timesince} ago&nbsp;
-                            <button type="button" className="read-button" onClick={() => this.readNotiHandler(notification.id)}>x</button>
+                            {` ${notification.timesince} ago `}
+                            <button
+                              type="button"
+                              className="read-button"
+                              onClick={() => this.readNotiHandler(notification.id)}
+                            >
+                                [X]
+                            </button>
                         </div>
                     );
                 },

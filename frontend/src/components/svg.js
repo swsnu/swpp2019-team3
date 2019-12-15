@@ -95,6 +95,6 @@ SVG.propTypes = {
 SVG.defaultProps = {
     width: "25px",
     height: "25px",
-    color: "black",
+    color: "",
     name: "zoom",
 };

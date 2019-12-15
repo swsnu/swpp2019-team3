@@ -130,6 +130,8 @@
     padding: 0;
     margin: 0;
     /* color: gray; */
+    background-color: white;
+    font-weight: bold;
 }
 
 #no-notifications-message {
