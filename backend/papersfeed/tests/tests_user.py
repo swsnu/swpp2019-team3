@@ -43,40 +43,6 @@ class UserTestCase(TestCase):
                     }),
                     content_type='application/json')
 
-    # pylint: disable=pointless-string-statement
-    # FIXME: 403 error is always raised in some environment and in the deployed site (#83 issue)
-    """
-    def test_csrf(self):
-        CSRF TOKEN TEST
-        # By default, csrf checks are disabled in test client
-        # To test csrf protection we enforce csrf checks here
-        client = Client(enforce_csrf_checks=True)
-        response = client.post('/api/user',
-                               json.dumps({
-                                   constants.EMAIL: 'csrf@snu.ac.kr',
-                                   constants.USERNAME: 'scrf',
-                                   constants.PASSWORD: 'iluvswpp1234'
-                               }),
-                               content_type='application/json')
-        self.assertEqual(response.status_code, 403)  # Request without csrf token returns 403 response
-
-        response = client.get('/api/token')
-
-        csrf_token = response.cookies['csrftoken'].value  # Get csrf token from cookie
-
-        response = client.post('/api/user',
-                               json.dumps({
-                                   constants.EMAIL: 'csrf@snu.ac.kr',
-                                   constants.USERNAME: 'csrf',
-                                   constants.PASSWORD: 'iluvswpp1234'
-                               }),
-                               content_type='application/json',
-                               HTTP_X_CSRFTOKEN=csrf_token)
-
-        self.assertEqual(response.status_code, 201)  # Pass csrf protection
-    """
-    # pylint: enable=pointless-string-statement
-
     def test_sign_up(self):
         """ SIGN UP """
         client = Client()

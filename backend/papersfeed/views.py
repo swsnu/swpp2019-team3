@@ -7,9 +7,8 @@ import json
 import traceback
 
 # Django Modules
-from django.http import JsonResponse, HttpResponse, HttpResponseNotAllowed
+from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 
 # Internal Modules
 from papersfeed.utils.base_utils import ApiError
@@ -23,16 +22,6 @@ def api_not_found():
     raise ApiError(404)
 
 
-@ensure_csrf_cookie
-def token(request):
-    """token"""
-    if request.method == 'GET':
-        return HttpResponse(status=204)
-
-    return HttpResponseNotAllowed(['GET'])
-
-
-@csrf_exempt
 def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
     """api_entry"""
     # API 요청에 Return 할 Response Initialize
@@ -40,7 +29,7 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
 
     # Method와 API Path를 이용해 Function을 찾아 실행시킨다
     # ——————————————————————————
-    method = request.method.upper()
+    method = request.method
     api_function = method.lower() + '_' + api
 
     if second_api is not None:
@@ -51,6 +40,11 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
 
     if fourth_api is not None:
         api_function += '_' + fourth_api
+
+    if api_function == 'get_session':
+        return apis.get_session(request)
+    elif api_function == 'post_user':
+        return apis.post_user(request)
 
     handler = getattr(apis, api_function, api_not_found)
 

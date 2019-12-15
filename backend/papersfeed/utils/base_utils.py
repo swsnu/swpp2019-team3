@@ -1,6 +1,10 @@
 """base_utils.py"""
 # -*- coding: utf-8 -*-
+import logging
+import traceback
+from django.http import JsonResponse
 from django.core.paginator import Paginator
+
 from papersfeed import constants
 
 
@@ -28,3 +32,30 @@ def get_results_from_queryset(queryset, count, page_num=0):
         return pages.get_page(page_num)
 
     return results
+
+
+def view_exceptions_handler(func):
+    """View Exceptions Handler"""
+    def view_wrapper(request, *args, **kwargs):
+        response_data = {}
+        try:
+            data = func(request, *args, **kwargs)
+            response_data = {} if data is None else data
+        except ApiError as error:
+            status_code = error.args[0]
+            logging.error("\tstatus-code: %d\n%s\n%s", status_code, str(error), traceback.format_exc())
+        except Exception as error:  # pylint: disable=broad-except
+            logging.error(traceback.format_exc())
+            status_code = 500
+            response_data[constants.DEBUG] = {constants.ERROR: str(error),
+                                              constants.DESCRIPTION: traceback.format_exc()}
+            logging.error("\tstatus-code: %d\n%s\n%s", status_code, str(error), traceback.format_exc())
+        else:
+            if request.method.lower() == 'post':
+                status_code = 201
+            else:
+                status_code = 200
+        response = JsonResponse(response_data, safe=False)
+        response.status_code = status_code
+        return response
+    return view_wrapper
