@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 
 # Internal Modules
+import json
+from django.views.decorators.csrf import ensure_csrf_cookie
+
+from papersfeed.utils.base_utils import view_exceptions_handler
 from papersfeed.utils.papers import utils as papers_utils
 from papersfeed.utils.users import utils as users_utils
 from papersfeed.utils.collections import utils as collections_utils
@@ -25,8 +29,12 @@ def delete_follow(args):
     return {constants.COUNT: users_utils.remove_follow(args)}
 
 
-def get_session(args):
+@ensure_csrf_cookie
+@view_exceptions_handler
+def get_session(request):
     """Get Session"""
+    args = request.GET.dict()
+    args[constants.REQUEST] = request
     return users_utils.select_session(args)
 
 
@@ -40,8 +48,15 @@ def delete_session(args):
     return users_utils.delete_session(args)
 
 
-def post_user(args):
+@ensure_csrf_cookie
+@view_exceptions_handler
+def post_user(request):
     """Post User"""
+    args = request.POST
+    body = json.loads(request.body.decode()) if request.body else None
+    if isinstance(body, dict):
+        args = body
+    args[constants.REQUEST] = request
     return {constants.USER: users_utils.insert_user(args)}
 
 
@@ -315,6 +330,11 @@ def put_user_collection(args):
 def delete_user_collection(args):
     """Delete User Collection"""
     return {constants.COUNT: users_utils.remove_user_collection(args)}
+
+
+def delete_user_collection_self(args):
+    """Delete User Collection Self"""
+    return {constants.COUNT: users_utils.remove_user_collection_self(args)}
 
 
 def put_user_collection_pending(args):

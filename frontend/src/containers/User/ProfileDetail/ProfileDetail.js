@@ -109,6 +109,7 @@ class ProfileDetail extends Component {
           likeCount={collection.count.likes}
           isLiked={collection.liked}
           owner={collection.owner}
+          type={collection.type}
           headerExists={false}
         />
     );
@@ -219,11 +220,11 @@ class ProfileDetail extends Component {
                                 <h2 id="userName">{this.props.thisUser.username}</h2>
                             </div>
                             <div id="collectionStat">
-                                <h5 id="collectionCount">{this.state.collections.length}</h5>
+                                <h5 id="collectionCount">{this.props.collections.totalCount}</h5>
                                 <h5 id="collectionText">Collections</h5>
                             </div>
                             <div id="reviewStat">
-                                <h5 id="reviewCount">{this.state.reviews.length}</h5>
+                                <h5 id="reviewCount">{this.props.reviews.totalCount}</h5>
                                 <h5 id="reviewText">Reviews</h5>
                             </div>
                             <Link id="followerStat" to={`/profile_id=${this.props.thisUser.id}/followers`}>
@@ -250,6 +251,7 @@ class ProfileDetail extends Component {
                                 {this.props.collections.finished ? null
                                     : (
                                         <Button
+                                          variant="outline-info"
                                           className="collection-more-button"
                                           onClick={this.clickCollectionMoreHandler}
                                           size="lg"
@@ -267,6 +269,7 @@ class ProfileDetail extends Component {
                                 { this.props.reviews.finished ? null
                                     : (
                                         <Button
+                                          variant="outline-info"
                                           className="review-more-button"
                                           onClick={this.clickReviewMoreHandler}
                                           size="lg"

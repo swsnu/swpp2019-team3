@@ -45,7 +45,7 @@ export const getReviewsByPaperId = (paperId, pageNum) => (dispatch) => axios.get
     .then((res) => dispatch(getReviewsByPaperIdSuccess(res.data)))
     .catch((err) => dispatch(getReviewsByPaperIdFailure(err)));
 
-// get rviews by user id
+// get reviews by user id
 const getReviewsByUserIdSuccess = (data) => (
     {
         type: reviewConstants.GET_REVIEWS_BY_USER,

@@ -476,7 +476,7 @@ describe("collectionActions", () => {
             });
     });
 
-    it("acceptInvitation should handle failure", (done) => {
+    it("dismissInvitation should handle failure", (done) => {
         const spy = jest.spyOn(axios, "delete")
             .mockImplementation(() => new Promise((_, reject) => {
                 const error = {
@@ -491,6 +491,42 @@ describe("collectionActions", () => {
         mockStore.dispatch(collectionActions.dismissInvitation(1))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/user/collection/pending", { params: { id: 1 } });
+                done();
+            });
+    });
+
+    it("leaveCollection should handle success", (done) => {
+        const spy = jest.spyOn(axios, "delete")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: { count: { users: 1 } },
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.leaveCollection(1))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/collection/self", { params: { id: 1 } });
+                done();
+            });
+    });
+
+    it("leaveCollection should handle failure", (done) => {
+        const spy = jest.spyOn(axios, "delete")
+            .mockImplementation(() => new Promise((_, reject) => {
+                const error = {
+                    response: {
+                        status: 404,
+                        data: null,
+                    },
+                };
+                reject(error);
+            }));
+
+        mockStore.dispatch(collectionActions.leaveCollection(1))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/user/collection/self", { params: { id: 1 } });
                 done();
             });
     });

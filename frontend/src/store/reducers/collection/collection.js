@@ -37,7 +37,7 @@ const initialState = {
     selected: {
         status: collectionStatus.NONE,
         collection: {
-            creation_date: "", modification_date: "", type: "private", collection_user_type: null,
+            creation_date: "", modification_date: "", type: "public", collection_user_type: null,
         },
         error: null,
         papers: { papers: [], page_number: 0, is_finished: true },
@@ -281,6 +281,24 @@ const reducer = (state = initialState, action) => {
             },
         };
     case collectionConstants.DEL_COLLECTION_MEMBER_FAILURE_MORE_THAN_USERCOUNT:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
+    case collectionConstants.LEAVE_COLLECTION_SUCCESS:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.SUCCESS,
+                memberCount: action.target.users,
+            },
+        };
+    case collectionConstants.LEAVE_COLLECTION_FAILURE:
         return {
             ...state,
             selected: {

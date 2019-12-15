@@ -106,7 +106,7 @@ class TransferOwnershipModal extends Component {
         return (
             <div className="TransferOwnership">
                 <div id="openButtonDiv">
-                    <Button id="modalOpenButton" onClick={this.clickOpenHandler}>
+                    <Button id="modalOpenButton" variant="info" onClick={this.clickOpenHandler}>
                         Transfer Ownership
                     </Button>
                 </div>

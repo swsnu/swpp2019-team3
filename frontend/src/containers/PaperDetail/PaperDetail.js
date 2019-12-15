@@ -137,6 +137,7 @@ class PaperDetail extends Component {
                         { this.props.reviewFinished ? null
                             : (
                                 <Button
+                                  variant="outline-info"
                                   className="review-more-button"
                                   onClick={() => this.getReviewsTrigger(
                                       this.props.reviewPageNum,

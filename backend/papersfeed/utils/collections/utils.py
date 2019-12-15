@@ -586,7 +586,9 @@ def __is_member(outer_ref, user_id):
 
 def __is_shared(outer_ref, user_id):
     """Check If Collection is Shared"""
-    return Exists(CollectionUser.objects.filter(Q(collection_id=OuterRef(outer_ref)), ~Q(user_id=user_id)))
+    # check if there are other members in the collection (except 'pending')
+    return Exists(CollectionUser.objects.filter(Q(collection_id=OuterRef(outer_ref)),
+                                                ~Q(user_id=user_id), ~Q(type=COLLECTION_USER_TYPE[2])))
 
 
 def __is_collection_owned(outer_ref, request_user):
