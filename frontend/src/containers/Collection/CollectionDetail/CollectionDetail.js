@@ -586,6 +586,7 @@ const mapDispatchToProps = (dispatch) => ({
     ),
     onDeleteCollectionPaper: (collectionAndPaper) => dispatch(
         collectionActions.deleteCollectionPaper(collectionAndPaper),
+    ),
     onLeaveCollection: (collectionId) => dispatch(
         collectionActions.leaveCollection(collectionId),
     ),
