@@ -84,6 +84,23 @@ class CollectionList extends Component {
     )
 
     render() {
+        let collectionMessage = null;
+        let sharedCollectionMessage = null;
+        if (this.state.collections.length === 0) {
+            collectionMessage = (
+                <div className="alert alert-warning" role="alert">
+                    Make your own collections!
+                </div>
+            );
+        }
+        if (this.state.sharedCollections.length === 0) {
+            sharedCollectionMessage = (
+                <div className="alert alert-warning" role="alert">
+                    Manage collections with other people!
+                </div>
+            );
+        }
+
         const collectionCardsLeft = this.state.collections
             .filter((x) => this.state.collections.indexOf(x) % 2 === 0)
             .map((collection) => this.cardsMaker(collection));
@@ -114,6 +131,7 @@ class CollectionList extends Component {
                 <Tabs defaultActiveKey="all-tab" className="collection-tabs">
                     <Tab className="all-tab" eventKey="all-tab" title={`All(${this.props.collectionTotalCount})`}>
                         <div className="CollectionListContent">
+                            {collectionMessage}
                             <div id="colletionCards">
                                 <div id="collectionCardsLeft">{collectionCardsLeft}</div>
                                 <div id="collectionCardsRight">{collectionCardsRight}</div>
@@ -137,6 +155,7 @@ class CollectionList extends Component {
                     </Tab>
                     <Tab className="shared-tab" eventKey="shared-tab" title={`Shared(${this.props.sharedTotalCount})`}>
                         <div className="SharedCollectionListContent">
+                            {sharedCollectionMessage}
                             <div id="sharedColletionCards">
                                 <div id="sharedCollectionCardsLeft">{sharedCollectionCardsLeft}</div>
                                 <div id="sharedCollectionCardsRight">{sharedCollectionCardsRight}</div>
