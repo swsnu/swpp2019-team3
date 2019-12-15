@@ -22,18 +22,21 @@ class CollectionList extends Component {
     }
 
     componentDidMount() {
-        if (this.props.me) {
+        if (Object.keys(this.props.me).length !== 0) {
             this.getCollectionsTrigger(0);
             this.getSharedCollectionsTrigger(0);
         }
     }
 
+    /* eslint-disable react/no-did-update-set-state */
     componentDidUpdate(prevProps) {
-        if (this.props.me !== prevProps.me) {
+        if (Object.keys(this.props.me).length !== 0 && this.props.me !== prevProps.me) {
+            this.setState({ collections: [] });
             this.getCollectionsTrigger(0);
             this.getSharedCollectionsTrigger(0);
         }
     }
+    /* eslint-enable react/no-did-update-set-state */
 
     getCollectionsTrigger(pageNum) {
         this.props.onGetCollections({
@@ -75,11 +78,29 @@ class CollectionList extends Component {
           likeCount={collection.count.likes}
           isLiked={collection.liked}
           owner={collection.owner}
+          type={collection.type}
           headerExists={false}
         />
     )
 
     render() {
+        let collectionMessage = null;
+        let sharedCollectionMessage = null;
+        if (this.state.collections.length === 0) {
+            collectionMessage = (
+                <div className="alert alert-warning" role="alert">
+                    Make your own collections!
+                </div>
+            );
+        }
+        if (this.state.sharedCollections.length === 0) {
+            sharedCollectionMessage = (
+                <div className="alert alert-warning" role="alert">
+                    Manage collections with other people!
+                </div>
+            );
+        }
+
         const collectionCardsLeft = this.state.collections
             .filter((x) => this.state.collections.indexOf(x) % 2 === 0)
             .map((collection) => this.cardsMaker(collection));
@@ -110,6 +131,7 @@ class CollectionList extends Component {
                 <Tabs defaultActiveKey="all-tab" className="collection-tabs">
                     <Tab className="all-tab" eventKey="all-tab" title={`All(${this.props.collectionTotalCount})`}>
                         <div className="CollectionListContent">
+                            {collectionMessage}
                             <div id="colletionCards">
                                 <div id="collectionCardsLeft">{collectionCardsLeft}</div>
                                 <div id="collectionCardsRight">{collectionCardsRight}</div>
@@ -117,6 +139,7 @@ class CollectionList extends Component {
                             { this.props.collectionFinished ? null
                                 : (
                                     <Button
+                                      variant="outline-info"
                                       className="collection-more-button"
                                       onClick={() => this.getCollectionsTrigger(
                                           this.props.collectionPageNum,
@@ -132,6 +155,7 @@ class CollectionList extends Component {
                     </Tab>
                     <Tab className="shared-tab" eventKey="shared-tab" title={`Shared(${this.props.sharedTotalCount})`}>
                         <div className="SharedCollectionListContent">
+                            {sharedCollectionMessage}
                             <div id="sharedColletionCards">
                                 <div id="sharedCollectionCardsLeft">{sharedCollectionCardsLeft}</div>
                                 <div id="sharedCollectionCardsRight">{sharedCollectionCardsRight}</div>
@@ -139,6 +163,7 @@ class CollectionList extends Component {
                             { this.props.sharedFinished ? null
                                 : (
                                     <Button
+                                      variant="outline-info"
                                       className="shared-collection-more-button"
                                       onClick={() => this.getSharedCollectionsTrigger(
                                           this.props.sharedPageNum,
@@ -197,7 +222,7 @@ CollectionList.propTypes = {
 };
 
 CollectionList.defaultProps = {
-    me: null,
+    me: {},
     storedCollections: [],
     sharedCollections: [],
     onGetCollections: () => {},

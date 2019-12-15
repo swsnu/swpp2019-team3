@@ -71,6 +71,8 @@
 .header #header .header-buttons .dropdown-notification .notification-menu .notification-entry{
     margin-left: 5%;
     margin-right: 5%;
+    border-top: 1px solid grey;
+    border-top: 1px solid grey;
 }
 
 .read-button {
@@ -79,7 +81,7 @@
     border: 0 none transparent;
     padding: 0;
     margin: 0;
-    color: gray;
+    /* color: gray; */
 }
 
 #no-notifications-message {

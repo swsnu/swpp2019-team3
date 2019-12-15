@@ -137,9 +137,21 @@ class History extends Component {
         let reviewCardRight = null;
         let collectionCardLeft = null;
         let collectionCardRight = null;
-        let paperMessage = "no papers you liked";
-        let reviewMessage = "no reviews you liked";
-        let collectionMessage = "no collections you liked";
+        let paperMessage = (
+            <div className="alert alert-warning" role="alert">
+                No papers you liked.
+            </div>
+        );
+        let reviewMessage = (
+            <div className="alert alert-warning" role="alert">
+                No reviews you liked.
+            </div>
+        );
+        let collectionMessage = (
+            <div className="alert alert-warning" role="alert">
+                No collections you liked.
+            </div>
+        );
 
         if (this.state.papers != null && this.state.papers.length > 0) {
             paperCardLeft = this.state.papers
@@ -176,14 +188,15 @@ class History extends Component {
                 <div className="item-list">
                     <Tabs defaultActiveKey="paper-tab" className="item-tabs">
                         <Tab className="paper-tab" eventKey="paper-tab" title="Paper">
+                            {paperMessage}
                             <div className="paper-cards">
-                                <div className="paper-message">{paperMessage}</div>
                                 <div className="paper-cards-left">{paperCardLeft}</div>
                                 <div className="paper-cards-right">{paperCardRight}</div>
                             </div>
                             { this.props.paperList.finished ? null
                                 : (
                                     <Button
+                                      variant="outline-info"
                                       className="paper-more-button"
                                       onClick={this.clickPaperMoreHandler}
                                       size="lg"
@@ -194,14 +207,15 @@ class History extends Component {
                                 )}
                         </Tab>
                         <Tab className="collection-tab" eventKey="collection-tab" title="Collection">
+                            {collectionMessage}
                             <div className="collection-cards">
-                                <div className="collection-message">{collectionMessage}</div>
                                 <div className="collection-cards-left">{collectionCardLeft}</div>
                                 <div className="collection-cards-right">{collectionCardRight}</div>
                             </div>
                             {this.props.collectionList.finished ? null
                                 : (
                                     <Button
+                                      variant="outline-info"
                                       className="collection-more-button"
                                       onClick={this.clickCollectionMoreHandler}
                                       size="lg"
@@ -212,14 +226,15 @@ class History extends Component {
                                 )}
                         </Tab>
                         <Tab className="review-tab" eventKey="review-tab" title="Review">
+                            {reviewMessage}
                             <div className="review-cards">
-                                <div className="review-message">{reviewMessage}</div>
                                 <div className="review-cards-left">{reviewCardLeft}</div>
                                 <div className="review-cards-right">{reviewCardRight}</div>
                             </div>
                             { this.props.reviewList.finished ? null
                                 : (
                                     <Button
+                                      variant="outline-info"
                                       className="review-more-button"
                                       onClick={this.clickReviewMoreHandler}
                                       size="lg"

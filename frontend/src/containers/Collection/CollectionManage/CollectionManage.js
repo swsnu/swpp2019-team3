@@ -62,13 +62,13 @@ class CollectionManage extends Component {
             beforeDescription = this.props.selectedCollection.text;
         }
 
-        let collectionTypeText = "Make this collection Private.";
-        let typeModalOpenButtonText = "Make this collection Private";
+        let collectionTypeText = "Private";
+        let typeModalOpenButtonText = "Private Collection";
         let typeModalWarnText = `Make Invisible to everyone other than Members: ${this.props.selectedCollection.title}`;
         let futureType = "private";
         if (this.state.collectionType === "private") {
-            collectionTypeText = "Make this collection Public.";
-            typeModalOpenButtonText = "Make this collection Public";
+            collectionTypeText = "Public";
+            typeModalOpenButtonText = "Public Collection";
             typeModalWarnText = `Make Visible to everyone: ${this.props.selectedCollection.title}`;
             futureType = "public";
         }
@@ -76,11 +76,11 @@ class CollectionManage extends Component {
         return (
             <div className="CollectionManage">
                 <h2 id="collectionManageTitle">
-                        Manage Collection: {this.props.selectedCollection.title}
+                        Manage Collection
                 </h2>
                 <div className="EditCollectionInfo">
                     <div className="EditCollectionItem">
-                        <h3 id="editNameTag">Collection Name</h3>
+                        <h3 id="editNameTag">Title</h3>
                         <input
                           id="editName"
                           type="text"
@@ -91,7 +91,7 @@ class CollectionManage extends Component {
                         />
                     </div>
                     <div className="EditCollectionItem">
-                        <h3 id="editDescTag">Collection Description</h3>
+                        <h3 id="editDescTag">Description</h3>
                         <textarea
                           id="editDescription"
                           rows="3"
@@ -111,7 +111,11 @@ class CollectionManage extends Component {
                                 && beforeDescription === this.state.collectionDescription)}
                         >Update Collection
                         </Button>
-                        <Button id="cancelButton" href={`/collection_id=${this.props.selectedCollection.id}`}>
+                        <Button
+                          id="cancelButton"
+                          variant="secondary"
+                          href={`/collection_id=${this.props.selectedCollection.id}`}
+                        >
                             Cancel
                         </Button>
                         {this.state.collectionName === ""
@@ -123,22 +127,16 @@ class CollectionManage extends Component {
                     <div className="ManageButtonItems">
                         <h5 className="ManageButtonText" id="manageMemberText">
                             Looks for current members of this collections,
-                            invite new members, or kick off some.
+                            invite new members, or kick off some
                         </h5>
                         <ManageCollectionMemberModal />
                     </div>
+                    <hr color="gray" />
                     <div className="ManageButtonItems">
-                        <div className="ManageButtonText" id="transferOwnershipText">
-                            <h5>
-                                Transfer the ownership of this collection
-                                to the other member of this collection.
-                            </h5>
-                            <h5>WARNING: This action cannot be undone.</h5>
+                        <div className="collectionTypeBlock">
+                            <h5 id="collectionTypeText">Make this collection&nbsp;</h5>
+                            <h5 id="collectionTypeContent">{collectionTypeText}</h5>
                         </div>
-                        <TransferOwnershipModal history={this.props.history} />
-                    </div>
-                    <div className="ManageButtonItems">
-                        <h5 id="collectionTypeText">{collectionTypeText}</h5>
                         <WarningModal
                           id="change-type-warningmodal"
                           openButtonText={typeModalOpenButtonText}
@@ -154,15 +152,34 @@ class CollectionManage extends Component {
                           showWarningContentText={false}
                         />
                     </div>
+                    <hr color="gray" />
+                    <div className="ManageButtonItems">
+                        <div className="ManageButtonText" id="transferOwnershipText">
+                            <h5>
+                                Transfer the ownership of this collection
+                                to the other member of this collection
+                            </h5>
+                            <div className="warning-block">
+                                <h5 id="warning-text">WARNING:&nbsp;</h5>
+                                <h5 id="warning-content">This action cannot be undone</h5>
+                            </div>
+                        </div>
+                        <TransferOwnershipModal history={this.props.history} />
+                    </div>
+                    <hr color="gray" />
                     <div className="ManageButtonItems">
                         <div className="ManageButtonText" id="deleteCollectionText">
-                            <h5>Delete this collection.</h5>
-                            <h5>WARNING: This action cannot be undone.</h5>
+                            <h5>Delete this collection</h5>
+                            <div className="warning-block">
+                                <h5 id="warning-text">WARNING:&nbsp;</h5>
+                                <h5 id="warning-content">This action cannot be undone</h5>
+                            </div>
                         </div>
                         <WarningModal
                           id="delete-warningmodal"
-                          openButtonText="Delete this collection"
-                          whatToWarnText={`Delete colelction: ${this.props.selectedCollection.title}`}
+                          variant="danger"
+                          openButtonText="Delete Collection"
+                          whatToWarnText={`Delete collection: ${this.props.selectedCollection.title}`}
                           whatActionWillBeDone={() => this.props.onDeleteCollection(
                               this.props.selectedCollection.id,
                           )}

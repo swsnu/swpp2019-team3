@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
 
 import { collectionActions } from "../../../store/actions";
 
@@ -63,8 +63,12 @@ class CreateNewCollectionModal extends Component {
         return (
             <div className="CreateNewCollectionModal">
                 <div id="openButtonDiv">
-                    <Button id="createModalOpenButton" onClick={this.clickOpenHandler}>
-                        Create New...
+                    <Button
+                      variant="outline-success"
+                      id="createModalOpenButton"
+                      onClick={this.clickOpenHandler}
+                    >
+                        New Collection
                     </Button>
                 </div>
                 <Modal id="createModal" show={this.state.isModalOpen} onHide={this.clickCancelHandler} centered>
@@ -73,11 +77,11 @@ class CreateNewCollectionModal extends Component {
                     </Modal.Header>
                     <Modal.Body>
                         <div id="nameDiv">
-                            <h5 id="newCollectionNameText">Name: </h5>
+                            <h5 id="newCollectionNameText">Title: </h5>
                             <textarea
                               id="newCollectionNameInput"
                               rows="1"
-                              cols="62"
+                              cols="50"
                               type="text"
                               placeholder="enter new collection name"
                               value={this.state.newCollectionName}
@@ -91,7 +95,7 @@ class CreateNewCollectionModal extends Component {
                             <textarea
                               id="newCollectionDescInput"
                               rows="3"
-                              cols="62"
+                              cols="55"
                               type="text"
                               placeholder="enter new collection description (optional)"
                               value={this.state.newCollectionDesc}
@@ -100,13 +104,19 @@ class CreateNewCollectionModal extends Component {
                               })}
                             />
                         </div>
-                        <Form.Check
-                          type="checkbox"
-                          className="private-check"
-                          label="Make Invisible to everyone other than Members"
-                          checked={this.state.private}
-                          onChange={() => this.handleCheckPrivate()}
-                        />
+                        <label
+                          id="private-check-label"
+                          htmlFor="create-collection-private-check"
+                        >
+                            <input
+                              type="checkbox"
+                              className="private-check"
+                              id="create-collection-private-check"
+                              checked={this.state.private}
+                              onChange={() => this.handleCheckPrivate()}
+                            />
+                             Make Invisible to everyone other than Members
+                        </label>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button

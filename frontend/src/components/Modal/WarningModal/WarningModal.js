@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Modal, Button } from "react-bootstrap";
 
+import "./WarningModal.css";
+
 class WarningModal extends Component {
     constructor(props) {
         super(props);
@@ -43,7 +45,7 @@ class WarningModal extends Component {
             : <div />;
         const warningContentText = this.props.showWarningContentText
             ? (
-                <h5 id="warningContentText">The following action will be done, however it cannot be undone after you press Confirm:</h5>
+                <h5 id="warningContentText">This action cannot be undone:</h5>
             ) : null;
         return (
             <div className="WarningModal">
@@ -54,19 +56,24 @@ class WarningModal extends Component {
                       id="modalOpenButton"
                       onClick={this.clickOpenHandler}
                       disabled={this.props.disableCondition}
+                      style={({
+                          width: this.props.openButtonWidth,
+                          height: this.props.openButtonHeight,
+                          marginLeft: this.props.openButtonMarginLeft,
+                      })}
                     >
                         {this.props.openButtonText}
                     </Button>
                 </div>
                 <Modal id="warningModal" show={this.state.isModalOpen} onHide={this.clickCancelHandler} centered>
-                    <Modal.Header className="ModalHeader">
-                        <h5 id="warningHeaderText">Warning</h5>
+                    <Modal.Header className="warningModalHeader">
+                        Warning
                     </Modal.Header>
                     <Modal.Body>
-                        <div id="texts">
+                        <div id="warning-texts">
                             {warningContentText}
                             <h5 id="warningWhatWillBeDone">{this.props.whatToWarnText}</h5>
-                            <h5 id="continueText">Continue?</h5>
+                            {/* <h5 id="continueText">Continue?</h5> */}
                         </div>
                         <div id="buttons">
                             <Button variant="danger" id="confirmButton" onClick={this.clickConfirmHandler}>
@@ -96,6 +103,9 @@ WarningModal.propTypes = {
     disableMessage: PropTypes.string,
     variant: PropTypes.string,
     showWarningContentText: PropTypes.bool,
+    openButtonWidth: PropTypes.string,
+    openButtonHeight: PropTypes.string,
+    openButtonMarginLeft: PropTypes.string,
 };
 
 WarningModal.defaultProps = {
@@ -107,4 +117,7 @@ WarningModal.defaultProps = {
     disableMessage: "",
     variant: "primary",
     showWarningContentText: true,
+    openButtonWidth: "",
+    openButtonHeight: "",
+    openButtonMarginLeft: "",
 };

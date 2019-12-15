@@ -20,11 +20,8 @@ class ReviewDetail extends Component {
             replies: [],
             isLiked: false,
             likeCount: 0,
+            replyCount: 0,
             author: {
-                id: 0,
-                username: "",
-            },
-            user: {
                 id: 0,
                 username: "",
             },
@@ -37,6 +34,7 @@ class ReviewDetail extends Component {
             replyFinished: true,
         };
 
+        this.initReviewDetail = this.initReviewDetail.bind(this);
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
         this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
         this.clickEditButtonHandler = this.clickEditButtonHandler.bind(this);
@@ -48,33 +46,21 @@ class ReviewDetail extends Component {
     }
 
     componentDidMount() {
-        this.props.onGetReview({ id: Number(this.props.match.params.review_id) })
-            .then(() => {
-                if (this.props.selectedReviewStatus === reviewStatus.REVIEW_NOT_EXIST) {
-                    this.props.history.push("/main");
-                    return;
-                }
-                this.setState({
-                    thisReview: this.props.selectedReview,
-                    isLiked: this.props.selectedReview.liked,
-                    likeCount: this.props.selectedReview.count.likes,
-                    author: this.props.selectedReview.user,
-                    paperId: this.props.selectedReview.paper.id,
-                    newReply: "",
-                    creationDate: `${this.props.selectedReview.creation_date.split("T")[0]} ${this.props.selectedReview.creation_date.split("T")[1].substring(0, 5)}`,
-                    modificationDate: `${this.props.selectedReview.modification_date.split("T")[0]} ${this.props.selectedReview.modification_date.split("T")[1].substring(0, 5)}`,
-                });
-            }).catch(() => {});
-
-        this.props.onGetReplies({ id: Number(this.props.match.params.review_id) })
-            .then(() => {
-                this.setState({
-                    replies: this.props.replyList.list,
-                    replyPageCount: 1,
-                    replyFinished: this.props.replyList.finished,
-                });
-            }).catch(() => {});
+        this.initReviewDetail();
     }
+
+    /* eslint-disable react/no-did-update-set-state */
+    componentDidUpdate(prevProps) {
+        if (this.props.location !== prevProps.location) {
+            this.setState({
+                newReply: "",
+                replies: [],
+                newReplies: [],
+            });
+            this.initReviewDetail();
+        }
+    }
+    /* eslint-enable react/no-did-update-set-state */
 
     clickMoreButtonHandler = () => {
         this.props.onGetReplies({
@@ -92,7 +78,7 @@ class ReviewDetail extends Component {
     }
 
     async handleReplies() {
-        // get replies utile previous pageCount
+        // get replies until previous pageCount
         const end = this.state.replyPageCount;
         this.setState({
             newReplies: [],
@@ -119,6 +105,36 @@ class ReviewDetail extends Component {
             id: Number(this.props.match.params.review_id),
             page_number: Number(i),
         });
+    }
+
+    initReviewDetail() {
+        this.props.onGetReview({ id: Number(this.props.match.params.review_id) })
+            .then(() => {
+                if (this.props.selectedReviewStatus === reviewStatus.REVIEW_NOT_EXIST) {
+                    this.props.history.push("/main");
+                    return;
+                }
+                this.setState({
+                    thisReview: this.props.selectedReview,
+                    isLiked: this.props.selectedReview.liked,
+                    likeCount: this.props.selectedReview.count.likes,
+                    replyCount: this.props.selectedReview.count.replies,
+                    author: this.props.selectedReview.user,
+                    paperId: this.props.selectedReview.paper.id,
+                    newReply: "",
+                    creationDate: `${this.props.selectedReview.creation_date.split("T")[0]} ${this.props.selectedReview.creation_date.split("T")[1].substring(0, 5)}`,
+                    modificationDate: `${this.props.selectedReview.modification_date.split("T")[0]} ${this.props.selectedReview.modification_date.split("T")[1].substring(0, 5)}`,
+                });
+            }).catch(() => {});
+
+        this.props.onGetReplies({ id: Number(this.props.match.params.review_id) })
+            .then(() => {
+                this.setState({
+                    replies: this.props.replyList.list,
+                    replyPageCount: 1,
+                    replyFinished: this.props.replyList.finished,
+                });
+            }).catch(() => {});
     }
 
     // handle click 'Like' button
@@ -188,9 +204,7 @@ class ReviewDetail extends Component {
               type="review"
             />
         ));
-        const replyCount = (this.state.replyPageCount > 1
-            || (this.state.replyPageCount === 1 && this.state.replyFinished === false))
-            ? "10+" : this.state.replies.length;
+
         return (
             <div className="review-detail">
                 <div className="board">
@@ -212,7 +226,7 @@ class ReviewDetail extends Component {
                             <div className="reply">
                                 <div className="review-extra">
                                     <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="25px" width="25px" /></div>{this.state.likeCount}</Button>
-                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="25px" width="25px" /></div>{replyCount}</Button>
+                                    <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="25px" width="25px" /></div>{this.state.replyCount}</Button>
                                     {this.props.me && this.state.author.id === this.props.me.id
                                         ? <Button className="edit-button" variant="outline-info" onClick={this.clickEditButtonHandler}>Edit</Button>
 
@@ -223,7 +237,7 @@ class ReviewDetail extends Component {
                                     <Button className="paper-button" variant="secondary" href={`/paper_id=${this.state.paperId}`}>Paper</Button>
                                 </div>
                                 <Form className="new-reply">
-                                    <Form.Label className="username">{this.state.user.username}</Form.Label>
+                                    <Form.Label className="username">{this.props.me.username}</Form.Label>
                                     <Form.Control className="reply-input" as="textarea" bsPrefix="reply-input" value={this.state.newReply} onChange={this.handleChange} />
                                     <Button className="new-reply-button" variant="info" onClick={this.clickReplyAddButtonHandler} disabled={this.state.newReply.length === 0}>Add</Button>
                                 </Form>
@@ -232,6 +246,7 @@ class ReviewDetail extends Component {
                                     { this.state.replyFinished ? null
                                         : (
                                             <Button
+                                              variant="outline-info"
                                               className="reply-more-button"
                                               onClick={this.clickMoreButtonHandler}
                                               size="lg"
@@ -280,6 +295,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 ReviewDetail.propTypes = {
     me: PropTypes.objectOf(PropTypes.any),
+    location: PropTypes.objectOf(PropTypes.any),
     history: PropTypes.objectOf(PropTypes.any),
     match: PropTypes.objectOf(PropTypes.any),
     selectedReviewStatus: PropTypes.string,
@@ -297,6 +313,7 @@ ReviewDetail.propTypes = {
 
 ReviewDetail.defaultProps = {
     me: null,
+    location: null,
     history: null,
     match: null,
     selectedReviewStatus: reviewStatus.NONE,

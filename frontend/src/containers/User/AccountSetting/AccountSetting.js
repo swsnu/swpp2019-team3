@@ -145,7 +145,7 @@ class AccountSetting extends Component {
                     <input
                       id="editUserName"
                       type="text"
-                      value={this.state.username}
+                      value={this.state.username || ""}
                       onChange={(event) => this.setState({ username: event.target.value })}
                     />
                     <h3 className="editMessage" id="editUserNameMessage">{editUsernameMessage}</h3>
@@ -156,7 +156,7 @@ class AccountSetting extends Component {
                     <input
                       id="editEmail"
                       type="text"
-                      value={this.state.email}
+                      value={this.state.email || ""}
                       onChange={(event) => this.setState({ email: event.target.value })}
                     />
                     <h3 className="editMessage" id="editEmailMessage">{editEmailMessage}</h3>
@@ -168,7 +168,7 @@ class AccountSetting extends Component {
                       rows="4"
                       type="text"
                       placeholder="Write anything freely that describes yourself best."
-                      value={this.state.description}
+                      value={this.state.description || ""}
                       onChange={(event) => this.setState({ description: event.target.value })}
                     />
                 </div>

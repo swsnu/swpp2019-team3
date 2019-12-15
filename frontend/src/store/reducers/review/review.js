@@ -13,6 +13,7 @@ const initialState = {
         error: null,
         pageNum: 0,
         finished: true,
+        totalCount: 0,
     },
     edit: {
         status: reviewStatus.NONE,
@@ -102,6 +103,7 @@ const ReviewReducer = (state = initialState, action) => {
                 list: action.target.reviews,
                 pageNum: action.target.page_number,
                 finished: action.target.is_finished,
+                totalCount: action.target.total_count,
             },
         };
     case reviewConstants.GET_REVIEW:

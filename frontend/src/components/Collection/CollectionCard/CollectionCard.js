@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import { Card } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 import { collectionActions } from "../../../store/actions";
 import "./CollectionCard.css";
 import { LikeButton, SubItemButton } from "../../Button/index";
+import SVG from "../../svg";
 
 class CollectionCard extends Component {
     constructor(props) {
@@ -48,12 +50,21 @@ class CollectionCard extends Component {
                 </Card.Header>
             );
         }
+
+        let typeIcon = null;
+        if (this.props.type === "private") {
+            typeIcon = (
+                <SVG name="lock" height="8%" width="8%" />
+            );
+        }
+
         return (
             <div className="wrapper">
                 <Card className="collection">
                     {header}
                     <Card.Body className="body">
                         <div className="title">
+                            {typeIcon}&nbsp;
                             <Card.Link className="text" href={`/collection_id=${this.props.id}`}>{this.props.title}</Card.Link>
                         </div>
                         <Card.Text>papers: {this.props.paperCount}</Card.Text>
@@ -73,7 +84,7 @@ class CollectionCard extends Component {
                         />
                         <SubItemButton
                           id="replyButton"
-                          href={`/collection_id=${this.props.id}`}
+                          onClick={() => { this.props.history.push({ pathname: `/collection_id=${this.props.id}`, state: "replyTab" }); }}
                           count={this.props.replyCount}
                         />
                     </Card.Footer>
@@ -99,10 +110,11 @@ const mapDispatchToProps = (dispatch) => ({
     ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CollectionCard);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CollectionCard));
 
 CollectionCard.propTypes = {
     id: PropTypes.number,
+    history: PropTypes.objectOf(PropTypes.any),
     title: PropTypes.string,
     memberCount: PropTypes.number,
     paperCount: PropTypes.number,
@@ -118,6 +130,7 @@ CollectionCard.propTypes = {
     subscription: PropTypes.bool,
     actor: PropTypes.objectOf(PropTypes.any),
     verb: PropTypes.string,
+    type: PropTypes.string,
     // eslint-disable-next-line react/no-unused-prop-types
     target: PropTypes.objectOf(PropTypes.any),
 };
@@ -139,5 +152,7 @@ CollectionCard.defaultProps = {
     subscription: false,
     actor: {},
     verb: "",
+    type: "public",
     target: {},
+    history: null,
 };

@@ -4,10 +4,10 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import {
-    Button, Tabs, Tab,
+    Button, Tabs, Tab, Form,
 } from "react-bootstrap";
 import {
-    PaperCard, Reply, InviteToCollectionModal, LikeButton,
+    PaperCard, Reply, InviteToCollectionModal, WarningModal, LikeButton,
 } from "../../../components";
 
 import { collectionActions, replyActions } from "../../../store/actions";
@@ -23,16 +23,18 @@ class CollectionDetail extends Component {
             userCount: 0,
             likeCount: 0,
             paperCount: 0,
+            replyCount: 0,
             newReplyContent: "",
             isLiked: false,
             replies: [],
+            newCollectionReplies: [],
             papers: [],
             thisCollection: { owner: {} },
-            newCollectionReplies: [],
             replyCollectionPageCount: 1,
             replyCollectionFinished: true,
         };
 
+        this.initCollectionDetail = this.initCollectionDetail.bind(this);
         this.getPapersTrigger = this.getPapersTrigger.bind(this);
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
         this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
@@ -41,20 +43,26 @@ class CollectionDetail extends Component {
     }
 
     componentDidMount() {
-        this.props.onGetCollection({ id: Number(this.props.location.pathname.split("=")[1]) })
-            .then(() => {
-                if (this.props.getCollectionStatus === collectionStatus.COLLECTION_NOT_EXIST) {
-                    this.props.history.push("/main");
-                }
-            });
-        this.props.onGetMembers(this.props.location.pathname.split("=")[1]);
+        this.initCollectionDetail();
     }
 
+    /* eslint-disable react/no-did-update-set-state */
     componentDidUpdate(prevProps) {
         if (this.props.selectedCollection !== prevProps.selectedCollection) {
             this.getAuthorizedInfo();
         }
+
+        if (this.props.location !== prevProps.location) {
+            this.setState({
+                newReplyContent: "",
+                replies: [],
+                newCollectionReplies: [],
+                papers: [],
+            });
+            this.initCollectionDetail();
+        }
     }
+    /* eslint-enable react/no-did-update-set-state */
 
     getAuthorizedInfo() {
         // if this collection is private and the user is not a member, redirect
@@ -70,6 +78,7 @@ class CollectionDetail extends Component {
             likeCount: this.props.selectedCollection.count.likes,
             userCount: this.props.selectedCollection.count.users,
             paperCount: this.props.selectedCollection.count.papers,
+            replyCount: this.props.selectedCollection.count.replies,
         });
 
         // if the collection is 'private',
@@ -146,6 +155,22 @@ class CollectionDetail extends Component {
             });
     }
 
+    initCollectionDetail() {
+        this.setState({
+            papers: [],
+            replies: [],
+            newCollectionReplies: [],
+            replyCollectionPageCount: 1,
+            replyCollectionFinished: true,
+        });
+        this.props.onGetCollection({ id: Number(this.props.location.pathname.split("=")[1]) })
+            .then(() => {
+                if (this.props.getCollectionStatus === collectionStatus.COLLECTION_NOT_EXIST) {
+                    this.props.history.push("/main");
+                }
+            });
+        this.props.onGetMembers(this.props.location.pathname.split("=")[1]);
+    }
 
     async handleReplies() {
         const end = this.state.replyCollectionPageCount;
@@ -177,7 +202,6 @@ class CollectionDetail extends Component {
             page_number: Number(i),
         });
     }
-
 
     // handle click 'Like' button
     clickLikeButtonHandler() {
@@ -253,11 +277,6 @@ class CollectionDetail extends Component {
                 : (<h5 id="noRepliesText">There is no reply in this collection for now.</h5>);
         }
 
-        const replyCount = (this.state.replyCollectionPageCount > 1
-            || (this.state.replyCollectionPageCount === 1
-                && this.state.replyCollectionFinished === false))
-            ? "10+" : this.state.replies.length;
-
         // 'pending' users cannot see 'Invite' or 'Manage' button
         // and are not included in member list/count
         // instead, they can see accept/dismiss buttons about invitation
@@ -266,7 +285,8 @@ class CollectionDetail extends Component {
             || this.props.selectedCollection.collection_user_type === "member") {
             inviteModal = (
                 <InviteToCollectionModal
-                  openButtonName="Invite to ..."
+                  variant="info"
+                  openButtonName="Invite"
                   members={this.props.members}
                   whatActionWillFollow={
                       () => {
@@ -286,9 +306,29 @@ class CollectionDetail extends Component {
             manageButton = (
                 <Button
                   id="manageButton"
+                  variant="outline-success"
                   href={`/collection_id=${this.props.selectedCollection.id}/manage`}
                 >Manage
                 </Button>
+            );
+        } else if (this.props.selectedCollection.collection_user_type === "member") {
+            manageButton = (
+                <WarningModal
+                  id="leave-warningmodal"
+                  variant="outline-danger"
+                  openButtonText="Leave"
+                  openButtonWidth="80px"
+                  openButtonHeight="40px"
+                  openButtonMarginLeft="5px"
+                  whatToWarnText={`Leave Collection: ${this.props.selectedCollection.title}`}
+                  history={this.props.history}
+                  whatActionWillBeDone={() => this.props.onLeaveCollection(
+                      this.props.selectedCollection.id,
+                  )}
+                  whatActionWillFollow={() => this.initCollectionDetail()}
+                >
+                Leave
+                </WarningModal>
             );
         }
 
@@ -308,9 +348,7 @@ class CollectionDetail extends Component {
                       onClick={() => this.props.onAcceptInvitation(
                           this.props.selectedCollection.id,
                       )
-                          .then(() => this.props.onGetCollection(
-                              { id: this.props.selectedCollection.id },
-                          ))}
+                          .then(() => this.initCollectionDetail())}
                     >
                         Accept
                     </Button>
@@ -320,9 +358,7 @@ class CollectionDetail extends Component {
                       onClick={() => this.props.onDismissInvitation(
                           this.props.selectedCollection.id,
                       )
-                          .then(() => this.props.onGetCollection(
-                              { id: this.props.selectedCollection.id },
-                          ))}
+                          .then(() => this.initCollectionDetail())}
                     >
                         Dismiss
                     </Button>
@@ -339,11 +375,19 @@ class CollectionDetail extends Component {
             /* eslint-enable prefer-destructuring */
         }
 
+        let typeIcon = null;
+        if (this.props.selectedCollection.type === "private") {
+            typeIcon = (
+                <SVG name="lock" height="5%" width="5%" />
+            );
+        }
+
         return (
             <div className="CollectionDetail">
                 <div className="CollectionDetailContent">
                     {inviteeAlert}
                     <div id="header">
+                        {typeIcon}
                         <LikeButton
                           id="likeButton"
                           isLiked={this.state.isLiked}
@@ -384,12 +428,13 @@ class CollectionDetail extends Component {
                         </div>
                     </div>
                     <div className="itemList">
-                        <Tabs defaultActiveKey="paperTab" id="itemTabs">
+                        <Tabs defaultActiveKey={this.props.location != null ? this.props.location.state : "paperTab"} id="itemTabs">
                             <Tab eventKey="paperTab" title={`Papers(${this.state.paperCount})`}>
                                 {paperCards}
                                 { this.props.storedPapers.is_finished ? null
                                     : (
                                         <Button
+                                          variant="outline-info"
                                           className="paper-more-button"
                                           onClick={() => this.getPapersTrigger(
                                               this.props.storedPapers.page_number,
@@ -401,9 +446,10 @@ class CollectionDetail extends Component {
                                         </Button>
                                     )}
                             </Tab>
-                            <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${replyCount})`}>
+                            <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${this.state.replyCount})`}>
                                 <div id="replies">
                                     <div id="createNewReply">
+                                        <Form.Label className="username">{this.props.me.username}</Form.Label>
                                         <textarea
                                           id="newReplyContentInput"
                                           type="text"
@@ -417,6 +463,7 @@ class CollectionDetail extends Component {
                                           }
                                         />
                                         <Button
+                                          className="new-reply-button"
                                           onClick={this.addNewReplyHandler}
                                           disabled={this.state.newReplyContent.length === 0}
                                         >
@@ -428,6 +475,7 @@ class CollectionDetail extends Component {
                                         {this.state.replyCollectionFinished ? null
                                             : (
                                                 <Button
+                                                  variant="outline-info"
                                                   className="reply-more-button"
                                                   onClick={this.clickMoreButtonHandler}
                                                   size="lg"
@@ -487,6 +535,9 @@ const mapDispatchToProps = (dispatch) => ({
     onDismissInvitation: (collectionId) => dispatch(
         collectionActions.dismissInvitation(collectionId),
     ),
+    onLeaveCollection: (collectionId) => dispatch(
+        collectionActions.leaveCollection(collectionId),
+    ),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionDetail);
@@ -509,6 +560,7 @@ CollectionDetail.propTypes = {
     onMakeNewReply: PropTypes.func,
     onAcceptInvitation: PropTypes.func,
     onDismissInvitation: PropTypes.func,
+    onLeaveCollection: PropTypes.func,
     replyList: PropTypes.objectOf(PropTypes.any),
     members: PropTypes.arrayOf(PropTypes.any),
     memberCount: PropTypes.number,
@@ -517,7 +569,7 @@ CollectionDetail.propTypes = {
 CollectionDetail.defaultProps = {
     me: {},
     history: null,
-    location: null,
+    location: { state: "paperTab" },
     onGetCollection: null,
     onGetCollectionPapers: null,
     getCollectionStatus: collectionStatus.NONE,
@@ -534,6 +586,7 @@ CollectionDetail.defaultProps = {
     onMakeNewReply: () => {},
     onAcceptInvitation: () => {},
     onDismissInvitation: () => {},
+    onLeaveCollection: () => {},
     replyList: {},
     members: [],
     memberCount: 0,

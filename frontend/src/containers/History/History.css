@@ -6,6 +6,13 @@
     display: flex;
 }
 
+.alert {
+    margin-top: 3%;
+    margin-left: 5%;
+    width: 90%;
+    margin-right: 5%;
+}
+
 .history .history-text {
     width: 96%;
     height: 100%;

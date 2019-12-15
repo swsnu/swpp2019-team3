@@ -315,6 +315,24 @@ describe("Collection reducer", () => {
         expect(newState.selected.error).toBe("error");
     });
 
+    it("should handle leave_collection_success", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.LEAVE_COLLECTION_SUCCESS,
+            target: { users: 3 },
+        });
+        expect(newState.selected.status).toBe(collectionStatus.SUCCESS);
+        expect(newState.selected.memberCount).toBe(3);
+    });
+
+    it("should handle leave_collection_failure", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.LEAVE_COLLECTION_FAILURE,
+            target: "error",
+        });
+        expect(newState.selected.status).toBe(collectionStatus.FAILURE);
+        expect(newState.selected.error).toBe("error");
+    });
+
     it("should return delete_collection", () => {
         const newState = reducer(stubInitialState, {
             type: collectionConstants.DEL_COLLECTION,

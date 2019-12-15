@@ -1,0 +1,20 @@
+.warningModalHeader {
+    font-size: 200%;
+    font-weight: bold;
+    color: royalblue;
+}
+
+#warningWhatWillBeDone {
+    font-size: 150%;
+    font-weight: bold;
+    color: red;
+}
+
+#continueText {
+    font-weight: 100%;
+    margin-top: 5%;
+}
+
+#buttons {
+    margin-top: 5%
+}

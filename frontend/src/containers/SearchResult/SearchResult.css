@@ -6,6 +6,13 @@
     display: flex;
 }
 
+.alert {
+    margin-top: 3%;
+    margin-left: 5%;
+    width: 90%;
+    margin-right: 5%;
+}
+
 .item-list {
     margin-top: 1%;
     margin-left: 1%;
@@ -94,24 +101,4 @@
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
-}
-
-#paper-message {
-    font-size: 150%;
-    color: #DC143C;
-}
-
-#paper-more-waiting-message {
-    font-size: 150%;
-    color: #DC143C;
-}
-
-#collection-message {
-    font-size: 150%;
-    color: #DC143C;
-}
-
-#user-message {
-    font-size: 150%;
-    color: #DC143C;
 }

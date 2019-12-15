@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 
 # Internal Modules
+import json
+from django.views.decorators.csrf import ensure_csrf_cookie
+
+from papersfeed.utils.base_utils import view_exceptions_handler
 from papersfeed.utils.papers import utils as papers_utils
 from papersfeed.utils.users import utils as users_utils
 from papersfeed.utils.collections import utils as collections_utils
@@ -25,8 +29,12 @@ def delete_follow(args):
     return {constants.COUNT: users_utils.remove_follow(args)}
 
 
-def get_session(args):
+@ensure_csrf_cookie
+@view_exceptions_handler
+def get_session(request):
     """Get Session"""
+    args = request.GET.dict()
+    args[constants.REQUEST] = request
     return users_utils.select_session(args)
 
 
@@ -40,8 +48,15 @@ def delete_session(args):
     return users_utils.delete_session(args)
 
 
-def post_user(args):
+@ensure_csrf_cookie
+@view_exceptions_handler
+def post_user(request):
     """Post User"""
+    args = request.POST
+    body = json.loads(request.body.decode()) if request.body else None
+    if isinstance(body, dict):
+        args = body
+    args[constants.REQUEST] = request
     return {constants.USER: users_utils.insert_user(args)}
 
 
@@ -151,10 +166,11 @@ def get_review_paper(args):
 
 def get_review_user(args):
     """Get Review User"""
-    reviews, page_number, is_finished = reviews_utils.select_review_user(args)
+    reviews, page_number, is_finished, total_count = reviews_utils.select_review_user(args)
     return {constants.REVIEWS: reviews,
             constants.PAGE_NUMBER: page_number,
-            constants.IS_FINISHED: is_finished}
+            constants.IS_FINISHED: is_finished,
+            constants.TOTAL_COUNT: total_count}
 
 
 def get_paper_search(args):
@@ -167,18 +183,20 @@ def get_paper_search(args):
 
 def get_collection_search(args):
     """Get Collection Search"""
-    collections, page_number, is_finished = collections_utils.select_collection_search(args)
+    collections, page_number, is_finished, total_count = collections_utils.select_collection_search(args)
     return {constants.COLLECTIONS: collections,
             constants.PAGE_NUMBER: page_number,
-            constants.IS_FINISHED: is_finished}
+            constants.IS_FINISHED: is_finished,
+            constants.TOTAL_COUNT: total_count}
 
 
 def get_user_search(args):
     """Get User Search"""
-    users, page_number, is_finished = users_utils.select_user_search(args)
+    users, page_number, is_finished, total_count = users_utils.select_user_search(args)
     return {constants.USERS: users,
             constants.PAGE_NUMBER: page_number,
-            constants.IS_FINISHED: is_finished}
+            constants.IS_FINISHED: is_finished,
+            constants.TOTAL_COUNT: total_count}
 
 
 def post_like_paper(args):
@@ -314,6 +332,11 @@ def delete_user_collection(args):
     return {constants.COUNT: users_utils.remove_user_collection(args)}
 
 
+def delete_user_collection_self(args):
+    """Delete User Collection Self"""
+    return {constants.COUNT: users_utils.remove_user_collection_self(args)}
+
+
 def put_user_collection_pending(args):
     """Put User Collection Pending"""
     return {constants.COUNT: users_utils.update_user_collection_pending(args)}
@@ -326,10 +349,11 @@ def delete_user_collection_pending(args):
 
 def get_notification(args):
     """Get Notification"""
-    notifications, page_number, is_finished = notification_utils.select_notifications(args)
+    notifications, page_number, is_finished, total_count = notification_utils.select_notifications(args)
     return {constants.NOTIFICATIONS: notifications,
             constants.PAGE_NUMBER: page_number,
-            constants.IS_FINISHED: is_finished}
+            constants.IS_FINISHED: is_finished,
+            constants.TOTAL_COUNT: total_count}
 
 
 def put_notification(args):

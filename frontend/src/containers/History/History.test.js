@@ -2,28 +2,29 @@
 import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
-
+import { Router } from "react-router-dom";
 import History from "./History";
 import { paperActions, collectionActions, reviewActions } from "../../store/actions";
 import {
     paperStatus, collectionStatus, reviewStatus,
 } from "../../constants/constants";
 import { getMockStore, mockPromise, flushPromises } from "../../test-utils/mocks";
+import { history } from "../../store/store";
 
-
-const mockHistory = { push: jest.fn() };
 const makeHistory = (initialState, props = {}) => (
-    <Provider store={getMockStore(initialState)}>
-        <History history={mockHistory} {...props} />
-    </Provider>
+    <Router location={{ state: "paperTab" }} history={history}>
+        <Provider store={getMockStore(initialState)}>
+            <History history={history} {...props} />
+        </Provider>
+    </Router>
 );
 
 describe("<History />", () => {
     let stubInitialState;
-    let history;
     let spyGetCollectionLike;
     let spyGetReviewLike;
     let spyGetPaperLike;
+    let thisHistory;
 
     beforeEach(() => {
         stubInitialState = {
@@ -121,7 +122,7 @@ describe("<History />", () => {
             },
             reply: {},
         };
-        history = makeHistory(stubInitialState);
+        thisHistory = makeHistory(stubInitialState);
         spyGetPaperLike = jest.spyOn(paperActions, "getPaperLike")
             .mockImplementation(() => () => mockPromise);
         spyGetCollectionLike = jest.spyOn(collectionActions, "getCollectionLike")
@@ -136,7 +137,7 @@ describe("<History />", () => {
 
 
     it("should render without errors and call Paper,Collection,Review", () => {
-        const component = mount(history);
+        const component = mount(thisHistory);
         const wrapper = component.find(".history");
         expect(wrapper.length).toBe(1);
         expect(spyGetCollectionLike).toBeCalledTimes(1);

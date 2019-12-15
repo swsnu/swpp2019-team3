@@ -303,9 +303,13 @@ def select_collection_search(args):
                                                                              | Q(is_member=True))
 
     # Collections
-    collections, _, is_finished, _ = __get_collections(queryset, request_user, 10, page_number=page_number)
+    params = {
+        constants.TOTAL_COUNT: True # count whole collections
+    }
+    collections, _, is_finished, total_count = __get_collections(queryset, request_user, 10, params=params,
+                                                                 page_number=page_number)
 
-    return collections, page_number, is_finished
+    return collections, page_number, is_finished, total_count
 
 
 def select_collection_like(args):
@@ -582,7 +586,9 @@ def __is_member(outer_ref, user_id):
 
 def __is_shared(outer_ref, user_id):
     """Check If Collection is Shared"""
-    return Exists(CollectionUser.objects.filter(Q(collection_id=OuterRef(outer_ref)), ~Q(user_id=user_id)))
+    # check if there are other members in the collection (except 'pending')
+    return Exists(CollectionUser.objects.filter(Q(collection_id=OuterRef(outer_ref)),
+                                                ~Q(user_id=user_id), ~Q(type=COLLECTION_USER_TYPE[2])))
 
 
 def __is_collection_owned(outer_ref, request_user):

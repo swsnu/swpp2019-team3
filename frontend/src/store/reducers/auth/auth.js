@@ -16,8 +16,6 @@ const initialState = {
     signinStatus: signinStatus.NONE,
     signoutStatus: signoutStatus.NONE,
     getMeStatus: getMeStatus.NONE,
-    getNotiStatus: notiStatus.NONE,
-    readNotiStatus: notiStatus.NONE,
     subscriptions: {
         status: getSubscriptionsStatus.NONE,
         pageNum: 0,
@@ -37,8 +35,15 @@ const initialState = {
         finished: true,
     },
     makeTasteInitStatus: makeTasteInitStatus.NONE,
-    notifications: [],
-    me: null,
+    notifications: {
+        getStatus: notiStatus.NONE,
+        readStatus: notiStatus.NONE,
+        notifications: [],
+        pageNum: 0,
+        finished: true,
+        totalCount: 0,
+    },
+    me: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -68,14 +73,42 @@ const reducer = (state = initialState, action) => {
         return { ...state, getMeStatus: getMeStatus.FAILURE };
 
     case authConstants.GET_NOTI_SUCCESS:
-        return { ...state, getNotiStatus: notiStatus.SUCCESS, notifications: action.target };
+        return {
+            ...state,
+            notifications: {
+                ...state.notifications,
+                getStatus: notiStatus.SUCCESS,
+                notifications: action.target.notifications,
+                pageNum: action.target.page_number,
+                finished: action.target.is_finished,
+                totalCount: action.target.total_count,
+            },
+        };
     case authConstants.GET_NOTI_FAILURE:
-        return { ...state, getNotiStatus: notiStatus.FAILURE };
+        return {
+            ...state,
+            notifications: {
+                ...state.notifications,
+                getStatus: notiStatus.FAILURE,
+            },
+        };
 
     case authConstants.READ_NOTI_SUCCESS:
-        return { ...state, readNotiStatus: notiStatus.SUCCESS };
+        return {
+            ...state,
+            notifications: {
+                ...state.notifications,
+                readStatus: notiStatus.SUCCESS,
+            },
+        };
     case authConstants.READ_NOTI_FAILURE:
-        return { ...state, readNotiStatus: notiStatus.FAILURE };
+        return {
+            ...state,
+            notifications: {
+                ...state.notifications,
+                readStatus: notiStatus.FAILURE,
+            },
+        };
 
     case authConstants.GET_SUBSCRIPTION_SUCCESS:
         return {

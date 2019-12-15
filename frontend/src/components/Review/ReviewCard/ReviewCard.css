@@ -58,8 +58,10 @@
 }
 
 .review .footer {
+    flex-wrap: nowrap;
     display: flex;
-    justify-content: flex-start;
+    justify-content: flex-start;  
+    align-items: center;
 }
 
 

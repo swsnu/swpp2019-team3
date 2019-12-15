@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Tabs, Tab, Button } from "react-bootstrap";
+import { Tabs, Tab } from "react-bootstrap";
 
 import { PaperCard, CollectionCard, UserCard } from "../../components";
 import { paperStatus } from "../../constants/constants";
@@ -13,7 +13,7 @@ class SearchResult extends Component {
         super(props);
         this.state = {
             searchWord: "",
-            paperHeadMessage: "please wait...",
+            paperHeadMessage: "wait",
             paperIds: [],
             paperCardsLeft: [],
             paperCardsRight: [],
@@ -21,10 +21,14 @@ class SearchResult extends Component {
             collections: [],
             users: [],
             searchPaperStatus: paperStatus.WAITING,
+            activeTab: 0, // default tab is 'Paper'
+            paperLoading: true,
+            collectionLoading: true,
+            peopleLoading: true,
         };
 
         this.searchTrigger = this.searchTrigger.bind(this);
-        this.clickPaperMoreHandler = this.clickPaperMoreHandler.bind(this);
+        this.viewPaperMoreHandler = this.viewPaperMoreHandler.bind(this);
         this.paperCardsMaker = this.paperCardsMaker.bind(this);
         this.paperCardsDistributor = this.paperCardsDistributor.bind(this);
         this.collectionCardsMaker = this.collectionCardsMaker.bind(this);
@@ -33,24 +37,86 @@ class SearchResult extends Component {
 
     componentDidMount() {
         this.searchTrigger();
+        window.addEventListener("scroll", this.handleScroll);
     }
 
     // when users search another word on SearchResult
     /* eslint-disable react/no-did-update-set-state */
     componentDidUpdate(prevProps) {
         if (this.props.location !== prevProps.location) {
+            window.scrollTo(0, 0);
             this.setState({
                 searchPaperStatus: paperStatus.WAITING,
-                paperHeadMessage: "please wait...",
+                paperHeadMessage: "wait",
                 paperIds: [],
                 paperCardsLeft: [],
                 paperCardsRight: [],
                 paperCardsLeftPushed: false,
+                paperLoading: true,
+                collectionLoading: true,
+                peopleLoading: true,
             });
             this.searchTrigger();
         }
     }
     /* eslint-enable react/no-did-update-set-state */
+
+    componentWillUnmount() {
+        window.removeEventListener("scroll", this.handleScroll);
+    }
+
+    handleScroll = () => {
+        const { scrollHeight } = document.documentElement;
+        const { scrollTop } = document.documentElement;
+        const { clientHeight } = document.documentElement;
+
+        if (this.state.activeTab === 0) {
+            if (!this.state.paperLoading
+            && !this.props.paperFinished
+            && ((scrollTop + clientHeight + 2000)
+            > scrollHeight)) {
+                this.setState({ paperLoading: true });
+                this.viewPaperMoreHandler();
+            }
+        } else if (this.state.activeTab === 1) {
+            if (!this.state.collectionLoading
+                && !this.props.collectionFinished
+                && ((scrollTop + clientHeight + 1000)
+                > scrollHeight)) {
+                this.setState({ collectionLoading: true });
+
+                this.props.onSearchCollection(
+                    this.state.searchWord,
+                    this.props.collectionPageNum + 1,
+                )
+                    .then(() => {
+                        const { collections } = this.state;
+                        this.setState({
+                            collections: collections.concat(
+                                this.props.searchedCollections,
+                            ),
+                            collectionLoading: false,
+                        });
+                    });
+            }
+        } else if (!this.state.peopleLoading
+                && !this.props.userFinished
+                && ((scrollTop + clientHeight + 1000)
+                > scrollHeight)) {
+            this.setState({ peopleLoading: true });
+
+            this.props.onSearchUser(
+                this.state.searchWord, this.props.userPageNum + 1,
+            )
+                .then(() => {
+                    const { users } = this.state;
+                    this.setState({
+                        users: users.concat(this.props.searchedUsers),
+                        peopleLoading: false,
+                    });
+                });
+        }
+    }
 
     searchTrigger = () => {
         const searchWord = this.props.location.pathname.split("=")[1];
@@ -59,44 +125,48 @@ class SearchResult extends Component {
             .then(() => {
                 // if searchWord is changed while waiting promise, don't update state
                 if (this.state.searchWord === searchWord) {
-                    this.setState({
-                        searchPaperStatus: paperStatus.NONE,
-                    });
                     if (this.props.searchedPapers.length > 0) {
                         this.setState({ paperHeadMessage: null });
                     } else {
                         this.setState({ paperHeadMessage: "no papers" });
                     }
                     this.paperCardsDistributor(this.props.searchedPapers);
+                    this.setState({
+                        searchPaperStatus: paperStatus.NONE,
+                        paperLoading: false,
+                    });
                 }
             });
         this.props.onSearchCollection(searchWord, 1)
             .then(() => {
                 // if searchWord is changed while waiting promise, don't update state
                 if (this.state.searchWord === searchWord) {
-                    this.setState({ collections: this.props.searchedCollections });
+                    this.setState({
+                        collections: this.props.searchedCollections, collectionLoading: false,
+                    });
                 }
             });
         this.props.onSearchUser(searchWord, 1)
             .then(() => {
                 // if searchWord is changed while waiting promise, don't update state
                 if (this.state.searchWord === searchWord) {
-                    this.setState({ users: this.props.searchedUsers });
+                    this.setState({ users: this.props.searchedUsers, peopleLoading: false });
                 }
             });
     }
 
-    clickPaperMoreHandler = () => {
+    viewPaperMoreHandler = () => {
         this.setState({ searchPaperStatus: paperStatus.WAITING });
         this.props.onSearchPaper({
             text: this.state.searchWord,
             page_number: this.props.paperPageNum + 1,
         })
             .then(() => {
+                this.paperCardsDistributor(this.props.searchedPapers);
                 this.setState({
                     searchPaperStatus: paperStatus.NONE,
+                    paperLoading: false,
                 });
-                this.paperCardsDistributor(this.props.searchedPapers);
             });
     };
 
@@ -181,6 +251,7 @@ class SearchResult extends Component {
           likeCount={collection.count.likes}
           isLiked={collection.liked}
           owner={collection.owner}
+          type={collection.type}
           headerExists={false}
         />
     );
@@ -211,11 +282,30 @@ class SearchResult extends Component {
         let collectionCardsRight = null;
         let userCardsLeft = null;
         let userCardsRight = null;
-        let collectionMessage = "no collections";
-        let userMessage = "no users";
-        let paperPlus = "";
-        let collectionPlus = "";
-        let userPlus = "";
+        let paperMessage = null;
+        if (this.state.paperHeadMessage === "wait") {
+            paperMessage = (
+                <div className="alert alert-info" role="alert">
+                    Please wait...
+                </div>
+            );
+        } else if (this.state.paperHeadMessage === "no papers") {
+            paperMessage = (
+                <div className="alert alert-warning" role="alert">
+                No papers.
+                </div>
+            );
+        }
+        let collectionMessage = (
+            <div className="alert alert-warning" role="alert">
+                No collections.
+            </div>
+        );
+        let userMessage = (
+            <div className="alert alert-warning" role="alert">
+                No users.
+            </div>
+        );
 
         if (this.state.collections.length > 0) {
             collectionCardsLeft = this.state.collections
@@ -238,102 +328,64 @@ class SearchResult extends Component {
         }
 
         let paperMoreButton = null;
-        if (this.state.searchPaperStatus !== paperStatus.WAITING
-            && !this.props.paperFinished) {
-            paperMoreButton = (
-                <Button
-                  className="paper-more-button"
-                  onClick={this.clickPaperMoreHandler}
-                  size="lg"
-                  block
-                >View More
-                </Button>
-            );
-            paperPlus = "+";
-        } else if (this.state.searchPaperStatus === paperStatus.WAITING
+        if (this.state.searchPaperStatus === paperStatus.WAITING
             && !paperEmpty) {
             paperMoreButton = (
-                <h3 id="paper-more-waiting-message">please wait...</h3>
+                <div className="alert alert-info" role="alert">
+                    Please wait...
+                </div>
             );
-        }
-
-        if (!this.props.collectionFinished) {
-            collectionPlus = "+";
-        }
-        if (!this.props.userFinished) {
-            userPlus = "+";
         }
 
         return (
             <div className="search-result">
                 <div className="item-list">
-                    <Tabs defaultActiveKey="paper-tab" className="item-tabs">
-                        <Tab className="paper-tab" eventKey="paper-tab" title={`Paper(${this.state.paperIds.length + paperPlus})`}>
+                    <Tabs
+                      defaultActiveKey="paper-tab"
+                      className="item-tabs"
+                      onSelect={(key) => {
+                          if (key === "paper-tab") {
+                              this.setState({ activeTab: 0 });
+                          } else if (key === "collection-tab") {
+                              this.setState({ activeTab: 1 });
+                          } else {
+                              this.setState({ activeTab: 2 });
+                          }
+                      }}
+                    >
+                        <Tab
+                          className="paper-tab"
+                          eventKey="paper-tab"
+                          title="Paper"
+                        >
+                            {paperMessage}
                             <div id="paper-cards">
-                                <h3 id="paper-message">{this.state.paperHeadMessage}</h3>
                                 <div id="paper-cards-left">{paperCardsLeft}</div>
                                 <div id="paper-cards-right">{paperCardsRight}</div>
                             </div>
                             {paperMoreButton}
                         </Tab>
-                        <Tab className="collection-tab" eventKey="collection-tab" title={`Collection(${this.state.collections.length + collectionPlus})`}>
+                        <Tab
+                          className="collection-tab"
+                          eventKey="collection-tab"
+                          title={`Collection(${this.props.collectionTotalCount})`}
+                        >
+                            {collectionMessage}
                             <div id="collection-cards">
-                                <h3 id="collection-message">{collectionMessage}</h3>
                                 <div id="collection-cards-left">{collectionCardsLeft}</div>
                                 <div id="collection-cards-right">{collectionCardsRight}</div>
                             </div>
-                            { this.props.collectionFinished ? null
-                                : (
-                                    <Button
-                                      className="collection-more-button"
-                                      onClick={() => {
-                                          this.props.onSearchCollection(
-                                              this.state.searchWord,
-                                              this.props.collectionPageNum + 1,
-                                          )
-                                              .then(() => {
-                                                  const { collections } = this.state;
-                                                  this.setState({
-                                                      collections: collections.concat(
-                                                          this.props.searchedCollections,
-                                                      ),
-                                                  });
-                                              });
-                                      }}
-                                      size="lg"
-                                      block
-                                    >
-                            View More
-                                    </Button>
-                                )}
                         </Tab>
-                        <Tab className="user-tab" eventKey="user-tab" title={`People(${this.state.users.length + userPlus})`}>
+                        <Tab
+                          className="user-tab"
+                          eventKey="user-tab"
+                          title={`People(${this.props.userTotalCount})`}
+                        >
+                            {userMessage}
                             <div id="user-cards">
-                                <h3 id="user-message">{userMessage}</h3>
                                 <div id="user-cards-left">{userCardsLeft}</div>
                                 <div id="user-cards-right">{userCardsRight}</div>
                             </div>
-                            { this.props.userFinished ? null
-                                : (
-                                    <Button
-                                      className="user-more-button"
-                                      onClick={() => {
-                                          this.props.onSearchUser(
-                                              this.state.searchWord, this.props.userPageNum + 1,
-                                          )
-                                              .then(() => {
-                                                  const { users } = this.state;
-                                                  this.setState({
-                                                      users: users.concat(this.props.searchedUsers),
-                                                  });
-                                              });
-                                      }}
-                                      size="lg"
-                                      block
-                                    >
-                            View More
-                                    </Button>
-                                )}
                         </Tab>
                     </Tabs>
                 </div>
@@ -355,6 +407,8 @@ const mapStateToProps = (state) => ({
     collectionFinished: state.collection.list.finished,
     userPageNum: state.user.search.pageNum,
     userFinished: state.user.search.finished,
+    collectionTotalCount: state.collection.list.totalCount,
+    userTotalCount: state.user.search.totalCount,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -382,6 +436,8 @@ SearchResult.propTypes = {
     collectionFinished: PropTypes.bool,
     userPageNum: PropTypes.number,
     userFinished: PropTypes.bool,
+    collectionTotalCount: PropTypes.number,
+    userTotalCount: PropTypes.number,
 };
 
 SearchResult.defaultProps = {
@@ -399,4 +455,6 @@ SearchResult.defaultProps = {
     collectionFinished: true,
     userPageNum: 0,
     userFinished: true,
+    collectionTotalCount: 0,
+    userTotalCount: 0,
 };
