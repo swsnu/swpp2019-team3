@@ -33,6 +33,7 @@ class ReviewDetail extends Component {
             replyFinished: true,
         };
 
+        this.reply = React.createRef();
         this.initReviewDetail = this.initReviewDetail.bind(this);
         this.clickLikeButtonHandler = this.clickLikeButtonHandler.bind(this);
         this.clickUnlikeButtonHandler = this.clickUnlikeButtonHandler.bind(this);
@@ -131,6 +132,10 @@ class ReviewDetail extends Component {
                     replies: this.props.replyList.list,
                     replyPageCount: 1,
                     replyFinished: this.props.replyList.finished,
+                }, () => {
+                    if (this.props.location.state != null && this.props.location.state === "reply") {
+                        window.scrollTo(0, this.reply.current.offsetTop);
+                    }
                 });
             }).catch(() => {});
     }
@@ -223,7 +228,7 @@ class ReviewDetail extends Component {
                                 <Card.Title className="title">{this.state.thisReview.title}</Card.Title>
                                 <Card.Text className="content">{this.state.thisReview.text}</Card.Text>
                             </div>
-                            <div className="reply">
+                            <div className="reply" ref={this.reply}>
                                 <div className="review-extra">
                                     <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="25px" width="25px" /></div>{this.state.likeCount}</Button>
                                     <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="25px" width="25px" /></div>{replyCount}</Button>

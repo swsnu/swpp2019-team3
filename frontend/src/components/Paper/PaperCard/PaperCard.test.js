@@ -1,18 +1,20 @@
 import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
-
+import { ConnectedRouter } from "connected-react-router";
 import PaperCard from "./PaperCard";
 import { getMockStore, mockComponent } from "../../../test-utils/mocks";
 import { paperActions } from "../../../store/actions";
+import { history } from "../../../store/store";
 
-
-const mockHistory = { push: jest.fn() };
+const mockHistory = history;
 
 /* eslint-disable react/jsx-props-no-spreading */
 const makePaperCard = (initialState, props = {}) => (
     <Provider store={getMockStore(initialState)}>
-        <PaperCard id={1} history={mockHistory} {...props} />
+        <ConnectedRouter location={{ state: "" }} history={mockHistory}>
+            <PaperCard id={1} history={mockHistory} {...props} />
+        </ConnectedRouter>
     </Provider>
 );
 /* eslint-enable react/jsx-props-no-spreading */

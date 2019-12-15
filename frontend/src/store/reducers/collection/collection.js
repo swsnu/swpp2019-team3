@@ -235,15 +235,6 @@ const reducer = (state = initialState, action) => {
                 collection: action.target,
             },
         };
-    case collectionConstants.DEL_COLLECTION_PAPER:
-        return {
-            ...state,
-            edit: {
-                ...state.edit,
-                status: collectionStatus.SUCCESS,
-                collection: action.target,
-            },
-        };
     case collectionConstants.ADD_COLLECTION_MEMBER:
         return {
             ...state,
@@ -423,6 +414,29 @@ const reducer = (state = initialState, action) => {
                 ...state.selected,
                 status: collectionStatus.FAILURE,
                 error: action.target,
+            },
+        };
+    case collectionConstants.DEL_COLLECTION_PAPER_SUCCESS:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.SUCCESS,
+                collection: {
+                    ...state.selected.collection,
+                    count: {
+                        ...state.selected.collection.count,
+                        papers: action.target,
+                    },
+                },
+            },
+        };
+    case collectionConstants.DEL_COLLECTION_PAPER_FAILURE:
+        return {
+            ...state,
+            selected: {
+                ...state.delete,
+                status: collectionStatus.FAILURE,
             },
         };
     default:

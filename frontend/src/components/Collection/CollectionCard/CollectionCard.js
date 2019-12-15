@@ -73,8 +73,9 @@ class CollectionCard extends Component {
                         />
                         <SubItemButton
                           id="replyButton"
-                          onClick={() => { this.props.history.push({ pathname: `/collection_id=${this.props.id}`, state: "replyTab" }); }}
+                          click={() => { this.props.history.push({ pathname: `/collection_id=${this.props.id}`, state: "replyTab" }); }}
                           count={this.props.replyCount}
+                          tab
                         />
                     </Card.Footer>
                 </Card>
@@ -121,6 +122,7 @@ CollectionCard.propTypes = {
     verb: PropTypes.string,
     // eslint-disable-next-line react/no-unused-prop-types
     target: PropTypes.objectOf(PropTypes.any),
+    deleteExists: PropTypes.bool,
 };
 
 CollectionCard.defaultProps = {
@@ -142,4 +144,5 @@ CollectionCard.defaultProps = {
     verb: "",
     target: {},
     history: null,
+    deleteExists: false,
 };

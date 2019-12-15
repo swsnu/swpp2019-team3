@@ -591,47 +591,6 @@ describe("collectionActions", () => {
             });
     });
 
-
-    it("removeCollectionPaper should call axios.put", (done) => {
-        const spy = jest.spyOn(axios, "put")
-            .mockImplementation(() => new Promise((resolve) => {
-                const result = {
-                    status: 200,
-                    data: {},
-                };
-                resolve(result);
-            }));
-
-        mockStore.dispatch(collectionActions.removeCollectionPaper(
-            { collection_ids: [stubCollection.id], id: 1 },
-        ))
-            .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/paper/collection", { collection_ids: [1], id: 1 });
-                done();
-            });
-    });
-
-    it("removeCollectionPaper should handle error", (done) => {
-        const spy = jest.spyOn(axios, "put")
-            .mockImplementation(() => new Promise((_, reject) => {
-                const result = {
-                    response: {
-                        status: 400,
-                        data: {},
-                    },
-                };
-                reject(result);
-            }));
-
-        mockStore.dispatch(collectionActions.removeCollectionPaper(
-            { collection_ids: [stubCollection.id], id: 1 },
-        ))
-            .then(() => {
-                expect(spy).toHaveBeenCalledWith("/api/paper/collection", { collection_ids: [1], id: 1 });
-                done();
-            });
-    });
-
     it("addNewMembers should call axios.post", (done) => {
         const spy = jest.spyOn(axios, "post")
             .mockImplementation(() => new Promise((resolve) => {
@@ -977,6 +936,40 @@ describe("collectionActions", () => {
         mockStore.dispatch(collectionActions.changeCollectionType(1, "private"))
             .then(() => {
                 expect(spy).toHaveBeenCalledWith("/api/collection/type", { id: 1, type: "private" });
+                done();
+            });
+    });
+
+    it("'deleteCollectionPaper' should call axios.delete", (done) => {
+        const spy = jest.spyOn(axios, "delete")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 200,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.deleteCollectionPaper({ id: 1, paper_id: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/paper/collection", { params: { id: 1, paper_id: 1 } });
+                done();
+            });
+    });
+
+    it("'deleteCollectionPaper' should handle error", (done) => {
+        const spy = jest.spyOn(axios, "delete")
+            .mockImplementation(() => new Promise((resolve) => {
+                const result = {
+                    status: 404,
+                    data: {},
+                };
+                resolve(result);
+            }));
+
+        mockStore.dispatch(collectionActions.deleteCollectionPaper({ id: 1, paper_id: 1 }))
+            .then(() => {
+                expect(spy).toHaveBeenCalledWith("/api/paper/collection", { params: { id: 1, paper_id: 1 } });
                 done();
             });
     });

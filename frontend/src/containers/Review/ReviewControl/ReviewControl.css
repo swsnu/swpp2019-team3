@@ -61,10 +61,9 @@
     margin-top: 2%;
 }
 
-.review-control .board .create-button {
+.review-control .board .footer-buttons {
+    display: flex;
+    align-content: center;
+    justify-content: center;
     margin-bottom: 5%;
-}
-
-.review-control .board .edit-button {
-    margin-bottom: 5%;
-}
+} 

@@ -29,7 +29,7 @@ function App(props) {
                                 <div className="col-sm-2"><SideBar history={props.history} /></div>
                                 <div className="col-sm-10">
                                     <Switch>
-                                        <Route path="/main" exact component={Main} />
+                                        <Route path="/main" history={props.history} exact component={Main} />
                                         <Route path="/init" exact component={Init} />
                                         <Route path="/tutorial" exact component={Tutorial} />
                                         <Route path="/search=:search_word" exact component={SearchResult} />

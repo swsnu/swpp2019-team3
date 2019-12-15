@@ -152,9 +152,12 @@ class ReviewControl extends Component {
                             <Form.Control name="content" className="content-input" as="textarea" value={this.state.content} rows="7" type="text" placeholder={this.props.mode === 0 ? "Enter content here." : this.props.selectedReview.review.text} onChange={this.handleChange} />
                             <Form.Check type="checkbox" className="anonymous-check" label="Write it anonymously" checked={this.state.anonymous} onChange={() => this.handleAnonymous()} />
                         </Form.Group>
-                        { this.props.mode === 0
-                            ? <Button className="create-button" onClick={this.clickButtonHandler} disabled={(this.state.title != null && this.state.content != null) && (this.state.title.length === 0 || this.state.content.length === 0)}>Create</Button>
-                            : <Button className="edit-button" onClick={this.clickButtonHandler} disabled={(this.state.title != null && this.state.content != null) && (this.state.title.length === 0 || this.state.content.length === 0)}>Edit</Button> }
+                        <div className="footer-buttons">
+                            <Button variant="secondary" className="cancel-button" onClick={() => this.props.history.push(`/paper_id=${this.state.paper.id}`)}>Cancel</Button>
+                            { this.props.mode === 0
+                                ? <Button className="create-button" onClick={this.clickButtonHandler} disabled={(this.state.title != null && this.state.content != null) && (this.state.title.length === 0 || this.state.content.length === 0)}>Create</Button>
+                                : <Button className="edit-button" onClick={this.clickButtonHandler} disabled={(this.state.title != null && this.state.content != null) && (this.state.title.length === 0 || this.state.content.length === 0)}>Edit</Button> }
+                        </div>
                     </div>
                 </div>
             </div>

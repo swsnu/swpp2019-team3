@@ -212,23 +212,6 @@ export const addCollectionPaper = (collectionsAndPaper) => (dispatch) => axios.p
     .then((res) => { dispatch(addCollectionPaperSuccess(res.data)); })
     .catch((err) => { dispatch(addCollectionPaperFailure(err)); });
 
-
-// remove paper from collection
-const removeCollectionPaperSuccess = (collection) => ({
-    type: collectionConstants.DEL_COLLECTION_PAPER,
-    target: collection.collection,
-});
-
-const removeCollectionPaperFailure = (error) => ({
-    type: null,
-    target: error,
-});
-
-export const removeCollectionPaper = (collectionsAndPaper) => (dispatch) => axios.put("/api/paper/collection", collectionsAndPaper)
-    .then((res) => { dispatch(removeCollectionPaperSuccess(res.data)); })
-    .catch((err) => { dispatch(removeCollectionPaperFailure(err)); });
-
-
 const addNewMembersSuccess = (count) => ({
     type: collectionConstants.ADD_COLLECTION_MEMBER,
     target: count.count,
@@ -387,3 +370,17 @@ const changeCollectionTypeFailure = (error) => ({
 export const changeCollectionType = (collectionId, collectionType) => (dispatch) => axios.put("/api/collection/type", { id: collectionId, type: collectionType })
     .then((res) => dispatch(changeCollectionTypeSuccess(res.data)))
     .catch((err) => dispatch(changeCollectionTypeFailure(err)));
+
+const deleteCollectionPaperSuccess = (count) => ({
+    type: collectionConstants.DEL_COLLECTION_PAPER_SUCCESS,
+    target: count.count.papers,
+});
+
+const deleteCollectionPaperFailure = (error) => ({
+    type: collectionConstants.DEL_COLLECTION_PAPER_FAILURE,
+    target: error,
+});
+
+export const deleteCollectionPaper = (collectionAndPaper) => (dispatch) => axios.delete("/api/paper/collection", { params: collectionAndPaper })
+    .then((res) => dispatch(deleteCollectionPaperSuccess(res.data)))
+    .catch((err) => dispatch(deleteCollectionPaperFailure(err)));

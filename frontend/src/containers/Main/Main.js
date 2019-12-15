@@ -13,7 +13,7 @@ class Main extends Component {
         return (
             <div className="main">
                 <div className="feeds">
-                    <SubscriptionFeed />
+                    <SubscriptionFeed history={this.props.history}/>
                 </div>
             </div>
         );
