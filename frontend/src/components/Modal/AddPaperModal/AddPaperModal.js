@@ -10,6 +10,7 @@ import CollectionEntry from "../../Collection/CollectionEntry/CollectionEntry";
 import "./AddPaperModal.css";
 import { collectionActions } from "../../../store/actions";
 import { collectionStatus } from "../../../constants/constants";
+import SVG from "../../svg";
 
 class AddPaperModal extends Component {
     constructor(props) {
@@ -170,7 +171,13 @@ class AddPaperModal extends Component {
 
         return (
             <div className="addpapermodal">
-                <Button className="addpaper-open-button" onClick={this.openAddPaperHandler}>Add to...</Button>
+                <Button
+                  className="addpaper-open-button"
+                  variant="light"
+                  onClick={this.openAddPaperHandler}
+                >
+                    <SVG id="addpaper-open-svg" name="bookmark" />
+                </Button>
                 <Modal
                   show={this.state.isAddPaperOpen}
                   onHide={this.clickCancelHandler}

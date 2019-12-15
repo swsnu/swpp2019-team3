@@ -7,7 +7,7 @@ import {
     Button, Tabs, Tab, Form,
 } from "react-bootstrap";
 import {
-    PaperCard, Reply, InviteToCollectionModal, WarningModal, LikeButton,
+    PaperCard, Reply, InviteToCollectionModal, WarningModal, LikeButton, SubItemButton,
 } from "../../../components";
 
 import { collectionActions, replyActions } from "../../../store/actions";
@@ -317,8 +317,6 @@ class CollectionDetail extends Component {
                   id="leave-warningmodal"
                   variant="outline-danger"
                   openButtonText="Leave"
-                  openButtonWidth="80px"
-                  openButtonHeight="40px"
                   openButtonMarginLeft="5px"
                   whatToWarnText={`Leave Collection: ${this.props.selectedCollection.title}`}
                   history={this.props.history}
@@ -378,117 +376,110 @@ class CollectionDetail extends Component {
         let typeIcon = null;
         if (this.props.selectedCollection.type === "private") {
             typeIcon = (
-                <SVG name="lock" height="5%" width="5%" />
+                <SVG name="lock" height="25px" width="25px" />
             );
         }
 
         return (
-            <div className="CollectionDetail">
-                <div className="CollectionDetailContent">
-                    {inviteeAlert}
-                    <div id="header">
-                        {typeIcon}
-                        <LikeButton
-                          id="likeButton"
-                          isLiked={this.state.isLiked}
-                          likeFn={this.clickLikeButtonHandler}
-                          unlikeFn={this.clickUnlikeButtonHandler}
-                          likeCount={this.state.likeCount}
-                        />
-                        <Button
-                          id="memberButton"
-                          variant="light"
-                          href={`/collection_id=${this.props.selectedCollection.id}/members`}
-                        >
-                            <div className="people-image">
-                                <SVG name="people" height="70%" width="70%" />
-                            </div>
-                            {this.state.userCount}
-                        </Button>
-                        {inviteModal}
-                        {manageButton}
-                        {inviteeButtons}
-                    </div>
-                    <div className="CollectionInfo">
-                        <div id="collectionBasicInfo">
-                            <h1 id="collectionName">{this.state.thisCollection.title}</h1>
-                            <p id="descriptionBox">
-                                {this.state.thisCollection.text !== ""
-                                    ? this.state.thisCollection.text
-                                    : "No description for this collection."}
-                            </p>
-                            <div id="owner">
+            <div className="PapersFeed-Content" id="CollectionDetail">
+                {inviteeAlert}
+                <div id="collectionDetailHeader">
+                    {typeIcon}
+                    <LikeButton
+                      id="likeButton"
+                      isLiked={this.state.isLiked}
+                      likeFn={this.clickLikeButtonHandler}
+                      unlikeFn={this.clickUnlikeButtonHandler}
+                      likeCount={this.state.likeCount}
+                    />
+                    <SubItemButton
+                      svgName="people"
+                      href={`/collection_id=${this.props.selectedCollection.id}/members`}
+                      count={this.state.userCount}
+                    />
+                    {inviteModal}
+                    {manageButton}
+                    {inviteeButtons}
+                </div>
+                <div className="CollectionInfo">
+                    <div id="collectionBasicInfo">
+                        <h1 id="collectionName">{this.state.thisCollection.title}</h1>
+                        <p id="descriptionBox">
+                            {this.state.thisCollection.text !== ""
+                                ? this.state.thisCollection.text
+                                : "No description for this collection."}
+                        </p>
+                        <div id="owner">
                                 Owned by&nbsp;
-                                <a href={`/profile_id=${this.state.thisCollection.owner.id}`}>{this.state.thisCollection.owner.username}</a>
-                            </div>
-                        </div>
-                        <div id="collectionDates">
-                            <div id="creationDate">Created: {creationDate}</div>
-                            <div id="lastUpdateDate">Last Update: {modificationDate}</div>
+                            <a href={`/profile_id=${this.state.thisCollection.owner.id}`}>{this.state.thisCollection.owner.username}</a>
                         </div>
                     </div>
-                    <div className="itemList">
-                        <Tabs defaultActiveKey={this.props.location != null ? this.props.location.state : "paperTab"} id="itemTabs">
-                            <Tab eventKey="paperTab" title={`Papers(${this.state.paperCount})`}>
-                                {paperCards}
-                                { this.props.storedPapers.is_finished ? null
-                                    : (
-                                        <Button
-                                          variant="outline-info"
-                                          className="paper-more-button"
-                                          onClick={() => this.getPapersTrigger(
-                                              this.props.storedPapers.page_number,
-                                          )}
-                                          size="lg"
-                                          block
-                                        >
+                    <div id="collectionDates">
+                        <div id="creationDate">Created: {creationDate}</div>
+                        <div id="lastUpdateDate">Last Update: {modificationDate}</div>
+                    </div>
+                </div>
+                <div className="itemList">
+                    <Tabs defaultActiveKey={this.props.location != null ? this.props.location.state : "paperTab"} id="itemTabs">
+                        <Tab eventKey="paperTab" title={`Papers(${this.state.paperCount})`}>
+                            {paperCards}
+                            { this.props.storedPapers.is_finished ? null
+                                : (
+                                    <Button
+                                      variant="outline-info"
+                                      className="paper-more-button"
+                                      onClick={() => this.getPapersTrigger(
+                                          this.props.storedPapers.page_number,
+                                      )}
+                                      size="lg"
+                                      block
+                                    >
                                             View More
-                                        </Button>
-                                    )}
-                            </Tab>
-                            <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${this.state.replyCount})`}>
-                                <div id="replies">
-                                    <div id="createNewReply">
-                                        <Form.Label className="username">{this.props.me.username}</Form.Label>
-                                        <textarea
-                                          id="newReplyContentInput"
-                                          type="text"
-                                          value={this.state.newReplyContent}
-                                          onChange={(event) => this.setState({
-                                              newReplyContent: event.target.value,
-                                          })}
-                                          disabled={
-                                              this.props.selectedCollection.type === "private"
+                                    </Button>
+                                )}
+                        </Tab>
+                        <Tab className="reply-tab" eventKey="replyTab" title={`Replies(${this.state.replyCount})`}>
+                            <div id="replies">
+                                <div id="createNewReply">
+                                    <Form.Label className="username">{this.props.me.username}</Form.Label>
+                                    <textarea
+                                      id="newReplyContentInput"
+                                      type="text"
+                                      value={this.state.newReplyContent}
+                                      onChange={(event) => this.setState({
+                                          newReplyContent: event.target.value,
+                                      })}
+                                      disabled={
+                                          this.props.selectedCollection.type === "private"
                                             && this.props.selectedCollection.collection_user_type === "pending"
-                                          }
-                                        />
-                                        <Button
-                                          className="new-reply-button"
-                                          onClick={this.addNewReplyHandler}
-                                          disabled={this.state.newReplyContent.length === 0}
-                                        >
+                                      }
+                                    />
+                                    <Button
+                                      className="new-reply-button"
+                                      onClick={this.addNewReplyHandler}
+                                      disabled={this.state.newReplyContent.length === 0}
+                                    >
                                             Add
-                                        </Button>
-                                    </div>
-                                    <div id="replyList">
-                                        {replies}
-                                        {this.state.replyCollectionFinished ? null
-                                            : (
-                                                <Button
-                                                  variant="outline-info"
-                                                  className="reply-more-button"
-                                                  onClick={this.clickMoreButtonHandler}
-                                                  size="lg"
-                                                  block
-                                                >
-                                                    View More
-                                                </Button>
-                                            ) }
-                                    </div>
+                                    </Button>
                                 </div>
-                            </Tab>
-                        </Tabs>
-                    </div>
+                                <div id="replyList">
+                                    {replies}
+                                    {this.state.replyCollectionFinished ? null
+                                        : (
+                                            <Button
+                                              variant="outline-info"
+                                              className="reply-more-button"
+                                              onClick={this.clickMoreButtonHandler}
+                                              size="lg"
+                                              block
+                                            >
+                                                    View More
+                                            </Button>
+                                        ) }
+                                </div>
+                            </div>
+                        </Tab>
+                    </Tabs>
                 </div>
             </div>
         );

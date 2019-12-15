@@ -1,73 +1,14 @@
-.CollectionListContent {
-    min-height: 1000px;
-    background: rgb(242,243,247);
-     
-    position: relative;
-    display: flex;
-    flex-direction: column;
-}
-
 #collectionListText {
-    width: 96%;
-    height: 100%;
-    margin-top: 5%;
-    margin-bottom: 5%;
+    padding: 15px;
     font-size: 200%;
     font-weight: 700;
 }
 
-.CollectionListContent #colletionCards {
-    width: 90%;
-    height: 100%;
-    margin-left: 5%;
-    margin-right: 10%;
-    
-    display: flex;
-    justify-content: flex-start;
-    flex-flow: row wrap;
-    align-items: flex-start;
+#collectionNewButtonDiv {
+    margin: 15px;
 }
 
-.CollectionListContent #colletionCards #collectionCardsLeft {
-    width: 50%;
-    height: 100%;
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-}
-
-.CollectionListContent #colletionCards #collectionCardsRight {
-    width: 50%;
-    height: 100%;
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-}
-
-.SharedCollectionListContent #sharedColletionCards {
-    width: 90%;
-    height: 100%;
-    margin-left: 5%;
-    margin-right: 10%;
-    
-    display: flex;
-    justify-content: flex-start;
-    flex-flow: row wrap;
-    align-items: flex-start;
-}
-
-.SharedCollectionListContent #sharedColletionCards #sharedCollectionCardsLeft {
-    width: 50%;
-    height: 100%;
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-}
-
-.SharedCollectionListContent #sharedColletionCards #sharedCollectionCardsRight {
-    width: 50%;
-    height: 100%;
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
+#collectionDetailTab {
+    background: white;
+    border-radius: 2%;
 }

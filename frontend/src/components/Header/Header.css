@@ -1,78 +1,126 @@
-.header {
+.PapersFeed-Header {
     position: sticky;
     top: 0;
-    width: 100%;
     background: white;
     border-bottom: 2px solid rgb(220,224,227);
-    min-height: 70px;
-    height: 9vh;
+    width: auto;
     z-index: 10 !important;
+
+    min-height: 70px;
+    height: 13vh;
+
+    display: grid;
 }
 
-#header {
-    align-items: center;
-    justify-content: space-between;
-    display: flex;
+.PF-Header-items {
+    position: absolute;
+    vertical-align: middle;
 }
 
-.header #header .logo {
+.PapersFeed-Header .logo {
+    top: 1vw;
+    left: 1vw;
     font-weight: bold;
     text-decoration-color: #2f87ef;
     font-size: 150%;
     font-style: oblique;
-    padding: 1%;
-    margin-right: 20%;
 }
 
-.header #header  .search {
-    flex: 0 1 700px;
+.PapersFeed-Header .search {
+    top: 7vh;
+    left: 3vw;
+
     justify-self: center;
     align-self: center;
     display: flex;
     align-items: center;
 }
 
-.header #header .search .search-input {
-    /* margin-left:18%; */
-    flex: 0 1 700px;
+.PapersFeed-Header #PFheader .search .search-input {
+    height: auto;
+    width: 75vw;
+    padding-right: 5px;
     background:rgb(242,243,247);
 }
 
-.header #header .search .search-button{
-    /* margin-left:18%; */
-    flex: 0 1 100px;
+.PapersFeed-Header #PFheader .search .search-button{
+    margin-left: 5px;
 }
 
-.header #header .header-buttons {
+.PapersFeed-Header #PFheader .header-buttons {
+    top: 1vh;
+    right: 2vw;
+
     display: flex;
     justify-content: flex-end;
     align-items: stretch;
 }
 
-.header #header .header-buttons .dropdown-notification {
+@media (min-width: 576px) {
+    .PapersFeed-Header {
+        min-height: 70px;
+        height: 9vh;
+    }
+
+    .PapersFeed-Header .logo {
+        top: auto;
+        left: 2vw;
+    }
+
+    .PapersFeed-Header .search {
+        top: auto;
+        left: 28vw;
+    }
+
+    .PapersFeed-Header #PFheader .header-buttons {
+        top: auto;
+    } 
+
+    .PapersFeed-Header #PFheader .search .search-input {
+        width: 28vw;
+    }
+}
+
+@media (min-width: 768px) {
+    .PapersFeed-Header .search {
+        left: 22vw;
+    }
+
+    .PapersFeed-Header #PFheader .search .search-input {
+        width: 40vw;
+    }
+}
+
+@media (min-width: 992px) {
+    .PapersFeed-Header #PFheader .search .search-input {
+        width: 50vw;
+    }
+}
+
+.PapersFeed-Header #PFheader .header-buttons .dropdown-notification {
     display: flex;
     justify-content: flex-end;
 }
 
-.header #header .header-buttons .dropdown-notification .notification-button {
+.PapersFeed-Header #PFheader .header-buttons .dropdown-notification .notification-button {
     flex: 0 1 100px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.header #header .header-buttons .dropdown-notification .notification-menu{
+.PapersFeed-Header #PFheader .header-buttons .dropdown-notification .notification-menu{
     width: 100%;
     min-width: 310px;
     overflow-y: scroll;
     height: 200px;
 }
 
-.header #header .header-buttons .dropdown-notification .notification-menu .notification-entry{
+.PapersFeed-Header #PFheader .header-buttons .dropdown-notification .notification-menu .notification-entry{
     margin-left: 5%;
     margin-right: 5%;
     border-top: 1px solid grey;
-    border-top: 1px solid grey;
+    border-bottom: 1px solid grey;
 }
 
 .read-button {
@@ -90,18 +138,18 @@
     text-align: center;
 }
 
-.header #header .header-buttons .dropdown-account  {
+.PapersFeed-Header #PFheader .header-buttons .dropdown-account  {
     display: flex;
     justify-content: flex-end;
 }
 
-.header #header .header-buttons .dropdown-account .myaccount-button {
+.PapersFeed-Header #PFheader .header-buttons .dropdown-account .myaccount-button {
     flex: 0 1 100px;
     display: flex;
     justify-content: space-around;
     align-items: center;
 }
 
-.header #header .header-buttons .dropdown-account .myaccount-menu {
+.PapersFeed-Header #PFheader .header-buttons .dropdown-account .myaccount-menu {
     width: 100%;
 }

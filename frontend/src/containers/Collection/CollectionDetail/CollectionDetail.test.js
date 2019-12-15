@@ -187,7 +187,7 @@ describe("CollectionDetail Test", () => {
         };
 
         const component = mount(makeCollectionDetail(stubInitialState));
-        const wrapper = component.find(".CollectionDetail");
+        const wrapper = component.find("#CollectionDetail");
         expect(wrapper.length).toBe(1);
         expect(spyGetCollection).toHaveBeenCalledTimes(1);
         const instance = component.find(CollectionDetail.WrappedComponent).instance();

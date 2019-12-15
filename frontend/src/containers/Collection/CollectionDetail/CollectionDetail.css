@@ -1,38 +1,21 @@
-.CollectionDetail {
-    background: rgb(242,243,247);
-    min-height: 91vh;
-}
-
-.CollectionDetailContent {
-    display: flex;
-    flex-direction: column;
-    padding-left: 5%;
-    padding-right: 5%;
-}
-
-.CollectionDetailContent #header {
+#collectionDetailHeader {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    align-items: center;
     margin-top: 1vh;
+}
+
+.CollectionDetailContent #collectionDetailHeader button {
+    margin-left: 5px;
 }
 
 .CollectionDetailContent .alert {
     margin-top: 2%;
 }
 
-.CollectionDetailContent #header #memberButton {
-    width: 70px;
-    height: 40px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    margin-left: 5px;
-    margin-right: 5px;
-}
-
 #manageButton {
-    width: 80px;
+    width: auto;
     height: 40px;
     margin-left: 5px;
 }
@@ -73,7 +56,7 @@
     .itemList {
         min-height: 50vh;
     }
-  }
+}
 
 .itemList #paperCards {
     width: 100%;

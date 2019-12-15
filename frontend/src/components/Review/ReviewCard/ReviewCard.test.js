@@ -99,7 +99,7 @@ describe("<ReviewCard />", () => {
             headerExists: true, subscription: true, target: {},
         });
         const component = mount(reviewCard);
-        const wrapper = component.find("#headerSubscription").hostNodes();
+        const wrapper = component.find("#headerReviewSubscription").hostNodes();
         expect(wrapper.length).toBe(1);
     });
 
@@ -108,7 +108,7 @@ describe("<ReviewCard />", () => {
             headerExists: true, subscription: true, target: { content: { id: 1 } },
         });
         const component = mount(reviewCard);
-        const wrapper = component.find("#headerSubscriptionTarget").hostNodes();
+        const wrapper = component.find("#headerReviewSubscriptionTarget").hostNodes();
         expect(wrapper.length).toBe(1);
     });
 
@@ -117,7 +117,7 @@ describe("<ReviewCard />", () => {
             headerExists: true, recommendation: true, target: { content: { id: 1 } },
         });
         const component = mount(reviewCard);
-        const wrapper = component.find("#headerSubscriptionTarget").hostNodes();
+        const wrapper = component.find("#headerReviewSubscriptionTarget").hostNodes();
         expect(wrapper.length).toBe(1);
     });
 

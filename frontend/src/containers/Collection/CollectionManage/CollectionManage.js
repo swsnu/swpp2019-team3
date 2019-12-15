@@ -74,9 +74,9 @@ class CollectionManage extends Component {
         }
 
         return (
-            <div className="CollectionManage">
-                <h2 id="collectionManageTitle">
-                        Manage Collection
+            <div className="PapersFeed-Content" id="CollectionManage">
+                <h2 className="PapersFeed-ContentTitle">
+                    Manage Collection
                 </h2>
                 <div className="EditCollectionInfo">
                     <div className="EditCollectionItem">

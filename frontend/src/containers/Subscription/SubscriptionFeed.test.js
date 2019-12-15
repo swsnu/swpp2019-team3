@@ -323,7 +323,7 @@ describe("SubscriptionFeed test", () => {
 
     it("should render well", async () => {
         const component = mount(feed);
-        const wrapper = component.find(".SubscriptionFeed");
+        const wrapper = component.find("#SubscriptionFeed");
         expect(wrapper.length).toBe(1);
         expect(spyGetSubscription).toBeCalledTimes(1);
 

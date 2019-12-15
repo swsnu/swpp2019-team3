@@ -92,7 +92,7 @@ describe("<CollectionCard />", () => {
     it("if headerExists is false, then header should not exist", () => {
         collectionCard = makeCollectionCard(stubInitialState, { headerExists: false });
         const component = mount(collectionCard);
-        const wrapper = component.find("#headerSubscription").hostNodes();
+        const wrapper = component.find("#headerCollectionSubscription").hostNodes();
         expect(wrapper.length).toBe(0);
     });
 
@@ -101,7 +101,7 @@ describe("<CollectionCard />", () => {
             headerExists: true, subscription: true,
         });
         const component = mount(collectionCard);
-        const wrapper = component.find("#headerSubscription").hostNodes();
+        const wrapper = component.find("#headerCollectionSubscription").hostNodes();
         expect(wrapper.length).toBe(1);
     });
 
@@ -110,7 +110,7 @@ describe("<CollectionCard />", () => {
             headerExists: true, subscription: true,
         });
         const component = mount(collectionCard);
-        const wrapper = component.find("#headerSubscription").hostNodes();
+        const wrapper = component.find("#headerCollectionSubscription").hostNodes();
         expect(wrapper.length).toBe(1);
     });
 });

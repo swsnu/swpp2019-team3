@@ -6,7 +6,7 @@ import {
     Form, Button, Card,
 } from "react-bootstrap";
 import { reviewActions, replyActions } from "../../../store/actions";
-import { Reply } from "../../../components";
+import { Reply, LikeButton } from "../../../components";
 import "./ReviewDetail.css";
 import SVG from "../../../components/svg";
 import { reviewStatus } from "../../../constants/constants";
@@ -225,7 +225,13 @@ class ReviewDetail extends Component {
                             </div>
                             <div className="reply">
                                 <div className="review-extra">
-                                    <Button className="like-button" variant="light" onClick={this.state.isLiked ? this.clickUnlikeButtonHandler : this.clickLikeButtonHandler}><div className="heart-image"><SVG name="heart" height="25px" width="25px" /></div>{this.state.likeCount}</Button>
+                                    <LikeButton
+                                      id="likeButton"
+                                      isLiked={this.state.isLiked}
+                                      likeFn={this.clickLikeButtonHandler}
+                                      unlikeFn={this.clickUnlikeButtonHandler}
+                                      likeCount={this.state.likeCount}
+                                    />
                                     <Button className="replyCount-button" variant="light"><div className="reply-image"><SVG name="zoom" height="25px" width="25px" /></div>{this.state.replyCount}</Button>
                                     {this.props.me && this.state.author.id === this.props.me.id
                                         ? <Button className="edit-button" variant="outline-info" onClick={this.clickEditButtonHandler}>Edit</Button>
@@ -252,7 +258,7 @@ class ReviewDetail extends Component {
                                               size="lg"
                                               block
                                             >
-                View More
+                                                View More
                                             </Button>
                                         ) }
                                 </div>

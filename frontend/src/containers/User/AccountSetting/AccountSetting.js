@@ -136,10 +136,8 @@ class AccountSetting extends Component {
         }, []);
 
         return (
-            <div className="AccountSetting">
-                <div className="AccountEditArea">
-                    <h5 id="headerText">Account Setting</h5>
-                </div>
+            <div className="PapersFeed-Content" id="AccountSetting">
+                <h2 className="PapersFeed-ContentTitle">Account Setting</h2>
                 <div className="AccountEditArea" id="EditUserNameArea">
                     <h3 id="editUserNameTag">Edit Username</h3>
                     <input
