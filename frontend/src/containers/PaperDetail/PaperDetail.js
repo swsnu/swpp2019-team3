@@ -45,9 +45,6 @@ class PaperDetail extends Component {
                 if (this.props.selectedPaper.keywords) {
                     this.setState({ keywords: this.props.selectedPaper.keywords });
                 }
-                if (this.props.location.state != null && this.props.location.state === "review") {
-                    window.scrollTo(this.review.current.offsetTop);
-                }
             })
             .catch(() => {});
 
@@ -61,6 +58,10 @@ class PaperDetail extends Component {
                     const { reviews } = this.state;
                     this.setState({
                         reviews: reviews.concat(this.props.reviewList),
+                    }, () => {
+                        if (this.props.location.state != null && this.props.location.state === "review") {
+                            window.scrollTo(0, this.review.current.offsetTop);
+                        }
                     });
                 } else {
                     this.props.history.push("/main");
@@ -125,11 +126,11 @@ class PaperDetail extends Component {
                           foldingNum={500}
                           history={this.props.history}
                         />
-                        <div className="up-review" ref={this.review}>
+                        <div className="up-review">
                             <h3 id="review-count">{this.state.reviewCount} reviews</h3>
                             <Button className="review-add" onClick={this.handleClickReviewAddButton}>Create</Button>
                         </div>
-                        <div className="reviewcards">
+                        <div className="reviewcards" ref={this.review}>
                             <div className="reviewcards-left">{reviewCardsLeft}</div>
                             <div className="reviewcards-right">{reviewCardsRight}</div>
                         </div>
