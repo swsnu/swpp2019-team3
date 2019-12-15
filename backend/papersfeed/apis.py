@@ -3,9 +3,10 @@
 
 # Internal Modules
 import json
+from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-from papersfeed.utils.base_utils import view_exceptions_handler
+from papersfeed.utils.base_utils import view_exceptions_handler, check_session
 from papersfeed.utils.papers import utils as papers_utils
 from papersfeed.utils.users import utils as users_utils
 from papersfeed.utils.collections import utils as collections_utils
@@ -173,8 +174,13 @@ def get_review_user(args):
             constants.TOTAL_COUNT: total_count}
 
 
-def get_paper_search(args):
+@cache_page(None)
+@view_exceptions_handler
+def get_paper_search(request):
     """Get Paper Search"""
+    args = request.GET.dict()
+    args[constants.REQUEST] = request
+    check_session(args, request)
     papers, page_number, is_finished = papers_utils.select_paper_search(args)
     return {constants.PAPERS: papers,
             constants.PAGE_NUMBER: page_number,

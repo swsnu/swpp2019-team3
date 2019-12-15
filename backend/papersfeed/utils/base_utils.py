@@ -4,8 +4,10 @@ import logging
 import traceback
 from django.http import JsonResponse
 from django.core.paginator import Paginator
+from django.core.exceptions import ObjectDoesNotExist
 
 from papersfeed import constants
+from papersfeed.models.users.user import User
 
 
 class ApiError(Exception):
@@ -32,6 +34,21 @@ def get_results_from_queryset(queryset, count, page_num=0):
         return pages.get_page(page_num)
 
     return results
+
+def check_session(args, request):
+    """Check Session"""
+    # User Id
+    user_id = request.session.get(constants.ID, None)
+    if not user_id:
+        raise ApiError(constants.AUTH_ERROR)
+
+    try:
+        # Get User By Id
+        user = User.objects.get(id=user_id)
+    except ObjectDoesNotExist:
+        raise ApiError(constants.AUTH_ERROR)
+    else:
+        args[constants.USER] = user
 
 
 def view_exceptions_handler(func):

@@ -8,11 +8,9 @@ import traceback
 
 # Django Modules
 from django.http import JsonResponse
-from django.core.exceptions import ObjectDoesNotExist
 
 # Internal Modules
-from papersfeed.utils.base_utils import ApiError
-from papersfeed.models.users.user import User
+from papersfeed.utils.base_utils import ApiError, check_session
 from . import apis
 from . import constants
 
@@ -47,6 +45,10 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
     if api_function == 'post_user':
         return apis.post_user(request)
 
+    if api_function == 'get_paper_search':
+        result = apis.get_paper_search(request)
+        return result
+
     handler = getattr(apis, api_function, api_not_found)
 
     if handler is not api_not_found:
@@ -66,7 +68,7 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
                     'get_user_all',
                     'get_paper_all'
                 ]:
-                __check_session(args, request)
+                check_session(args, request)
 
             # Functions 실행
             data = handler(args)
@@ -91,7 +93,6 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
 
     response = JsonResponse(response_data, safe=False)
     response.status_code = status_code
-
     return response
 # pylint: enable=too-many-branches
 
@@ -120,18 +121,3 @@ def __get_args(request):
         args = body
 
     return args
-
-
-def __check_session(args, request):
-    # User Id
-    user_id = request.session.get(constants.ID, None)
-    if not user_id:
-        raise ApiError(constants.AUTH_ERROR)
-
-    try:
-        # Get User By Id
-        user = User.objects.get(id=user_id)
-    except ObjectDoesNotExist:
-        raise ApiError(constants.AUTH_ERROR)
-    else:
-        args[constants.USER] = user
