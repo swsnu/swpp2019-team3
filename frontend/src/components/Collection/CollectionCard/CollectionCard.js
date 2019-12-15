@@ -51,8 +51,6 @@ class CollectionCard extends Component {
             );
         }
 
-<<<<<<< HEAD
-=======
         let typeIcon = null;
         if (this.props.type === "private") {
             typeIcon = (
@@ -60,7 +58,6 @@ class CollectionCard extends Component {
             );
         }
 
->>>>>>> d669d3046127a96403d5ea7b6c46aa08521a06e5
         return (
             <div className="wrapper">
                 <Card className="collection">

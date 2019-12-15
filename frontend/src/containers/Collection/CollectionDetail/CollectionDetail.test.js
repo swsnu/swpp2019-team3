@@ -577,4 +577,63 @@ describe("CollectionDetail Test", () => {
         const wrapper = component.find(".alert");
         expect(wrapper.length).toBe(3);
     });
+
+
+    it("should handle papers well repeatedly", async () => {
+        stubInitialState = {
+            ...stubInitialState,
+            collection: {
+                ...stubInitialState.collection,
+                selected: {
+                    status: collectionStatus.SUCCESS,
+                    collection: {
+                        type: "public",
+                        title: "test collection",
+                        text: "test description",
+                        creation_date: "2019-11-26T11:59:41.126",
+                        modification_date: "2019-11-26T11:59:41.126",
+                        count: {},
+                        owner: { id: 1, username: "test1" },
+                        collection_user_type: "owner",
+                        owned: true,
+                    },
+                    error: null,
+                    papers: { papers: [], page_number: 1, is_finished: false },
+                },
+            },
+        };
+        const component = mount(makeCollectionDetail(stubInitialState));
+        const instance = component.find("CollectionDetail").instance();
+        instance.setState(
+            {
+                paperCollectionFinished: false,
+                paperCollectionPageCount: 2,
+                papers: [{
+                    id: idGenerator(),
+                    count: { likes: 0 },
+                }],
+            },
+        );
+        component.update();
+        const spyHandlePapers = jest.spyOn(instance, "handleCollectionPapers");
+        const spyForEach = jest.spyOn(instance, "forEachHandlePaper");
+
+        expect(instance.state.paperCollectionPageCount).toBe(2);
+
+        instance.handleCollectionPapers();
+        await flushPromises();
+        component.update();
+        expect(spyGetCollectionPapers).toBeCalledTimes(2);
+        expect(spyHandlePapers).toBeCalledTimes(1);
+        expect(spyForEach).toBeCalledTimes(2);
+    });
+
+    it("should delete paper", () => {
+        const component = mount(collectionDetail);
+        const instance = component.find("CollectionDetail").instance();
+        const spyDeletePapers = jest.spyOn(instance, "handleClickDeletePaper");
+
+        instance.handleClickDeletePaper();
+        expect(spyDeletePapers).toBeCalledTimes(1);
+    });
 });
