@@ -156,14 +156,14 @@ class PaperTestCase(TestCase):
                    },
                    content_type='application/json')
 
-        paper_id = Paper.objects.filter(title='paper1').first().id
-        test_collection_2_id = Collection.objects.filter(title='test_collection_2').first().id
+        test_paper_id = Paper.objects.filter(title='paper1').first().id
+        collection_id = Collection.objects.filter(title='test_collection_2').first().id
 
         # Add paper to test_collection_2
         response = client.put('/api/paper/collection',
                               data=json.dumps({
-                                  constants.ID: paper_id,
-                                  constants.COLLECTION_IDS: [test_collection_2_id]
+                                  constants.ID: test_paper_id,
+                                  constants.COLLECTION_IDS: [collection_id]
                               }),
                               content_type='application/json')
 
@@ -172,8 +172,8 @@ class PaperTestCase(TestCase):
         # Delete paper from test_collection_2
         response = client.delete('/api/paper/collection',
                                  data=json.dumps({
-                                     constants.ID: test_collection_2_id,
-                                     constants.PAPER_ID: paper_id,
+                                     constants.ID: collection_id,
+                                     constants.PAPER_ID: test_paper_id,
                                  }),
                                  content_type='application/json')
 
