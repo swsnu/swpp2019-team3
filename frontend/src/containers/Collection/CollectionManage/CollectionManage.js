@@ -179,7 +179,7 @@ class CollectionManage extends Component {
                           id="delete-warningmodal"
                           variant="danger"
                           openButtonText="Delete Collection"
-                          whatToWarnText={`Delete colelction: ${this.props.selectedCollection.title}`}
+                          whatToWarnText={`Delete collection: ${this.props.selectedCollection.title}`}
                           whatActionWillBeDone={() => this.props.onDeleteCollection(
                               this.props.selectedCollection.id,
                           )}
