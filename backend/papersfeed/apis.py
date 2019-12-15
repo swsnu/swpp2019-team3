@@ -174,7 +174,7 @@ def get_review_user(args):
             constants.TOTAL_COUNT: total_count}
 
 
-@cache_page(60 * 15)
+@cache_page(None)
 @view_exceptions_handler
 def get_paper_search(request):
     """Get Paper Search"""
