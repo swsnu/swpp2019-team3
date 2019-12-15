@@ -1,5 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import SubscriptionFeed from "../Subscription/SubscriptionFeed";
 
 // import "./Main.css";
@@ -13,7 +14,7 @@ class Main extends Component {
         return (
             <div className="main">
                 <div className="feeds">
-                    <SubscriptionFeed />
+                    <SubscriptionFeed history={this.props.history} />
                 </div>
             </div>
         );
@@ -21,3 +22,11 @@ class Main extends Component {
 }
 
 export default Main;
+
+Main.propTypes = {
+    history: PropTypes.objectOf(PropTypes.any),
+};
+
+Main.defaultProps = {
+    history: null,
+};

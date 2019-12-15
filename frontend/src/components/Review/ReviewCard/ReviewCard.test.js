@@ -1,19 +1,22 @@
 import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
-
+import { Router } from "react-router-dom";
 import ReviewCard from "./ReviewCard";
 import { getMockStore } from "../../../test-utils/mocks";
 import { reviewActions } from "../../../store/actions";
 import { reviewStatus } from "../../../constants/constants";
+import { history } from "../../../store/store";
 
-const mockHistory = { push: jest.fn() };
+const mockHistory = history;
 
 /* eslint-disable react/jsx-props-no-spreading */
 const makeReviewCard = (initialState, props = {}) => (
-    <Provider store={getMockStore(initialState)}>
-        <ReviewCard id={1} history={mockHistory} {...props} />
-    </Provider>
+    <Router location={{ pathname: "", state: "" }} history={mockHistory}>
+        <Provider store={getMockStore(initialState)}>
+            <ReviewCard id={1} history={mockHistory} {...props} />
+        </Provider>
+    </Router>
 );
 /* eslint-enable react/jsx-props-no-spreading */
 

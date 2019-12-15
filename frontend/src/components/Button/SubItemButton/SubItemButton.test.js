@@ -12,4 +12,10 @@ describe("SubItemButton Test", () => {
         const wrapper = component.find(".SubItemButton").hostNodes();
         expect(wrapper.length).toBe(1);
     });
+
+    it("should handle tab", () => {
+        const component = mount(<SubItemButton tab />);
+        const wrapper = component.find(".SubItemButton").hostNodes();
+        expect(wrapper.length).toBe(1);
+    });
 });

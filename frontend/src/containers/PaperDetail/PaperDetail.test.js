@@ -1,7 +1,7 @@
 import React from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
-
+import { Router } from "react-router-dom";
 import PaperDetail from "./PaperDetail";
 import { PaperSpec } from "../../components";
 import { paperActions, reviewActions } from "../../store/actions";
@@ -9,13 +9,15 @@ import {
     paperStatus, collectionStatus, reviewStatus, signinStatus,
 } from "../../constants/constants";
 import { getMockStore, mockPromise, flushPromises } from "../../test-utils/mocks";
+import { history } from "../../store/store";
 
-
-const mockHistory = { push: jest.fn() };
+const mockHistory = history;
 const makePaperDetail = (initialState) => (
-    <Provider store={getMockStore(initialState)}>
-        <PaperDetail history={mockHistory} location={{ pathname: "/paper_id=1" }} />
-    </Provider>
+    <Router location={{ pathname: "", state: "" }} history={mockHistory}>
+        <Provider store={getMockStore(initialState)}>
+            <PaperDetail history={mockHistory} location={{ pathname: "/paper_id=1" }} />
+        </Provider>
+    </Router>
 );
 
 describe("<PaperDetail />", () => {
@@ -167,6 +169,8 @@ describe("<PaperDetail />", () => {
 
 
     it("should handle when getPaper failed", async () => {
+        const spyPush = jest.spyOn(history, "push")
+            .mockImplementation(() => {});
         stubInitialState = {
             ...stubInitialState,
             paper: {
@@ -185,7 +189,7 @@ describe("<PaperDetail />", () => {
         };
         mount(makePaperDetail(stubInitialState));
         await flushPromises();
-        expect(mockHistory.push).toHaveBeenCalledTimes(1);
+        expect(spyPush).toHaveBeenCalledTimes(1);
     });
 
     it("should make reviewCardsLeft and reviewCardsRight well", () => {

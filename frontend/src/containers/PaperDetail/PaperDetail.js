@@ -19,6 +19,7 @@ class PaperDetail extends Component {
             reviews: [],
         };
 
+        this.review = React.createRef();
         this.getReviewsTrigger = this.getReviewsTrigger.bind(this);
         this.reviewMaker = this.reviewMaker.bind(this);
         this.handleClickReviewAddButton = this.handleClickReviewAddButton.bind(this);
@@ -57,6 +58,10 @@ class PaperDetail extends Component {
                     const { reviews } = this.state;
                     this.setState({
                         reviews: reviews.concat(this.props.reviewList),
+                    }, () => {
+                        if (this.props.location.state != null && this.props.location.state === "review") {
+                            window.scrollTo(0, this.review.current.offsetTop);
+                        }
                     });
                 } else {
                     this.props.history.push("/main");
@@ -125,7 +130,7 @@ class PaperDetail extends Component {
                             <h3 id="review-count">{this.state.reviewCount} reviews</h3>
                             <Button className="review-add" onClick={this.handleClickReviewAddButton}>Create</Button>
                         </div>
-                        <div className="reviewcards">
+                        <div className="reviewcards" ref={this.review}>
                             <div className="reviewcards-left">{reviewCardsLeft}</div>
                             <div className="reviewcards-right">{reviewCardsRight}</div>
                         </div>

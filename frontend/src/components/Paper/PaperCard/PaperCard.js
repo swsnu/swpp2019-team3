@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { Card, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-
+import { withRouter } from "react-router-dom";
 import { paperActions } from "../../../store/actions";
 import "./PaperCard.css";
 import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
@@ -115,6 +115,12 @@ class PaperCard extends Component {
             } else if (this.props.paperSource) {
                 header = <Card.Header id="header">{`from ${this.props.paperSource}`}</Card.Header>;
             }
+        } else if (this.props.deleteExists) {
+            header = (
+                <Card.Header id="headerDelete">
+                    <Button variant="outline-danger" className="deleteButton" onClick={() => { this.props.clickDeleteCard(this.props.id); }}>Delete</Button>
+                </Card.Header>
+            );
         }
         let addButton = null;
         if (this.props.addButtonExists) {
@@ -145,8 +151,9 @@ class PaperCard extends Component {
                                 />
                                 <SubItemButton
                                   id="replyButton"
-                                  href={`/paper_id=${this.props.id}`}
+                                  click={() => { this.props.history.push({ pathname: `/paper_id=${this.props.id}`, state: "review" }); }}
                                   count={this.props.reviewCount}
+                                  tab
                                 />
                             </span>
                             <div>
@@ -176,7 +183,7 @@ const mapDispatchToProps = (dispatch) => ({
     ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PaperCard);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(PaperCard));
 
 PaperCard.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
@@ -200,6 +207,8 @@ PaperCard.propTypes = {
     actor: PropTypes.objectOf(PropTypes.any),
     verb: PropTypes.string,
     target: PropTypes.objectOf(PropTypes.any),
+    clickDeleteCard: PropTypes.func,
+    deleteExists: PropTypes.bool,
 };
 
 PaperCard.defaultProps = {
@@ -224,4 +233,6 @@ PaperCard.defaultProps = {
     actor: {},
     verb: "",
     target: {},
+    clickDeleteCard: () => {},
+    deleteExists: false,
 };

@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 import PropTypes from "prop-types";
 
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
 
 import {
@@ -29,7 +29,7 @@ function App(props) {
                                 <div className="col-sm-2"><SideBar history={props.history} /></div>
                                 <div className="col-sm-10">
                                     <Switch>
-                                        <Route path="/main" exact component={Main} />
+                                        <Route path="/main" history={props.history} exact component={Main} />
                                         <Route path="/init" exact component={Init} />
                                         <Route path="/tutorial" exact component={Tutorial} />
                                         <Route path="/search=:search_word" exact component={SearchResult} />
@@ -106,6 +106,7 @@ function App(props) {
                                           )}
                                         />
                                         <Route path="/collection_id=:collection_id/manage" exact component={CollectionManage} />
+                                        <Redirect exact to="/main" />
                                     </Switch>
                                 </div>
                             </div>

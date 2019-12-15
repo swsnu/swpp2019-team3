@@ -12,6 +12,7 @@ from django.db.models import Q, Exists, OuterRef, Count, Case, When
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
 from papersfeed.utils.papers.search import exploit_arxiv, exploit_crossref, __extract_keywords_from_abstract, __parse_and_save_arxiv_info # pylint: disable=line-too-long
+from papersfeed.utils.collections.utils import get_collection_paper_count
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.papers.author import Author
 from papersfeed.models.papers.keyword import Keyword
@@ -267,6 +268,23 @@ def get_papers(filter_query, request_user, count):
     """Public Get Papers"""
     return __get_papers(filter_query, request_user, count)
 
+def remove_paper_collection(args):
+    """Remove paper from the collection"""
+    is_parameter_exists([
+        constants.ID, constants.PAPER_ID
+    ], args)
+
+    collection_id = int(args[constants.ID])
+    paper_id = int(args[constants.PAPER_ID])
+
+    if not CollectionPaper.objects.filter(collection_id=collection_id, paper_id=paper_id).exists():
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    CollectionPaper.objects.filter(collection_id=collection_id, paper_id=paper_id).delete()
+
+    # Get the number of papers in the collection
+    paper_counts = get_collection_paper_count([collection_id], 'collection_id')
+    return {constants.PAPERS: paper_counts[collection_id] if collection_id in paper_counts else 0}
 
 def __get_papers(filter_query, request_user, count, order_by='-pk'):
     """Get Papers By Query"""

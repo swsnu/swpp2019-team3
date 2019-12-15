@@ -254,12 +254,21 @@ describe("Collection reducer", () => {
 
     it("should return delete_collection_paper", () => {
         const newState = reducer(stubInitialState, {
-            type: collectionConstants.DEL_COLLECTION_PAPER,
+            type: collectionConstants.DEL_COLLECTION_PAPER_SUCCESS,
             target: stubCollection,
         });
-        expect(newState.edit.status).toBe(collectionStatus.SUCCESS);
-        expect(newState.edit.collection).toBe(stubCollection);
+        expect(newState.selected.status).toBe(collectionStatus.SUCCESS);
     });
+
+
+    it("should return delete_collection_paper", () => {
+        const newState = reducer(stubInitialState, {
+            type: collectionConstants.DEL_COLLECTION_PAPER_FAILURE,
+            target: stubCollection,
+        });
+        expect(newState.selected.status).toBe(collectionStatus.FAILURE);
+    });
+
 
     it("should return add_collection_member", () => {
         const newState = reducer(stubInitialState, {
