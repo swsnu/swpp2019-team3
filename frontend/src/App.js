@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import { Route, Switch, Redirect } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
-
+//
 import {
     Intro, Main, SearchResult, ReviewDetail, PaperDetail, ReviewControl,
     ProfileDetail, AccountSetting, CollectionDetail, CollectionList,
