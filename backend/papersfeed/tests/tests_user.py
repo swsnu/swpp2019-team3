@@ -796,6 +796,15 @@ class UserTestCase(TestCase):
         # now, members of the collection are two users
         self.assertEqual(json.loads(response.content)['count']['users'], 2)
 
+        # Delete the User from the Collection (Not Found)
+        response = client.delete('/api/user/collection/self',
+                                 json.dumps({
+                                     constants.ID: -1,
+                                 }),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 404)
+
         # Delete the User from the Collection
         response = client.delete('/api/user/collection/self',
                                  json.dumps({
