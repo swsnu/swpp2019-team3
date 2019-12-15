@@ -153,4 +153,11 @@ describe("<PaperCard />", () => {
         const wrapper = component.find(".keywords").hostNodes();
         expect(wrapper.text()).toBe("# B");
     });
+
+    it("if deleteExists, show delete button", () => {
+        paperCard = makePaperCard(stubInitialState, { headerExists: false, deleteExists: true });
+        const component = mount(paperCard);
+        const wrapper = component.find("#headerDelete").hostNodes();
+        expect(wrapper.length).toBe(1);
+    });
 });
