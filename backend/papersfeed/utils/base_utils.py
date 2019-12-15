@@ -41,15 +41,15 @@ def view_exceptions_handler(func):
         try:
             data = func(request, *args, **kwargs)
             response_data = {} if data is None else data
-        except ApiError as error:
-            status_code = error.args[0]
-            logging.error("\tstatus-code: %d\n%s\n%s", status_code, str(error), traceback.format_exc())
-        except Exception as error:  # pylint: disable=broad-except
+        except ApiError as e: # pylint: disable=invalid-name
+            status_code = e.args[0]
+            logging.error("\tstatus-code: %d\n%s\n%s", status_code, str(e), traceback.format_exc())
+        except Exception as e:  # pylint: disable=broad-except, invalid-name
             logging.error(traceback.format_exc())
             status_code = 500
-            response_data[constants.DEBUG] = {constants.ERROR: str(error),
+            response_data[constants.DEBUG] = {constants.ERROR: str(e),
                                               constants.DESCRIPTION: traceback.format_exc()}
-            logging.error("\tstatus-code: %d\n%s\n%s", status_code, str(error), traceback.format_exc())
+            logging.error("\tstatus-code: %d\n%s\n%s", status_code, str(e), traceback.format_exc())
         else:
             if request.method.lower() == 'post':
                 status_code = 201
