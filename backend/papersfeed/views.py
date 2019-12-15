@@ -22,6 +22,7 @@ def api_not_found():
     raise ApiError(404)
 
 
+# pylint: disable=too-many-branches
 def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
     """api_entry"""
     # API 요청에 Return 할 Response Initialize
@@ -43,7 +44,7 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
 
     if api_function == 'get_session':
         return apis.get_session(request)
-    elif api_function == 'post_user':
+    if api_function == 'post_user':
         return apis.post_user(request)
 
     handler = getattr(apis, api_function, api_not_found)
@@ -92,6 +93,7 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
     response.status_code = status_code
 
     return response
+# pylint: enable=too-many-branches
 
 
 def __get_args(request):
