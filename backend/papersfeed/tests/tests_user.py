@@ -786,6 +786,13 @@ class UserTestCase(TestCase):
                    },
                    content_type='application/json')
 
+        # Delete the User from the Collection (Not Found - CollectionUser)
+        response = client.delete('/api/user/collection/self',
+                                 json.dumps({
+                                     constants.ID: collection_id,
+                                 }),
+                                 content_type='application/json')
+
         # accept invitation from 'swpp'
         response = client.put('/api/user/collection/pending',
                               data=json.dumps({
@@ -796,7 +803,7 @@ class UserTestCase(TestCase):
         # now, members of the collection are two users
         self.assertEqual(json.loads(response.content)['count']['users'], 2)
 
-        # Delete the User from the Collection (Not Found)
+        # Delete the User from the Collection (Not Found - Collection)
         response = client.delete('/api/user/collection/self',
                                  json.dumps({
                                      constants.ID: -1,
