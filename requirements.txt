@@ -18,3 +18,4 @@ django-notifications-hq==1.5.0
 xmltodict==0.12.0
 celery==4.3.0
 redis==3.3.11
+django-redis==4.11.0
