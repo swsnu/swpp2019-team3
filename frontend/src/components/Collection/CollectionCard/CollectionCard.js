@@ -84,7 +84,7 @@ class CollectionCard extends Component {
                         />
                         <SubItemButton
                           id="replyButton"
-                          onClick={() => { this.props.history.push({ pathname: `/collection_id=${this.props.id}`, state: "replyTab" }); }}
+                          click={() => { this.props.history.push({ pathname: `/collection_id=${this.props.id}`, state: "replyTab" }); }}
                           count={this.props.replyCount}
                           tab
                         />

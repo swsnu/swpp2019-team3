@@ -302,7 +302,11 @@ class CollectionDetail extends Component {
                         <div id="paperCardsRight">{paperCardsRight}</div>
                     </div>
                 )
-                : (<h5 id="noPapersText">There is no paper in this collection for now.</h5>);
+                : (
+                    <div className="alert alert-warning" role="alert">
+                        There is no paper in this collection for now.
+                    </div>
+                );
 
             replies = this.state.replies.length !== 0
                 ? (this.state.replies.map((reply) => (
@@ -320,7 +324,11 @@ class CollectionDetail extends Component {
                       type="collection"
                     />
                 )))
-                : (<h5 id="noRepliesText">There is no reply in this collection for now.</h5>);
+                : (
+                    <div className="alert alert-warning" role="alert">
+                        There is no reply in this collection for now.
+                    </div>
+                );
         }
 
         // 'pending' users cannot see 'Invite' or 'Manage' button

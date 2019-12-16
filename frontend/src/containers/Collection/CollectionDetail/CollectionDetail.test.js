@@ -243,8 +243,6 @@ describe("CollectionDetail Test", () => {
         expect(wrapper.length).toBe(0);
         wrapper = component.find("#paperCardsRight");
         expect(wrapper.length).toBe(0);
-        wrapper = component.find("#noPapersText");
-        expect(wrapper.length).toBe(1);
     });
 
     it("should show paper cards well", () => {
@@ -492,7 +490,7 @@ describe("CollectionDetail Test", () => {
         await flushPromises();
 
         let wrapper = component.find(".alert");
-        expect(wrapper.length).toBe(1);
+        expect(wrapper.length).toBe(3);
 
         wrapper = component.find("#acceptButton").hostNodes();
         expect(wrapper.length).toBe(1);
