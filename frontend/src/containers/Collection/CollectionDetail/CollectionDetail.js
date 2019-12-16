@@ -29,9 +29,11 @@ class CollectionDetail extends Component {
             replies: [],
             newCollectionReplies: [],
             papers: [],
+            newCollectionPapers: [],
             thisCollection: { owner: {} },
             replyCollectionPageCount: 1,
             replyCollectionFinished: true,
+            paperCollectionPageCount: 1,
         };
 
         this.initCollectionDetail = this.initCollectionDetail.bind(this);
@@ -105,9 +107,11 @@ class CollectionDetail extends Component {
         })
             .then(() => {
                 const { papers } = this.state;
-                this.setState({ papers: papers.concat(this.props.storedPapers.papers) });
-            })
-            .catch(() => {});
+                this.setState({
+                    papers: papers.concat(this.props.storedPapers.papers),
+                    paperCollectionPageCount: this.props.storedPapers.page_number,
+                });
+            });
     }
 
     // clickRemovePaperButtonHandler(collection_id: number, paper_id: number)
@@ -120,6 +124,14 @@ class CollectionDetail extends Component {
                     newReplyContent: "",
                 });
                 this.handleReplies();
+            });
+    }
+
+    // handle paper delete
+    handleClickDeletePaper = (paperId) => {
+        this.props.onDeleteCollectionPaper({ id: Number(this.props.location.pathname.split("=")[1]), paper_id: paperId })
+            .then(() => {
+                this.handleCollectionPapers();
             });
     }
 
@@ -137,6 +149,8 @@ class CollectionDetail extends Component {
           reviewCount={paper.count.reviews}
           isLiked={paper.liked}
           headerExists={false}
+          clickDeleteCard={this.handleClickDeletePaper}
+          deleteExists
         />
     )
 
@@ -153,6 +167,38 @@ class CollectionDetail extends Component {
                     replyCollectionFinished: this.props.replyList.finished,
                 });
             });
+    }
+
+    // to maintain page number when delete paper
+    async handleCollectionPapers() {
+        const end = this.state.paperCollectionPageCount;
+        this.setState({
+            newCollectionPapers: [],
+        });
+        for (let i = 1; (i === 1) || (i < end + 1); i += 1) {
+            await this.forEachHandlePaper(i, end)
+                .catch(() => {});
+            if (i === end || this.props.storedPapers.is_finished === true) {
+                this.setState((prevState) => ({
+                    newCollectionPapers: [],
+                    paperCollectionPageCount: this.props.storedPapers.page_number,
+                    papers: prevState.newCollectionPapers.concat(this.props.storedPapers.papers),
+                    paperCount: this.props.selectedCollection.count.papers,
+                }));
+                break;
+            }
+            this.setState((prevState) => ({
+                newCollectionPapers:
+                prevState.newCollectionPapers.concat(this.props.storedPapers.papers),
+            }));
+        }
+    }
+
+    forEachHandlePaper(i) {
+        return this.props.onGetCollectionPapers({
+            id: Number(this.props.location.pathname.split("=")[1]),
+            page_number: Number(i),
+        });
     }
 
     initCollectionDetail() {
@@ -526,6 +572,9 @@ const mapDispatchToProps = (dispatch) => ({
     onDismissInvitation: (collectionId) => dispatch(
         collectionActions.dismissInvitation(collectionId),
     ),
+    onDeleteCollectionPaper: (collectionAndPaper) => dispatch(
+        collectionActions.deleteCollectionPaper(collectionAndPaper),
+    ),
     onLeaveCollection: (collectionId) => dispatch(
         collectionActions.leaveCollection(collectionId),
     ),
@@ -555,6 +604,7 @@ CollectionDetail.propTypes = {
     replyList: PropTypes.objectOf(PropTypes.any),
     members: PropTypes.arrayOf(PropTypes.any),
     memberCount: PropTypes.number,
+    onDeleteCollectionPaper: PropTypes.func,
 };
 
 CollectionDetail.defaultProps = {
@@ -581,4 +631,5 @@ CollectionDetail.defaultProps = {
     replyList: {},
     members: [],
     memberCount: 0,
+    onDeleteCollectionPaper: () => {},
 };

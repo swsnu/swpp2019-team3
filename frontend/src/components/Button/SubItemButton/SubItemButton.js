@@ -11,7 +11,8 @@ const SubItemButton = (props) => (
       variant="light"
       width={props.width}
       height={props.height}
-      href={props.href}
+      onClick={props.click}
+      href={props.tab ? null : props.href}
     >
         <span>
             <SVG name={props.svgName} height="25px" width="25px" />
@@ -28,6 +29,8 @@ SubItemButton.propTypes = {
     count: PropTypes.number,
     width: PropTypes.string,
     height: PropTypes.string,
+    click: PropTypes.func,
+    tab: PropTypes.bool,
 };
 
 SubItemButton.defaultProps = {
@@ -36,4 +39,6 @@ SubItemButton.defaultProps = {
     count: 0,
     width: "auto",
     height: "auto",
+    click: () => {},
+    tab: false,
 };

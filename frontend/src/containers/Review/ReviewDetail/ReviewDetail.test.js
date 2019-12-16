@@ -16,6 +16,7 @@ const makeReviewDetail = (initialState, props = {}) => (
         <ReviewDetail
           match={{ params: { review_id: 1 } }}
           history={history}
+          location={{ state: "" }}
           {...props}
         />
     </Provider>
@@ -271,6 +272,8 @@ describe("<ReviewDetail />", () => {
     });
 
     it("should handle click more button", async () => {
+        const spyScroll = jest.spyOn(window, "scrollTo")
+            .mockImplementation(() => {});
         stubInitialState = {
             ...stubInitialState,
             reply: {
@@ -284,7 +287,9 @@ describe("<ReviewDetail />", () => {
             },
         };
         const component = mount(makeReviewDetail(stubInitialState));
+
         const instance = component.find("ReviewDetail").instance();
+        expect(spyScroll).toBeCalledTimes(0);
         instance.setState(
             {
                 replyFinished: false,
@@ -293,6 +298,7 @@ describe("<ReviewDetail />", () => {
             },
         );
         component.update();
+        expect(instance.state.replyFinished).toBe(false);
         const button = component.find(".reply-more-button").hostNodes();
         expect(button.length).toBe(1);
         button.simulate("click");

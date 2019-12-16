@@ -629,6 +629,9 @@ def __get_collection_user_count(collection_ids, group_by_field):
 
     return {collection_user[group_by_field]: collection_user['count'] for collection_user in collection_users}
 
+def get_collection_paper_count(collection_ids, group_by_field):
+    """Get collection paper count"""
+    return __get_collection_paper_count(collection_ids, group_by_field)
 
 def __get_collection_paper_count(collection_ids, group_by_field):
     """Get Number of Papers in Collections"""

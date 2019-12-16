@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Card } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-
+import { withRouter } from "react-router-dom";
 import { reviewActions } from "../../../store/actions";
 import "./ReviewCard.css";
 import { LikeButton, SubItemButton } from "../../Button/index";
@@ -94,8 +94,9 @@ class ReviewCard extends Component {
                         />
                         <SubItemButton
                           id="replyButton"
-                          href={`/review_id=${this.props.id}`}
+                          click={() => this.props.history.push({ pathname: `/review_id=${this.props.id}`, state: "reply" })}
                           count={this.props.replyCount}
+                          tab
                         />
                     </Card.Footer>
                 </Card>
@@ -121,7 +122,7 @@ const mapDispatchToProps = (dispatch) => ({
     ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReviewCard);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ReviewCard));
 
 ReviewCard.propTypes = {
     me: PropTypes.objectOf(PropTypes.any),
@@ -144,10 +145,12 @@ ReviewCard.propTypes = {
     target: PropTypes.objectOf(PropTypes.any),
     recommendation: PropTypes.bool,
     anonymous: PropTypes.bool,
+    history: PropTypes.objectOf(PropTypes.any),
 };
 
 ReviewCard.defaultProps = {
     me: null,
+    history: null,
     author: "",
     author_id: 0,
     id: 0,

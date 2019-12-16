@@ -15,6 +15,11 @@
     font-weight: bold;
 }
 
+#headerDelete {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .paper {
     width: 90%;
     text-align: left;
