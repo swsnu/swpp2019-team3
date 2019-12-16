@@ -175,7 +175,7 @@ def select_paper_search(args):
             is_finished = False
 
         # Cache set
-        cache.set(cache_key, (result_ids, paper_ids, external, is_finished))
+        cache.set(cache_key, (result_ids, paper_ids, external, is_finished), timeout=None)
         logging.info("CACHE SET: %s", cache_key)
 
     # Papers - Sometimes, there can be duplicated ids in result_ids. Thus, len(papers) < len(result_ids) is possible.
