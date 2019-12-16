@@ -4,7 +4,7 @@
 # Internal Modules
 import json
 from django.views.decorators.cache import cache_page
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 
 from papersfeed.utils.base_utils import view_exceptions_handler, check_session
 from papersfeed.utils.papers import utils as papers_utils
@@ -399,6 +399,7 @@ def get_user_action(args):
             constants.ACTIONS: actions}
 
 
+@csrf_exempt
 def post_user_recommendation(args):
     """Post User Recommendation"""
     return recommendation_utils.insert_user_recommendation(args)
