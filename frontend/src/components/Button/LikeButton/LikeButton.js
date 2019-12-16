@@ -13,7 +13,7 @@ const LikeButton = (props) => {
     return (
         <Button
           className="LikeButton"
-          variant="outline-danger"
+          variant="light"
           width={props.width}
           height={props.height}
           onClick={props.isLiked ? props.unlikeFn : props.likeFn}
