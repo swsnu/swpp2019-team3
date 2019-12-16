@@ -398,12 +398,16 @@ def get_user_action(args):
             constants.USERS: users,
             constants.ACTIONS: actions}
 
-
 @csrf_exempt
-def post_user_recommendation(args):
+@view_exceptions_handler
+def post_user_recommendation(request):
     """Post User Recommendation"""
+    args = request.POST
+    body = json.loads(request.body.decode()) if request.body else None
+    if isinstance(body, dict):
+        args = body
+    args[constants.REQUEST] = request
     return recommendation_utils.insert_user_recommendation(args)
-
 
 def get_paper_search_ml(args):
     """Get Paper Search ML"""

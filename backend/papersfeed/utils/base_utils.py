@@ -76,3 +76,4 @@ def view_exceptions_handler(func):
         response.status_code = status_code
         return response
     return view_wrapper
+    

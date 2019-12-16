@@ -49,6 +49,9 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
         result = apis.get_paper_search(request)
         return result
 
+    if api_function == 'post_user_recommendation':
+        return apis.post_user_recommendation(request)
+
     handler = getattr(apis, api_function, api_not_found)
 
     if handler is not api_not_found:
