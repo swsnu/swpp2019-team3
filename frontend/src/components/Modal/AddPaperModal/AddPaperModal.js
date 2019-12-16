@@ -173,7 +173,7 @@ class AddPaperModal extends Component {
             <div className="addpapermodal">
                 <Button
                   className="addpaper-open-button"
-                  variant="light"
+                  variant="outline-info"
                   onClick={this.openAddPaperHandler}
                 >
                     <SVG id="addpaper-open-svg" name="bookmark" />

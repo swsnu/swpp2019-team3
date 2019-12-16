@@ -8,7 +8,7 @@ import "./SubItemButton.css";
 const SubItemButton = (props) => (
     <Button
       className="SubItemButton"
-      variant="light"
+      variant="outline-secondary"
       width={props.width}
       height={props.height}
       onClick={props.click}
