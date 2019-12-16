@@ -284,11 +284,10 @@ class SubscriptionFeed extends Component {
         }
 
         return (
-            <div className="SubscriptionFeed">
-                {/* <div id="SubscriptionText">My Subscription Feed</div> */}
-                <div id="subscriptionCards">
-                    <div id="subscriptionCardsLeft">{cardsLeft}</div>
-                    <div id="subscriptionCardsRight">{cardsRight}</div>
+            <div className="PapersFeed-Content" id="SubscriptionFeed">
+                <div className="PapersFeed-CardList">
+                    <div className="PapersFeed-CardListHalf" id="subscriptionCardsLeft">{cardsLeft}</div>
+                    <div className="PapersFeed-CardListHalf" id="subscriptionCardsRight">{cardsRight}</div>
                 </div>
                 {alertSub}
             </div>

@@ -104,7 +104,7 @@ describe("<ProfileDetail />", () => {
         const profileDetail = setProfileDetail(stubInitState);
         const component = mount(profileDetail);
 
-        const wrapper = component.find(".ProfileDetailContent");
+        const wrapper = component.find("#profileDetail");
         expect(wrapper.length).toBe(1);
     });
 

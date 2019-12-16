@@ -94,7 +94,7 @@ describe("<UserList />", () => {
 
     it("should render without errors and call UserList API", async () => {
         const followingComponent = mount(followingList);
-        const followingWrapper = followingComponent.find(".user-list");
+        const followingWrapper = followingComponent.find("#user-list");
         expect(followingWrapper.length).toBe(1);
         expect(spyFollowingsUser).toBeCalledTimes(1);
         await flushPromises();
@@ -103,7 +103,7 @@ describe("<UserList />", () => {
         expect(instance.state.users.length).toBe(1);
 
         const followerComponent = mount(followerList);
-        const followerWrapper = followerComponent.find(".user-list");
+        const followerWrapper = followerComponent.find("#user-list");
         expect(followerWrapper.length).toBe(1);
         expect(spyFollowersUser).toBeCalledTimes(1);
         await flushPromises();
@@ -112,7 +112,7 @@ describe("<UserList />", () => {
         expect(instance.state.users.length).toBe(1);
 
         const memberComponent = mount(memberList);
-        const memberWrapper = memberComponent.find(".user-list");
+        const memberWrapper = memberComponent.find("#user-list");
         expect(memberWrapper.length).toBe(1);
         expect(spyGetMembers).toBeCalledTimes(1);
         await flushPromises();
@@ -140,21 +140,21 @@ describe("<UserList />", () => {
         };
 
         const followingComponent = mount(makeUserList(stubInitialState, "followings"));
-        const followingWrapper = followingComponent.find(".user-list");
+        const followingWrapper = followingComponent.find("#user-list");
         expect(followingWrapper.length).toBe(1);
         expect(spyFollowingsUser).toBeCalledTimes(1);
         await flushPromises();
         // FIXME: expecting spyHistoryPush fails
 
         const followerComponent = mount(makeUserList(stubInitialState, "followers"));
-        const followerWrapper = followerComponent.find(".user-list");
+        const followerWrapper = followerComponent.find("#user-list");
         expect(followerWrapper.length).toBe(1);
         expect(spyFollowersUser).toBeCalledTimes(1);
         await flushPromises();
         // FIXME: expecting spyHistoryPush fails
 
         const memberComponent = mount(makeUserList(stubInitialState, "members"));
-        const memberWrapper = memberComponent.find(".user-list");
+        const memberWrapper = memberComponent.find("#user-list");
         expect(memberWrapper.length).toBe(1);
         expect(spyGetMembers).toBeCalledTimes(1);
         await flushPromises();

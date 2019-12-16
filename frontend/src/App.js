@@ -1,3 +1,4 @@
+// SWPP 2019 Fall Team3 - PapersFeed
 import React from "react";
 import "./App.css";
 import PropTypes from "prop-types";

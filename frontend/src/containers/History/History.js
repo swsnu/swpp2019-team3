@@ -183,15 +183,15 @@ class History extends Component {
             collectionMessage = null;
         }
         return (
-            <div className="history">
-                <div className="history-text">My History</div>
-                <div className="item-list">
+            <div className="PapersFeed-Content" id="history">
+                <div className="PapersFeed-ContentTitle">My History</div>
+                <div className="PapersFeed-ItemListTab">
                     <Tabs defaultActiveKey="paper-tab" className="item-tabs">
                         <Tab className="paper-tab" eventKey="paper-tab" title="Paper">
                             {paperMessage}
-                            <div className="paper-cards">
-                                <div className="paper-cards-left">{paperCardLeft}</div>
-                                <div className="paper-cards-right">{paperCardRight}</div>
+                            <div className="PapersFeed-CardList">
+                                <div className="PapersFeed-CardListHalf" id="paper-cards-left">{paperCardLeft}</div>
+                                <div className="PapersFeed-CardListHalf" id="paper-cards-right">{paperCardRight}</div>
                             </div>
                             { this.props.paperList.finished ? null
                                 : (
@@ -202,15 +202,15 @@ class History extends Component {
                                       size="lg"
                                       block
                                     >
-                View More
+                                        View More
                                     </Button>
                                 )}
                         </Tab>
                         <Tab className="collection-tab" eventKey="collection-tab" title="Collection">
                             {collectionMessage}
-                            <div className="collection-cards">
-                                <div className="collection-cards-left">{collectionCardLeft}</div>
-                                <div className="collection-cards-right">{collectionCardRight}</div>
+                            <div className="PapersFeed-CardList">
+                                <div className="PapersFeed-CardListHalf" id="collection-cards-left">{collectionCardLeft}</div>
+                                <div className="PapersFeed-CardListHalf" id="collection-cards-right">{collectionCardRight}</div>
                             </div>
                             {this.props.collectionList.finished ? null
                                 : (
@@ -221,15 +221,15 @@ class History extends Component {
                                       size="lg"
                                       block
                                     >
-                View More
+                                        View More
                                     </Button>
                                 )}
                         </Tab>
                         <Tab className="review-tab" eventKey="review-tab" title="Review">
                             {reviewMessage}
-                            <div className="review-cards">
-                                <div className="review-cards-left">{reviewCardLeft}</div>
-                                <div className="review-cards-right">{reviewCardRight}</div>
+                            <div className="PapersFeed-CardList">
+                                <div className="PapersFeed-CardListHalf" id="review-cards-left">{reviewCardLeft}</div>
+                                <div className="PapersFeed-CardListHalf" id="review-cards-right">{reviewCardRight}</div>
                             </div>
                             { this.props.reviewList.finished ? null
                                 : (

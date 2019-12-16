@@ -11,3 +11,53 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.PapersFeed-Content {
+  background: rgb(242,243,247);
+  min-height: 91vh;
+  display: flex;
+  flex-direction: column;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.PapersFeed-ContentTitle {
+  padding: 3vh;
+  font-size: 200%;
+  font-weight: 700;
+}
+
+.PapersFeed-ItemListTab {
+  background: white;
+  border-radius: 2%;
+}
+
+@media (min-width: 576px) {
+  .PapersFeed-ItemListTab {
+      min-height: 50vh;
+  }
+}
+
+.PapersFeed-CardList {
+  width: 100%;
+  height: 100%;
+  margin-top: 3%;
+  margin-left: 2.5%;
+  display: flex;
+  justify-content: center;
+  flex-flow: row wrap;
+  align-items: flex-start;
+}
+
+.PapersFeed-CardListHalf {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.CardHeaderText {
+  font-size: 110%;
+  font-weight: 500;
+}

@@ -7,12 +7,21 @@ import json
 import traceback
 
 # Django Modules
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseNotAllowed
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 # Internal Modules
 from papersfeed.utils.base_utils import ApiError, check_session
 from . import apis
 from . import constants
+
+@ensure_csrf_cookie
+def token(request):		
+    """token"""		
+    if request.method == 'GET':		
+        return HttpResponse(status=204)		
+
+    return HttpResponseNotAllowed(['GET'])
 
 
 def api_not_found():
@@ -46,8 +55,7 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
         return apis.post_user(request)
 
     if api_function == 'get_paper_search':
-        result = apis.get_paper_search(request)
-        return result
+        return apis.get_paper_search(request)
 
     if api_function == 'post_user_recommendation':
         return apis.post_user_recommendation(request)

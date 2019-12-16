@@ -1,11 +1,6 @@
 .addpaper-open-button {
-    /* margin-top: 5%; */
-    /* margin-left: 3%; */
-    /* float: right; */
-    /* width: 100px;
-    height: 60px; */
-    /* margin-bottom: 50%; */
-    white-space: nowrap;
+    width: 40px;
+    text-align: center;
 }
 
 .modal-header .header-content{

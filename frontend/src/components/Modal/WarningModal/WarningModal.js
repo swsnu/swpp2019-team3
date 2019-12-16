@@ -117,7 +117,7 @@ WarningModal.defaultProps = {
     disableMessage: "",
     variant: "primary",
     showWarningContentText: true,
-    openButtonWidth: "",
-    openButtonHeight: "",
-    openButtonMarginLeft: "",
+    openButtonWidth: "auto",
+    openButtonHeight: "auto",
+    openButtonMarginLeft: "0px",
 };

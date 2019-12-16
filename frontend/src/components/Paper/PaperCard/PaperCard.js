@@ -86,34 +86,34 @@ class PaperCard extends Component {
                 const actorLink = (<a className="actorLink" href={`/profile_id=${this.props.actor.id}`}>{this.props.actor.username}</a>);
                 if (Object.keys(this.props.target).length !== 0) {
                     header = (
-                        <Card.Header id="headerSubscriptionTarget">
-                            <div className="CardHeader">
+                        <Card.Header id="headerPaperSubscriptionTarget">
+                            <span className="CardHeaderText">
                                 {actorLink}
-                                <h5 className="verb">{` ${this.props.verb} this paper to`}</h5>
+                                {` ${this.props.verb} this paper to`}
                                 <a className="targetLink" href={`/collection_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
-                            </div>
+                            </span>
                         </Card.Header>
                     );
                 } else {
                     header = (
-                        <Card.Header id="headerSubscription">
-                            <div className="CardHeader">
+                        <Card.Header id="headerPaperSubscription">
+                            <span className="CardHeaderText">
                                 {actorLink}
-                                <h5 className="verb">{` ${this.props.verb} this paper`}</h5>
-                            </div>
+                                {` ${this.props.verb} this paper`}
+                            </span>
                         </Card.Header>
                     );
                 }
             } else if (this.props.recommendation) {
                 header = (
-                    <Card.Header id="headerSubscription">
-                        <div className="CardHeader">
-                            <h5 className="verb">{`${this.props.verb}`}</h5>
-                        </div>
+                    <Card.Header id="headerPaperSubscription">
+                        <span className="CardHeaderText">
+                            {` ${this.props.verb}`}
+                        </span>
                     </Card.Header>
                 );
             } else if (this.props.paperSource) {
-                header = <Card.Header id="header">{`from ${this.props.paperSource}`}</Card.Header>;
+                header = <Card.Header id="headerPaper">{`from ${this.props.paperSource}`}</Card.Header>;
             }
         } else if (this.props.deleteExists) {
             header = (
