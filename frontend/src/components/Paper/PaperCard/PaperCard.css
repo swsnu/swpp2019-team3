@@ -2,22 +2,17 @@
     padding-bottom: 10%;
 }
 
-#headerSubscriptionTarget {
-    display: inline-block;
-    /* flex-direction: row; */
-    /* justify-content: space-around; */
+#headerPaperSubscriptionTarget {
+    background-color: rgb(232, 240, 247);
 }
 
-#headerSubscription {
-    display: inline-block;
-    /* flex-direction: row;
-    justify-content: space-around; */
+#headerPaperSubscription {
+    background-color: rgb(232, 240, 247);
 }
 
-#headerLine {
-    display: inline-block;
-    flex-direction: row;
-    justify-content: space-around;
+.PaperCardHeaderText {
+    font-size: 100%;
+    font-weight: bold;
 }
 
 #headerDelete {
@@ -64,21 +59,4 @@
 
  #footer-left-buttons {
     display: block;
-}
-
-#reviewButton {
-    height: 40px;
-    width: 80px;
-}
-
-#reviewButtonInside {
-    /* width: 17%; */
-    display: flex;
-    justify-content: space-around;
-}
-
-#likeButtonInside {
-    /* width: 17%; */
-    display: flex;
-    justify-content: space-around;
 }

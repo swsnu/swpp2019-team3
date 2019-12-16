@@ -118,25 +118,23 @@ class UserList extends Component {
         }
 
         return (
-            <div className="user-list">
-                <div className="item-list">
-                    <div id="user-cards">
-                        <h3 id="user-message">{userMessage}</h3>
-                        <div id="user-cards-left">{userCardsLeft}</div>
-                        <div id="user-cards-right">{userCardsRight}</div>
-                    </div>
-                    { this.state.finished ? null
-                        : (
-                            <Button
-                              className="user-more-button"
-                              onClick={() => this.getUsersTrigger(this.state.pageNum)}
-                              size="lg"
-                              block
-                            >
-                            View More
-                            </Button>
-                        )}
+            <div className="PapersFeed-Content" id="user-list">
+                <div className="PapersFeed-CardList" id="user-cards">
+                    <h3 id="user-message">{userMessage}</h3>
+                    <div className="PapersFeed-CardListHalf" id="user-cards-left">{userCardsLeft}</div>
+                    <div className="PapersFeed-CardListHalf" id="user-cards-right">{userCardsRight}</div>
                 </div>
+                { this.state.finished ? null
+                    : (
+                        <Button
+                          className="user-more-button"
+                          onClick={() => this.getUsersTrigger(this.state.pageNum)}
+                          size="lg"
+                          block
+                        >
+                            View More
+                        </Button>
+                    )}
             </div>
         );
     }

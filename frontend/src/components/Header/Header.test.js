@@ -71,7 +71,7 @@ describe("<Header />", () => {
 
     it("should render without errors and call getNoti", () => {
         const component = mount(makeHeader(stubInitialState));
-        const wrapper = component.find(".header").hostNodes();
+        const wrapper = component.find(".PapersFeed-Header").hostNodes();
         expect(wrapper.length).toBe(1);
         expect(spyGetNoti).toHaveBeenCalledTimes(1);
     });

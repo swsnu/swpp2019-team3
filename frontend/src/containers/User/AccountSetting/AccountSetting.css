@@ -1,10 +1,5 @@
-.AccountSetting {
-    min-height: 91vh;
-    background: rgb(242,243,247);
-}
-
 .AccountEditArea {
-    padding: 10px;
+    padding: 5px;
 }
 
 #headerText {

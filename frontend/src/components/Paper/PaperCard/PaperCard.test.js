@@ -84,16 +84,16 @@ describe("<PaperCard />", () => {
         const component = mount(paperCard);
         let wrapper = component.find("#header").hostNodes();
         expect(wrapper.length).toBe(0);
-        wrapper = component.find("#headerSubscription").hostNodes();
+        wrapper = component.find("#headerPaperSubscription").hostNodes();
         expect(wrapper.length).toBe(0);
-        wrapper = component.find("#headerSubscriptionTarget").hostNodes();
+        wrapper = component.find("#headerPaperSubscriptionTarget").hostNodes();
         expect(wrapper.length).toBe(0);
     });
 
     it("if headerExists && paperSource, then header should exist", () => {
         paperCard = makePaperCard(stubInitialState, { headerExists: true, subscription: false, paperSource: "source" });
         const component = mount(paperCard);
-        const wrapper = component.find("#header").hostNodes();
+        const wrapper = component.find("#headerPaper").hostNodes();
         expect(wrapper.length).toBe(1);
     });
 
@@ -102,7 +102,7 @@ describe("<PaperCard />", () => {
             headerExists: true, subscription: true, target: {},
         });
         const component = mount(paperCard);
-        const wrapper = component.find("#headerSubscription").hostNodes();
+        const wrapper = component.find("#headerPaperSubscription").hostNodes();
         expect(wrapper.length).toBe(1);
     });
 
@@ -111,7 +111,7 @@ describe("<PaperCard />", () => {
             headerExists: true, subscription: true, target: { content: { id: 1 } },
         });
         const component = mount(paperCard);
-        const wrapper = component.find("#headerSubscriptionTarget").hostNodes();
+        const wrapper = component.find("#headerPaperSubscriptionTarget").hostNodes();
         expect(wrapper.length).toBe(1);
     });
 

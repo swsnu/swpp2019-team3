@@ -8,14 +8,14 @@ import "./SubItemButton.css";
 const SubItemButton = (props) => (
     <Button
       className="SubItemButton"
-      variant="light"
+      variant="outline-secondary"
       width={props.width}
       height={props.height}
       onClick={props.click}
       href={props.tab ? null : props.href}
     >
         <span>
-            <SVG name="zoom" height="25px" width="25px" />
+            <SVG name={props.svgName} height="25px" width="25px" />
             {` ${props.count}`}
         </span>
     </Button>
@@ -24,6 +24,7 @@ const SubItemButton = (props) => (
 export default SubItemButton;
 
 SubItemButton.propTypes = {
+    svgName: PropTypes.string,
     href: PropTypes.string,
     count: PropTypes.number,
     width: PropTypes.string,
@@ -33,6 +34,7 @@ SubItemButton.propTypes = {
 };
 
 SubItemButton.defaultProps = {
+    svgName: "zoom",
     href: "/main",
     count: 0,
     width: "auto",

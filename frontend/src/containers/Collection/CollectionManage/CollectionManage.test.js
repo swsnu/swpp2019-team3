@@ -152,7 +152,7 @@ describe("CollectionManage test", () => {
         };
 
         const component = mount(makeCollectionManage(stubInitialState));
-        const wrapper = component.find(".CollectionManage");
+        const wrapper = component.find("#CollectionManage");
         expect(wrapper.length).toBe(1);
         expect(spyGetCollection).toHaveBeenCalledTimes(1);
 

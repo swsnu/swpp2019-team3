@@ -206,81 +206,79 @@ class ProfileDetail extends Component {
             .map((review) => this.reviewCardMaker(review));
 
         return (
-            <div className="ProfileDetail">
-                <div className="ProfileDetailContent">
-                    <div className="userInfo">
-                        <div className="userStatistic">
-                            <div className="userPhotoName">
-                                <PhotoDisplayer
-                                  index={this.props.thisUser.photo_index}
-                                  width="150px"
-                                  height="150px"
-                                  roundedCircle
-                                />
-                                <h2 id="userName">{this.props.thisUser.username}</h2>
-                            </div>
-                            <div id="collectionStat">
-                                <h5 id="collectionCount">{this.props.collections.totalCount}</h5>
-                                <h5 id="collectionText">Collections</h5>
-                            </div>
-                            <div id="reviewStat">
-                                <h5 id="reviewCount">{this.props.reviews.totalCount}</h5>
-                                <h5 id="reviewText">Reviews</h5>
-                            </div>
-                            <Link id="followerStat" to={`/profile_id=${this.props.thisUser.id}/followers`}>
-                                <h5 id="followerCount">{this.state.followerCount}</h5>
-                                <h5 id="followerText">Follower</h5>
-                            </Link>
-                            <Link id="followingStat" to={`/profile_id=${this.props.thisUser.id}/followings`}>
-                                <h5 id="followingCount">{this.state.followingCount}</h5>
-                                <h5 id="followingText">Following</h5>
-                            </Link>
+            <div className="PapersFeed-Content" id="profileDetail">
+                <div className="userInfo">
+                    <div className="userStatistic">
+                        <div className="userPhotoName">
+                            <PhotoDisplayer
+                              index={this.props.thisUser.photo_index}
+                              width="150px"
+                              height="150px"
+                              roundedCircle
+                            />
+                            <h2 id="userName">{this.props.thisUser.username}</h2>
                         </div>
-                        <div className="userDescAndButton">
-                            <div id="buttonDisplayed">{buttonDisplayed}</div>
-                            <p id="userDescription">{this.props.thisUser.description}</p>
+                        <div id="collectionStat">
+                            <h5 id="collectionCount">{this.props.collections.totalCount}</h5>
+                            <h5 id="collectionText">Collections</h5>
                         </div>
+                        <div id="reviewStat">
+                            <h5 id="reviewCount">{this.props.reviews.totalCount}</h5>
+                            <h5 id="reviewText">Reviews</h5>
+                        </div>
+                        <Link id="followerStat" to={`/profile_id=${this.props.thisUser.id}/followers`}>
+                            <h5 id="followerCount">{this.state.followerCount}</h5>
+                            <h5 id="followerText">Follower</h5>
+                        </Link>
+                        <Link id="followingStat" to={`/profile_id=${this.props.thisUser.id}/followings`}>
+                            <h5 id="followingCount">{this.state.followingCount}</h5>
+                            <h5 id="followingText">Following</h5>
+                        </Link>
                     </div>
-                    <div className="itemTabSection">
-                        <Tabs defaultActiveKey="collectionTab" id="itemTabs">
-                            <Tab eventKey="collectionTab" title={`Collection(${this.props.collections.totalCount})`}>
-                                <div id="collectionCards">
-                                    <div id="collectionCardsLeft">{collectionCardsLeft}</div>
-                                    <div id="collectionCardsRight">{collectionCardsRight}</div>
-                                </div>
-                                {this.props.collections.finished ? null
-                                    : (
-                                        <Button
-                                          variant="outline-info"
-                                          className="collection-more-button"
-                                          onClick={this.clickCollectionMoreHandler}
-                                          size="lg"
-                                          block
-                                        >
-                                            View More
-                                        </Button>
-                                    )}
-                            </Tab>
-                            <Tab eventKey="reviewTab" title={`Review(${this.props.reviews.totalCount})`}>
-                                <div id="reviewCards">
-                                    <div id="reviewCardsLeft">{reviewCardsLeft}</div>
-                                    <div id="reviewCardsRight">{reviewCardsRight}</div>
-                                </div>
-                                { this.props.reviews.finished ? null
-                                    : (
-                                        <Button
-                                          variant="outline-info"
-                                          className="review-more-button"
-                                          onClick={this.clickReviewMoreHandler}
-                                          size="lg"
-                                          block
-                                        >
-                                            View More
-                                        </Button>
-                                    ) }
-                            </Tab>
-                        </Tabs>
+                    <div className="userDescAndButton">
+                        <div id="buttonDisplayed">{buttonDisplayed}</div>
+                        <p id="userDescription">{this.props.thisUser.description}</p>
                     </div>
+                </div>
+                <div className="PapersFeed-ItemListTab">
+                    <Tabs defaultActiveKey="collectionTab" id="itemTabs">
+                        <Tab eventKey="collectionTab" title={`Collection(${this.props.collections.totalCount})`}>
+                            <div className="PapersFeed-CardList" id="collectionCards">
+                                <div className="PapersFeed-CardListHalf" id="collectionCardsLeft">{collectionCardsLeft}</div>
+                                <div className="PapersFeed-CardListHalf" id="collectionCardsRight">{collectionCardsRight}</div>
+                            </div>
+                            {this.props.collections.finished ? null
+                                : (
+                                    <Button
+                                      variant="outline-info"
+                                      className="collection-more-button"
+                                      onClick={this.clickCollectionMoreHandler}
+                                      size="lg"
+                                      block
+                                    >
+                                        View More
+                                    </Button>
+                                )}
+                        </Tab>
+                        <Tab eventKey="reviewTab" title={`Review(${this.props.reviews.totalCount})`}>
+                            <div className="PapersFeed-CardList" id="reviewCards">
+                                <div className="PapersFeed-CardListHalf" id="reviewCardsLeft">{reviewCardsLeft}</div>
+                                <div className="PapersFeed-CardListHalf" id="reviewCardsRight">{reviewCardsRight}</div>
+                            </div>
+                            { this.props.reviews.finished ? null
+                                : (
+                                    <Button
+                                      variant="outline-info"
+                                      className="review-more-button"
+                                      onClick={this.clickReviewMoreHandler}
+                                      size="lg"
+                                      block
+                                    >
+                                        View More
+                                    </Button>
+                                ) }
+                        </Tab>
+                    </Tabs>
                 </div>
             </div>
         );

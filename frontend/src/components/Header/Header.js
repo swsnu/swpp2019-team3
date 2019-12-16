@@ -195,10 +195,16 @@ class Header extends Component {
                             >
                                 {notification.actor.username}
                             </Link>
-                                &nbsp;{notification.verb}&nbsp;
+                            {` ${notification.verb} `}
                             {target}
-                            {notification.timesince} ago&nbsp;
-                            <button type="button" className="read-button" onClick={() => this.readNotiHandler(notification.id)}>x</button>
+                            {` ${notification.timesince} ago `}
+                            <button
+                              type="button"
+                              className="read-button"
+                              onClick={() => this.readNotiHandler(notification.id)}
+                            >
+                                [X]
+                            </button>
                         </div>
                     );
                 },
@@ -208,14 +214,23 @@ class Header extends Component {
         }
 
         return (
-            <div className="header">
-                <Navbar id="header">
-                    <Nav.Link disabled={this.props.history.location.state != null && this.props.history.location.state.previous === "signup"} className="logo" href="/main">PapersFeed</Nav.Link>
-                    <div className="search"> {/* if 'Form', 'enter' triggers calls twice} */}
+            <div className="PapersFeed-Header">
+                <Navbar id="PFheader">
+                    <div className="PF-Header-items logo">
+                        <Nav.Link
+                          disabled={this.props.history.location.state != null
+                            && this.props.history.location.state.previous === "signup"}
+                          id="PapersFeed-Logo"
+                          href="/main"
+                        >
+                            PapersFeed
+                        </Nav.Link>
+                    </div>
+                    <div className="PF-Header-items search"> {/* if 'Form', 'enter' triggers calls twice} */}
                         <Form.Control
                           className="search-input"
                           type="text"
-                          placeholder="Search"
+                          placeholder="Search papers, collections or users"
                           value={this.state.searchWord}
                           onChange={this.handleChange}
                           onKeyPress={this.keyPressHandler}
@@ -224,10 +239,11 @@ class Header extends Component {
                           className="search-button"
                           href={`/search=${this.state.searchWord}`}
                           disabled={!this.state.searchWord || (this.props.history.location.state != null && this.props.history.location.state.previous === "signup")}
-                        >Search
+                        >
+                            Search
                         </Button>
                     </div>
-                    <div className="header-buttons">
+                    <div className="PF-Header-items header-buttons">
                         <Dropdown ref={this.notiMenu} className="dropdown-notification" alignRight onToggle={() => this.openNoti()}>
                             <Dropdown.Toggle className="notification-button" variant="light" title="notification">
                                 <SVG name="bell" height="20px" width="20px" />

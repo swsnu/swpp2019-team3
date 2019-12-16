@@ -52,7 +52,7 @@ describe("AccountSetting Test", () => {
 
     it("should render without errors", () => {
         const component = mount(accountSetting);
-        const wrapper = component.find(".AccountSetting");
+        const wrapper = component.find("#AccountSetting");
         expect(wrapper.length).toBe(1);
     });
 

@@ -118,8 +118,8 @@ class CollectionList extends Component {
             .map((collection) => this.cardsMaker(collection));
 
         return (
-            <div className="CollectionList">
-                <div id="collectionListText">My Collections</div>
+            <div className="PapersFeed-Content">
+                <div className="PapersFeed-ContentTitle">My Collections</div>
                 <div id="collectionNewButtonDiv">
                     <CreateNewCollectionModal
                       whatActionWillFollow={() => {
@@ -128,13 +128,13 @@ class CollectionList extends Component {
                       }}
                     />
                 </div>
-                <Tabs defaultActiveKey="all-tab" className="collection-tabs">
-                    <Tab className="all-tab" eventKey="all-tab" title={`All(${this.props.collectionTotalCount})`}>
-                        <div className="CollectionListContent">
+                <div className="PapersFeed-ItemListTab">
+                    <Tabs defaultActiveKey="all-tab" className="collection-tabs">
+                        <Tab className="all-tab" eventKey="all-tab" title={`All(${this.props.collectionTotalCount})`}>
                             {collectionMessage}
-                            <div id="colletionCards">
-                                <div id="collectionCardsLeft">{collectionCardsLeft}</div>
-                                <div id="collectionCardsRight">{collectionCardsRight}</div>
+                            <div className="PapersFeed-CardList" id="colletionCards">
+                                <div className="PapersFeed-CardListHalf" id="collectionCardsLeft">{collectionCardsLeft}</div>
+                                <div className="PapersFeed-CardListHalf" id="collectionCardsRight">{collectionCardsRight}</div>
                             </div>
                             { this.props.collectionFinished ? null
                                 : (
@@ -147,18 +147,15 @@ class CollectionList extends Component {
                                       size="lg"
                                       block
                                     >
-                            View More
+                                    View More
                                     </Button>
                                 )}
-
-                        </div>
-                    </Tab>
-                    <Tab className="shared-tab" eventKey="shared-tab" title={`Shared(${this.props.sharedTotalCount})`}>
-                        <div className="SharedCollectionListContent">
+                        </Tab>
+                        <Tab className="shared-tab" eventKey="shared-tab" title={`Shared(${this.props.sharedTotalCount})`}>
                             {sharedCollectionMessage}
-                            <div id="sharedColletionCards">
-                                <div id="sharedCollectionCardsLeft">{sharedCollectionCardsLeft}</div>
-                                <div id="sharedCollectionCardsRight">{sharedCollectionCardsRight}</div>
+                            <div className="PapersFeed-CardList" id="sharedColletionCards">
+                                <div className="PapersFeed-CardListHalf" id="sharedCollectionCardsLeft">{sharedCollectionCardsLeft}</div>
+                                <div className="PapersFeed-CardListHalf" id="sharedCollectionCardsRight">{sharedCollectionCardsRight}</div>
                             </div>
                             { this.props.sharedFinished ? null
                                 : (
@@ -171,13 +168,12 @@ class CollectionList extends Component {
                                       size="lg"
                                       block
                                     >
-                            View More
+                                    View More
                                     </Button>
                                 )}
-
-                        </div>
-                    </Tab>
-                </Tabs>
+                        </Tab>
+                    </Tabs>
+                </div>
             </div>
         );
     }

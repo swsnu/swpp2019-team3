@@ -7,33 +7,8 @@
     text-align: left;
 }
 
-#headerSubscriptionTarget {
-    display: inline-flex;
-    flex-direction: row;
-    /* align-items: center; */
-}
-
-#headerSubscription {
-    display: inline-flex;
-    flex-direction: row;
-    /* align-items: center; */
-}
-
-#headerLine {
-    display: inline-flex;
-    flex-direction: row;
-    /* align-items: center; */
-}
-
-.actorLink {
-    /* This is interval between texts: DO NOT MODIFY IT */
-    margin-right: 5px;
-    font-size: 120%;
-}
-
-.verb {
-    /* This is interval between texts: DO NOT MODIFY IT */
-    margin-right: 5px;
+#headerCollectionSubscription {
+    background-color: rgb(234, 239, 255)
 }
 
 .collection .body {
@@ -51,21 +26,4 @@
 .collection .footer {
     display: flex;
     justify-content: flex-start;
-}
-
-/* .collection .like-button{
-    width: 17%;
-    display: flex;
-    justify-content: space-around;
-}
-
-#replyButton {
-    height: 40px;
-    width: 80px;
-} */
-
-.collection .reply-button{
-    width: 17%;
-    display: flex;
-    justify-content: space-around;
 }

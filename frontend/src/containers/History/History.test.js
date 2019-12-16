@@ -138,7 +138,7 @@ describe("<History />", () => {
 
     it("should render without errors and call Paper,Collection,Review", () => {
         const component = mount(thisHistory);
-        const wrapper = component.find(".history");
+        const wrapper = component.find("#history");
         expect(wrapper.length).toBe(1);
         expect(spyGetCollectionLike).toBeCalledTimes(1);
         expect(spyGetReviewLike).toBeCalledTimes(1);
@@ -207,20 +207,20 @@ describe("<History />", () => {
             },
         );
         component.update();
-        let wrapperLeft = component.find(".paper-cards-left");
-        let wrapperRight = component.find(".paper-cards-right");
+        let wrapperLeft = component.find("#paper-cards-left");
+        let wrapperRight = component.find("#paper-cards-right");
         expect(component.find("PaperCard").length).toBe(2);
         expect(wrapperLeft.children().length).toBe(1);
         expect(wrapperRight.children().length).toBe(1);
 
-        wrapperLeft = component.find(".collection-cards-left");
-        wrapperRight = component.find(".collection-cards-right");
+        wrapperLeft = component.find("#collection-cards-left");
+        wrapperRight = component.find("#collection-cards-right");
         expect(component.find("CollectionCard").length).toBe(2);
         expect(wrapperLeft.children().length).toBe(1);
         expect(wrapperRight.children().length).toBe(1);
 
-        wrapperLeft = component.find(".review-cards-left");
-        wrapperRight = component.find(".review-cards-right");
+        wrapperLeft = component.find("#review-cards-left");
+        wrapperRight = component.find("#review-cards-right");
         expect(component.find("ReviewCard").length).toBe(2);
         expect(wrapperLeft.children().length).toBe(1);
         expect(wrapperRight.children().length).toBe(1);

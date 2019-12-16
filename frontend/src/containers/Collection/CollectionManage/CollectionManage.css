@@ -1,19 +1,3 @@
-.CollectionManage {
-    background: rgb(242,243,247);
-    min-height: 91vh;
-     
-    position: relative;
-    display: flex;
-    flex-direction: column;
-
-    padding: 15px;
-}
-
-#collectionManageTitle {
-    font-weight: bold;
-    margin: 20px;
-}
-
 .EditCollectionInfo {
     margin-bottom: 20px;
 }

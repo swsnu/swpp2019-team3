@@ -1,16 +1,8 @@
-.ProfileDetailContent {
-    min-height: 70vh;
-    background: rgb(242,243,247);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-}
-
 .userInfo {
     margin-top: 5%;
     margin-left: 5%;
-    margin-bottom: 5%;
     margin-right: 10%;
+    margin-bottom: 2%;
     display: flex;
     flex-direction: column;
 }
@@ -42,59 +34,4 @@
     margin-right: 10%;
     background: rgb(255,255,255);
     min-height: 52vh;
-}
-
-.itemTabSection #collectionCards {
-
-    width: 100%;
-    height: 100%;
-    margin: 15px;
-    
-    display: flex;
-    justify-content: flex-start;
-    flex-flow: row wrap;
-    align-items: flex-start;
-}
-
-.itemTabSection #collectionCardsLeft {
-    width: 50%;
-    height: 100%;
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-}
-
-.itemTabSection #collectionCardsRight {
-    width: 50%;
-    height: 100%;
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-}
-
-.itemTabSection #reviewCards {
-    width: 100%;
-    height: 100%;
-    margin: 15px;
-    
-    display: flex;
-    justify-content: flex-start;
-    flex-flow: row wrap;
-    align-items: flex-start;
-}
-
-.itemTabSection #reviewCardsLeft {
-    width: 50%;
-    height: 100%;
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-}
-
-.itemTabSection #reviewCardsRight {
-    width: 50%;
-    height: 100%;
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
 }

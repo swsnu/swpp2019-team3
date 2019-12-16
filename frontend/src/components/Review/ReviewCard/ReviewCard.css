@@ -8,33 +8,17 @@
 }
 
 .CardHeader {
-    display: flex;
-}
-
-#headerSubscriptionTarget {
     display: inline-block;
-    flex-direction: row;
 }
 
-#headerSubscription {
+#headerReviewSubscriptionTarget {
     display: inline-block;
-    flex-direction: row;
+    background-color: rgb(235, 250, 254);
 }
 
-#headerLine {
+#headerReviewSubscription {
     display: inline-block;
-    flex-direction: row;
-}
-
-.actorLink {
-    /* This is interval between texts: DO NOT MODIFY IT */
-    margin-right: 5px;
-    font-size: 120%;
-}
-
-.verb {
-    /* This is interval between texts: DO NOT MODIFY IT */
-    margin-right: 5px;
+    background-color: rgb(235, 250, 254);
 }
 
 .review .body {
