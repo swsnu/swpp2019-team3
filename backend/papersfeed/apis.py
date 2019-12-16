@@ -410,7 +410,7 @@ def post_user_recommendation(request):
     print()
     if isinstance(body, dict):
         args = body
-    args[constants.REQUEST] = request
+    args.reqeuset = request
     return recommendation_utils.insert_user_recommendation(args)
 
 

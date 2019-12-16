@@ -327,7 +327,7 @@ class RecommnedationTestCase(TestCase):
                                    {"data": [{"user": user_id, "papers": [paper_id]}]}
                                ),
                                content_type='application/json')
-
+        self.assertIn("dfaf", response.content.decode())
         self.assertEqual(response.status_code, 201)
 
     @patch('requests.get')
