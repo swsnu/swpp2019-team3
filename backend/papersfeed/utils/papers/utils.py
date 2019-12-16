@@ -7,6 +7,7 @@ import json
 import logging
 import requests
 import xmltodict
+from django.core.cache import cache
 from django.db.models import Q, Exists, OuterRef, Count, Case, When
 
 from papersfeed import constants
@@ -101,67 +102,81 @@ def select_paper_search(args):
     # Page Number
     page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
-    paper_ids = {
-        'papersfeed': [], # only used when all external search fails
-        'arxiv': [],
-        'crossref': [],
-    }
-    is_finished_dict = {
-        'arxiv': False,
-        'crossref': False,
-    }
+    # Check cache
+    cache_key = keyword + '_' + str(page_number)
+    cache_result = cache.get(cache_key)
 
-    future_to_source = {}
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        future_to_source[executor.submit(exploit_arxiv, keyword, page_number)] = 'arxiv'
-        future_to_source[executor.submit(exploit_crossref, keyword, page_number)] = 'crossref'
-        for future in concurrent.futures.as_completed(future_to_source):
-            source = future_to_source[future]
-            try:
-                paper_ids[source], is_finished_dict[source] = future.result()
-            except Exception as exc: # pylint: disable=broad-except
-                logging.warning("[%s] generated an exception: %s", source, exc)
+    if cache_result:
+        logging.info("CACHE HIT: %s", cache_key)
+        result_ids, paper_ids, external, is_finished = cache_result
 
-    external = True
-    # if there are both results (len <= SEARCH_RESULT * 2)
-    if paper_ids['arxiv'] and paper_ids['crossref']:
-        result_ids = paper_ids['arxiv'] + paper_ids['crossref']
-        is_finished = is_finished_dict['arxiv'] and is_finished_dict['crossref']
-
-    # if only there are results of Crossref (len <= SEARCH_COUNT)
-    elif not paper_ids['arxiv'] and paper_ids['crossref']:
-        result_ids = paper_ids['crossref']
-        is_finished = is_finished_dict['crossref']
-
-    # if only there are results of arXiv (len <= SEARCH_COUNT)
-    elif not paper_ids['crossref'] and paper_ids['arxiv']:
-        result_ids = paper_ids['arxiv']
-        is_finished = is_finished_dict['arxiv']
-
-    # if cannot get any results from external sources
     else:
-        external = False
-        logging.info("[naive-search] Searching in PapersFeed DB")
+        logging.info("CACHE MISS: %s", cache_key)
+        paper_ids = {
+            'papersfeed': [], # only used when all external search fails
+            'arxiv': [],
+            'crossref': [],
+        }
+        is_finished_dict = {
+            'arxiv': False,
+            'crossref': False,
+        }
 
-        # Papers Queryset
-        queryset = Paper.objects.filter(Q(title__icontains=keyword) | Q(abstract__icontains=keyword)) \
-            .values_list('id', 'abstract')
+        future_to_source = {}
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            future_to_source[executor.submit(exploit_arxiv, keyword, page_number)] = 'arxiv'
+            future_to_source[executor.submit(exploit_crossref, keyword, page_number)] = 'crossref'
+            for future in concurrent.futures.as_completed(future_to_source):
+                source = future_to_source[future]
+                try:
+                    paper_ids[source], is_finished_dict[source] = future.result()
+                except Exception as exc: # pylint: disable=broad-except
+                    logging.warning("[%s] generated an exception: %s", source, exc)
 
-        # Check if the papers have keywords. If not, try extracting keywords this time
-        abstracts = {}
-        for paper_id, abstract in queryset:
-            paper_ids['papersfeed'].append(paper_id)
+        external = True
+        # if there are both results (len <= SEARCH_RESULT * 2)
+        if paper_ids['arxiv'] and paper_ids['crossref']:
+            result_ids = paper_ids['arxiv'] + paper_ids['crossref']
+            is_finished = is_finished_dict['arxiv'] and is_finished_dict['crossref']
 
-            if not PaperKeyword.objects.filter(paper_id=paper_id).exists():
-                abstracts[paper_id] = abstract
+        # if only there are results of Crossref (len <= SEARCH_COUNT)
+        elif not paper_ids['arxiv'] and paper_ids['crossref']:
+            result_ids = paper_ids['crossref']
+            is_finished = is_finished_dict['crossref']
 
-        if abstracts:
-            __extract_keywords_from_abstract(abstracts)
+        # if only there are results of arXiv (len <= SEARCH_COUNT)
+        elif not paper_ids['crossref'] and paper_ids['arxiv']:
+            result_ids = paper_ids['arxiv']
+            is_finished = is_finished_dict['arxiv']
 
-        # Paper Ids
-        result_ids = get_results_from_queryset(paper_ids['papersfeed'], SEARCH_COUNT, page_number)
-        # is_finished (tentative)
-        is_finished = False
+        # if cannot get any results from external sources
+        else:
+            external = False
+            logging.info("[naive-search] Searching in PapersFeed DB")
+
+            # Papers Queryset
+            queryset = Paper.objects.filter(Q(title__icontains=keyword) | Q(abstract__icontains=keyword)) \
+                .values_list('id', 'abstract')
+
+            # Check if the papers have keywords. If not, try extracting keywords this time
+            abstracts = {}
+            for paper_id, abstract in queryset:
+                paper_ids['papersfeed'].append(paper_id)
+
+                if not PaperKeyword.objects.filter(paper_id=paper_id).exists():
+                    abstracts[paper_id] = abstract
+
+            if abstracts:
+                __extract_keywords_from_abstract(abstracts)
+
+            # Paper Ids
+            result_ids = get_results_from_queryset(paper_ids['papersfeed'], SEARCH_COUNT, page_number)
+            # is_finished (tentative)
+            is_finished = False
+
+        # Cache set
+        cache.set(cache_key, (result_ids, paper_ids, external, is_finished), timeout=None)
+        logging.info("CACHE SET: %s", cache_key)
 
     # Papers - Sometimes, there can be duplicated ids in result_ids. Thus, len(papers) < len(result_ids) is possible.
     papers, _, is_finished = __get_papers_search(result_ids, request_user, paper_ids, external, is_finished)
