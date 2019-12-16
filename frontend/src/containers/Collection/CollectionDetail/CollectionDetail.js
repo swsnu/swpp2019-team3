@@ -326,7 +326,7 @@ class CollectionDetail extends Component {
                 )))
                 : (
                     <div className="alert alert-warning" role="alert">
-                        There is no paper in this collection for now.
+                        There is no reply in this collection for now.
                     </div>
                 );
         }
