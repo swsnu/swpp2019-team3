@@ -1158,24 +1158,301 @@ versions:
         category: User
         description: User 객체
         item:
-          type: string
+          type: object
+          properties:
+            id:
+              type: integer
+              description: User ID
+            username:
+              type: string
+              description: Username
+            email:
+              type: string
+              description: E-mail
+            description(key):
+              type: string
+              description: 자기소개
+            photo_index:
+              type: integer
+              description: 프로필 사진 Index
+            count:
+              type: object
+              properties:
+                follower:
+                  type: integer
+                  description: Follower 수
+                following:
+                  type: integer
+                  description: Following 수
+            is_followed:
+              type: boolean
+              description: followed 관계 여부
+            is_following:
+              type: boolean
+              description: following 관계 여부
       response_collection:
         category: Collection
         description: Collection 객체
         item:
-          type: string
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+            title:
+              type: string
+              description: Collection Title
+            text:
+              type: string
+              description: Collectoin 설명
+            liked:
+              type: boolean
+              description: like 여부
+            owned:
+              type: boolean
+              description: Owned 여부
+            count:
+              type: object
+              properties:
+                users:
+                  type: integer
+                  description: 유저 수
+                papers:
+                  type: integer
+                  description: Paper 수
+                likes:
+                  type: integer
+                  description: like 수
+                replies:
+                  type: integer
+                  description: Reply 수
+            creation_date:
+              type: string
+              description: 생성 날짜
+            modification_date:
+              type: string
+              description: 수정 날짜
+            type(key):
+              type: string
+              description: private/public
+            collection_user_type:
+              type: string
+              description: owner/member/pending
+            owner:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: Owner User ID
+                username:
+                  type: string
+                  description: Owner Username
+            contains_paper:
+              type: boolean
+              description: Paper 포함 여(Paper ID를 같이 보낸 경우)
       response_paper:
         category: Paper
         description: Paper 객체
         item:
-          type: string
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Paper ID
+            title:
+              type: string
+              description: Paper Title
+            liked:
+              type: boolean
+              description: Like 여부
+            language:
+              type: string
+              description: Paper 언어
+            abstract:
+              type: string
+              description: 초록
+            issn:
+              type: string
+              description: ISSN
+            eissn:
+              type: string
+              description: eISSN
+            doi:
+              type: string
+              description: DOI
+            file_url:
+              type: string
+              description: File URL
+            download_url:
+              type: string
+              description: Download URL
+            authors:
+              type: array
+              description: Authors
+              items:
+                type: response_author
+            keywords:
+              type: array
+              description: Keywords
+              items:
+                type: response_keyword
+            publication:
+              type: response_publication
+            count:
+              type: object
+              properties:
+                reviews:
+                  type: integer
+                  description: 리뷰 수
+                likes:
+                  type: integer
+                  description: Like 수
       response_review:
         category: Review
         description: Review 객체
         item:
-          type: string
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Review ID
+            title:
+              type: string
+              description: Review Title
+            text:
+              type: string
+              description: Review Text
+            liked:
+              type: string
+              description: Like 여부
+            paper:
+              type: response_paper
+              description: Review's Paper
+            user:
+              type: response_user
+              description: 작성자
+            count:
+              type: object
+              properties:
+                likes:
+                  type: integer
+                  description: Like 수
+                replies:
+                  type: integer
+                  description: Reply 수
+            creation_date:
+              type: string
+              description: 생성 날짜
+            modification_date:
+              type: string
+              description: 수정 날짜
+            is_anonymous:
+              type: boolean
+              description: 익명 여부
       response_reply:
         category: Reply
         description: Reply 객체
         item:
-          type: string
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Reply ID
+            text:
+              type: string
+              description: Reply Text
+            liked:
+              type: string
+              description: Like 여부
+            review:
+              type: response_review
+              description: Reply's Review
+            collection:
+              type: response_review
+              description: Reply's Collection
+            user:
+              type: response_user
+              description: 작성자
+            count:
+              type: object
+              properties:
+                likes:
+                  type: integer
+                  description: Like 수
+            creation_date:
+              type: string
+              description: 생성 날짜
+            modification_date:
+              type: string
+              description: 수정 날짜
+      response_publication:
+        category: Publication
+        description: Publication 객체
+        item:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Publication ID
+            name:
+              type: string
+              description: Publication Name
+            type(key):
+              type: string
+              description: journal/book/series/patent
+            publisher:
+              type: response_publisher
+      response_publisher:
+        category: Publisher
+        description: Publisher 객체
+        item:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Publisher ID
+            name:
+              type: string
+              description: Publisher Name
+            city:
+              type: string
+              description: Publisher City
+            address:
+              type: string
+              description: Publisher Address
+      response_keyword:
+        category: Keyword
+        description: Keyword 객체
+        item:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Keyword ID
+            name:
+              type: string
+              description: Keyword Name
+      response_author:
+        category: Author
+        description: Author 객체
+        item:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Author ID
+            first_name:
+              type: string
+              description: First Name
+            last_name:
+              type: string
+              description: Last Name
+            email:
+              type: string
+              description: E-mail
+            address:
+              type: string
+              description: Address
+            researcher_id:
+              type: string
+              description: Researcher ID
