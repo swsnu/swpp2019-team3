@@ -1,0 +1,3218 @@
+configuration:
+  title: PapersFeed API Doc
+  description: SWPP Fall 2019 Team 3
+  uri: https://www.papersfeed.online/api
+categories:
+  Common:
+    description: Commons
+    order: 0
+  System:
+    description: System 관련 API
+    order: 1
+  User:
+    description: User 관련 API
+    order: 2
+  Collection:
+    description: Collection 관련 API
+    order: 3
+  Paper:
+    description: Paper 관련 API
+    order: 4
+  Review:
+    description: Review 관련 API
+    order: 5
+  Reply:
+    description: Reply 관련 API
+    order: 6
+  Keyword:
+    description: Keyword 관련 API
+    order: 7
+  Search:
+    description: Search 관련 API
+    order: 8
+  Like:
+    description: Like 관련 API
+    order: 9
+  Notification:
+    description: Notification 관련 API
+    order: 10
+  Subscription:
+    description: Subscription 관련 API
+    order: 11
+  ML:
+    description: ML 관련 API
+    order: 12
+versions:
+  v1.0:
+    status: current
+    major: 1
+    minor: 1
+    methods:
+      PostFollow:
+        label: 200. User Follow
+        method: POST
+        category: User
+        description: User Follow
+        uri: /follow
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: User ID
+        response_body:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: User의 팔로워 수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      DeleteFollow:
+        label: 201. User Unfollow
+        method: DELETE
+        category: User
+        description: User Unfollow
+        uri: /follow
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: User ID
+        response_body:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: User의 팔로워 수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetSession:
+        label: 202. 이메일 로그인
+        method: GET
+        category: User
+        description: 이메일 로그인
+        uri: /session
+        request_body:
+          type: object
+          properties:
+            email:
+              type: string
+              description: 이메일
+            password:
+              type: string
+              description: 패스워드
+        response_body:
+          type: object
+          properties:
+            user:
+              type: response_user
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetUserMe:
+        label: 203. 내 정보 불러오기
+        method: GET
+        category: User
+        description: 내 정보 불러오기
+        uri: /user/me
+        response_body:
+          type: object
+          properties:
+            user:
+              type: response_user
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      DeleteSession:
+        label: 204. 로그아웃
+        method: DELETE
+        category: User
+        description: 로그아웃
+        uri: /session
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PostUser:
+        label: 205. 회원가입
+        method: POST
+        category: User
+        description: 회원가입
+        uri: /user
+        request_body:
+          type: object
+          properties:
+            email:
+              type: string
+              description: 이메일
+            username:
+              type: string
+              description: Username
+            password:
+              type: string
+              description: 패스워드
+        response_body:
+          type: object
+          properties:
+            user:
+              type: response_user
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+          - code: 419
+            message: USERNAME_ALREADY_EXISTS
+            description: 이미 존재하는 사용자 이름
+          - code: 420
+            message: EMAIL_ALREADY_EXISTS
+            description: 이미 존재하는 이메일
+      GetUser:
+        label: 206. 유저 정보 불러오기
+        method: GET
+        category: User
+        description: 유저 정보 불러오기
+        uri: /user
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: User ID
+        response_body:
+          type: object
+          properties:
+            user:
+              type: response_user
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PutUser:
+        label: 207. 유저 정보 수정하기
+        method: PUT
+        category: User
+        description: 유저 정보 불러오기
+        uri: /user
+        request_body:
+          type: object
+          properties:
+            description:
+              type: string
+              description: 유저 자기소개
+            email:
+              type: string
+              description: 이메일
+            username:
+              type: string
+              description: Username
+            password:
+              type: string
+              description: 패스워드
+            photo_index:
+              type: integer
+              description: 사진 Index
+        response_body:
+          type: object
+          properties:
+            user:
+              type: response_user
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      DeleteUser:
+        label: 208. 회원탈퇴
+        method: DELETE
+        category: User
+        description: 회원탈퇴
+        uri: /user
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetCollection:
+        label: 300. Collection 불러오기
+        method: GET
+        category: Collection
+        description: Collection 불러오기
+        uri: /collection
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+        response_body:
+          type: object
+          properties:
+            collection:
+              type: response_collection
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PostCollection:
+        label: 301. Collection 만들기
+        method: POST
+        category: Collection
+        description: Collection 만들기
+        uri: /collection
+        request_body:
+          type: object
+          properties:
+            title:
+              type: string
+              description: 타이틀
+            text:
+              type: string
+              description: 설명
+        response_body:
+          type: object
+          properties:
+            collection:
+              type: response_collection
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PutCollection:
+        label: 302. Collection 수정하기
+        method: PUT
+        category: Collection
+        description: Collection 수정하기
+        uri: /collection
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+            title:
+              type: string
+              description: 타이틀
+            text:
+              type: string
+              description: 설명
+        response_body:
+          type: object
+          properties:
+            collection:
+              type: response_collection
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PutCollectionType:
+        label: 303. Collection Type 수정(private/public)
+        method: PUT
+        category: Collection
+        description: Collection Type 수정(private/public)
+        uri: /collection/type
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+            type(key):
+              type: string
+              description: Collection Type(public/private)
+        response_body:
+          type: object
+          properties:
+            collection:
+              type: response_collection
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      DeleteCollection:
+        label: 304. Collection 삭제
+        method: DELETE
+        category: Collection
+        description: Collection 삭제
+        uri: /collection
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetCollectionUser:
+        label: 305. User의 Collection 불러오기
+        method: GET
+        category: Collection
+        description: User의 Collection 불러오기
+        uri: /collection/user
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: User ID
+        response_body:
+          type: object
+          properties:
+            collections:
+              type: array
+              items:
+                type: response_collection
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+            total_count:
+              type: integer
+              description: 전체 갯수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetCollectionUserShared:
+        label: 306. User의 Shared Collection 불러오기
+        method: GET
+        category: Collection
+        description: User의 Shared Collection 불러오기
+        uri: /collection/user/shared
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: User ID
+        response_body:
+          type: object
+          properties:
+            collections:
+              type: array
+              items:
+                type: response_collection
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+            total_count:
+              type: integer
+              description: 전체 갯수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetPaper:
+        label: 400. Paper 불러오기
+        method: GET
+        category: Paper
+        description: Paper 불러오기
+        uri: /paper
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Paper ID
+        response_body:
+          type: object
+          properties:
+            paper:
+              type: response_paper
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetPaperCollection:
+        label: 401. Collection의 Paper 불러오기
+        method: GET
+        category: Paper
+        description: Collection의 Paper 불러오기
+        uri: /paper/collection
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+        response_body:
+          type: object
+          properties:
+            papers:
+              type: array
+              items:
+                type: response_paper
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+            total_count:
+              type: integer
+              description: 전체 갯수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PutPaperCollection:
+        label: 402. Collection에 Paper 담기/제거
+        method: PUT
+        category: Paper
+        description: Collection에 Paper 담기/제거
+        uri: /paper/collection
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Paper ID
+            collection_ids:
+              type: array
+              description: Collection IDs
+              items:
+                type: integer
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetReview:
+        label: 500. Review 불러오기
+        method: GET
+        category: Review
+        description: Review 불러오기
+        uri: /review
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Review ID
+        response_body:
+          type: object
+          properties:
+            review:
+              type: response_review
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PostReview:
+        label: 501. Review 만들기
+        method: POST
+        category: Review
+        description: Review 만들기
+        uri: /review
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Paper ID
+            title:
+              type: string
+              description: 제목
+            text:
+              type: string
+              description: 내용
+            is_anonymous:
+              type: boolean
+              description: 익명 여부
+        response_body:
+          type: object
+          properties:
+            review:
+              type: response_review
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PutReview:
+        label: 502. Review 수정하기
+        method: PUT
+        category: Review
+        description: Review 수정하기
+        uri: /review
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Review ID
+            title:
+              type: string
+              description: 제목
+            text:
+              type: string
+              description: 내용
+            is_anonymous:
+              type: boolean
+              description: 익명 여부
+        response_body:
+          type: object
+          properties:
+            review:
+              type: response_review
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      DeleteReview:
+        label: 503. Review 삭제하기
+        method: DELETE
+        category: Review
+        description: Review 삭제하기
+        uri: /review
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Review ID
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetReviewPaper:
+        label: 504. Paper의 Review 불러오기
+        method: GET
+        category: Review
+        description: Paper의 Review 불러오기
+        uri: /review/paper
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Paper ID
+        response_body:
+          type: object
+          properties:
+            reviews:
+              type: array
+              items:
+                type: response_review
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetReviewUser:
+        label: 505. User의 Review 불러오기
+        method: GET
+        category: Review
+        description: User의 Review 불러오기
+        uri: /review/user
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: User ID
+        response_body:
+          type: object
+          properties:
+            reviews:
+              type: array
+              items:
+                type: response_review
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetPaperSearch:
+        label: 800. Paper 검색하기
+        method: GET
+        category: Search
+        description: Paper 검색하기
+        uri: /paper/search
+        request_body:
+          type: object
+          properties:
+            text:
+              type: string
+              description: 검색 text
+        response_body:
+          type: object
+          properties:
+            papers:
+              type: array
+              items:
+                type: response_paper
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+            total_count:
+              type: integer
+              description: 전체 갯수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetCollectionSearch:
+        label: 801. Collection 검색하기
+        method: GET
+        category: Search
+        description: Collection 검색하기
+        uri: /collection/search
+        request_body:
+          type: object
+          properties:
+            text:
+              type: string
+              description: 검색 text
+        response_body:
+          type: object
+          properties:
+            collections:
+              type: array
+              items:
+                type: response_collection
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+            total_count:
+              type: integer
+              description: 전체 갯수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetUserSearch:
+        label: 802. User 검색하기
+        method: GET
+        category: Search
+        description: User 검색하기
+        uri: /user/search
+        request_body:
+          type: object
+          properties:
+            text:
+              type: string
+              description: 검색 text
+        response_body:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                type: response_user
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+            total_count:
+              type: integer
+              description: 전체 갯수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PostLikePaper:
+        label: 900. Post Like
+        method: POST
+        category: Like
+        description: Post Like
+        uri: /like/paper
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Paper ID
+        response_body:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Like 수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      DeleteLikePaper:
+        label: 901. Post Unlike
+        method: DELETE
+        category: Like
+        description: Post Unlike
+        uri: /like/paper
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Paper ID
+        response_body:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Like 수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetPaperLike:
+        label: 902. Post Like History
+        method: GET
+        category: Like
+        description: Post Like History
+        uri: /paper/like
+        response_body:
+          type: object
+          properties:
+            papers:
+              type: array
+              items:
+                type: response_paper
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PostLikeReview:
+        label: 903. Review Like
+        method: POST
+        category: Like
+        description: Review Like
+        uri: /like/review
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Review ID
+        response_body:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Like 수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      DeleteLikeReview:
+        label: 904. Reivew Unlike
+        method: DELETE
+        category: Like
+        description: Review Unlike
+        uri: /like/review
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Review ID
+        response_body:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Like 수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetReviewLike:
+        label: 905. Review Like History
+        method: GET
+        category: Like
+        description: Review Like History
+        uri: /review/like
+        response_body:
+          type: object
+          properties:
+            reviews:
+              type: array
+              items:
+                type: response_review
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PostLikeCollection:
+        label: 906. Collection Like
+        method: POST
+        category: Like
+        description: Collection Like
+        uri: /like/collection
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+        response_body:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Like 수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      DeleteLikeCollection:
+        label: 907. Collection Unlike
+        method: DELETE
+        category: Like
+        description: Collection Unlike
+        uri: /like/collection
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+        response_body:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Like 수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetCollectionLike:
+        label: 908. Collection Like History
+        method: GET
+        category: Like
+        description: Collecion Like History
+        uri: /collection/like
+        response_body:
+          type: object
+          properties:
+            collections:
+              type: array
+              items:
+                type: response_collection
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PostLikeReply:
+        label: 909. Reply Like
+        method: POST
+        category: Like
+        description: Reply Like
+        uri: /like/reply
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Reply ID
+        response_body:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Like 수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      DeleteLikeReply:
+        label: 910. Reply Unlike
+        method: DELETE
+        category: Like
+        description: Reply Unlike
+        uri: /like/reply
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Reply ID
+        response_body:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Like 수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetReplyCollection:
+        label: 600. Collection의 Reply 불러오기
+        method: GET
+        category: Reply
+        description: Collection의 Reply 불러오기
+        uri: /reply/collection
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+        response_body:
+          type: object
+          properties:
+            replies:
+              type: array
+              items: response_reply
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PostReplyCollection:
+        label: 601. Collection에 Reply 달기
+        method: POST
+        category: Reply
+        description: Collection에 Reply 달기
+        uri: /reply/collection
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+            text:
+              type: string
+              description: Reply Text
+        response_body:
+          type: object
+          properties:
+            reply:
+              type: response_reply
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PutReplyCollection:
+        label: 602. Collection의 Reply 수정하기
+        method: PUT
+        category: Reply
+        description: Collection의 Reply 수정하기
+        uri: /reply/collection
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Reply ID
+            text:
+              type: string
+              description: Reply Text
+        response_body:
+          type: object
+          properties:
+            reply:
+              type: response_reply
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      DeleteReplyCollection:
+        label: 603. Collection의 Reply 삭제하기
+        method: DELETE
+        category: Reply
+        description: Collection의 Reply 삭제하기
+        uri: /reply/collection
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Reply ID
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetReplyReview:
+        label: 604. Review의 Reply 불러오기
+        method: GET
+        category: Reply
+        description: Review의 Reply 불러오기
+        uri: /reply/review
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Review ID
+        response_body:
+          type: object
+          properties:
+            replies:
+              type: array
+              items: response_reply
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PostReplyReview:
+        label: 605. Review에 Reply 달기
+        method: POST
+        category: Reply
+        description: Review에 Reply 달기
+        uri: /reply/review
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Review ID
+            text:
+              type: string
+              description: Reply Text
+        response_body:
+          type: object
+          properties:
+            reply:
+              type: response_reply
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PutReplyReview:
+        label: 606. Review의 Reply 수정하기
+        method: PUT
+        category: Reply
+        description: Review의 Reply 수정하기
+        uri: /reply/review
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Reply ID
+            text:
+              type: string
+              description: Reply Text
+        response_body:
+          type: object
+          properties:
+            reply:
+              type: response_reply
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      DeleteReplyReview:
+        label: 607. Review의 Reply 삭제하기
+        method: DELETE
+        category: Reply
+        description: Review의 Reply 삭제하기
+        uri: /reply/review
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Reply ID
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetUserCollection:
+        label: 307. Collection의 User 불러오기
+        method: GET
+        category: Collection
+        description: Collection의 User 불러오기
+        uri: /user/collection
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+        response_body:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                type: response_user
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PostUserCollection:
+        label: 308. Collection에 User 초대하기
+        method: POST
+        category: Collection
+        description: Collection에 User 초대하기
+        uri: /user/collection
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+            user_ids:
+              type: array
+              description: 초대할 User IDs
+              items:
+                type: integer
+        response_body:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Collection User 수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PutUserCollection:
+        label: 309. Collection Owner 권한 넘기기
+        method: PUT
+        category: Collection
+        description: Collection Owner 권한 넘기기
+        uri: /user/collection
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+            user_id:
+              type: integer
+              description: 권한 넘길 User ID
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      DeleteUserCollection:
+        label: 310. Collection에 User 추방하기
+        method: DELETE
+        category: Collection
+        description: Collection에 User 추방하기
+        uri: /user/collection
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+            user_ids:
+              type: array
+              description: 추방할 User IDs
+              items:
+                type: integer
+        response_body:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Collection User 수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      DeleteUserCollectionSelf:
+        label: 311. Collection 나가기
+        method: DELETE
+        category: Collection
+        description: Collection 나가기
+        uri: /user/collection/self
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+        response_body:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Collection User 수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PutUserCollectionPending:
+        label: 312. Collection 초대 수락하기
+        method: PUT
+        category: Collection
+        description: Collection 초대 수락하기
+        uri: /user/collection/pending
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+        response_body:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Collection User 수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      DeleteUserCollectionPending:
+        label: 313. Collection 초대 거절하기
+        method: DELETE
+        category: Collection
+        description: Collection 초대 거절하기
+        uri: /user/collection/pending
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetNotification:
+        label: 1000. Notification 불러오기
+        method: GET
+        category: Notification
+        description: Notification 불러오기
+        uri: /notification
+        response_body:
+          type: object
+          properties:
+            notifications:
+              type: array
+              items:
+                type: response_notification
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+            total_count:
+              type: integer
+              description: 전체 갯수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PutNotification:
+        label: 1001. Notification 읽음 처리하기
+        method: PUT
+        category: Notification
+        description: Notification 읽음 처리하기
+        uri: /notification
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Notification ID
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetUserFollowing:
+        label: 209. Following User 불러오기
+        method: GET
+        category: User
+        description: Following User 불러오기
+        uri: /user/following
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: User ID
+        response_body:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                type: response_user
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetUserFollowed:
+        label: 210. Followed User 불러오기
+        method: GET
+        category: User
+        description: Followed User 불러오기
+        uri: /user/followed
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: User ID
+        response_body:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                type: response_user
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetUserFollowingCollection:
+        label: 211. Collection에 소속되지 않은 Following User 불러오기
+        method: GET
+        category: User
+        description: Collection에 소속되지 않은 Following User 불러오기
+        uri: /user/following/collection
+        request_body:
+          type: object
+          properties:
+            collection_id:
+              type: integer
+              description: Collection ID
+        response_body:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                type: response_user
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetUserSearchCollection:
+        label: 803. Collection에 소속되지 않은 User 검색하기
+        method: GET
+        category: Search
+        description: Collection에 소속되지 않은 User 검색하기
+        uri: /user/search/collection
+        request_body:
+          type: object
+          properties:
+            text:
+              type: string
+              description: 검색 text
+            collection_id:
+              type: integer
+              description: Collection ID
+        response_body:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                type: response_user
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetSubscription:
+        label: 1100. Subscription 피드 불러오기
+        method: GET
+        category: Subscription
+        description: Subscription 피드 불러오기
+        uri: /subscription
+        response_body:
+          type: object
+          properties:
+            subscriptions:
+              type: array
+              items:
+                type: response_subscription
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetUserAction:
+        label: 1200. User Action 불러오기
+        method: GET
+        category: ML
+        description: User Action 불러오기
+        uri: /user/action
+        response_body:
+          type: object
+          properties:
+            papers:
+              type: array
+              items:
+                type: response_paper
+            users:
+              type: array
+              items:
+                type: response_user
+            actions:
+              type: array
+              items:
+                type: object
+                properties:
+                  UserId:
+                    type: integer
+                    description: Action User ID
+                  ItemId:
+                    type: integer
+                    description: Action Item ID
+                  Type:
+                    type: string
+                    description: Action Type
+                  Count:
+                    type: integer
+                    description: Action Count
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PostUserRecommendation:
+        label: 1201. Add User’s Recommended Papers
+        method: POST
+        category: ML
+        description: Add User’s Recommended Papers
+        uri: /user/recommendation
+        request_body:
+          type: object
+          properties:
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  user:
+                    type: integer
+                    description: User ID
+                  papers:
+                    type: array
+                    items:
+                      type: integer
+                      description: Paper ID
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetPaperSearchML:
+        label: 1202. Search Paper for ML
+        method: GET
+        category: ML
+        description: Search Paper for ML
+        uri: /paper/search/ml
+        request_body:
+          type: object
+          properties:
+            titles:
+              type: array
+              items:
+                type: string
+                description: Paper Title
+        response_body:
+          type: object
+          properties:
+            papers:
+              type: array
+              items:
+                type: response_paper
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetRecommendation:
+        label: 1203. Recommendation 불러오기
+        method: GET
+        category: ML
+        description: Recommendation 불러오기
+        uri: /recommendation
+        response_body:
+          type: object
+          properties:
+            recommendations:
+              type: array
+              items:
+                type: response_recommendation
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetPaperAll:
+        label: 1204. Paper 전부 불러오기
+        method: GET
+        category: ML
+        description: Paper 전부 불러오기
+        uri: /paper/all
+        response_body:
+          type: object
+          properties:
+            papers:
+              type: array
+              items:
+                type: response_paper
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetUserAll:
+        label: 1205. User 전부 불러오기
+        method: GET
+        category: ML
+        description: User 전부 불러오기
+        uri: /user/all
+        response_body:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                type: response_user
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      GetKeywordInit:
+        label: 700. Get Selected Keywords
+        method: GET
+        category: Keyword
+        description: Get Selected Keywords
+        uri: /keyword/init
+        response_body:
+          type: object
+          properties:
+            keywords:
+              type: array
+              items:
+                type: response_keyword
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      PostRecommendationInit:
+        label: 1206. Initialize Recommendation
+        method: POST
+        category: ML
+        description: Initialize Recommendation
+        uri: /recommendation/init
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+      DeletePaperCollection:
+        label: 314. Collection에서 Paper 제거
+        method: DELETE
+        category: Collection
+        description: Collection에서 Paper 제거
+        uri: /paper/collection
+        request_body:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+            paper_id:
+              type: integer
+              description: Paper ID
+        response_body:
+          type: object
+          properties:
+            count:
+              type: object
+              properties:
+                papers:
+                  type: integer
+                  description: Paper 수
+        response_codes:
+          - code: 403
+            message: AUTH_ERROR
+            description: 인증 오류, 권한 없음 혹은 비밀번호 오류
+          - code: 400
+            message: PARAMETER_ERROR
+            description: 필수 파라미터 에러 (syntax, parsing error)
+          - code: 405
+            message: NOT_AVAILABLE_API
+            description: 지원하지 않는 API 버전
+          - code: 440
+            message: INVALID_SESSION
+            description: 잘못된 세션
+          - code: 404
+            message: NOT_EXIST_OBJECT
+            description: 존재하지 않는 Object
+          - code: 422
+            message: UNPROCESSABLE_ENTITY
+            description: semantic error (ex> self following)
+    types:
+      response_user:
+        category: User
+        description: User 객체
+        item:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: User ID
+            username:
+              type: string
+              description: Username
+            email:
+              type: string
+              description: E-mail
+            description(key):
+              type: string
+              description: 자기소개
+            photo_index:
+              type: integer
+              description: 프로필 사진 Index
+            count:
+              type: object
+              properties:
+                follower:
+                  type: integer
+                  description: Follower 수
+                following:
+                  type: integer
+                  description: Following 수
+            is_followed:
+              type: boolean
+              description: followed 관계 여부
+            is_following:
+              type: boolean
+              description: following 관계 여부
+      response_collection:
+        category: Collection
+        description: Collection 객체
+        item:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Collection ID
+            title:
+              type: string
+              description: Collection Title
+            text:
+              type: string
+              description: Collectoin 설명
+            liked:
+              type: boolean
+              description: like 여부
+            owned:
+              type: boolean
+              description: Owned 여부
+            count:
+              type: object
+              properties:
+                users:
+                  type: integer
+                  description: 유저 수
+                papers:
+                  type: integer
+                  description: Paper 수
+                likes:
+                  type: integer
+                  description: like 수
+                replies:
+                  type: integer
+                  description: Reply 수
+            creation_date:
+              type: string
+              description: 생성 날짜
+            modification_date:
+              type: string
+              description: 수정 날짜
+            type(key):
+              type: string
+              description: private/public
+            collection_user_type:
+              type: string
+              description: owner/member/pending
+            owner:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: Owner User ID
+                username:
+                  type: string
+                  description: Owner Username
+            contains_paper:
+              type: boolean
+              description: Paper 포함 여(Paper ID를 같이 보낸 경우)
+      response_paper:
+        category: Paper
+        description: Paper 객체
+        item:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Paper ID
+            title:
+              type: string
+              description: Paper Title
+            liked:
+              type: boolean
+              description: Like 여부
+            language:
+              type: string
+              description: Paper 언어
+            abstract:
+              type: string
+              description: 초록
+            issn:
+              type: string
+              description: ISSN
+            eissn:
+              type: string
+              description: eISSN
+            doi:
+              type: string
+              description: DOI
+            file_url:
+              type: string
+              description: File URL
+            download_url:
+              type: string
+              description: Download URL
+            authors:
+              type: array
+              description: Authors
+              items:
+                type: response_author
+            keywords:
+              type: array
+              description: Keywords
+              items:
+                type: response_keyword
+            publication:
+              type: response_publication
+            count:
+              type: object
+              properties:
+                reviews:
+                  type: integer
+                  description: 리뷰 수
+                likes:
+                  type: integer
+                  description: Like 수
+      response_review:
+        category: Review
+        description: Review 객체
+        item:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Review ID
+            title:
+              type: string
+              description: Review Title
+            text:
+              type: string
+              description: Review Text
+            liked:
+              type: string
+              description: Like 여부
+            paper:
+              type: response_paper
+              description: Review's Paper
+            user:
+              type: response_user
+              description: 작성자
+            count:
+              type: object
+              properties:
+                likes:
+                  type: integer
+                  description: Like 수
+                replies:
+                  type: integer
+                  description: Reply 수
+            creation_date:
+              type: string
+              description: 생성 날짜
+            modification_date:
+              type: string
+              description: 수정 날짜
+            is_anonymous:
+              type: boolean
+              description: 익명 여부
+      response_reply:
+        category: Reply
+        description: Reply 객체
+        item:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Reply ID
+            text:
+              type: string
+              description: Reply Text
+            liked:
+              type: string
+              description: Like 여부
+            review:
+              type: response_review
+              description: Reply's Review
+            collection:
+              type: response_review
+              description: Reply's Collection
+            user:
+              type: response_user
+              description: 작성자
+            count:
+              type: object
+              properties:
+                likes:
+                  type: integer
+                  description: Like 수
+            creation_date:
+              type: string
+              description: 생성 날짜
+            modification_date:
+              type: string
+              description: 수정 날짜
+      response_publication:
+        category: Publication
+        description: Publication 객체
+        item:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Publication ID
+            name:
+              type: string
+              description: Publication Name
+            type(key):
+              type: string
+              description: journal/book/series/patent
+            publisher:
+              type: response_publisher
+      response_publisher:
+        category: Publisher
+        description: Publisher 객체
+        item:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Publisher ID
+            name:
+              type: string
+              description: Publisher Name
+            city:
+              type: string
+              description: Publisher City
+            address:
+              type: string
+              description: Publisher Address
+      response_keyword:
+        category: Keyword
+        description: Keyword 객체
+        item:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Keyword ID
+            name:
+              type: string
+              description: Keyword Name
+      response_author:
+        category: Author
+        description: Author 객체
+        item:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Author ID
+            first_name:
+              type: string
+              description: First Name
+            last_name:
+              type: string
+              description: Last Name
+            email:
+              type: string
+              description: E-mail
+            address:
+              type: string
+              description: Address
+            researcher_id:
+              type: string
+              description: Researcher ID
+      response_subscription:
+        category: Subscription
+        description: Subscription 객체
+        item:
+          type: object
+          properties:
+            type(key):
+              type: string
+              description: subscription
+            id:
+              type: integer
+              description: Notification ID
+            actor:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: Actor ID
+                username:
+                  type: string
+                  description: Actor Username
+            verb:
+              type: string
+              description: Verb
+            action_object:
+              type: object
+              properties:
+                type(key):
+                  type: string
+                  description: paper/collection/review
+                content:
+                  type: object
+                  description: paper/collection/review 객체
+            target:
+              type: object
+              properties:
+                type(key):
+                  type: string
+                  description: Target Content Type
+                id:
+                  type: integer
+                  description: Target ID
+                string:
+                  type: string
+                  description: Target String
+            creation_date:
+              type: string
+              description: 생성 날짜
+      response_recommendation:
+        category: ML
+        description: Recommendation 객체
+        item:
+          type: object
+          properties:
+            type(key):
+              type: string
+              description: recommendation_paper/recommendation_review
+            id:
+              type: integer
+              description: Recommendation ID
+            verb:
+              type: string
+              description: Recommended Paper/Recommended Review
+            action_object:
+              type: object
+              properties:
+                type(key):
+                  type: string
+                  description: paper/review
+                content:
+                  type: object
+                  description: paper/review 객체
+            target:
+              type: object
+              description: (opt)Recommended Review일 경우에만
+              properties:
+                type(key):
+                  type: string
+                  description: paper
+                id:
+                  type: integer
+                  description: Paper ID
+                title:
+                  type: string
+                  description: Paper Title
+            creation_date:
+              type: string
+              description: 생성 날짜
+      response_notification:
+        category: Notification
+        description: Notification 객체
+        item:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Notification ID
+            actor:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: Actor ID
+                username:
+                  type: string
+                  description: Actor Username
+            verb:
+              type: string
+              description: Verb
+            target:
+              type: object
+              properties:
+                type(key):
+                  type: string
+                  description: Target Content Type
+                id:
+                  type: integer
+                  description: Target ID
+                string:
+                  type: string
+                  description: Target String
+            action_object:
+              type: object
+              properties:
+                type(key):
+                  type: string
+                  description: Action Object Type
+                id:
+                  type: integer
+                  description: Action Object ID
+                string:
+                  type: string
+                  description: Action Object String
+            time_since:
+              type: string
+              description: Time Since
