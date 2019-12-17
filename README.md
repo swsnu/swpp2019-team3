@@ -1,5 +1,7 @@
 # PapersFeed [![Build Status](https://travis-ci.com/swsnu/swpp2019-team3.svg?branch=master)](https://travis-ci.com/swsnu/swpp2019-team3) [![Coverage Status](https://coveralls.io/repos/github/swsnu/swpp2019-team3/badge.svg?branch=master)](https://coveralls.io/github/swsnu/swpp2019-team3?branch=master) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=swsnu_swpp2019-team3&metric=alert_status)](https://sonarcloud.io/dashboard?id=swsnu_swpp2019-team3)
 
+## https://www.papersfeed.online
+
 ## How to Run
 ### 1. Clone this repository
 `git clone https://github.com/swsnu/swpp2019-team3.git`
@@ -100,3 +102,13 @@ In `swpp2019-team3/frontend`,
 ```
 yarn test --coverage --watchAll=false
 ```
+
+## Demo Video
+https://youtu.be/d4GE50Vv4Sk
+
+## Wiki
+You can refer to [our wiki](https://github.com/swsnu/swpp2019-team3/wiki) for detailed information.
+
+## API document
+For information of our APIs, you can visit [here](https://www.papersfeed.online/static/apidoc/apidoc.html).
+Also when running backend on your machine, you can also use [this link](http://localhost:8000/static/apidoc/apidoc.html).
