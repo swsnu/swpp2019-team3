@@ -132,6 +132,7 @@ versions:
               type: string
               description: 패스워드
         response_body:
+          type: object
           properties:
             user:
               type: response_user
@@ -161,6 +162,7 @@ versions:
         description: 내 정보 불러오기
         uri: /user/me
         response_body:
+          type: object
           properties:
             user:
               type: response_user
@@ -215,19 +217,19 @@ versions:
         description: 회원가입
         uri: /user
         request_body:
-          request_body:
-            type: object
-            properties:
-              email:
-                type: string
-                description: 이메일
-              username:
-                type: string
-                description: Username
-              password:
-                type: string
-                description: 패스워드
+          type: object
+          properties:
+            email:
+              type: string
+              description: 이메일
+            username:
+              type: string
+              description: Username
+            password:
+              type: string
+              description: 패스워드
         response_body:
+          type: object
           properties:
             user:
               type: response_user
@@ -269,6 +271,7 @@ versions:
               type: integer
               description: User ID
         response_body:
+          type: object
           properties:
             user:
               type: response_user
@@ -316,6 +319,7 @@ versions:
               type: integer
               description: 사진 Index
         response_body:
+          type: object
           properties:
             user:
               type: response_user
@@ -376,6 +380,7 @@ versions:
               type: integer
               description: Collection ID
         response_body:
+          type: object
           properties:
             collection:
               type: response_collection
@@ -491,7 +496,7 @@ versions:
             id:
               type: integer
               description: Collection ID
-            type:
+            type(key):
               type: string
               description: Collection Type(public/private)
         response_body:
@@ -566,8 +571,8 @@ versions:
           properties:
             collections:
               type: array
-                items:
-                  type: response_collection
+              items:
+                type: response_collection
             page_number:
               type: integer
               description: Page Number
@@ -613,8 +618,8 @@ versions:
           properties:
             collections:
               type: array
-                items:
-                  type: response_collection
+              items:
+                type: response_collection
             page_number:
               type: integer
               description: Page Number
@@ -696,8 +701,8 @@ versions:
           properties:
             papers:
               type: array
-                items:
-                  type: response_paper
+              items:
+                type: response_paper
             page_number:
               type: integer
               description: Page Number
@@ -741,8 +746,8 @@ versions:
             collection_ids:
               type: array
               description: Collection IDs
-                items:
-                  type: integer
+              items:
+                type: integer
         response_codes:
           - code: 403
             message: AUTH_ERROR
@@ -933,17 +938,17 @@ versions:
               description: Paper ID
         response_body:
           type: object
-            properties:
-              reviews:
-                type: array
-                  items:
-                    type: response_review
-              page_number:
-                type: integer
-                description: Page Number
-              is_finished:
-                type: boolean
-                description: Pagination Finish 여부
+          properties:
+            reviews:
+              type: array
+              items:
+                type: response_review
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
         response_codes:
           - code: 403
             message: AUTH_ERROR
@@ -977,17 +982,17 @@ versions:
               description: User ID
         response_body:
           type: object
-            properties:
-              reviews:
-                type: array
-                  items:
-                    type: response_review
-              page_number:
-                type: integer
-                description: Page Number
-              is_finished:
-                type: boolean
-                description: Pagination Finish 여부
+          properties:
+            reviews:
+              type: array
+              items:
+                type: response_review
+            page_number:
+              type: integer
+              description: Page Number
+            is_finished:
+              type: boolean
+              description: Pagination Finish 여부
         response_codes:
           - code: 403
             message: AUTH_ERROR
@@ -1024,8 +1029,8 @@ versions:
           properties:
             papers:
               type: array
-                items:
-                  type: response_paper
+              items:
+                type: response_paper
             page_number:
               type: integer
               description: Page Number
@@ -1071,8 +1076,8 @@ versions:
           properties:
             collections:
               type: array
-                items:
-                  type: response_collection
+              items:
+                type: response_collection
             page_number:
               type: integer
               description: Page Number
@@ -1118,8 +1123,8 @@ versions:
           properties:
             users:
               type: array
-                items:
-                  type: response_user
+              items:
+                type: response_user
             page_number:
               type: integer
               description: Page Number
@@ -1153,102 +1158,24 @@ versions:
         category: User
         description: User 객체
         item:
-          type: object
-          properties:
-            object_id:
-              type: string
-              description: Geo Name Object Id
-            text:
-              type: object
-              description: Geo Name Text
-              properties:
-                name:
-                  type: string
-                  description: Geo Name
+          type: string
       response_collection:
         category: Collection
         description: Collection 객체
         item:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Tag 종류 { Hash | User }
-            offset:
-              type: integer
-              description: 위치
-            value:
-              type: string
-              description: 태그 값 Hash Tag의 경우 해당 Text, User의 경우 User Name이 들어있음 (단, User Name이 바꼈을 경우가 있으므로 User Type의 경우 User Object를 사용할 것)
-            user:
-              type: object
-              description: 사용자 태그 구성에 사용할 User 정보
-              properties:
-                object_id:
-                  type: string
-                  description: 사용자 ID
-                username:
-                  type: string
-                  description: 사용자 User Name
+          type: string
       response_paper:
         category: Paper
         description: Paper 객체
         item:
-          type: object
-          properties:
-            type:
-              type: string
-              description: 객체 타입
-            object_id:
-              type: string
-              description: Place Object ID
-            pick:
-              type: boolean
-              description: Pick 여부
-            bookmark:
-              type: boolean
-              description: Book Mark 여부
-            place_id:
-              type: string
-              description: Google Place ID
-            based_on_user:
-              type: object
-              description: (Optional) Place 자체가 아닌 유저에 따라 달라질 수 있는 정보
-              properties:
-                count:
-                  type: object
-                  description: (Optional) Count 정보
-                  properties:
-                    post:
-                      type: integer
-                      description: 해당 Place에 사용자가 올린 Post Count
+          type: string
       response_review:
         category: Review
         description: Review 객체
         item:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Content 종류 { Image | Profile | Video | Vote | Map }
-            object_id:
-              type: string
-              description: Content Object ID
-            priority:
-              type: number
-              description: 순서 Priority
+          type: string
       response_reply:
         category: Reply
         description: Reply 객체
         item:
-          type: object
-          properties:
-            type:
-              type: string
-              description: 객체 타입
-            object_id:
-              type: string
-              description: 고유 ID
-            language_code:
-              type: string
-              description: 원문 언어 코드
+          type: string

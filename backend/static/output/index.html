@@ -1,0 +1,4067 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Papersfeed API Doc</title>
+    
+<link href="./css/combined.css" rel="stylesheet">
+<script type="text/javascript" src="./js/combined.js"></script>
+     
+</head>
+<body>
+    <div class="jumbotron">
+    <div class="container">
+        <h1>Papersfeed API Doc</h1><p>
+        SWPP Fall 2019 Team 3
+        </p></div>
+</div><div id="help-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Keyboard Shortcuts</h3>
+            </div>
+            <div class="modal-body">
+                <div class="help_row">
+                    <h4>Site wide shortcuts</h4>
+                    <dl class="keyboard-mappings">
+                        <dt>?</dt>
+                        <dd>Bring up this help dialog</dd>
+                    </dl>
+                    <dl class="keyboard-mappings">
+                        <dt>esc</dt>
+                        <dd>Hide this help dialog</dd>
+                    </dl>
+                    <dl class="keyboard-mappings">
+                        <dt>/</dt>
+                        <dd>Focus search bar</dd>
+                    </dl>
+                </div>
+                <div class="help_row">
+                    <h4>Navigation</h4>
+                    <dl class="keyboard-mappings">
+                        <dt>j <em>or</em> n</dt>
+                        <dd>Move to next method or type</dd>
+                    </dl>
+                    <dl class="keyboard-mappings">
+                        <dt>k <em>or</em> p</dt>
+                        <dd>Move to previous method or type</dd>
+                    </dl>
+            
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</div><div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="doc-sidebar"><input type="search" placeholder="search" class="col-md-12 form-control">
+<div class="scroll-spyable">
+    <ul class="nav nav-list doc-sidenav">
+        <li class="nav-header"><h5>Methods</h5></li><li class="nav-header" data-group="User"><a href="javascript:navigateTo({category: 'User'}, ['category', 'method', 'type'])" data-target="#c-User"><h6>User</h6></a></li>
+        <li data-group="User"  data-item="200. User Follow"><a href="javascript:navigateTo({category: 'User', method: 'PostFollow'}, ['category', 'method'])" data-target="#m-PostFollow"><span>200. User Follow</span></a></li>
+        <li data-group="User"  data-item="201. User Unfollow"><a href="javascript:navigateTo({category: 'User', method: 'DeleteFollow'}, ['category', 'method'])" data-target="#m-DeleteFollow"><span>201. User Unfollow</span></a></li>
+        <li data-group="User"  data-item="202. 이메일 로그인"><a href="javascript:navigateTo({category: 'User', method: 'GetSession'}, ['category', 'method'])" data-target="#m-GetSession"><span>202. 이메일 로그인</span></a></li>
+        <li data-group="User"  data-item="203. 내 정보 불러오기"><a href="javascript:navigateTo({category: 'User', method: 'GetUserMe'}, ['category', 'method'])" data-target="#m-GetUserMe"><span>203. 내 정보 불러오기</span></a></li>
+        <li data-group="User"  data-item="204. 로그아웃"><a href="javascript:navigateTo({category: 'User', method: 'DeleteSession'}, ['category', 'method'])" data-target="#m-DeleteSession"><span>204. 로그아웃</span></a></li>
+        <li data-group="User"  data-item="205. 회원가입"><a href="javascript:navigateTo({category: 'User', method: 'PostUser'}, ['category', 'method'])" data-target="#m-PostUser"><span>205. 회원가입</span></a></li>
+        <li data-group="User"  data-item="206. 유저 정보 불러오기"><a href="javascript:navigateTo({category: 'User', method: 'GetUser'}, ['category', 'method'])" data-target="#m-GetUser"><span>206. 유저 정보 불러오기</span></a></li>
+        <li data-group="User"  data-item="207. 유저 정보 수정하기"><a href="javascript:navigateTo({category: 'User', method: 'PutUser'}, ['category', 'method'])" data-target="#m-PutUser"><span>207. 유저 정보 수정하기</span></a></li>
+        <li data-group="User"  data-item="208. 회원탈퇴"><a href="javascript:navigateTo({category: 'User', method: 'DeleteUser'}, ['category', 'method'])" data-target="#m-DeleteUser"><span>208. 회원탈퇴</span></a></li>
+        <li class="separator"></li><li class="nav-header" data-group="Collection"><a href="javascript:navigateTo({category: 'Collection'}, ['category', 'method', 'type'])" data-target="#c-Collection"><h6>Collection</h6></a></li>
+        <li data-group="Collection"  data-item="300. Collection 불러오기"><a href="javascript:navigateTo({category: 'Collection', method: 'GetCollection'}, ['category', 'method'])" data-target="#m-GetCollection"><span>300. Collection 불러오기</span></a></li>
+        <li data-group="Collection"  data-item="301. Collection 만들기"><a href="javascript:navigateTo({category: 'Collection', method: 'PostCollection'}, ['category', 'method'])" data-target="#m-PostCollection"><span>301. Collection 만들기</span></a></li>
+        <li data-group="Collection"  data-item="302. Collection 수정하기"><a href="javascript:navigateTo({category: 'Collection', method: 'PutCollection'}, ['category', 'method'])" data-target="#m-PutCollection"><span>302. Collection 수정하기</span></a></li>
+        <li data-group="Collection"  data-item="303. Collection Type 수정(private/public)"><a href="javascript:navigateTo({category: 'Collection', method: 'PutCollectionType'}, ['category', 'method'])" data-target="#m-PutCollectionType"><span>303. Collection Type 수정(private/public)</span></a></li>
+        <li data-group="Collection"  data-item="304. Collection 삭제"><a href="javascript:navigateTo({category: 'Collection', method: 'DeleteCollection'}, ['category', 'method'])" data-target="#m-DeleteCollection"><span>304. Collection 삭제</span></a></li>
+        <li data-group="Collection"  data-item="305. User의 Collection 불러오기"><a href="javascript:navigateTo({category: 'Collection', method: 'GetCollectionUser'}, ['category', 'method'])" data-target="#m-GetCollectionUser"><span>305. User의 Collection 불러오기</span></a></li>
+        <li data-group="Collection"  data-item="306. User의 Shared Collection 불러오기"><a href="javascript:navigateTo({category: 'Collection', method: 'GetCollectionUserShared'}, ['category', 'method'])" data-target="#m-GetCollectionUserShared"><span>306. User의 Shared Collection 불러오기</span></a></li>
+        <li class="separator"></li><li class="nav-header" data-group="Paper"><a href="javascript:navigateTo({category: 'Paper'}, ['category', 'method', 'type'])" data-target="#c-Paper"><h6>Paper</h6></a></li>
+        <li data-group="Paper"  data-item="400. Paper 불러오기"><a href="javascript:navigateTo({category: 'Paper', method: 'GetPaper'}, ['category', 'method'])" data-target="#m-GetPaper"><span>400. Paper 불러오기</span></a></li>
+        <li data-group="Paper"  data-item="401. Collection의 Paper 불러오기"><a href="javascript:navigateTo({category: 'Paper', method: 'GetPaperCollection'}, ['category', 'method'])" data-target="#m-GetPaperCollection"><span>401. Collection의 Paper 불러오기</span></a></li>
+        <li data-group="Paper"  data-item="402. Collection에 Paper 담기/제거"><a href="javascript:navigateTo({category: 'Paper', method: 'PutPaperCollection'}, ['category', 'method'])" data-target="#m-PutPaperCollection"><span>402. Collection에 Paper 담기/제거</span></a></li>
+        <li class="separator"></li><li class="nav-header" data-group="Review"><a href="javascript:navigateTo({category: 'Review'}, ['category', 'method', 'type'])" data-target="#c-Review"><h6>Review</h6></a></li>
+        <li data-group="Review"  data-item="500. Review 불러오기"><a href="javascript:navigateTo({category: 'Review', method: 'GetReview'}, ['category', 'method'])" data-target="#m-GetReview"><span>500. Review 불러오기</span></a></li>
+        <li data-group="Review"  data-item="501. Review 만들기"><a href="javascript:navigateTo({category: 'Review', method: 'PostReview'}, ['category', 'method'])" data-target="#m-PostReview"><span>501. Review 만들기</span></a></li>
+        <li data-group="Review"  data-item="502. Review 수정하기"><a href="javascript:navigateTo({category: 'Review', method: 'PutReview'}, ['category', 'method'])" data-target="#m-PutReview"><span>502. Review 수정하기</span></a></li>
+        <li data-group="Review"  data-item="503. Review 삭제하기"><a href="javascript:navigateTo({category: 'Review', method: 'DeleteReview'}, ['category', 'method'])" data-target="#m-DeleteReview"><span>503. Review 삭제하기</span></a></li>
+        <li data-group="Review"  data-item="504. Paper의 Review 불러오기"><a href="javascript:navigateTo({category: 'Review', method: 'GetReviewPaper'}, ['category', 'method'])" data-target="#m-GetReviewPaper"><span>504. Paper의 Review 불러오기</span></a></li>
+        <li data-group="Review"  data-item="505. User의 Review 불러오기"><a href="javascript:navigateTo({category: 'Review', method: 'GetReviewUser'}, ['category', 'method'])" data-target="#m-GetReviewUser"><span>505. User의 Review 불러오기</span></a></li>
+        <li class="separator"></li><li class="nav-header" data-group="Search"><a href="javascript:navigateTo({category: 'Search'}, ['category', 'method', 'type'])" data-target="#c-Search"><h6>Search</h6></a></li>
+        <li data-group="Search"  data-item="800. Paper 검색하기"><a href="javascript:navigateTo({category: 'Search', method: 'GetPaperSearch'}, ['category', 'method'])" data-target="#m-GetPaperSearch"><span>800. Paper 검색하기</span></a></li>
+        <li data-group="Search"  data-item="801. Collection 검색하기"><a href="javascript:navigateTo({category: 'Search', method: 'GetCollectionSearch'}, ['category', 'method'])" data-target="#m-GetCollectionSearch"><span>801. Collection 검색하기</span></a></li>
+        <li data-group="Search"  data-item="802. User 검색하기"><a href="javascript:navigateTo({category: 'Search', method: 'GetUserSearch'}, ['category', 'method'])" data-target="#m-GetUserSearch"><span>802. User 검색하기</span></a></li>
+    </ul>
+    <ul class="nav nav-list doc-sidenav">
+        <li class="nav-header"><h5>Types</h5></li><li class="nav-header" data-group="User"><a href="javascript:navigateTo({category: 'User'}, ['category', 'method', 'type'])" data-target="#c-User"><h6>User</h6></a></li>
+        <li data-group="User" data-item="response_user"><a href="javascript:navigateTo({category: 'User', type: 'response_user'}, ['category', 'method'])" data-target="#t-response_user"><span>response_user</span></a></li>
+        <li class="separator"></li><li class="nav-header" data-group="Collection"><a href="javascript:navigateTo({category: 'Collection'}, ['category', 'method', 'type'])" data-target="#c-Collection"><h6>Collection</h6></a></li>
+        <li data-group="Collection" data-item="response_collection"><a href="javascript:navigateTo({category: 'Collection', type: 'response_collection'}, ['category', 'method'])" data-target="#t-response_collection"><span>response_collection</span></a></li>
+        <li class="separator"></li><li class="nav-header" data-group="Paper"><a href="javascript:navigateTo({category: 'Paper'}, ['category', 'method', 'type'])" data-target="#c-Paper"><h6>Paper</h6></a></li>
+        <li data-group="Paper" data-item="response_paper"><a href="javascript:navigateTo({category: 'Paper', type: 'response_paper'}, ['category', 'method'])" data-target="#t-response_paper"><span>response_paper</span></a></li>
+        <li class="separator"></li><li class="nav-header" data-group="Review"><a href="javascript:navigateTo({category: 'Review'}, ['category', 'method', 'type'])" data-target="#c-Review"><h6>Review</h6></a></li>
+        <li data-group="Review" data-item="response_review"><a href="javascript:navigateTo({category: 'Review', type: 'response_review'}, ['category', 'method'])" data-target="#t-response_review"><span>response_review</span></a></li>
+    </ul>
+</div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div id="item-head" class="item">
+                <h4></h4>
+                <div class="diff-header"></div>
+                <div class="stack">
+                    <h5>hello</h5>
+                </div>
+            </div>
+            <div class="page-header">
+                <h2>Methods</h2>
+            </div>
+            <ul class="list-unstyled">
+    <li class="category" id="c-User"><h3>User</h3>
+        <div class="description">User 관련 API</div>
+        <ul class="list-unstyled">
+            <li class="method item" id="m-PostFollow" data-method="POST">
+                <h4>200. User Follow</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">User Follow</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/follow</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">User ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"count"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">User의 팔로워 수</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">POST</span> <span class="hur">/follow</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"count"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-DeleteFollow" data-method="DELETE">
+                <h4>201. User Unfollow</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">User Unfollow</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/follow</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">User ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"count"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">User의 팔로워 수</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">DELETE</span> <span class="hur">/follow</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"count"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-GetSession" data-method="GET">
+                <h4>202. 이메일 로그인</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">이메일 로그인</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/session</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"email"</span><span class="pun">: </span><span class="typ">string</span><span class="pun">,</span></td>
+        <td class="com">이메일</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"password"</span><span class="pun">: </span><span class="typ">string</span></td>
+        <td class="com">패스워드</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"user"</span><span class="pun">: </span><span class="typ"><a href="javascript:navigateTo({type: 'response_user'}, ['category', 'method'])">response_user</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">GET</span> <span class="hur">/session</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"email"</span><span class="pun">: </span><span class="str">"my_email"</span><span class="pun">,
+</span>  <span class="str">"password"</span><span class="pun">: </span><span class="str">"my_password"</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"user"</span><span class="pun">: </span><span class="str">"my_response_user"</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-GetUserMe" data-method="GET">
+                <h4>203. 내 정보 불러오기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">내 정보 불러오기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/user/me</span></code>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"user"</span><span class="pun">: </span><span class="typ"><a href="javascript:navigateTo({type: 'response_user'}, ['category', 'method'])">response_user</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">GET</span> <span class="hur">/user/me</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+</div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"user"</span><span class="pun">: </span><span class="str">"my_response_user"</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-DeleteSession" data-method="DELETE">
+                <h4>204. 로그아웃</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">로그아웃</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/session</span></code>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">DELETE</span> <span class="hur">/session</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+</div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+</div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-PostUser" data-method="POST">
+                <h4>205. 회원가입</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">회원가입</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/user</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"email"</span><span class="pun">: </span><span class="typ">string</span><span class="pun">,</span></td>
+        <td class="com">이메일</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"password"</span><span class="pun">: </span><span class="typ">string</span><span class="pun">,</span></td>
+        <td class="com">패스워드</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"username"</span><span class="pun">: </span><span class="typ">string</span></td>
+        <td class="com">Username</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"user"</span><span class="pun">: </span><span class="typ"><a href="javascript:navigateTo({type: 'response_user'}, ['category', 'method'])">response_user</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">419</span></td>
+            <td><span class="str">USERNAME_ALREADY_EXISTS</span></td>
+            <td><span class="com">이미 존재하는 사용자 이름</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">420</span></td>
+            <td><span class="str">EMAIL_ALREADY_EXISTS</span></td>
+            <td><span class="com">이미 존재하는 이메일</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">POST</span> <span class="hur">/user</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"email"</span><span class="pun">: </span><span class="str">"my_email"</span><span class="pun">,
+</span>  <span class="str">"password"</span><span class="pun">: </span><span class="str">"my_password"</span><span class="pun">,
+</span>  <span class="str">"username"</span><span class="pun">: </span><span class="str">"my_username"</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"user"</span><span class="pun">: </span><span class="str">"my_response_user"</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-GetUser" data-method="GET">
+                <h4>206. 유저 정보 불러오기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">유저 정보 불러오기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/user</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">User ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"user"</span><span class="pun">: </span><span class="typ"><a href="javascript:navigateTo({type: 'response_user'}, ['category', 'method'])">response_user</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">GET</span> <span class="hur">/user</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"user"</span><span class="pun">: </span><span class="str">"my_response_user"</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-PutUser" data-method="PUT">
+                <h4>207. 유저 정보 수정하기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">유저 정보 불러오기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/user</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"description"</span><span class="pun">: </span><span class="typ">string</span><span class="pun">,</span></td>
+        <td class="com">유저 자기소개</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"email"</span><span class="pun">: </span><span class="typ">string</span><span class="pun">,</span></td>
+        <td class="com">이메일</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"password"</span><span class="pun">: </span><span class="typ">string</span><span class="pun">,</span></td>
+        <td class="com">패스워드</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"photo_index"</span><span class="pun">: </span><span class="typ">integer</span><span class="pun">,</span></td>
+        <td class="com">사진 Index</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"username"</span><span class="pun">: </span><span class="typ">string</span></td>
+        <td class="com">Username</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"user"</span><span class="pun">: </span><span class="typ"><a href="javascript:navigateTo({type: 'response_user'}, ['category', 'method'])">response_user</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">PUT</span> <span class="hur">/user</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"description"</span><span class="pun">: </span><span class="str">"my_description"</span><span class="pun">,
+</span>  <span class="str">"email"</span><span class="pun">: </span><span class="str">"my_email"</span><span class="pun">,
+</span>  <span class="str">"password"</span><span class="pun">: </span><span class="str">"my_password"</span><span class="pun">,
+</span>  <span class="str">"photo_index"</span><span class="pun">: </span><span class="lit">42</span><span class="pun">,
+</span>  <span class="str">"username"</span><span class="pun">: </span><span class="str">"my_username"</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"user"</span><span class="pun">: </span><span class="str">"my_response_user"</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-DeleteUser" data-method="DELETE">
+                <h4>208. 회원탈퇴</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">회원탈퇴</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/user</span></code>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">DELETE</span> <span class="hur">/user</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+</div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+</div></div></div>
+                </div>
+            </li>
+        </ul>
+    </li>
+    <li class="category" id="c-Collection"><h3>Collection</h3>
+        <div class="description">Collection 관련 API</div>
+        <ul class="list-unstyled">
+            <li class="method item" id="m-GetCollection" data-method="GET">
+                <h4>300. Collection 불러오기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Collection 불러오기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/collection</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">Collection ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"collection"</span><span class="pun">: </span><span class="typ"><a href="javascript:navigateTo({type: 'response_collection'}, ['category', 'method'])">response_collection</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">GET</span> <span class="hur">/collection</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"collection"</span><span class="pun">: </span><span class="str">"my_response_collection"</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-PostCollection" data-method="POST">
+                <h4>301. Collection 만들기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Collection 만들기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/collection</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"text"</span><span class="pun">: </span><span class="typ">string</span><span class="pun">,</span></td>
+        <td class="com">설명</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"title"</span><span class="pun">: </span><span class="typ">string</span></td>
+        <td class="com">타이틀</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"collection"</span><span class="pun">: </span><span class="typ"><a href="javascript:navigateTo({type: 'response_collection'}, ['category', 'method'])">response_collection</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">POST</span> <span class="hur">/collection</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"text"</span><span class="pun">: </span><span class="str">"my_text"</span><span class="pun">,
+</span>  <span class="str">"title"</span><span class="pun">: </span><span class="str">"my_title"</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"collection"</span><span class="pun">: </span><span class="str">"my_response_collection"</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-PutCollection" data-method="PUT">
+                <h4>302. Collection 수정하기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Collection 수정하기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/collection</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span><span class="pun">,</span></td>
+        <td class="com">Collection ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"text"</span><span class="pun">: </span><span class="typ">string</span><span class="pun">,</span></td>
+        <td class="com">설명</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"title"</span><span class="pun">: </span><span class="typ">string</span></td>
+        <td class="com">타이틀</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"collection"</span><span class="pun">: </span><span class="typ"><a href="javascript:navigateTo({type: 'response_collection'}, ['category', 'method'])">response_collection</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">PUT</span> <span class="hur">/collection</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span><span class="pun">,
+</span>  <span class="str">"text"</span><span class="pun">: </span><span class="str">"my_text"</span><span class="pun">,
+</span>  <span class="str">"title"</span><span class="pun">: </span><span class="str">"my_title"</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"collection"</span><span class="pun">: </span><span class="str">"my_response_collection"</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-PutCollectionType" data-method="PUT">
+                <h4>303. Collection Type 수정(private/public)</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Collection Type 수정(private/public)</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/collection/type</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span><span class="pun">,</span></td>
+        <td class="com">Collection ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"type(key)"</span><span class="pun">: </span><span class="typ">string</span></td>
+        <td class="com">Collection Type(public/private)</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"collection"</span><span class="pun">: </span><span class="typ"><a href="javascript:navigateTo({type: 'response_collection'}, ['category', 'method'])">response_collection</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">PUT</span> <span class="hur">/collection/type</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span><span class="pun">,
+</span>  <span class="str">"type(key)"</span><span class="pun">: </span><span class="str">"my_type(key)"</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"collection"</span><span class="pun">: </span><span class="str">"my_response_collection"</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-DeleteCollection" data-method="DELETE">
+                <h4>304. Collection 삭제</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Collection 삭제</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/collection</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">Collection ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">DELETE</span> <span class="hur">/collection</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+</div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-GetCollectionUser" data-method="GET">
+                <h4>305. User의 Collection 불러오기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">User의 Collection 불러오기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/collection/user</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">User ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"collections"</span><span class="pun">: </span><span class="pun">[</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>    <span class="typ"><a href="javascript:navigateTo({type: 'response_collection'}, ['category', 'method'])">response_collection</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="pun">]</span><span class="pun">,</span></td>
+        <td></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"is_finished"</span><span class="pun">: </span><span class="typ">boolean</span><span class="pun">,</span></td>
+        <td class="com">Pagination Finish 여부</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"page_number"</span><span class="pun">: </span><span class="typ">integer</span><span class="pun">,</span></td>
+        <td class="com">Page Number</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"total_count"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">전체 갯수</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">GET</span> <span class="hur">/collection/user</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"collections"</span><span class="pun">: </span><span class="pun">[
+</span>    <span class="str">"my_response_collection"</span><span class="pun">,
+</span>    <span class="str">"my_response_collection"</span>
+  <span class="pun">]</span><span class="pun">,
+</span>  <span class="str">"is_finished"</span><span class="pun">: </span><span class="lit">true</span><span class="pun">,
+</span>  <span class="str">"page_number"</span><span class="pun">: </span><span class="lit">42</span><span class="pun">,
+</span>  <span class="str">"total_count"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-GetCollectionUserShared" data-method="GET">
+                <h4>306. User의 Shared Collection 불러오기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">User의 Shared Collection 불러오기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/collection/user/shared</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">User ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"collections"</span><span class="pun">: </span><span class="pun">[</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>    <span class="typ"><a href="javascript:navigateTo({type: 'response_collection'}, ['category', 'method'])">response_collection</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="pun">]</span><span class="pun">,</span></td>
+        <td></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"is_finished"</span><span class="pun">: </span><span class="typ">boolean</span><span class="pun">,</span></td>
+        <td class="com">Pagination Finish 여부</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"page_number"</span><span class="pun">: </span><span class="typ">integer</span><span class="pun">,</span></td>
+        <td class="com">Page Number</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"total_count"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">전체 갯수</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">GET</span> <span class="hur">/collection/user/shared</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"collections"</span><span class="pun">: </span><span class="pun">[
+</span>    <span class="str">"my_response_collection"</span><span class="pun">,
+</span>    <span class="str">"my_response_collection"</span>
+  <span class="pun">]</span><span class="pun">,
+</span>  <span class="str">"is_finished"</span><span class="pun">: </span><span class="lit">true</span><span class="pun">,
+</span>  <span class="str">"page_number"</span><span class="pun">: </span><span class="lit">42</span><span class="pun">,
+</span>  <span class="str">"total_count"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+        </ul>
+    </li>
+    <li class="category" id="c-Paper"><h3>Paper</h3>
+        <div class="description">Paper 관련 API</div>
+        <ul class="list-unstyled">
+            <li class="method item" id="m-GetPaper" data-method="GET">
+                <h4>400. Paper 불러오기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Paper 불러오기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/paper</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">Paper ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"paper"</span><span class="pun">: </span><span class="typ"><a href="javascript:navigateTo({type: 'response_paper'}, ['category', 'method'])">response_paper</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">GET</span> <span class="hur">/paper</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"paper"</span><span class="pun">: </span><span class="str">"my_response_paper"</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-GetPaperCollection" data-method="GET">
+                <h4>401. Collection의 Paper 불러오기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Collection의 Paper 불러오기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/paper/collection</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">Collection ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"is_finished"</span><span class="pun">: </span><span class="typ">boolean</span><span class="pun">,</span></td>
+        <td class="com">Pagination Finish 여부</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"page_number"</span><span class="pun">: </span><span class="typ">integer</span><span class="pun">,</span></td>
+        <td class="com">Page Number</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"papers"</span><span class="pun">: </span><span class="pun">[</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>    <span class="typ"><a href="javascript:navigateTo({type: 'response_paper'}, ['category', 'method'])">response_paper</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="pun">]</span><span class="pun">,</span></td>
+        <td></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"total_count"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">전체 갯수</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">GET</span> <span class="hur">/paper/collection</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"is_finished"</span><span class="pun">: </span><span class="lit">true</span><span class="pun">,
+</span>  <span class="str">"page_number"</span><span class="pun">: </span><span class="lit">42</span><span class="pun">,
+</span>  <span class="str">"papers"</span><span class="pun">: </span><span class="pun">[
+</span>    <span class="str">"my_response_paper"</span><span class="pun">,
+</span>    <span class="str">"my_response_paper"</span>
+  <span class="pun">]</span><span class="pun">,
+</span>  <span class="str">"total_count"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-PutPaperCollection" data-method="PUT">
+                <h4>402. Collection에 Paper 담기/제거</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Collection에 Paper 담기/제거</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/paper/collection</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"collection_ids"</span><span class="pun">: </span><span class="pun">[</span></td>
+        <td class="com">Collection IDs</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>    <span class="typ">integer</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="pun">]</span><span class="pun">,</span></td>
+        <td></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">Paper ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">PUT</span> <span class="hur">/paper/collection</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"collection_ids"</span><span class="pun">: </span><span class="pun">[
+</span>    <span class="lit">42</span><span class="pun">,
+</span>    <span class="lit">42</span>
+  <span class="pun">]</span><span class="pun">,
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+</div></div></div>
+                </div>
+            </li>
+        </ul>
+    </li>
+    <li class="category" id="c-Review"><h3>Review</h3>
+        <div class="description">Review 관련 API</div>
+        <ul class="list-unstyled">
+            <li class="method item" id="m-GetReview" data-method="GET">
+                <h4>500. Review 불러오기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Review 불러오기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/review</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">Review ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"review"</span><span class="pun">: </span><span class="typ"><a href="javascript:navigateTo({type: 'response_review'}, ['category', 'method'])">response_review</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">GET</span> <span class="hur">/review</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"review"</span><span class="pun">: </span><span class="str">"my_response_review"</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-PostReview" data-method="POST">
+                <h4>501. Review 만들기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Review 만들기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/review</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span><span class="pun">,</span></td>
+        <td class="com">Paper ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"is_anonymous"</span><span class="pun">: </span><span class="typ">boolean</span><span class="pun">,</span></td>
+        <td class="com">익명 여부</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"text"</span><span class="pun">: </span><span class="typ">string</span><span class="pun">,</span></td>
+        <td class="com">내용</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"title"</span><span class="pun">: </span><span class="typ">string</span></td>
+        <td class="com">제목</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"review"</span><span class="pun">: </span><span class="typ"><a href="javascript:navigateTo({type: 'response_review'}, ['category', 'method'])">response_review</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">POST</span> <span class="hur">/review</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span><span class="pun">,
+</span>  <span class="str">"is_anonymous"</span><span class="pun">: </span><span class="lit">true</span><span class="pun">,
+</span>  <span class="str">"text"</span><span class="pun">: </span><span class="str">"my_text"</span><span class="pun">,
+</span>  <span class="str">"title"</span><span class="pun">: </span><span class="str">"my_title"</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"review"</span><span class="pun">: </span><span class="str">"my_response_review"</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-PutReview" data-method="PUT">
+                <h4>502. Review 수정하기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Review 수정하기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/review</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span><span class="pun">,</span></td>
+        <td class="com">Review ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"is_anonymous"</span><span class="pun">: </span><span class="typ">boolean</span><span class="pun">,</span></td>
+        <td class="com">익명 여부</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"text"</span><span class="pun">: </span><span class="typ">string</span><span class="pun">,</span></td>
+        <td class="com">내용</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"title"</span><span class="pun">: </span><span class="typ">string</span></td>
+        <td class="com">제목</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"review"</span><span class="pun">: </span><span class="typ"><a href="javascript:navigateTo({type: 'response_review'}, ['category', 'method'])">response_review</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">PUT</span> <span class="hur">/review</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span><span class="pun">,
+</span>  <span class="str">"is_anonymous"</span><span class="pun">: </span><span class="lit">true</span><span class="pun">,
+</span>  <span class="str">"text"</span><span class="pun">: </span><span class="str">"my_text"</span><span class="pun">,
+</span>  <span class="str">"title"</span><span class="pun">: </span><span class="str">"my_title"</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"review"</span><span class="pun">: </span><span class="str">"my_response_review"</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-DeleteReview" data-method="DELETE">
+                <h4>503. Review 삭제하기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Review 삭제하기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/review</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">Review ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">DELETE</span> <span class="hur">/review</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+</div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-GetReviewPaper" data-method="GET">
+                <h4>504. Paper의 Review 불러오기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Paper의 Review 불러오기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/review/paper</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">Paper ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"is_finished"</span><span class="pun">: </span><span class="typ">boolean</span><span class="pun">,</span></td>
+        <td class="com">Pagination Finish 여부</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"page_number"</span><span class="pun">: </span><span class="typ">integer</span><span class="pun">,</span></td>
+        <td class="com">Page Number</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"reviews"</span><span class="pun">: </span><span class="pun">[</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>    <span class="typ"><a href="javascript:navigateTo({type: 'response_review'}, ['category', 'method'])">response_review</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="pun">]</span></td>
+        <td></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">GET</span> <span class="hur">/review/paper</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"is_finished"</span><span class="pun">: </span><span class="lit">true</span><span class="pun">,
+</span>  <span class="str">"page_number"</span><span class="pun">: </span><span class="lit">42</span><span class="pun">,
+</span>  <span class="str">"reviews"</span><span class="pun">: </span><span class="pun">[
+</span>    <span class="str">"my_response_review"</span><span class="pun">,
+</span>    <span class="str">"my_response_review"</span>
+  <span class="pun">]</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-GetReviewUser" data-method="GET">
+                <h4>505. User의 Review 불러오기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">User의 Review 불러오기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/review/user</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"id"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">User ID</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"is_finished"</span><span class="pun">: </span><span class="typ">boolean</span><span class="pun">,</span></td>
+        <td class="com">Pagination Finish 여부</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"page_number"</span><span class="pun">: </span><span class="typ">integer</span><span class="pun">,</span></td>
+        <td class="com">Page Number</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"reviews"</span><span class="pun">: </span><span class="pun">[</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>    <span class="typ"><a href="javascript:navigateTo({type: 'response_review'}, ['category', 'method'])">response_review</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="pun">]</span></td>
+        <td></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">GET</span> <span class="hur">/review/user</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"id"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"is_finished"</span><span class="pun">: </span><span class="lit">true</span><span class="pun">,
+</span>  <span class="str">"page_number"</span><span class="pun">: </span><span class="lit">42</span><span class="pun">,
+</span>  <span class="str">"reviews"</span><span class="pun">: </span><span class="pun">[
+</span>    <span class="str">"my_response_review"</span><span class="pun">,
+</span>    <span class="str">"my_response_review"</span>
+  <span class="pun">]</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+        </ul>
+    </li>
+    <li class="category" id="c-Search"><h3>Search</h3>
+        <div class="description">Search 관련 API</div>
+        <ul class="list-unstyled">
+            <li class="method item" id="m-GetPaperSearch" data-method="GET">
+                <h4>800. Paper 검색하기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Paper 검색하기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/paper/search</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"text"</span><span class="pun">: </span><span class="typ">string</span></td>
+        <td class="com">검색 text</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"is_finished"</span><span class="pun">: </span><span class="typ">boolean</span><span class="pun">,</span></td>
+        <td class="com">Pagination Finish 여부</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"page_number"</span><span class="pun">: </span><span class="typ">integer</span><span class="pun">,</span></td>
+        <td class="com">Page Number</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"papers"</span><span class="pun">: </span><span class="pun">[</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>    <span class="typ"><a href="javascript:navigateTo({type: 'response_paper'}, ['category', 'method'])">response_paper</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="pun">]</span><span class="pun">,</span></td>
+        <td></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"total_count"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">전체 갯수</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">GET</span> <span class="hur">/paper/search</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"text"</span><span class="pun">: </span><span class="str">"my_text"</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"is_finished"</span><span class="pun">: </span><span class="lit">true</span><span class="pun">,
+</span>  <span class="str">"page_number"</span><span class="pun">: </span><span class="lit">42</span><span class="pun">,
+</span>  <span class="str">"papers"</span><span class="pun">: </span><span class="pun">[
+</span>    <span class="str">"my_response_paper"</span><span class="pun">,
+</span>    <span class="str">"my_response_paper"</span>
+  <span class="pun">]</span><span class="pun">,
+</span>  <span class="str">"total_count"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-GetCollectionSearch" data-method="GET">
+                <h4>801. Collection 검색하기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Collection 검색하기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/collection/search</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"text"</span><span class="pun">: </span><span class="typ">string</span></td>
+        <td class="com">검색 text</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"collections"</span><span class="pun">: </span><span class="pun">[</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>    <span class="typ"><a href="javascript:navigateTo({type: 'response_collection'}, ['category', 'method'])">response_collection</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="pun">]</span><span class="pun">,</span></td>
+        <td></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"is_finished"</span><span class="pun">: </span><span class="typ">boolean</span><span class="pun">,</span></td>
+        <td class="com">Pagination Finish 여부</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"page_number"</span><span class="pun">: </span><span class="typ">integer</span><span class="pun">,</span></td>
+        <td class="com">Page Number</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"total_count"</span><span class="pun">: </span><span class="typ">integer</span></td>
+        <td class="com">전체 갯수</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">GET</span> <span class="hur">/collection/search</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"text"</span><span class="pun">: </span><span class="str">"my_text"</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"collections"</span><span class="pun">: </span><span class="pun">[
+</span>    <span class="str">"my_response_collection"</span><span class="pun">,
+</span>    <span class="str">"my_response_collection"</span>
+  <span class="pun">]</span><span class="pun">,
+</span>  <span class="str">"is_finished"</span><span class="pun">: </span><span class="lit">true</span><span class="pun">,
+</span>  <span class="str">"page_number"</span><span class="pun">: </span><span class="lit">42</span><span class="pun">,
+</span>  <span class="str">"total_count"</span><span class="pun">: </span><span class="lit">42</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+            <li class="method item" id="m-GetUserSearch" data-method="GET">
+                <h4>802. User 검색하기</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+<h5 class="title"></h5>
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">User 검색하기</div></div><div class="request stack">
+    <h5><i class="i-request"></i> Request: </h5>
+    <h6>Resource: </h6>
+
+    <code  class="diff_version" data-version="v1.0"><span class="hur">https://www.papersfeed.com/api/user/search</span></code>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"text"</span><span class="pun">: </span><span class="typ">string</span></td>
+        <td class="com">검색 text</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="response stack">
+    <h5><i class="i-response"></i> Response: </h5>
+    <h6>Body: </h6>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">{</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"is_finished"</span><span class="pun">: </span><span class="typ">boolean</span><span class="pun">,</span></td>
+        <td class="com">Pagination Finish 여부</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"page_number"</span><span class="pun">: </span><span class="typ">integer</span><span class="pun">,</span></td>
+        <td class="com">Page Number</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"total_count"</span><span class="pun">: </span><span class="typ">integer</span><span class="pun">,</span></td>
+        <td class="com">전체 갯수</td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="str">"users"</span><span class="pun">: </span><span class="pun">[</span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>    <span class="typ"><a href="javascript:navigateTo({type: 'response_user'}, ['category', 'method'])">response_user</a></span></td>
+        <td class="com"></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td>  <span class="pun">]</span></td>
+        <td></td>
+    </tr>
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="pun">}</span></td>
+        <td></td>
+    </tr>
+        </tbody>
+    </table></div>
+    <h6>Codes: </h6><table class="table table-bordered table-hover table-condensed">
+        <colgroup>
+            <col width="50px"></col>
+            <col></col>
+            <col width="50%"></col>
+        </colgroup>
+        <thead>
+            <tr>
+            <th><span
+            >Code</span></th>
+            <th><span
+            >Message</span></th>
+            <th><span
+            >Description</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">400</span></td>
+            <td><span class="str">PARAMETER_ERROR</span></td>
+            <td><span class="com">필수 파라미터 에러 (syntax, parsing error)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">403</span></td>
+            <td><span class="str">AUTH_ERROR</span></td>
+            <td><span class="com">인증 오류, 권한 없음 혹은 비밀번호 오류</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">404</span></td>
+            <td><span class="str">NOT_EXIST_OBJECT</span></td>
+            <td><span class="com">존재하지 않는 Object</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">405</span></td>
+            <td><span class="str">NOT_AVAILABLE_API</span></td>
+            <td><span class="com">지원하지 않는 API 버전</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">422</span></td>
+            <td><span class="str">UNPROCESSABLE_ENTITY</span></td>
+            <td><span class="com">semantic error (ex> self following)</span></td>
+        </tr>
+        <tr class="diff_version " data-version="v1.0">
+            <td><span class="lit">440</span></td>
+            <td><span class="str">INVALID_SESSION</span></td>
+            <td><span class="com">잘못된 세션</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Sample: </h5>
+<h6>Request: </h6>
+<div class="code"><span class="hme">GET</span> <span class="hur">/user/search</span> <span class="hpr">HTTP/1.1</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"text"</span><span class="pun">: </span><span class="str">"my_text"</span>
+<span class="pun">}</span></div>
+        <h6>Response: </h6>
+        <div class="code"><span class="hpr">HTTP/1.1</span> <span class="lit">200</span> <span class="str">OK</span>
+<span class="hat">Content-Type</span><span class="pun">: </span><span class="hva">application/json; charset=utf-8</span>
+
+<span class="pun">{
+</span>  <span class="str">"is_finished"</span><span class="pun">: </span><span class="lit">true</span><span class="pun">,
+</span>  <span class="str">"page_number"</span><span class="pun">: </span><span class="lit">42</span><span class="pun">,
+</span>  <span class="str">"total_count"</span><span class="pun">: </span><span class="lit">42</span><span class="pun">,
+</span>  <span class="str">"users"</span><span class="pun">: </span><span class="pun">[
+</span>    <span class="str">"my_response_user"</span><span class="pun">,
+</span>    <span class="str">"my_response_user"</span>
+  <span class="pun">]</span>
+<span class="pun">}</span></div></div></div>
+                </div>
+            </li>
+        </ul>
+    </li>
+            </ul>
+            <div class="page-header">
+                <h2>Types</h2>
+            </div>
+            <ul class="list-unstyled">
+    <li class="category" id="c-User"><h3>User</h3>
+        <div class="description">User 관련 API</div>
+        <ul class="list-unstyled">
+            <li class="type item" id="t-response_user">
+                <h4>response_user</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">User 객체</div></div><div class="configuration stack">
+    <h5><i class="i-presentation"></i> Presentation: </h5>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="typ">string</span></td>
+        <td class="com"></td>
+    </tr>
+        </tbody>
+    </table></div>
+
+
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Formats: </h5>
+<h6>Sample: </h6>
+<div class="code"><span class="str">"my_response_user"</span></div></div></div>
+                </div>
+            </li>
+        </ul>
+    </li>
+    <li class="category" id="c-Collection"><h3>Collection</h3>
+        <div class="description">Collection 관련 API</div>
+        <ul class="list-unstyled">
+            <li class="type item" id="t-response_collection">
+                <h4>response_collection</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Collection 객체</div></div><div class="configuration stack">
+    <h5><i class="i-presentation"></i> Presentation: </h5>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="typ">string</span></td>
+        <td class="com"></td>
+    </tr>
+        </tbody>
+    </table></div>
+
+
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Formats: </h5>
+<h6>Sample: </h6>
+<div class="code"><span class="str">"my_response_collection"</span></div></div></div>
+                </div>
+            </li>
+        </ul>
+    </li>
+    <li class="category" id="c-Paper"><h3>Paper</h3>
+        <div class="description">Paper 관련 API</div>
+        <ul class="list-unstyled">
+            <li class="type item" id="t-response_paper">
+                <h4>response_paper</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Paper 객체</div></div><div class="configuration stack">
+    <h5><i class="i-presentation"></i> Presentation: </h5>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="typ">string</span></td>
+        <td class="com"></td>
+    </tr>
+        </tbody>
+    </table></div>
+
+
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Formats: </h5>
+<h6>Sample: </h6>
+<div class="code"><span class="str">"my_response_paper"</span></div></div></div>
+                </div>
+            </li>
+        </ul>
+    </li>
+    <li class="category" id="c-Review"><h3>Review</h3>
+        <div class="description">Review 관련 API</div>
+        <ul class="list-unstyled">
+            <li class="type item" id="t-response_review">
+                <h4>response_review</h4><div class="nocontents">no implementation for this version</div>
+                <div class="contents">
+
+
+<div class="description stack">
+    
+    <div class="diff_version" data-version="v1.0">Review 객체</div></div><div class="configuration stack">
+    <h5><i class="i-presentation"></i> Presentation: </h5>
+    <div class="code"><table class="table-hover">
+        <colgroup>
+            <col width="50%%"></col>
+            <col width="50%%"></col>
+        </colgroup>
+        <tbody>
+
+    <tr class="diff_version" data-version="v1.0">
+        <td><span class="typ">string</span></td>
+        <td class="com"></td>
+    </tr>
+        </tbody>
+    </table></div>
+
+
+</div><div class="stack sample"><div data-version="v1.0">
+
+<h5><i class="i-sample"></i> Formats: </h5>
+<h6>Sample: </h6>
+<div class="code"><span class="str">"my_response_review"</span></div></div></div>
+                </div>
+            </li>
+        </ul>
+    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="btn-group">
+        <button class="btn btn-default i-previous" type="button"></button>
+        <button class="btn btn-default i-top" type="button"></button>
+        <button class="btn btn-default i-next" type="button"></button>
+    </div>
+</footer>
+
+</body>
+</html>
