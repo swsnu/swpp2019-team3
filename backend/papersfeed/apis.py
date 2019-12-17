@@ -3,7 +3,6 @@
 
 # Internal Modules
 import json
-from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 
 from papersfeed.utils.base_utils import view_exceptions_handler, check_session
@@ -174,7 +173,7 @@ def get_review_user(args):
             constants.TOTAL_COUNT: total_count}
 
 
-@cache_page(None)
+# @cache_page(None)
 @view_exceptions_handler
 def get_paper_search(request):
     """Get Paper Search"""

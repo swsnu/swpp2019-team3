@@ -64,7 +64,7 @@ class ReviewCard extends Component {
             header = (
                 <Card.Header id="headerReviewSubscriptionTarget">
                     <span className="CardHeaderText">
-                        {` ${this.props.verb} on`}
+                        {` ${this.props.verb} on `}
                         <a className="targetLink" href={`/paper_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
                     </span>
                 </Card.Header>

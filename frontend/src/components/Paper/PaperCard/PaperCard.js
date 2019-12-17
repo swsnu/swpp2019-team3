@@ -89,7 +89,7 @@ class PaperCard extends Component {
                         <Card.Header id="headerPaperSubscriptionTarget">
                             <span className="CardHeaderText">
                                 {actorLink}
-                                {` ${this.props.verb} this paper to`}
+                                {` ${this.props.verb} this paper to `}
                                 <a className="targetLink" href={`/collection_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
                             </span>
                         </Card.Header>
