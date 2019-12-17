@@ -97,7 +97,7 @@ or
 coverage run --source='.' ./manage.py test
 coverage report --fail-under=90
 ```
-a
+
 In `swpp2019-team3/frontend`,
 ```
 yarn test --coverage --watchAll=false
