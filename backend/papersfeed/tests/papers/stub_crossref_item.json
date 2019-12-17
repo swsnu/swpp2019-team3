@@ -1,0 +1,117 @@
+{
+    "status": "ok",
+    "message-type": "work-list",
+    "message-version": "1.0.0",
+    "message": {
+        "facets": {},
+        "total-results": 7210300,
+        "items": [
+            {
+                "indexed": {
+                    "date-parts": [
+                        [
+                            2019,
+                            8,
+                            16
+                        ]
+                    ],
+                    "date-time": "2019-08-16T10:10:51Z",
+                    "timestamp": 1565950251432
+                },
+                "reference-count": 0,
+                "publisher": "Oxford University Press",
+                "isbn-type": [
+                    {
+                        "value": "9780190854584",
+                        "type": "electronic"
+                    }
+                ],
+                "content-domain": {
+                    "domain": [],
+                    "crossmark-restriction": false
+                },
+                "abstract": "<p>\n                  <italic>This is an advance summary of a forthcoming article in the Oxford Research Encyclopedia of Anthropology. Please check back later for the full article.</italic>\n               </p>\n               <p>The term <italic>hunter-gatherer</italic> refers to a range of human subsistence patterns and socioeconomies since the Middle Pleistocene, some of which are still practiced in rare pockets across the globe. Hunter-gatherer research is centered on ethnohistorical records of the lifeways, economies, and interpersonal relationships of groups who gather field/wild foods and hunt for meat. Information collected in this way is cautiously applied to the Stone Age/Palaeolithic archaeological records to inform on, or build hypotheses about, past human behaviors. Late Pleistocene (that is, the Tarantian stage of the Pleistocene after about 126,000 years ago) hunter-gatherers possessed the behavioral, technological, and cognitive wherewithal to populate the globe. Hunter-gatherer groups are often relatively egalitarian regarding power and gender relationships. But, as is the case for all mammals, only females become pregnant and bear offspring. This biological reality has socioeconomic and behavioral implications when it comes to food supply. Whereas we share the principles of the mammalian reproductive process, humans have evolved to occupy a unique cognitive-behavioral niche in which we outsmart competition in the quest for survival on any given landscape.</p>\n               <p>Since early on in our history, the women of our species gave birth to relatively big-brained offspring with considerable cognitive potential, measured against that of other animals. Key to this development is the consumption of specific foods that contain brain-selective nutrients such as omega-6 and omega-3 polyunsaturated fatty acids and trace elements, including iron, iodine, copper, selenium, and zinc. Such nutrients are as important for us as they are for modern and prehistoric hunter-gatherers. Ethnohistorical and nutritional evidence shows that edible plants and small animals, most often gathered by women, represent an abundant and accessible source of \u201cbrain foods.\u201d This is in contrast to the \u201cMan the Hunter\u201d hypothesis wherein big-game hunting and meat-eating are seen as prime movers in the development of biological and behavioral traits that distinguish humans from other primates.</p>",
+                "DOI": "10.1093/acrefore/9780190854584.013.105",
+                "type": "reference-entry",
+                "created": {
+                    "date-parts": [
+                        [
+                            2018,
+                            9,
+                            26
+                        ]
+                    ],
+                    "date-time": "2018-09-26T05:10:33Z",
+                    "timestamp": 1537938633000
+                },
+                "source": "Crossref",
+                "is-referenced-by-count": 0,
+                "title": [
+                    "Hunter-Gatherer Women"
+                ],
+                "prefix": "10.1093",
+                "author": [
+                    {
+                        "given": "Marlize",
+                        "family": "Lombard",
+                        "sequence": "first",
+                        "affiliation": []
+                    },
+                    {
+                        "given": "Katharine",
+                        "family": "Kyriacou",
+                        "sequence": "additional",
+                        "affiliation": []
+                    }
+                ],
+                "member": "286",
+                "published-online": {
+                    "date-parts": [
+                        [
+                            2018,
+                            9,
+                            26
+                        ]
+                    ]
+                },
+                "container-title": [
+                    "Oxford Research Encyclopedia of Anthropology"
+                ],
+                "original-title": [
+                    "Hunter-Gatherer Women"
+                ],
+                "deposited": {
+                    "date-parts": [
+                        [
+                            2019,
+                            8,
+                            16
+                        ]
+                    ],
+                    "date-time": "2019-08-16T09:53:34Z",
+                    "timestamp": 1565949214000
+                },
+                "score": 40.05245,
+                "issued": {
+                    "date-parts": [
+                        [
+                            2018,
+                            9,
+                            26
+                        ]
+                    ]
+                },
+                "ISBN": [
+                    "9780190854584"
+                ],
+                "references-count": 0,
+                "URL": "http://dx.doi.org/10.1093/acrefore/9780190854584.013.105"
+            }
+        ],
+        "items-per-page": 1,
+        "query": {
+            "start-index": 0,
+            "search-terms": "Optimal foraging strategies and hunter-gatherer research in anthropology?rows=1?offset=0"
+        }
+    }
+}

@@ -1,15 +1,15 @@
 .review-control .review-control-page{
     background: rgb(242,243,247);
-    margin-left: 18%;
     display: flex;
     min-height: 1000px;
 }
 
 .review-control .review-control-page .board{
-    width: 80%;
-    margin-top: 5%;
-    margin-left: 5%;
-    margin-right: 10%;
+    width: 90%;
+    margin-top: 3%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5%;
     background: white;
     display: flex;
     justify-content: flex-start;
@@ -17,8 +17,14 @@
     flex-direction: column;
 }
 
+.review-control .review-control-page .review-header{
+    margin-top: 5%;
+    font-size: 200%;
+    font-weight: bold;
+}
+
 .review-control .review-control-page .board .paper-spec{
-    width: 80%;
+    width: 100%;
     background: white;
     display: flex;
     justify-content: flex-start;
@@ -46,3 +52,18 @@
     font-size: 120%;
     font-weight: bold;
 }
+
+.review-control .board .form-content .anonymous-check{
+    font-size: 80%;
+    font-weight: normal;
+    font-style: italic;
+    align-self: flex-start;
+    margin-top: 2%;
+}
+
+.review-control .board .footer-buttons {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    margin-bottom: 5%;
+} 

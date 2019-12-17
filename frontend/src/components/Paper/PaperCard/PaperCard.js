@@ -1,9 +1,13 @@
+/* eslint-disable react/no-array-index-key */
 import React, { Component } from "react";
 import { Card, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { paperActions } from "../../../store/actions";
 import "./PaperCard.css";
 import AddPaperModal from "../../Modal/AddPaperModal/AddPaperModal";
-import SVG from "../../svg";
+import { LikeButton, SubItemButton } from "../../Button/index";
 
 class PaperCard extends Component {
     constructor(props) {
@@ -14,6 +18,7 @@ class PaperCard extends Component {
             authorNames: "",
             keywords: "",
         };
+        this.processKeywords = this.processKeywords.bind(this);
         this.clickPaperCardUnlikeHandler = this.clickPaperCardUnlikeHandler.bind(this);
         this.clickPaperCardLikeHandler = this.clickPaperCardLikeHandler.bind(this);
     }
@@ -21,39 +26,105 @@ class PaperCard extends Component {
     componentDidMount() {
         if (this.props.authors.length > 0) {
             const authorNames = this.props.authors.map((author) => `${author.first_name} ${author.last_name}`);
-            this.setState({ authorNames: authorNames.join(", ") });
+            this.setState({ authorNames: authorNames.slice(0, 10).join(", ") });
         }
+        let authorKeywords = "";
+        let abstractKeywords = "";
         if (this.props.keywords.length > 0) {
-            this.setState({ keywords: this.props.keywords.join(", ") });
+            authorKeywords = this.processKeywords("author");
+            abstractKeywords = this.processKeywords("abstract");
+
+            if (authorKeywords.length > 0) {
+                this.setState({ keywords: authorKeywords });
+            } else {
+                this.setState({ keywords: abstractKeywords });
+            }
         }
     }
 
+    processKeywords = (type) => this.props.keywords.sort(
+        (a, b) => a.id - b.id,
+    ).slice(0, 10).filter(
+        (keyword) => keyword.type === type,
+    ).map(
+        (keyword) => (
+            <Button
+              key={keyword.id}
+              id={keyword.name}
+              className="keyword-tag"
+              href={`/search=${keyword.name}`}
+              variant="outline-secondary"
+              size="sm"
+            ># {keyword.name}
+            </Button>
+        ),
+    );
+
+
     // handle click 'Like' button
     clickPaperCardLikeHandler() {
-        const nextState = {
-            isLiked: true,
-            likeCount: this.state.likeCount + 1,
-        };
-        this.setState(nextState);
+        this.props.onLikePaper({ id: this.props.id })
+            .then(() => {
+                this.setState({ likeCount: this.props.afterLikeCount });
+                this.setState({ isLiked: true });
+            });
     }
 
     // handle click 'Unlike' button
     clickPaperCardUnlikeHandler() {
-        const nextState = {
-            isLiked: false,
-            likeCount: this.state.likeCount - 1,
-        };
-        this.setState(nextState);
+        this.props.onUnlikePaper({ id: this.props.id })
+            .then(() => {
+                this.setState({ likeCount: this.props.afterUnlikeCount });
+                this.setState({ isLiked: false });
+            });
     }
 
     render() {
         let header = null;
         if (this.props.headerExists) {
-            header = <Card.Header>{`${this.props.user} ${this.props.source} this paper.`}</Card.Header>;
+            if (this.props.subscription) {
+                const actorLink = (<a className="actorLink" href={`/profile_id=${this.props.actor.id}`}>{this.props.actor.username}</a>);
+                if (Object.keys(this.props.target).length !== 0) {
+                    header = (
+                        <Card.Header id="headerPaperSubscriptionTarget">
+                            <span className="CardHeaderText">
+                                {actorLink}
+                                {` ${this.props.verb} this paper to `}
+                                <a className="targetLink" href={`/collection_id=${this.props.target.id}`}>{`${this.props.target.title}`}</a>
+                            </span>
+                        </Card.Header>
+                    );
+                } else {
+                    header = (
+                        <Card.Header id="headerPaperSubscription">
+                            <span className="CardHeaderText">
+                                {actorLink}
+                                {` ${this.props.verb} this paper`}
+                            </span>
+                        </Card.Header>
+                    );
+                }
+            } else if (this.props.recommendation) {
+                header = (
+                    <Card.Header id="headerPaperSubscription">
+                        <span className="CardHeaderText">
+                            {` ${this.props.verb}`}
+                        </span>
+                    </Card.Header>
+                );
+            } else if (this.props.paperSource) {
+                header = <Card.Header id="headerPaper">{`from ${this.props.paperSource}`}</Card.Header>;
+            }
+        } else if (this.props.deleteExists) {
+            header = (
+                <Card.Header id="headerDelete">
+                    <Button variant="outline-danger" className="deleteButton" onClick={() => { this.props.clickDeleteCard(this.props.id); }}>Delete</Button>
+                </Card.Header>
+            );
         }
         let addButton = null;
         if (this.props.addButtonExists) {
-            addButton = <AddPaperModal className="add-button" id={this.props.id} history={this.props.history} />;
+            addButton = <AddPaperModal className="add-button" paperId={this.props.id} history={this.props.history} />;
         }
 
         return (
@@ -65,17 +136,30 @@ class PaperCard extends Component {
                             <Card.Link href={`/paper_id=${this.props.id}`} className="text">{this.props.title}</Card.Link>
                         </div>
                         <Card.Text>{this.props.date}</Card.Text>
-                        <Card.Text>{this.state.authorNames}</Card.Text>
-                        <Card.Text>{this.state.keywords}</Card.Text>
+                        <Card.Text className="authors">{this.state.authorNames}</Card.Text>
+                        <Card.Text className="keywords">{this.state.keywords}</Card.Text>
                     </Card.Body>
                     <Card.Footer className="footer">
-
-                        <Button variant="light" className="like-button" onClick={this.state.isLiked ? this.clickPaperCardUnlikeHandler : this.clickPaperCardLikeHandler}><div className="heart-image"><SVG name="heart" height="70%" width="70%" /></div>{this.state.likeCount}</Button>
-
-                        <Button variant="light" className="review-button" href={`/paper_id=${this.props.id}`}>
-                            <div className="review-image"><SVG name="zoom" height="70%" width="70%" /></div>{this.props.reviewCount}
-                        </Button>
-                        {addButton}
+                        <span id="footer-flex">
+                            <span id="footer-left-buttons">
+                                <LikeButton
+                                  id="likeButton"
+                                  isLiked={this.state.isLiked}
+                                  likeFn={this.clickPaperCardLikeHandler}
+                                  unlikeFn={this.clickPaperCardUnlikeHandler}
+                                  likeCount={this.state.likeCount}
+                                />
+                                <SubItemButton
+                                  id="replyButton"
+                                  click={() => { this.props.history.push({ pathname: `/paper_id=${this.props.id}`, state: "review" }); }}
+                                  count={this.props.reviewCount}
+                                  tab
+                                />
+                            </span>
+                            <div>
+                                {addButton}
+                            </div>
+                        </span>
                     </Card.Footer>
                 </Card>
             </div>
@@ -83,27 +167,53 @@ class PaperCard extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+    likePaperStatus: state.paper.likePaperStatus,
+    afterLikeCount: state.paper.likeCount,
+    unlikePaperStatus: state.paper.unlikePaperStatus,
+    afterUnlikeCount: state.paper.unlikeCount,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onLikePaper: (paperId) => dispatch(
+        paperActions.likePaper(paperId),
+    ),
+    onUnlikePaper: (paperId) => dispatch(
+        paperActions.unlikePaper(paperId),
+    ),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(PaperCard));
+
 PaperCard.propTypes = {
     history: PropTypes.objectOf(PropTypes.any),
-    source: PropTypes.string,
     id: PropTypes.number,
-    user: PropTypes.string,
     title: PropTypes.string,
     date: PropTypes.string,
     authors: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
-    keywords: PropTypes.arrayOf(PropTypes.string),
+    keywords: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
     likeCount: PropTypes.number,
     reviewCount: PropTypes.number,
     isLiked: PropTypes.bool,
+    paperSource: PropTypes.string,
     headerExists: PropTypes.bool,
     addButtonExists: PropTypes.bool,
+    afterLikeCount: PropTypes.number,
+    afterUnlikeCount: PropTypes.number,
+    onLikePaper: PropTypes.func,
+    onUnlikePaper: PropTypes.func,
+    subscription: PropTypes.bool,
+    recommendation: PropTypes.bool,
+    actor: PropTypes.objectOf(PropTypes.any),
+    verb: PropTypes.string,
+    target: PropTypes.objectOf(PropTypes.any),
+    clickDeleteCard: PropTypes.func,
+    deleteExists: PropTypes.bool,
 };
 
 PaperCard.defaultProps = {
     history: null,
-    source: "",
     id: 0,
-    user: "",
     title: "",
     date: "",
     authors: [],
@@ -111,8 +221,18 @@ PaperCard.defaultProps = {
     likeCount: 0,
     reviewCount: 0,
     isLiked: false,
+    paperSource: "",
     headerExists: true,
     addButtonExists: false,
+    recommendation: false,
+    afterLikeCount: 0,
+    afterUnlikeCount: 0,
+    onLikePaper: () => {},
+    onUnlikePaper: () => {},
+    subscription: false,
+    actor: {},
+    verb: "",
+    target: {},
+    clickDeleteCard: () => {},
+    deleteExists: false,
 };
-
-export default PaperCard;

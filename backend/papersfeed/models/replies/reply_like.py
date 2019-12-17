@@ -3,7 +3,7 @@ from django.db import models
 
 from papersfeed.models.base_models import BaseModel
 from papersfeed.models.users.user import User
-from .reply import Reply
+from papersfeed.models.replies.reply import Reply
 
 
 class ReplyLike(BaseModel):

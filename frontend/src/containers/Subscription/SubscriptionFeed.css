@@ -1,0 +1,16 @@
+.SubscriptionFeed {
+    min-height: 1000px;
+    background: rgb(242,243,247);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.SubscriptionFeed #SubscriptionText {
+    width: 96%;
+    height: 100%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    font-size: 200%;
+    font-weight: 700;
+}

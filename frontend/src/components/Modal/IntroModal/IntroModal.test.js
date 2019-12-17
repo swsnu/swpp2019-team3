@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import IntroModal from "./IntroModal";
 import { authActions } from "../../../store/actions";
 import { signupStatus, signinStatus } from "../../../constants/constants";
-import { getMockStore } from "../../../test-utils/mocks";
+import { getMockStore, mockPromise } from "../../../test-utils/mocks";
 
 let stubInitialState = {
     collection: {},
@@ -14,6 +14,9 @@ let stubInitialState = {
         signinStatus: signinStatus.NONE,
     },
     paper: {},
+    user: {},
+    review: {},
+    reply: {},
 };
 const mockHistory = { push: jest.fn() };
 const makeIntroModal = (initialState) => (
@@ -21,9 +24,6 @@ const makeIntroModal = (initialState) => (
         <IntroModal history={mockHistory} />
     </Provider>
 );
-/* eslint-disable no-unused-vars */
-const mockPromise = new Promise((resolve, reject) => { resolve(); });
-/* eslint-enable no-unused-vars */
 
 describe("<IntroModal />", () => {
     let introModal;
@@ -283,12 +283,11 @@ describe("<IntroModal />", () => {
 
     it("should handle each result of signing up", () => {
         stubInitialState = {
+            ...stubInitialState,
             auth: {
                 signupStatus: signupStatus.WAITING,
                 signinStatus: signinStatus.NONE,
             },
-            collection: {},
-            paper: {},
         };
         let component = mount(makeIntroModal(stubInitialState));
         let openButton = component.find(".signup-open-button").hostNodes();
@@ -309,12 +308,11 @@ describe("<IntroModal />", () => {
 
 
         stubInitialState = {
+            ...stubInitialState,
             auth: {
                 signupStatus: signupStatus.SUCCESS,
                 signinStatus: signinStatus.NONE,
             },
-            collection: {},
-            paper: {},
         };
         component = mount(makeIntroModal(stubInitialState));
         openButton = component.find(".signup-open-button").hostNodes();
@@ -335,12 +333,11 @@ describe("<IntroModal />", () => {
 
 
         stubInitialState = {
+            ...stubInitialState,
             auth: {
                 signupStatus: signupStatus.DUPLICATE_EMAIL,
                 signinStatus: signinStatus.NONE,
             },
-            collection: {},
-            paper: {},
         };
         component = mount(makeIntroModal(stubInitialState));
         openButton = component.find(".signup-open-button").hostNodes();
@@ -362,12 +359,11 @@ describe("<IntroModal />", () => {
 
 
         stubInitialState = {
+            ...stubInitialState,
             auth: {
                 signupStatus: signupStatus.DUPLICATE_USERNAME,
                 signinStatus: signinStatus.NONE,
             },
-            collection: {},
-            paper: {},
         };
         component = mount(makeIntroModal(stubInitialState));
         openButton = component.find(".signup-open-button").hostNodes();
@@ -391,12 +387,11 @@ describe("<IntroModal />", () => {
 
     it("should handle each result of signing in", () => {
         stubInitialState = {
+            ...stubInitialState,
             auth: {
                 signupStatus: signupStatus.NONE,
                 signinStatus: signinStatus.WAITING,
             },
-            collection: {},
-            paper: {},
         };
         let component = mount(makeIntroModal(stubInitialState));
         let openButton = component.find(".signin-open-button").hostNodes();
@@ -415,12 +410,11 @@ describe("<IntroModal />", () => {
 
 
         stubInitialState = {
+            ...stubInitialState,
             auth: {
                 signupStatus: signupStatus.NONE,
                 signinStatus: signinStatus.SUCCESS,
             },
-            collection: {},
-            paper: {},
         };
         component = mount(makeIntroModal(stubInitialState));
         openButton = component.find(".signin-open-button").hostNodes();
@@ -439,12 +433,11 @@ describe("<IntroModal />", () => {
 
 
         stubInitialState = {
+            ...stubInitialState,
             auth: {
                 signupStatus: signupStatus.NONE,
                 signinStatus: signinStatus.USER_NOT_EXIST,
             },
-            collection: {},
-            paper: {},
         };
         component = mount(makeIntroModal(stubInitialState));
 
@@ -465,12 +458,11 @@ describe("<IntroModal />", () => {
 
 
         stubInitialState = {
+            ...stubInitialState,
             auth: {
                 signupStatus: signupStatus.NONE,
                 signinStatus: signinStatus.WRONG_PW,
             },
-            collection: {},
-            paper: {},
         };
         component = mount(makeIntroModal(stubInitialState));
 

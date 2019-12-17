@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: #f5f6fa;
 }
 
 .App-logo {
@@ -19,4 +20,24 @@
 
 .App-link {
   color: #09d3ac;
+}
+
+.container-papersfeed {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 1440px) {
+  .container{
+    max-width: 1400px !important;
+  }
+}
+
+@media (min-width: 1920px) {
+  .container{
+    max-width: 1630px !important;
+  }
 }

@@ -1,7 +1,14 @@
 """collection.py"""
 from django.db import models
+from django_mysql.models import EnumField
 
 from papersfeed.models.base_models import BaseModel
+
+
+COLLECTION_SHARE_TYPE = [
+    'public',
+    'private'
+]
 
 
 class Collection(BaseModel):
@@ -12,6 +19,12 @@ class Collection(BaseModel):
 
     # Text
     text = models.TextField(null=False)
+
+    # Share Type
+    type = EnumField(choices=COLLECTION_SHARE_TYPE, default='public')
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         """Table Meta"""

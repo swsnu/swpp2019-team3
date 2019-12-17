@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <link href="http://arxiv.org/api/query?search_query%3Dhey%20hey%20hey%26id_list%3D%26start%3D0%26max_results%3D1" rel="self" type="application/atom+xml"/>
+  <title type="html">ArXiv Query: search_query=hey hey hey&amp;id_list=&amp;start=0&amp;max_results=1</title>
+  <id>http://arxiv.org/api/LMg/n/Y7EUc+SKnbN8KxLl6EY/g</id>
+  <updated>2019-11-22T00:00:00-05:00</updated>
+  <opensearch:totalResults xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">577</opensearch:totalResults>
+  <opensearch:startIndex xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">0</opensearch:startIndex>
+  <opensearch:itemsPerPage xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">1</opensearch:itemsPerPage>
+  <entry>
+    <id>http://arxiv.org/abs/astro-ph/0703438v1</id>
+    <updated>2007-03-16T12:44:44Z</updated>
+    <published>2007-03-16T12:44:44Z</published>
+    <title>Rapid HeII-&gt;HeI recombination and radiation concerned with this process</title>
+    <summary>  Recombination of the primordial helium plasma (HeII-&gt;HeI, $z \simeq 1500 -
+3000$) is considered. This process has an effect on the CMBR anisotropy and
+CMBR spectrum distortion. In this work an influence of neutral hydrogen on
+kinetics of HeII-&gt;HeI recombination is investigated in the frame of the
+standard cosmological model. It is shown that small amount of neutral hydrogen
+($10^{-5} - 10^{-2}$ of total number of hydrogen ions and atoms) leads to
+acceleration of HeII-&gt;HeI recombination at $z\lesssim 2000$ and at $z\lesssim
+1600$ quasi-equilibrium HeII-&gt;HeI recombination (according to the Saha formula)
+becomes valid.
+</summary>
+    <author>
+      <name>E. E. Kholupenko</name>
+    </author>
+    <author>
+      <name>A. V. Ivanchik</name>
+    </author>
+    <author>
+      <name>D. A. Varshalovich</name>
+    </author>
+    <arxiv:doi xmlns:arxiv="http://arxiv.org/schemas/atom">10.1111/j.1745-3933.2007.00316.x</arxiv:doi>
+    <link title="doi" href="http://dx.doi.org/10.1111/j.1745-3933.2007.00316.x" rel="related"/>
+    <arxiv:comment xmlns:arxiv="http://arxiv.org/schemas/atom">submitted to MNRAS Letters 23.01.2007, accepted 15.03.2007, 5 pages,
+  5 figures, 1 table</arxiv:comment>
+    <link href="http://arxiv.org/abs/astro-ph/0703438v1" rel="alternate" type="text/html"/>
+    <link title="pdf" href="http://arxiv.org/pdf/astro-ph/0703438v1" rel="related" type="application/pdf"/>
+    <arxiv:primary_category xmlns:arxiv="http://arxiv.org/schemas/atom" term="astro-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph" scheme="http://arxiv.org/schemas/atom"/>
+  </entry>
+</feed>

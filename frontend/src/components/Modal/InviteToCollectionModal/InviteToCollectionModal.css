@@ -1,0 +1,30 @@
+.InviteToCollectionModal .OpenButtonDiv #modalOpenButton {
+    max-width: 150px;
+    height: 40px;
+}
+
+#inviteModal .ModalHeader{
+    display:flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#inviteModal .ModalBody{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 400px;
+    display:flex;
+    flex-direction: column;
+    align-content: center;
+}
+
+#inviteModal .ModalBody #searchArea{
+    display: flex;
+    width: 100%;
+    margin-left: 5%;
+    margin-bottom: 3%;;
+}
+
+#inviteModal .ModalBody #searchArea #userSearchBar{
+    flex: 0 1 300px;
+}

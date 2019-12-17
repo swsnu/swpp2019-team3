@@ -3,10 +3,15 @@ import Main from "./Main/Main";
 import ReviewDetail from "./Review/ReviewDetail/ReviewDetail";
 import PaperDetail from "./PaperDetail/PaperDetail";
 import ReviewControl from "./Review/ReviewControl/ReviewControl";
-import ProfileDetail from "./Profile/ProfileDetail/ProfileDetail";
-import ProfileEdit from "./Profile/ProfileEdit/ProfileEdit";
+import ProfileDetail from "./User/ProfileDetail/ProfileDetail";
+import AccountSetting from "./User/AccountSetting/AccountSetting";
 import CollectionDetail from "./Collection/CollectionDetail/CollectionDetail";
 import CollectionList from "./Collection/CollectionList/CollectionList";
+import SearchResult from "./SearchResult/SearchResult";
+import UserList from "./User/UserList/UserList";
+import History from "./History/History";
+import Init from "./Init/Init";
+import Tutorial from "./Tutorial/Tutorial";
 
 export {
     Intro,
@@ -15,7 +20,12 @@ export {
     PaperDetail,
     ReviewControl,
     ProfileDetail,
-    ProfileEdit,
+    AccountSetting,
     CollectionDetail,
     CollectionList,
+    SearchResult,
+    UserList,
+    History,
+    Init,
+    Tutorial,
 };

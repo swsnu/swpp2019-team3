@@ -2,6 +2,24 @@
     padding-bottom: 10%;
 }
 
+#headerPaperSubscriptionTarget {
+    background-color: rgb(232, 240, 247);
+}
+
+#headerPaperSubscription {
+    background-color: rgb(232, 240, 247);
+}
+
+.PaperCardHeaderText {
+    font-size: 100%;
+    font-weight: bold;
+}
+
+#headerDelete {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .paper {
     width: 90%;
     text-align: left;
@@ -21,24 +39,24 @@
     font-size: 130%;
 }
 
-.paper .footer {
-    display: flex;
-    align-items: flex-start;
-}
-.paper .footer .add-button{
-    margin-left: 50%;
+.paper .body .authors{
+    text-align: left;
+    font-size: 110%;
+    font-weight: 600;
 }
 
-
-.paper .review-button{
-    width: 17%;
-    display: flex;
-    justify-content: space-around;
+.paper .body .keywords{
+    text-align: left;
+    font-size: 100%;
+    font-weight: 300;
+    font-style: italic;
 }
 
-
-.paper .like-button{
-    width: 17%;
+.paper #footer-flex {
     display: flex;
-    justify-content: space-around;
+    justify-content : space-between;
+}
+
+ #footer-left-buttons {
+    display: block;
 }

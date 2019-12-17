@@ -1,0 +1,37 @@
+.userInfo {
+    margin-top: 5%;
+    margin-left: 5%;
+    margin-right: 10%;
+    margin-bottom: 2%;
+    display: flex;
+    flex-direction: column;
+}
+
+.userInfo .userStatistic {
+    display: inline-flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.userInfo .userDescAndButton {
+    display: flex;
+    flex-direction: column;
+}
+
+.userInfo .userDescAndButton #buttonDisplayed {
+    align-self: flex-end;
+}
+
+.userInfo .userDescAndButton #userDescription {
+    align-self: flex-start;
+    white-space: pre-wrap;
+    text-align: left;
+    margin-left: 20px;
+}
+
+.itemTabSection {
+    margin-left: 5%;
+    margin-right: 10%;
+    background: rgb(255,255,255);
+    min-height: 52vh;
+}

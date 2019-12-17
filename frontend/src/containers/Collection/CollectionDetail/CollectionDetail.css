@@ -1,66 +1,61 @@
-.CollectionDetailContent {
-    min-height: 1000px;
-    background: rgb(242,243,247);
-    margin-left: 18%;
-    position: relative;
+#collectionDetailHeader {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 1vh;
 }
 
-.CollectionDetailContent .head {
-    width:92%;
-    margin-top: 5%;
-    font-weight: bold;
-    font-size: 200%;
-    margin-bottom: 2%;
+.CollectionDetailContent #collectionDetailHeader button {
+    margin-left: 5px;
+}
 
+.CollectionDetailContent .alert {
+    margin-top: 2%;
+}
+
+#manageButton {
+    width: auto;
+    height: 40px;
+    margin-left: 5px;
 }
 
 .CollectionInfo {
-    width: 92%;
-    margin-top: 1%;
-    margin-left: 1%;
-    margin-right: 3%;
-    display: flex;
-    flex-direction: column;
-}
-
-.CollectionInfo #collectionName {
-    margin-right: 4%;
-}
-
-.CollectionInfo #collectionInfoMid {
-    width: 92%;
-    margin-top: 1%;
-    margin-bottom: 1%;
-    margin-left: 6%;
-    display: inline-flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
-.CollectionInfo #collectionDescription #date {
-    margin-left: 1%;
-    margin-right: 5%;
-    display: flex;
-    justify-content: space-between;
-    font-style: italic;
-}
-
-.CollectionInfo #collectionDescription #descriptionBox {
-    margin-left: 1%;
-    margin-right: 5%;
     text-align: left;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 3%;
+    padding-bottom: 1%;
+    border-bottom: 2px solid rgb(225,225,225);
+}
+
+.CollectionInfo #collectionBasicInfo #owner {
+    font-weight: 600;
+    font-size: large;
+}
+
+.CollectionInfo #collectionBasicInfo #descriptionBox {
+    margin-left: 5%;
+    margin-right: 5%;
+    white-space: pre-wrap;
+}
+
+.CollectionInfo #collectionDates {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-style: oblique;
 }
 
 .itemList {
-    margin-left: 1%;
-    margin-right: 5%;
-    background: rgb(255,255,255);
+    background: white;
+    border-radius: 2%;
 }
 
-.itemList .reply-tab {
-    background: white;
+@media (min-width: 576px) {
+    .itemList {
+        min-height: 50vh;
+    }
 }
 
 .itemList #paperCards {
@@ -98,17 +93,32 @@
 }
 
 .itemList #replies #createNewReply {
+    margin-top: 2%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    text-align: left;
+    margin-left: 5%;
+    height: 100%;
+    width: 90%;
+}
+
+.itemList #replies #createNewReply .username{
+    font-weight: bold;
+    font-size: 100%;
 }
 
 .itemList #replies #createNewReply #newReplyContentInput {
-    width: 1000px;
+    min-height: 80%;
+    margin-bottom: 1%;
+}
+
+.itemList #replies #createNewReply .new-reply-button {
+    min-width: 60px;
+    align-self: flex-end;
 }
 
 .itemList #replies #replyList {
-
-    background: rgb(242,243,247);
-    margin: 10px;
+    margin: 2%;
+    text-align: left;
 }

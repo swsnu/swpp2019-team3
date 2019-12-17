@@ -21,11 +21,17 @@ export const getMockStore = (initialState) => {
     const mockAuthReducer = getMockReducer(initialState.auth);
     const mockPaperReducer = getMockReducer(initialState.paper);
     const mockCollectionReducer = getMockReducer(initialState.collection);
+    const mockUserReducer = getMockReducer(initialState.user);
+    const mockReviewReducer = getMockReducer(initialState.review);
+    const mockReplyReducer = getMockReducer(initialState.reply);
     const rootReducer = (his) => combineReducers({
         router: connectRouter(his),
         auth: mockAuthReducer,
         paper: mockPaperReducer,
         collection: mockCollectionReducer,
+        user: mockUserReducer,
+        review: mockReviewReducer,
+        reply: mockReplyReducer,
     });
 
     const mockStore = createStore(rootReducer(history), applyMiddleware(...middlewares));
@@ -38,3 +44,15 @@ export const mockComponent = (componentName) => (props) => (
     <div className={componentName} {...props} />
     /* eslint-enable react/jsx-props-no-spreading */
 );
+
+/* eslint-disable no-unused-vars */
+export const mockPromise = new Promise((resolve, reject) => { resolve(); });
+/* eslint-enable no-unused-vars */
+
+export const flushPromises = () => new Promise(setImmediate);
+
+let lastId = 0;
+export const idGenerator = () => {
+    lastId += 1;
+    return lastId;
+};

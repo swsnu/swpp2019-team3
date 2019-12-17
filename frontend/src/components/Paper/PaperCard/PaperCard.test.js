@@ -1,55 +1,163 @@
 import React from "react";
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
+import { Provider } from "react-redux";
+import { ConnectedRouter } from "connected-react-router";
 import PaperCard from "./PaperCard";
-import { mockComponent } from "../../../test-utils/mocks";
+import { getMockStore, mockComponent } from "../../../test-utils/mocks";
+import { paperActions } from "../../../store/actions";
+import { history } from "../../../store/store";
 
-jest.mock("../../Modal/AddPaperModal/AddPaperModal", () => jest.fn(() => (mockComponent("GoMyCollectionsModal")())));
+const mockHistory = history;
+
+/* eslint-disable react/jsx-props-no-spreading */
+const makePaperCard = (initialState, props = {}) => (
+    <Provider store={getMockStore(initialState)}>
+        <ConnectedRouter location={{ state: "" }} history={mockHistory}>
+            <PaperCard id={1} history={mockHistory} {...props} />
+        </ConnectedRouter>
+    </Provider>
+);
+/* eslint-enable react/jsx-props-no-spreading */
+
+jest.mock("../../Modal/AddPaperModal/AddPaperModal", () => jest.fn(() => (mockComponent("AddPaperModal")())));
+
+const mockPromise = new Promise((resolve) => { resolve(); });
 
 describe("<PaperCard />", () => {
+    let stubInitialState;
+    let paperCard;
+    let spyLikePaper;
+    let spyUnlikePaper;
+
+    beforeEach(() => {
+        stubInitialState = {
+            paper: {},
+            auth: {},
+            collection: {},
+            review: {},
+            user: {},
+            reply: {},
+        };
+        paperCard = makePaperCard(stubInitialState);
+        spyLikePaper = jest.spyOn(paperActions, "likePaper")
+            .mockImplementation(() => () => mockPromise);
+        spyUnlikePaper = jest.spyOn(paperActions, "unlikePaper")
+            .mockImplementation(() => () => mockPromise);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     it("should render without errors", () => {
-        const component = shallow(<PaperCard />);
+        const component = mount(paperCard);
         const wrapper = component.find(".wrapper");
         expect(wrapper.length).toBe(1);
     });
 
-    it("should handle Like/Unlike Button", () => {
-        const component = mount(<PaperCard />);
-        const wrapper = component.find(".like-button").hostNodes();
+    it("should call likePaper when Like Button is clicked", () => {
+        const component = mount(paperCard);
+        const wrapper = component.find("#likeButton");
         expect(wrapper.length).toBe(1);
 
         wrapper.simulate("click");
 
-        expect(component.state().likeCount).toEqual(1);
-        expect(component.state().isLiked).toBe(true);
+        expect(spyLikePaper).toHaveBeenCalledTimes(1);
+    });
+
+    it("should call unlikePaper when IsLiked and Like Button is clicked", () => {
+        const component = mount(paperCard);
+        const instance = component.find(PaperCard.WrappedComponent).instance();
+        instance.setState({ isLiked: true });
+        component.update();
+
+        const wrapper = component.find("#likeButton");
+        expect(wrapper.length).toBe(1);
 
         wrapper.simulate("click");
-        expect(component.state().likeCount).toBe(0);
-        expect(component.state().isLiked).toBe(false);
+
+        expect(spyUnlikePaper).toHaveBeenCalledTimes(1);
     });
 
     it("if headerExists is false, then header should not exist", () => {
-        const component = mount(<PaperCard headerExists={false} />);
-        const wrapper = component.find(".header");
+        paperCard = makePaperCard(stubInitialState, { headerExists: false });
+        const component = mount(paperCard);
+        let wrapper = component.find("#header").hostNodes();
+        expect(wrapper.length).toBe(0);
+        wrapper = component.find("#headerPaperSubscription").hostNodes();
+        expect(wrapper.length).toBe(0);
+        wrapper = component.find("#headerPaperSubscriptionTarget").hostNodes();
         expect(wrapper.length).toBe(0);
     });
 
+    it("if headerExists && paperSource, then header should exist", () => {
+        paperCard = makePaperCard(stubInitialState, { headerExists: true, subscription: false, paperSource: "source" });
+        const component = mount(paperCard);
+        const wrapper = component.find("#headerPaper").hostNodes();
+        expect(wrapper.length).toBe(1);
+    });
+
+    it("if headerExists && subscription, then subscription header should exist", () => {
+        paperCard = makePaperCard(stubInitialState, {
+            headerExists: true, subscription: true, target: {},
+        });
+        const component = mount(paperCard);
+        const wrapper = component.find("#headerPaperSubscription").hostNodes();
+        expect(wrapper.length).toBe(1);
+    });
+
+    it("if headerExists && subscription && target, then subscription header with target should exist", () => {
+        paperCard = makePaperCard(stubInitialState, {
+            headerExists: true, subscription: true, target: { content: { id: 1 } },
+        });
+        const component = mount(paperCard);
+        const wrapper = component.find("#headerPaperSubscriptionTarget").hostNodes();
+        expect(wrapper.length).toBe(1);
+    });
+
     it("if addButtonExists is true, then addButton should exist", () => {
-        const component = mount(<PaperCard addButtonExists />);
+        paperCard = makePaperCard(stubInitialState, { addButtonExists: true });
+        const component = mount(paperCard);
         const wrapper = component.find(".add-button");
         expect(wrapper.length).toBe(1);
     });
 
     it("if authors are given, join them and set authorNames appropriately", () => {
-        const component = mount(<PaperCard authors={[{ first_name: "A", last_name: "B" },
-            { first_name: "C", last_name: "D" }]}
-        />);
-        const paperCardInstance = component.find(PaperCard).instance();
+        paperCard = makePaperCard(stubInitialState, {
+            authors: [{ first_name: "A", last_name: "B" }, { first_name: "C", last_name: "D" }],
+        });
+        const component = mount(paperCard);
+        const paperCardInstance = component.find(PaperCard.WrappedComponent).instance();
         expect(paperCardInstance.state.authorNames).toBe("A B, C D");
     });
 
     it("if keywords are given, join them and set keywords appropriately", () => {
-        const component = mount(<PaperCard keywords={["A", "B"]} />);
-        const paperCardInstance = component.find(PaperCard).instance();
-        expect(paperCardInstance.state.keywords).toBe("A, B");
+        paperCard = makePaperCard(stubInitialState, {
+            keywords: [
+                { id: 1, name: "A", type: "author" },
+                { id: 2, name: "B", type: "abstract" },
+                { id: 3, name: "C", type: "author" }],
+        });
+        const component = mount(paperCard);
+        const wrapper = component.find(".keywords").hostNodes();
+        expect(wrapper.text()).toBe("# A# C");
+    });
+
+    it("if authorKeywords don't exist, show abstractKeywords", () => {
+        paperCard = makePaperCard(stubInitialState, {
+            keywords: [
+                { id: 1, name: "B", type: "abstract" },
+            ],
+        });
+        const component = mount(paperCard);
+        const wrapper = component.find(".keywords").hostNodes();
+        expect(wrapper.text()).toBe("# B");
+    });
+
+    it("if deleteExists, show delete button", () => {
+        paperCard = makePaperCard(stubInitialState, { headerExists: false, deleteExists: true });
+        const component = mount(paperCard);
+        const wrapper = component.find("#headerDelete").hostNodes();
+        expect(wrapper.length).toBe(1);
     });
 });

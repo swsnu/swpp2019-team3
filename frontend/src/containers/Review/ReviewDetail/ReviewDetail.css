@@ -1,17 +1,21 @@
 .review-detail .board {
     background: rgb(242,243,247);
-    margin-left: 18%;
+     
+    min-height: 1000px;
     position: relative;
     display: flex;
 }
 
 .review-detail .board .review-reply {
-    width: 100%;
-    margin-top: 5%;
-    margin-left: 5%;
-    margin-right: 10%;
+    width: 90%;
+    margin-top: 3%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5%;
     display: flex;
     justify-content: flex-start;
+    border-radius: 0.5em;
+    border-width: 0;
 }
 
 .review-detail .board .review-reply .head {
@@ -35,6 +39,7 @@
 }
 
 .review-detail .board .review-reply .review .title {
+    margin-top: 5%;
     text-align: left;
     font-size: 150%;
     font-weight: bold;
@@ -55,15 +60,17 @@
 }
 
 .review-detail .board .review-reply .reply .review-extra .like-button{
-    width: 15%;
+    flex: 0 1 70px;
     display: flex;
     justify-content: space-around;
+    align-items: center;
 }
 
 .review-detail .board .review-reply .reply .review-extra .replyCount-button{
-    width: 15%;
+    flex: 0 1 70px;
     display: flex;
     justify-content: space-around;
+    align-items: center;
 }
 
 .review-detail .board .review-reply .reply .review-extra .replyCount-button .reply-image{
@@ -76,8 +83,7 @@
     justify-content: flex-start;
     flex-direction: column;
     text-align: left;
-    margin-bottom: 10%;
-    margin-left: 3%;
+    margin-left: 5%;
     height: 100%;
     width: 90%;
 }
@@ -93,8 +99,8 @@
 }
 
 .review-detail .board .review-reply .reply .new-reply .new-reply-button{
-    margin-left: 93%;
-    width: 7%;
+    min-width: 60px;
+    align-self: flex-end;
 }
 
 .review-detail .board .review-reply .reply .replies{

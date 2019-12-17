@@ -1,0 +1,31 @@
+.PhotoCheckBox {
+    display: inline-block;
+}
+
+.PhotoCheckBox input {
+    display: none;
+}
+
+.PhotoCheckBoxLable {
+    border: 5px solid #ffffff;
+    margin: 3px;
+    cursor: pointer;
+  }
+
+.PhotoCheckBoxLable img {
+    height: 100px;
+    width: 100px;
+    transition-duration: 0.2s;
+    transform-origin: 50% 50%;
+}
+  
+:checked+.PhotoCheckBoxLable {
+    background: white;
+    border: 5px solid grey;
+}
+
+:checked+.PhotoCheckBoxLable img {
+    transform: scale(0.9);
+    box-shadow: 0 0 5px #333;
+    z-index: -1;
+}

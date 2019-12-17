@@ -25,13 +25,18 @@ export const makeNewCollection = (collection) => (dispatch) => axios.post("/api/
 
 
 // getCollectionsByUserId
-const getCollectionsByUserIdSuccess = (collections) => ({
-    type: collectionConstants.GET_COLLECTIONS,
-    target: collections.collections,
+const getCollectionsByUserIdSuccess = (data) => ({
+    type: collectionConstants.GET_COLLECTIONS_SUCCESS,
+    target: {
+        collections: data.collections,
+        pageNum: data.page_number,
+        finished: data.is_finished,
+        totalCount: data.total_count,
+    },
 });
 
 const getCollectionsByUserIdFailure = (error) => ({
-    type: null,
+    type: collectionConstants.GET_COLLECTIONS_FAILURE,
     target: error,
 });
 
@@ -39,6 +44,26 @@ const getCollectionsByUserIdFailure = (error) => ({
 export const getCollectionsByUserId = (params) => (dispatch) => axios.get("/api/collection/user", { params })
     .then((res) => { dispatch(getCollectionsByUserIdSuccess(res.data)); })
     .catch((err) => { (dispatch(getCollectionsByUserIdFailure(err))); });
+
+
+const getSharedCollectionsByUserIdSuccess = (data) => ({
+    type: collectionConstants.GET_SHARED_COLLECTIONS_SUCCESS,
+    target: {
+        collections: data.collections,
+        pageNum: data.page_number,
+        finished: data.is_finished,
+        totalCount: data.total_count,
+    },
+});
+
+const getSharedCollectionsByUserIdFailure = (error) => ({
+    type: collectionConstants.GET_SHARED_COLLECTIONS_FAILURE,
+    target: error,
+});
+
+export const getSharedCollectionsByUserId = (userId) => (dispatch) => axios.get("/api/collection/user/shared", { params: userId })
+    .then((res) => { dispatch(getSharedCollectionsByUserIdSuccess(res.data)); })
+    .catch((err) => { (dispatch(getSharedCollectionsByUserIdFailure(err))); });
 
 
 // getCollection
@@ -66,13 +91,13 @@ export const getCollection = (collectionId) => (dispatch) => axios.get("/api/col
 
 
 // get papers of a collection
-const getCollectionPapersSuccess = (papers) => ({
-    type: collectionConstants.GET_COLLECTION_PAPERS,
-    target: papers.papers,
+const getCollectionPapersSuccess = (data) => ({
+    type: collectionConstants.GET_COLLECTION_PAPERS_SUCCESS,
+    target: data,
 });
 
 const getCollectionPapersFailure = (error) => ({
-    type: null,
+    type: collectionConstants.GET_COLLECTION_PAPERS_FAILURE,
     target: error,
 });
 
@@ -80,27 +105,70 @@ export const getCollectionPapers = (collectionId) => (dispatch) => axios.get("/a
     .then((res) => { dispatch(getCollectionPapersSuccess(res.data)); })
     .catch((err) => { (dispatch(getCollectionPapersFailure(err))); });
 
+const getCollectionMembersSuccess = (data) => ({
+    type: collectionConstants.GET_COLLECTION_MEMBERS_SUCCESS,
+    target: { members: data.users, pageNum: data.page_number, finished: data.is_finished },
+});
 
-// getCollectionMembers - no matching api
-/* export const getCollectionMembers = (collectionID) => (dispatch)
-=> axios.get(`/user/collection/${collectionID}`)
-    .then((res) => dispatch({
-        type: actionTypes.GET_COLLECTION_MEMBERS, members: res.data,
-    })); */
+const getCollectionMembersFailure = (error) => ({
+    type: collectionConstants.GET_COLLECTION_MEMBERS_FAILURE,
+    target: error,
+});
 
-// getCollectionReplies - no matching api
-/* export const getCollectionReplies = (collectionID) => (dispatch)
-=> axios.get(`/reply/collection/${collectionID}`)
-    .then((res) => dispatch({
-        type: actionTypes.GET_COLLECTION_REPLIES, replies: res.data,
-    })); */
+export const getCollectionMembers = (collectionID, pageNum, includesMe = true) => (dispatch) => axios.get("/api/user/collection", { params: { id: collectionID, page_number: pageNum, includes_me: includesMe } })
+    .then((res) => { dispatch(getCollectionMembersSuccess(res.data)); })
+    .catch((err) => { dispatch(getCollectionMembersFailure(err)); });
 
-// setOwner - no matching api
-/* export const setOwner = (collectionID, userID) => (dispatch)
-=> axios.put(`/collection/${collectionID}`, { userID })
-    .then((res) => dispatch({
-        type: actionTypes.CHANGE_COLLECTION_OWNER, newOwnerID: userID,
-    })); */
+
+const setOwnerSuccess = () => ({
+    type: collectionConstants.SET_OWNER,
+});
+
+const setOwnerFailure = (error) => {
+    let actionType = null;
+    if (error.response.status === 403) {
+        actionType = collectionConstants.SET_OWNER_FAILURE_AUTH_ERROR;
+    }
+
+    return {
+        type: actionType,
+        target: error,
+    };
+};
+
+export const setOwner = (collectionId, targetUserId) => (dispatch) => axios.put("/api/user/collection", { id: collectionId, user_id: targetUserId })
+    .then(() => dispatch(setOwnerSuccess()))
+    .catch((err) => { dispatch(setOwnerFailure(err)); });
+
+
+const acceptInvitationSuccess = (count) => ({
+    type: collectionConstants.ACCEPT_INVITATION_SUCCESS,
+    target: count.count,
+});
+
+const acceptInvitationFailure = (error) => ({
+    type: collectionConstants.ACCEPT_INVITATION_FAILURE,
+    target: error,
+});
+
+export const acceptInvitation = (collectionId) => (dispatch) => axios.put("/api/user/collection/pending", { id: collectionId })
+    .then((res) => dispatch(acceptInvitationSuccess(res.data)))
+    .catch((err) => dispatch(acceptInvitationFailure(err)));
+
+
+const dismissInvitationSuccess = () => ({
+    type: collectionConstants.DISMISS_INVITATION_SUCCESS,
+    target: null,
+});
+
+const dismissInvitationFailure = (error) => ({
+    type: collectionConstants.DISMISS_INVITATION_FAILURE,
+    target: error,
+});
+
+export const dismissInvitation = (collectionId) => (dispatch) => axios.delete("/api/user/collection/pending", { params: { id: collectionId } })
+    .then(() => { dispatch(dismissInvitationSuccess()); })
+    .catch((err) => { dispatch(dismissInvitationFailure(err)); });
 
 
 // setNameAndDescription of collection
@@ -144,36 +212,67 @@ export const addCollectionPaper = (collectionsAndPaper) => (dispatch) => axios.p
     .then((res) => { dispatch(addCollectionPaperSuccess(res.data)); })
     .catch((err) => { dispatch(addCollectionPaperFailure(err)); });
 
-
-// remove paper from collection
-const removeCollectionPaperSuccess = (collection) => ({
-    type: collectionConstants.DEL_COLLECTION_PAPER,
-    target: collection.collection,
+const leaveCollectionSuccess = (count) => ({
+    type: collectionConstants.LEAVE_COLLECTION_SUCCESS,
+    target: count.count,
 });
 
-const removeCollectionPaperFailure = (error) => ({
-    type: null,
+const leaveCollectionFailure = (error) => ({
+    type: collectionConstants.LEAVE_COLLECTION_FAILURE,
     target: error,
 });
 
-export const removeCollectionPaper = (collectionsAndPaper) => (dispatch) => axios.put("/api/paper/collection", collectionsAndPaper)
-    .then((res) => { dispatch(removeCollectionPaperSuccess(res.data)); })
-    .catch((err) => { (dispatch(removeCollectionPaperFailure(err))); });
+export const leaveCollection = (collectionId) => (dispatch) => axios.delete("/api/user/collection/self", { params: { id: collectionId } })
+    .then((res) => { dispatch(leaveCollectionSuccess(res.data)); })
+    .catch((err) => { dispatch(leaveCollectionFailure(err)); });
 
 
-// add member to collection - no matching api
-/* export const addCollectionMember = (collectionID, userID) => (dispatch)
-=> axios.post(`/user/collection/${collectionID}`, userID)
-    .then((res) => dispatch({
-        type: actionTypes.ADD_COLLECTION_MEMBER, members: res.data,
-    })); */
+const addNewMembersSuccess = (count) => ({
+    type: collectionConstants.ADD_COLLECTION_MEMBER,
+    target: count.count,
+});
 
-// remove member from CollectionMember - no matching api
-/* export const removeCollectionMember = (collectionID, userID) => (dispatch)
-=> axios.delete(`/user/collection/${collectionID}`, userID)
-    .then((res) => dispatch({
-        type: actionTypes.DEL_COLLECTION_MEMBER, members: res.data,
-    })); */
+const addNewMembersFailure = (error) => {
+    let actionType = null;
+    if (error.response.status === 403) {
+        actionType = collectionConstants.ADD_COLLECTION_MEMBER_FAILURE_NOT_AUTHORIZED;
+    }
+    if (error.response.status === 422) {
+        actionType = collectionConstants.ADD_COLLECTION_MEMBER_FAILURE_SELF_ADDING;
+    }
+    return {
+        type: actionType,
+        target: error,
+    };
+};
+
+export const addNewMembers = (collectionId, userIdList) => (dispatch) => axios.post("/api/user/collection", { id: collectionId, user_ids: userIdList })
+    .then((res) => { dispatch(addNewMembersSuccess(res.data)); })
+    .catch((err) => { dispatch(addNewMembersFailure(err)); });
+
+
+const deleteMembersSuccess = (count) => ({
+    type: collectionConstants.DEL_COLLECTION_MEMBER,
+    target: count.count,
+});
+
+const deleteMembersFailure = (error) => {
+    let actionType = null;
+    if (error.response.status === 403) {
+        actionType = collectionConstants.DEL_COLLECTION_MEMBER_FAILURE_NOT_AUTHORIZED;
+    }
+    if (error.response.status === 422) {
+        actionType = collectionConstants.DEL_COLLECTION_MEMBER_FAILURE_MORE_THAN_USERCOUNT;
+    }
+    return {
+        type: actionType,
+        target: error,
+    };
+};
+
+export const deleteMembers = (collectionId, userIdList) => (dispatch) => axios.delete("/api/user/collection", { params: { id: collectionId, user_ids: JSON.stringify(userIdList) } })
+    .then((res) => { dispatch(deleteMembersSuccess(res.data)); })
+    .catch((err) => { dispatch(deleteMembersFailure(err)); });
 
 
 // deleteCollection
@@ -197,27 +296,106 @@ const deleteCollectionFailure = (error) => {
     };
 };
 
-export const deleteCollection = (collectionId) => (dispatch) => axios.delete("/api/collection", { params: collectionId })
+export const deleteCollection = (collectionId) => (dispatch) => axios.delete("/api/collection", { params: { id: collectionId } })
     .then((res) => { dispatch(deleteCollectionSuccess(res.data)); })
     .catch((err) => { (dispatch(deleteCollectionFailure(err))); });
 
 
-// add collection like - no matching api
-// export const addCollectionLike = (collectionID) => {
-//     return dispatch => {
-//         return axios.get()
-//             .then(res => dispatch({
-//                 type: GET_COLLECION_MEMBERS, members: res.data
-//         }));
-//     };
-// };
+const likeCollectionSuccess = (count) => ({
+    type: collectionConstants.LIKE_COLLECTION_SUCCESS,
+    target: count.count,
+});
 
-// removeCollectionLike - no matching api
-// export const removeCollectionLike = (collectionID) => {
-//     return dispatch => {
-//         return axios.get()
-//             .then(res => dispatch({
-//                 type: GET_COLLECION_MEMBERS, members: res.data
-//         }));
-//     };
-// };
+const likeCollectionFailure = (error) => ({
+    type: collectionConstants.LIKE_COLLECTION_FAILURE,
+    target: error,
+});
+
+export const likeCollection = (collectionId) => (dispatch) => axios.post("/api/like/collection", collectionId)
+    .then((res) => dispatch(likeCollectionSuccess(res.data)))
+    .catch((err) => dispatch(likeCollectionFailure(err)));
+
+
+const unlikeCollectionSuccess = (count) => ({
+    type: collectionConstants.UNLIKE_COLLECTION_SUCCESS,
+    target: count.count,
+});
+
+const unlikeCollectionFailure = (error) => ({
+    type: collectionConstants.UNLIKE_COLLECTION_FAILURE,
+    target: error,
+});
+
+export const unlikeCollection = (collectionId) => (dispatch) => axios.delete("/api/like/collection", { params: collectionId })
+    .then((res) => dispatch(unlikeCollectionSuccess(res.data)))
+    .catch((err) => dispatch(unlikeCollectionFailure(err)));
+
+
+const searchCollectionSuccess = (data) => ({
+    type: collectionConstants.SEARCH_COLLECTION_SUCCESS,
+    target: {
+        collections: data.collections,
+        pageNum: data.page_number,
+        finished: data.is_finished,
+        totalCount: data.total_count,
+    },
+});
+
+const searchCollectionFailure = (error) => ({
+    type: collectionConstants.SEARCH_COLLECTION_FAILURE,
+    target: error,
+});
+
+export const searchCollection = (searchWord, pageNum) => (dispatch) => axios.get("/api/collection/search", { params: { text: searchWord, page_number: pageNum } })
+    .then((res) => dispatch(searchCollectionSuccess(res.data)))
+    .catch((err) => dispatch(searchCollectionFailure(err)));
+
+
+// Get Collection Like
+const getCollectionLikeSuccess = (data) => ({
+    type: collectionConstants.GET_COLLECTION_LIKE_SUCCESS,
+    target: {
+        collections: data.collections,
+        pageNum: data.page_number,
+        finished: data.is_finished,
+    },
+});
+
+const getCollectionLikeFailure = (error) => ({
+    type: collectionConstants.GET_COLLECTION_LIKE_FAILURE,
+    target: error,
+});
+
+export const getCollectionLike = (pageNum) => (dispatch) => axios.get("/api/collection/like", { params: pageNum })
+    .then((res) => dispatch(getCollectionLikeSuccess(res.data)))
+    .catch((err) => dispatch(getCollectionLikeFailure(err)));
+
+
+// Change Collection Type
+const changeCollectionTypeSuccess = (data) => ({
+    type: collectionConstants.CHANGE_COLLECTION_TYPE_SUCCESS,
+    target: data.collection,
+});
+
+const changeCollectionTypeFailure = (error) => ({
+    type: collectionConstants.CHANGE_COLLECTION_TYPE_FAILURE,
+    target: error,
+});
+
+export const changeCollectionType = (collectionId, collectionType) => (dispatch) => axios.put("/api/collection/type", { id: collectionId, type: collectionType })
+    .then((res) => dispatch(changeCollectionTypeSuccess(res.data)))
+    .catch((err) => dispatch(changeCollectionTypeFailure(err)));
+
+const deleteCollectionPaperSuccess = (count) => ({
+    type: collectionConstants.DEL_COLLECTION_PAPER_SUCCESS,
+    target: count.count.papers,
+});
+
+const deleteCollectionPaperFailure = (error) => ({
+    type: collectionConstants.DEL_COLLECTION_PAPER_FAILURE,
+    target: error,
+});
+
+export const deleteCollectionPaper = (collectionAndPaper) => (dispatch) => axios.delete("/api/paper/collection", { params: collectionAndPaper })
+    .then((res) => dispatch(deleteCollectionPaperSuccess(res.data)))
+    .catch((err) => dispatch(deleteCollectionPaperFailure(err)));

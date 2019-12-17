@@ -1,12 +1,13 @@
 .paperdetail {
-    min-height: 1000px;
+    min-height: 90vh;
     background: rgb(242,243,247);
-    margin-left: 250px;
-    position: relative;
+    /*   */
+    /* position: relative; */
     display: flex;
 }
 
 .paperdetail-content {
+    height: 100%;
     margin-top: 3%;
     margin-left: auto;
     margin-right: auto;
@@ -14,12 +15,25 @@
     width: 90%;
     background: white;
     border-radius: 0.5em;
+    min-height: 85vh;
 }
 
+.paperdetail-content .up-review {
+    border-top: 2px solid rgb(242,243,247);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    
+}
 .paperdetail-content #review-count {
     text-align: left;
     margin-top: 5%;
     margin-left: 3%;
+}
+
+.paperdetail-content .review-add {
+    margin-top: 5%;
+    margin-right: 5%;
 }
 
 .paperdetail-content .reviewcards {
@@ -47,4 +61,7 @@
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
+} 
+.paperdetail-page {
+    background: wheat;
 }

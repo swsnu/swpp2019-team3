@@ -12,6 +12,17 @@ const initialState = {
         status: collectionStatus.NONE,
         list: [],
         error: null,
+        pageNum: 0,
+        finished: true,
+        totalCount: 0,
+    },
+    sharedList: {
+        status: collectionStatus.NONE,
+        list: [],
+        error: null,
+        pageNum: 0,
+        finished: true,
+        totalCount: 0,
     },
     edit: {
         status: collectionStatus.NONE,
@@ -25,11 +36,30 @@ const initialState = {
     },
     selected: {
         status: collectionStatus.NONE,
+        collection: {
+            creation_date: "", modification_date: "", type: "public", collection_user_type: null,
+        },
         error: null,
-        collection: {},
-        papers: [],
-        members: [],
+        papers: { papers: [], page_number: 0, is_finished: true },
+        memberCount: 0,
         replies: [],
+    },
+    like: {
+        status: collectionStatus.NONE,
+        count: 0,
+        error: null,
+    },
+    unlike: {
+        status: collectionStatus.NONE,
+        count: 0,
+        error: null,
+    },
+    getMembers: {
+        status: collectionStatus.NONE,
+        members: [],
+        pageNum: 0,
+        finished: true,
+        error: null,
     },
 };
 
@@ -43,6 +73,10 @@ const reducer = (state = initialState, action) => {
                 status: collectionStatus.SUCCESS,
                 collection: action.target,
             },
+            list: {
+                ...state.list,
+                list: [action.target].concat(state.list.list),
+            },
         };
     case collectionConstants.ADD_COLLECTION_FAILURE_MISSING_PARAM:
         return {
@@ -53,13 +87,46 @@ const reducer = (state = initialState, action) => {
                 error: action.target,
             },
         };
-    case collectionConstants.GET_COLLECTIONS:
+    case collectionConstants.GET_COLLECTIONS_SUCCESS:
         return {
             ...state,
             list: {
                 ...state.selected,
                 status: collectionStatus.SUCCESS,
-                list: action.target,
+                list: action.target.collections,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
+                totalCount: action.target.totalCount,
+            },
+        };
+    case collectionConstants.GET_COLLECTIONS_FAILURE:
+        return {
+            ...state,
+            list: {
+                ...state.selected,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
+    case collectionConstants.GET_SHARED_COLLECTIONS_SUCCESS:
+        return {
+            ...state,
+            sharedList: {
+                ...state.selected,
+                status: collectionStatus.SUCCESS,
+                list: action.target.collections,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
+                totalCount: action.target.totalCount,
+            },
+        };
+    case collectionConstants.GET_SHARED_COLLECTIONS_FAILURE:
+        return {
+            ...state,
+            sharedList: {
+                ...state.selected,
+                status: collectionStatus.FAILURE,
+                error: action.target,
             },
         };
     case collectionConstants.GET_COLLECTION:
@@ -71,13 +138,22 @@ const reducer = (state = initialState, action) => {
                 collection: action.target,
             },
         };
-    case collectionConstants.GET_COLLECTION_PAPERS:
+    case collectionConstants.GET_COLLECTION_PAPERS_SUCCESS:
         return {
             ...state,
             selected: {
                 ...state.selected,
                 status: collectionStatus.SUCCESS,
                 papers: action.target,
+            },
+        };
+    case collectionConstants.GET_COLLECTION_PAPERS_FAILURE:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.FAILURE,
+                error: action.target,
             },
         };
     case collectionConstants.GET_COLLECTION_FAILURE_COLLECTION_NOT_EXIST:
@@ -89,12 +165,40 @@ const reducer = (state = initialState, action) => {
                 error: action.target,
             },
         };
-    // case collectionConstants.GET_COLLECTION_MEMBERS:
-        // return { ...state };
-    // case collectionConstants.GET_COLLECTION_REPLIES:
-        // return { ...state };
-    // case collectionConstants.CHANGE_COLLECTION_OWNER:
-        // return { ...state };
+    case collectionConstants.GET_COLLECTION_MEMBERS_SUCCESS:
+        return {
+            ...state,
+            getMembers: {
+                status: collectionStatus.SUCCESS,
+                members: action.target.members,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
+            },
+        };
+    case collectionConstants.GET_COLLECTION_MEMBERS_FAILURE:
+        return {
+            ...state,
+            getMembers: {
+                status: collectionStatus.FAILURE,
+                members: [],
+                pageNum: 0,
+                finished: false,
+                error: action.target,
+            },
+        };
+    case collectionConstants.SET_OWNER:
+        return {
+            ...state,
+        };
+    case collectionConstants.SET_OWNER_FAILURE_AUTH_ERROR:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.AUTH_ERROR,
+                error: action.target,
+            },
+        };
     case collectionConstants.EDIT_COLLECTION:
         return {
             ...state,
@@ -131,19 +235,78 @@ const reducer = (state = initialState, action) => {
                 collection: action.target,
             },
         };
-    case collectionConstants.DEL_COLLECTION_PAPER:
+    case collectionConstants.ADD_COLLECTION_MEMBER:
         return {
             ...state,
-            edit: {
-                ...state.edit,
+            selected: {
+                ...state.selected,
                 status: collectionStatus.SUCCESS,
-                collection: action.target,
+                memberCount: action.target.users,
             },
         };
-    // case collectionConstants.ADD_COLLECTION_MEMBER:
-        // return { ...state };
-    // case collectionConstants.DEL_COLLECTION_MEMBER:
-        // return { ...state };
+    case collectionConstants.ADD_COLLECTION_MEMBER_FAILURE_NOT_AUTHORIZED:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.AUTH_ERROR,
+                error: action.target,
+            },
+        };
+    case collectionConstants.ADD_COLLECTION_MEMBER_FAILURE_SELF_ADDING:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.USER_SELF_ADDING,
+                error: action.target,
+            },
+        };
+    case collectionConstants.DEL_COLLECTION_MEMBER:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.SUCCESS,
+                memberCount: action.target.users,
+            },
+        };
+    case collectionConstants.DEL_COLLECTION_MEMBER_FAILURE_NOT_AUTHORIZED:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.AUTH_ERROR,
+                error: action.target,
+            },
+        };
+    case collectionConstants.DEL_COLLECTION_MEMBER_FAILURE_MORE_THAN_USERCOUNT:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
+    case collectionConstants.LEAVE_COLLECTION_SUCCESS:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.SUCCESS,
+                memberCount: action.target.users,
+            },
+        };
+    case collectionConstants.LEAVE_COLLECTION_FAILURE:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
     case collectionConstants.DEL_COLLECTION:
         return {
             ...state,
@@ -171,10 +334,129 @@ const reducer = (state = initialState, action) => {
                 error: action.target,
             },
         };
-    // case collectionConstants.ADD_COLLECTION_LIKE:
-        // return { ...state };
-    // case collectionConstants.DEL_COLLECTION_LIKE:
-        // return { ...state };
+    case collectionConstants.LIKE_COLLECTION_SUCCESS:
+        return {
+            ...state,
+            like: {
+                ...state.like,
+                status: collectionStatus.SUCCESS,
+                count: action.target.likes,
+            },
+        };
+    case collectionConstants.LIKE_COLLECTION_FAILURE:
+        return {
+            ...state,
+            like: {
+                ...state.like,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
+    case collectionConstants.UNLIKE_COLLECTION_SUCCESS:
+        return {
+            ...state,
+            unlike: {
+                ...state.unlike,
+                status: collectionStatus.SUCCESS,
+                count: action.target.likes,
+            },
+        };
+    case collectionConstants.UNLIKE_COLLECTION_FAILURE:
+        return {
+            ...state,
+            unlike: {
+                ...state.unlike,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
+    case collectionConstants.SEARCH_COLLECTION_SUCCESS:
+        return {
+            ...state,
+            list: {
+                ...state.list,
+                status: collectionStatus.SUCCESS,
+                list: action.target.collections,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
+                totalCount: action.target.totalCount,
+            },
+        };
+    case collectionConstants.SEARCH_COLLECTION_FAILURE:
+        return {
+            ...state,
+            list: {
+                ...state.list,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+                pageNum: 0,
+                finished: false,
+                totalCount: 0,
+            },
+        };
+    case collectionConstants.GET_COLLECTION_LIKE_SUCCESS:
+        return {
+            ...state,
+            list: {
+                ...state.list,
+                status: collectionStatus.SUCCESS,
+                list: action.target.collections,
+                pageNum: action.target.pageNum,
+                finished: action.target.finished,
+            },
+        };
+    case collectionConstants.GET_COLLECTION_LIKE_FAILURE:
+        return {
+            ...state,
+            list: {
+                ...state.list,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+                pageNum: 0,
+                finished: false,
+            },
+        };
+    case collectionConstants.CHANGE_COLLECTION_TYPE_SUCCESS:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.SUCCESS,
+                collection: action.target,
+            },
+        };
+    case collectionConstants.CHANGE_COLLECTION_TYPE_FAILURE:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.FAILURE,
+                error: action.target,
+            },
+        };
+    case collectionConstants.DEL_COLLECTION_PAPER_SUCCESS:
+        return {
+            ...state,
+            selected: {
+                ...state.selected,
+                status: collectionStatus.SUCCESS,
+                collection: {
+                    ...state.selected.collection,
+                    count: {
+                        ...state.selected.collection.count,
+                        papers: action.target,
+                    },
+                },
+            },
+        };
+    case collectionConstants.DEL_COLLECTION_PAPER_FAILURE:
+        return {
+            ...state,
+            selected: {
+                ...state.delete,
+                status: collectionStatus.FAILURE,
+            },
+        };
     default:
         return { ...state };
     }

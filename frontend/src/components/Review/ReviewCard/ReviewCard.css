@@ -7,6 +7,20 @@
     text-align: left;
 }
 
+.CardHeader {
+    display: inline-block;
+}
+
+#headerReviewSubscriptionTarget {
+    display: inline-block;
+    background-color: rgb(235, 250, 254);
+}
+
+#headerReviewSubscription {
+    display: inline-block;
+    background-color: rgb(235, 250, 254);
+}
+
 .review .body {
     padding-bottom: 10%;
 }
@@ -28,8 +42,10 @@
 }
 
 .review .footer {
+    flex-wrap: nowrap;
     display: flex;
-    justify-content: flex-start;
+    justify-content: flex-start;  
+    align-items: center;
 }
 
 

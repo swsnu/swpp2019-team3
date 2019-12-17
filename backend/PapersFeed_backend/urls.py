@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.conf.urls import include
+from django.conf.urls import include, url
+import notifications.urls
 
 # pylint: disable=invalid-name
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('papersfeed.urls'))
+    path('api/', include('papersfeed.urls')),
+    url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
 ]
 # pylint: enable=invalid-name

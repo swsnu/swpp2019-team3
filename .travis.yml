@@ -36,8 +36,11 @@ matrix:
     dist: trusty
     services:
     - mysql
+    - redis-server
     env:
     - COVERALLS_PARALLEL=true
+    - TEXT_ANALYTICS_SUBSCRIPTION_KEY=secret
+    - TEXT_ANALYTICS_ENDPOINT=https://koreacentral.api.cognitive.microsoft.com/
     addons:
       sonarcloud:
         organization: "swsnu"

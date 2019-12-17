@@ -1,0 +1,255 @@
+import ReviewReducer from "./review";
+import { reviewStatus } from "../../../constants/constants";
+import { reviewConstants } from "../../actions/actionTypes";
+
+const stubInitialState = {
+    make: {
+        status: reviewStatus.NONE,
+        review: {},
+        error: null,
+    },
+    list: {
+        status: reviewStatus.NONE,
+        list: [],
+        error: null,
+        pageNum: 0,
+        finished: false,
+    },
+    edit: {
+        status: reviewStatus.NONE,
+        review: {},
+        error: null,
+    },
+    delete: {
+        status: reviewStatus.NONE,
+        review: {},
+        error: null,
+    },
+    selected: {
+        status: reviewStatus.NONE,
+        review: {},
+        error: null,
+        replies: [],
+    },
+    like: {
+        status: reviewStatus.NONE,
+        count: 0,
+        error: null,
+    },
+    unlike: {
+        status: reviewStatus.NONE,
+        count: 0,
+        error: null,
+    },
+};
+
+const stubReview = {
+    id: 1,
+    creation_data: "2019-11-05",
+    modification_data: "2019-11-06",
+    title: "SWPP",
+    text: "SWPP2019fall",
+};
+
+const stubError = {
+    response: {
+        status: 440,
+        data: {},
+    },
+};
+
+describe("Review reducer", () => {
+    it("should return defualt state", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: "Abc",
+            target: "fddf",
+        });
+        expect(newState).toEqual(stubInitialState);
+    });
+
+    it("should return add_review state", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.ADD_REVIEW,
+            target: stubReview,
+        });
+        expect(newState.make.status).toBe(reviewStatus.SUCCESS);
+        expect(newState.make.review).toBe(stubReview);
+    });
+
+    it("should return add_review_failure_missing_param", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.ADD_REVIEW_FAILURE_MISSING_PARAM,
+            target: stubReview,
+        });
+        expect(newState.make.status).toBe(reviewStatus.MISSING_PARAM);
+        expect(newState.make.error).toBe(stubReview);
+    });
+
+    it("should return add_review_failure_paper_not_exist", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.ADD_REVIEW_FAILURE_PAPER_NOT_EXIST,
+            target: stubReview,
+        });
+        expect(newState.make.status).toBe(reviewStatus.PAPER_NOT_EXIST);
+        expect(newState.make.error).toBe(stubReview);
+    });
+
+    it("should return get_reviews_by_paper", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.GET_REVIEWS_BY_PAPER_SUCCESS,
+            target: { reviews: [stubReview], page_number: 1, is_finished: true },
+        });
+        expect(newState.list.status).toBe(reviewStatus.SUCCESS);
+        expect(newState.list.list).toEqual([stubReview]);
+    });
+
+    it("should handle get_reviews_by_paper_failure", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.GET_REVIEWS_BY_PAPER_FAILURE,
+            target: { reviews: stubReview, page_number: 1, is_finished: true },
+        });
+        expect(newState.list.status).toBe(reviewStatus.FAILURE);
+        expect(newState.list.list).toEqual([]);
+    });
+
+    it("should return get_reviews_by_user", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.GET_REVIEWS_BY_USER,
+            target: {
+                reviews: [stubReview],
+                page_number: 1,
+                is_finished: false,
+            },
+        });
+        expect(newState.list.status).toBe(reviewStatus.SUCCESS);
+        expect(newState.list.list).toStrictEqual([stubReview]);
+        expect(newState.list.pageNum).toBe(1);
+        expect(newState.list.finished).toBe(false);
+    });
+
+    it("should return get_review", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.GET_REVIEW,
+            target: stubReview,
+        });
+        expect(newState.selected.status).toBe(reviewStatus.SUCCESS);
+        expect(newState.selected.review).toBe(stubReview);
+    });
+
+    it("should return get_review_failure_review_not_exist", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.GET_REVIEW_FAILURE_REVIEW_NOT_EXIST,
+            target: stubReview,
+        });
+        expect(newState.selected.status).toBe(reviewStatus.REVIEW_NOT_EXIST);
+        expect(newState.selected.error).toBe(stubReview);
+    });
+
+    it("should return edit_review", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.EDIT_REVIEW,
+            target: stubReview,
+        });
+        expect(newState.edit.status).toBe(reviewStatus.SUCCESS);
+        expect(newState.edit.review).toBe(stubReview);
+    });
+
+    it("should return edit_review_papers_failure_review_not_exist", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.EDIT_REVIEW_FAILURE_REVIEW_NOT_EXIST,
+            target: stubReview,
+        });
+        expect(newState.edit.status).toBe(reviewStatus.REVIEW_NOT_EXIST);
+        expect(newState.edit.error).toBe(stubReview);
+    });
+
+
+    it("should return edit_review_failure_review_auth_error", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.EDIT_REVIEW_FAILURE_AUTH_ERROR,
+            target: stubReview,
+        });
+        expect(newState.edit.status).toBe(reviewStatus.AUTH_ERROR);
+        expect(newState.edit.error).toBe(stubReview);
+    });
+
+    it("should return delete_reviewr", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.DEL_REVIEW,
+            target: stubReview,
+        });
+        expect(newState.delete.status).toBe(reviewStatus.SUCCESS);
+        expect(newState.delete.review).toBe(stubReview);
+    });
+
+    it("should return delete_review_failure_auth_error", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.DEL_REVIEW_FAILURE_AUTH_ERROR,
+            target: stubReview,
+        });
+        expect(newState.delete.status).toBe(reviewStatus.AUTH_ERROR);
+        expect(newState.delete.error).toBe(stubReview);
+    });
+
+
+    it("should return delete_review_failure_not_exist", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.DEL_REVIEW_FAILURE_REVIEW_NOT_EXIST,
+            target: stubReview,
+        });
+        expect(newState.delete.status).toBe(reviewStatus.REVIEW_NOT_EXIST);
+        expect(newState.delete.error).toBe(stubReview);
+    });
+
+
+    it("should return like_review_success state", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.LIKE_REVIEW_SUCCESS,
+            target: { likes: 1 },
+        });
+        expect(newState.like.status).toBe(reviewStatus.SUCCESS);
+    });
+
+    it("should return like_review_failure state", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.LIKE_REVIEW_FAILURE,
+            target: stubError,
+        });
+        expect(newState.like.status).toBe(reviewStatus.FAILURE);
+    });
+
+
+    it("should return unlike_review_success state", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.UNLIKE_REVIEW_SUCCESS,
+            target: { likes: 1 },
+        });
+        expect(newState.unlike.status).toBe(reviewStatus.SUCCESS);
+    });
+
+    it("should return unlike_review_failure state", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.UNLIKE_REVIEW_FAILURE,
+            target: stubError,
+        });
+        expect(newState.unlike.status).toBe(reviewStatus.FAILURE);
+    });
+
+    it("should return get_review_like", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.GET_REVIEW_LIKE_SUCCESS,
+            target: { reviews: stubReview },
+        });
+        expect(newState.list.status).toBe(reviewStatus.SUCCESS);
+        expect(newState.list.list).toBe(stubReview);
+    });
+
+    it("should not return get_review_like", () => {
+        const newState = ReviewReducer(stubInitialState, {
+            type: reviewConstants.GET_REVIEW_LIKE_FAILURE,
+            target: 204,
+        });
+        expect(newState.list.status).toBe(reviewStatus.FAILURE);
+        expect(newState.list.error).toBe(204);
+    });
+});

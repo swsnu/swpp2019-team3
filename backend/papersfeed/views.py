@@ -2,17 +2,15 @@
 # -*- coding: utf-8 -*-
 
 # Python Modules
+import logging
 import json
 import traceback
 
 # Django Modules
 from django.http import JsonResponse
-from django.core.exceptions import ObjectDoesNotExist
-from django.views.decorators.csrf import csrf_exempt
 
 # Internal Modules
-from papersfeed.utils.base_utils import ApiError
-from papersfeed.models.users.user import User
+from papersfeed.utils.base_utils import ApiError, check_session
 from . import apis
 from . import constants
 
@@ -22,7 +20,7 @@ def api_not_found():
     raise ApiError(404)
 
 
-@csrf_exempt
+# pylint: disable=too-many-branches
 def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
     """api_entry"""
     # API 요청에 Return 할 Response Initialize
@@ -30,7 +28,7 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
 
     # Method와 API Path를 이용해 Function을 찾아 실행시킨다
     # ——————————————————————————
-    method = request.method.upper()
+    method = request.method
     api_function = method.lower() + '_' + api
 
     if second_api is not None:
@@ -42,6 +40,15 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
     if fourth_api is not None:
         api_function += '_' + fourth_api
 
+    if api_function == 'get_session':
+        return apis.get_session(request)
+    if api_function == 'post_user':
+        return apis.post_user(request)
+
+    if api_function == 'get_paper_search':
+        result = apis.get_paper_search(request)
+        return result
+
     handler = getattr(apis, api_function, api_not_found)
 
     if handler is not api_not_found:
@@ -52,8 +59,16 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
             args[constants.REQUEST] = request
 
             # Session Check
-            if api_function not in ['get_session', 'post_user']:
-                __check_session(args, request)
+            if api_function not in [
+                    'get_session',
+                    'post_user',
+                    'get_paper_search_ml',
+                    'get_user_action',
+                    'post_user_recommendation',
+                    'get_user_all',
+                    'get_paper_all'
+                ]:
+                check_session(args, request)
 
             # Functions 실행
             data = handler(args)
@@ -61,23 +76,25 @@ def api_entry(request, api, second_api=None, third_api=None, fourth_api=None):
 
         except ApiError as error:
             status_code = error.args[0]
-        except ValueError as error:
-            status_code = 520
-            response_data[constants.DEBUG] = {constants.ERROR: str(error)}
+            logging.error("\tstatus-code: %d\n%s\n%s", status_code, str(error), traceback.format_exc())
         except Exception as error:  # pylint: disable=broad-except
-            print("ERROR:" + str(error))
+            logging.error(traceback.format_exc())
             status_code = 500
             response_data[constants.DEBUG] = {constants.ERROR: str(error),
                                               constants.DESCRIPTION: traceback.format_exc()}
+            logging.error("\tstatus-code: %d\n%s\n%s", status_code, str(error), traceback.format_exc())
         else:
-            status_code = 200
+            if api_function.startswith('post'):
+                status_code = 201
+            else:
+                status_code = 200
     else:
         status_code = 404
 
     response = JsonResponse(response_data, safe=False)
     response.status_code = status_code
-
     return response
+# pylint: enable=too-many-branches
 
 
 def __get_args(request):
@@ -104,18 +121,3 @@ def __get_args(request):
         args = body
 
     return args
-
-
-def __check_session(args, request):
-    # User Id
-    user_id = request.session.get(constants.ID, None)
-    if not user_id:
-        raise ApiError(constants.AUTH_ERROR)
-
-    try:
-        # Get User By Id
-        user = User.objects.get(id=user_id)
-    except ObjectDoesNotExist:
-        raise ApiError(constants.AUTH_ERROR)
-    else:
-        args[constants.USER] = user

@@ -1,13 +1,19 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
 
+import concurrent.futures
+import urllib
 import json
-import datetime
-
-from django.db.models import Q, Exists, OuterRef, Count
+import logging
+import requests
+import xmltodict
+from django.core.cache import cache
+from django.db.models import Q, Exists, OuterRef, Count, Case, When
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
+from papersfeed.utils.papers.search import exploit_arxiv, exploit_crossref, __extract_keywords_from_abstract, __parse_and_save_arxiv_info # pylint: disable=line-too-long
+from papersfeed.utils.collections.utils import get_collection_paper_count
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.papers.author import Author
 from papersfeed.models.papers.keyword import Keyword
@@ -19,6 +25,8 @@ from papersfeed.models.papers.publication import Publication
 from papersfeed.models.papers.publisher import Publisher
 from papersfeed.models.reviews.review import Review
 from papersfeed.models.collections.collection_paper import CollectionPaper
+
+SEARCH_COUNT = 20 # pagination count for searching papers
 
 
 def select_paper(args):
@@ -34,7 +42,7 @@ def select_paper(args):
     paper_id = args[constants.ID]
 
     # Papers
-    papers, _, _ = __get_papers(Q(id=paper_id), request_user, None)
+    papers, _ = __get_papers(Q(id=paper_id), request_user, None)
 
     # Does Not Exist
     if not papers:
@@ -57,134 +65,285 @@ def select_paper_collection(args):
     # Collection Id
     collection_id = args[constants.ID]
 
-    # Papers
-    collection_papers = CollectionPaper.objects.filter(
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
+
+    # Papers Queryset
+    queryset = CollectionPaper.objects.filter(
         collection_id=collection_id
     )
 
+    # Papers
+    collection_papers = get_results_from_queryset(queryset, 10, page_number)
+
+    # is_finished
+    is_finished = not collection_papers.has_next()
+
     paper_ids = [collection_paper.paper_id for collection_paper in collection_papers]
 
-    papers, _, _ = __get_papers(Q(id__in=paper_ids), request_user, None)
+    papers, _ = __get_papers(Q(id__in=paper_ids), request_user, 10)
+
+    return papers, page_number, is_finished
+
+
+# pylint: disable=too-many-locals
+def select_paper_search(args):
+    """Select Paper Search"""
+    is_parameter_exists([
+        constants.TEXT
+    ], args)
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Search Keyword
+    keyword = args[constants.TEXT]
+
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
+
+    # Check cache
+    cache_key = keyword + '_' + str(page_number)
+    cache_result = cache.get(cache_key)
+
+    if cache_result:
+        logging.info("CACHE HIT: %s", cache_key)
+        result_ids, paper_ids, external, is_finished = cache_result
+
+    else:
+        logging.info("CACHE MISS: %s", cache_key)
+        paper_ids = {
+            'papersfeed': [], # only used when all external search fails
+            'arxiv': [],
+            'crossref': [],
+        }
+        is_finished_dict = {
+            'arxiv': False,
+            'crossref': False,
+        }
+
+        future_to_source = {}
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            future_to_source[executor.submit(exploit_arxiv, keyword, page_number)] = 'arxiv'
+            future_to_source[executor.submit(exploit_crossref, keyword, page_number)] = 'crossref'
+            for future in concurrent.futures.as_completed(future_to_source):
+                source = future_to_source[future]
+                try:
+                    paper_ids[source], is_finished_dict[source] = future.result()
+                except Exception as exc: # pylint: disable=broad-except
+                    logging.warning("[%s] generated an exception: %s", source, exc)
+
+        external = True
+        # if there are both results (len <= SEARCH_RESULT * 2)
+        if paper_ids['arxiv'] and paper_ids['crossref']:
+            result_ids = paper_ids['arxiv'] + paper_ids['crossref']
+            is_finished = is_finished_dict['arxiv'] and is_finished_dict['crossref']
+
+        # if only there are results of Crossref (len <= SEARCH_COUNT)
+        elif not paper_ids['arxiv'] and paper_ids['crossref']:
+            result_ids = paper_ids['crossref']
+            is_finished = is_finished_dict['crossref']
+
+        # if only there are results of arXiv (len <= SEARCH_COUNT)
+        elif not paper_ids['crossref'] and paper_ids['arxiv']:
+            result_ids = paper_ids['arxiv']
+            is_finished = is_finished_dict['arxiv']
+
+        # if cannot get any results from external sources
+        else:
+            external = False
+            logging.info("[naive-search] Searching in PapersFeed DB")
+
+            # Papers Queryset
+            queryset = Paper.objects.filter(Q(title__icontains=keyword) | Q(abstract__icontains=keyword)) \
+                .values_list('id', 'abstract')
+
+            # Check if the papers have keywords. If not, try extracting keywords this time
+            abstracts = {}
+            for paper_id, abstract in queryset:
+                paper_ids['papersfeed'].append(paper_id)
+
+                if not PaperKeyword.objects.filter(paper_id=paper_id).exists():
+                    abstracts[paper_id] = abstract
+
+            if abstracts:
+                __extract_keywords_from_abstract(abstracts)
+
+            # Paper Ids
+            result_ids = get_results_from_queryset(paper_ids['papersfeed'], SEARCH_COUNT, page_number)
+            # is_finished (tentative)
+            is_finished = False
+
+        # Cache set
+        cache.set(cache_key, (result_ids, paper_ids, external, is_finished), timeout=None)
+        logging.info("CACHE SET: %s", cache_key)
+
+    # Papers - Sometimes, there can be duplicated ids in result_ids. Thus, len(papers) < len(result_ids) is possible.
+    papers, _, is_finished = __get_papers_search(result_ids, request_user, paper_ids, external, is_finished)
+    return papers, page_number, is_finished
+# pylint: enable=too-many-locals
+
+
+# pylint: disable=too-many-locals
+def select_paper_search_ml(args):
+    """Select Paper Search for ML(dummy data)"""
+    is_parameter_exists([
+        constants.TITLES
+    ], args)
+
+    # Search Titles
+    titles = json.loads(args[constants.TITLES])
+
+    paper_ids = []
+
+    # this dict is for extracting keywords from papers which already exists in DB but have no keywords
+    abstracts = {}
+
+    for title in titles:
+        # Papers Queryset(id, abstract)
+        queryset = Paper.objects.filter(Q(title__icontains=title)).values_list('id', 'abstract')
+
+        # if there is no result in our DB
+        if queryset.count() == 0:
+            # exploit arXiv
+            try:
+                start = 0
+                logging.info("[arXiv API - ml] searching (%d~%d)", start, start + 1)
+                arxiv_url = "http://export.arxiv.org/api/query"
+                query = "?search_query=" + urllib.parse.quote(title) \
+                    + "&start=" + str(start) + "&max_results=" + str(1)
+                response = requests.get(arxiv_url + query)
+
+                if response.status_code == 200:
+                    response_xml = response.text
+                    response_dict = xmltodict.parse(response_xml)['feed']
+                    if 'entry' in response_dict and response_dict['entry']:
+                        # this process includes extracting keywords from abstracts
+                        paper_ids.append(__parse_and_save_arxiv_info(response_dict)[0][0])
+                    else: # if 'entry' doesn't exist
+                        logging.warning("[arXiv API - ml] more entries don't exist")
+                        paper_ids.append(-1)
+                else:
+                    logging.warning("[arXiv API - ml] error code %d", response.status_code)
+                    paper_ids.append(-1)
+            except requests.exceptions.RequestException as exception:
+                logging.warning(exception)
+                paper_ids.append(-1)
+
+        # if the paper exists in our DB
+        else:
+            # (id, abstract) of the paper
+            paper_id, abstract = queryset.first()
+            paper_ids.append(paper_id)
+
+            # Check if the paper has keywords. If not, try extracting keywords this time
+            if not PaperKeyword.objects.filter(paper_id=paper_id).exists():
+                abstracts[paper_id] = abstract
+
+    # after getting all results from arXiv and checking keywords existence
+    if abstracts:
+        __extract_keywords_from_abstract(abstracts)
+
+    # Papers
+    papers = __get_papers_ml(paper_ids, titles)
 
     return papers
+# pylint: enable=too-many-locals
 
 
-def get_paper_migration():
-    """Paper Migration from json"""
-    with open('papersfeed/fixtures/cs_500.json', 'r') as papers_json:
-        paper_related_objects = json.load(papers_json)
+def select_paper_like(args):
+    """Select Paper Like"""
 
-        papers = []
-        authors = []
-        paper_authors = []
-        publishers = []
-        publications = []
-        paper_publications = []
+    # Request User
+    request_user = args[constants.USER]
 
-        for paper_related_object in paper_related_objects:
-            model = paper_related_object['model'].split('.')[1]
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
-            pk = paper_related_object['pk']
-            if model == 'paper':
-                papers.append(
-                    Paper(
-                        id=pk,
-                        title=paper_related_object['fields']['title'],
-                        language=paper_related_object['fields']['language'],
-                        abstract=paper_related_object['fields']['abstract'],
-                        ISSN=paper_related_object['fields']['ISSN'],
-                        eISSN=paper_related_object['fields']['eISSN'],
-                        DOI=paper_related_object['fields']['DOI']
-                    )
-                )
-            elif model == 'author':
-                authors.append(
-                    Author(
-                        id=pk,
-                        first_name=paper_related_object['fields']['first_name'],
-                        last_name=paper_related_object['fields']['last_name'],
-                        email=paper_related_object['fields']['email'],
-                        address=paper_related_object['fields']['address'],
-                        researcher_id=paper_related_object['fields']['researcher_id']
-                    )
-                )
-            elif model == 'paperauthor':
-                paper_authors.append(
-                    PaperAuthor(
-                        id=pk,
-                        paper_id=paper_related_object['fields']['paper'],
-                        author_id=paper_related_object['fields']['author'],
-                        type=paper_related_object['fields']['type'],
-                        rank=paper_related_object['fields']['rank']
-                    )
-                )
-            elif model == 'publisher':
-                publishers.append(
-                    Publisher(
-                        id=pk,
-                        name=paper_related_object['fields']['name'],
-                        city=paper_related_object['fields']['city'],
-                        address=paper_related_object['fields']['address']
-                    )
-                )
-            elif model == 'publication':
-                publications.append(
-                    Publication(
-                        id=pk,
-                        name=paper_related_object['fields']['name'],
-                        type=paper_related_object['fields']['type'],
-                        publisher_id=paper_related_object['fields']['publisher']
-                    )
-                )
-            elif model == 'paperpublication':
-                paper_publications.append(
-                    PaperPublication(
-                        id=pk,
-                        paper_id=paper_related_object['fields']['paper'],
-                        publication_id=paper_related_object['fields']['publication'],
-                        volume=paper_related_object['fields']['volume'],
-                        issue=paper_related_object['fields']['issue'],
-                        date=datetime.datetime.strptime(paper_related_object['fields']['date'], '%Y-%m-%d')
-                        if paper_related_object['fields']['date'] else None,
-                        beginning_page=paper_related_object['fields']['beginning_page'],
-                        ending_page=paper_related_object['fields']['ending_page'],
-                        ISBN=paper_related_object['fields']['ISBN']
-                    )
-                )
+    # Papers Queryset
+    queryset = PaperLike.objects.filter(Q(user_id=request_user.id)).order_by(
+        '-creation_date').values_list('paper_id', flat=True)
 
-        Paper.objects.bulk_create(papers)
-        Author.objects.bulk_create(authors)
-        PaperAuthor.objects.bulk_create(paper_authors)
-        Publisher.objects.bulk_create(publishers)
-        Publication.objects.bulk_create(publications)
-        PaperPublication.objects.bulk_create(paper_publications)
+    # Paper Ids
+    paper_ids = get_results_from_queryset(queryset, 10, page_number)
+
+    # is_finished
+    is_finished = not paper_ids.has_next()
+
+    # need to maintain the order
+    preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(paper_ids)])
+
+    # Papers
+    papers, _ = __get_papers(Q(id__in=paper_ids), request_user, 10, preserved)
+
+    return papers, page_number, is_finished
 
 
 def get_papers(filter_query, request_user, count):
     """Public Get Papers"""
     return __get_papers(filter_query, request_user, count)
 
+def remove_paper_collection(args):
+    """Remove paper from the collection"""
+    is_parameter_exists([
+        constants.ID, constants.PAPER_ID
+    ], args)
 
-def __get_papers(filter_query, request_user, count):
+    collection_id = int(args[constants.ID])
+    paper_id = int(args[constants.PAPER_ID])
+
+    if not CollectionPaper.objects.filter(collection_id=collection_id, paper_id=paper_id).exists():
+        raise ApiError(constants.NOT_EXIST_OBJECT)
+
+    CollectionPaper.objects.filter(collection_id=collection_id, paper_id=paper_id).delete()
+
+    # Get the number of papers in the collection
+    paper_counts = get_collection_paper_count([collection_id], 'collection_id')
+    return {constants.PAPERS: paper_counts[collection_id] if collection_id in paper_counts else 0}
+
+def __get_papers(filter_query, request_user, count, order_by='-pk'):
     """Get Papers By Query"""
     queryset = Paper.objects.filter(
         filter_query
     ).annotate(
         is_liked=__is_paper_liked('id', request_user)
-    )
+    ).order_by(order_by)
 
     papers = get_results_from_queryset(queryset, count)
 
     pagination_value = papers[len(papers) - 1].id if papers else 0
 
-    is_finished = len(papers) < count if count and pagination_value != 0 else True
-
     papers = __pack_papers(papers, request_user)
+
+    return papers, pagination_value
+
+
+def __get_papers_search(result_ids, request_user, source_to_id, external, is_finished):
+    """Get Papers By Query"""
+    # need to maintain the order
+    preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(result_ids)])
+
+    queryset = Paper.objects.filter(
+        Q(id__in=result_ids)
+    ).annotate(
+        is_liked=__is_paper_liked('id', request_user)
+    ).order_by(preserved)
+
+    if external:
+        # if external, give all ready search results
+        papers = queryset
+    else:
+        papers = get_results_from_queryset(queryset, SEARCH_COUNT)
+        is_finished = len(papers) < SEARCH_COUNT if SEARCH_COUNT and papers else True
+
+    pagination_value = papers[len(papers) - 1].id if papers else 0
+
+    papers = __pack_papers(papers, request_user, source_to_id=source_to_id)
 
     return papers, pagination_value, is_finished
 
 
-def __pack_papers(papers, request_user):  # pylint: disable=unused-argument
+def __pack_papers(papers, request_user, source_to_id=None):  # pylint: disable=unused-argument
     """Pack Papers"""
     packed = []
 
@@ -225,8 +384,46 @@ def __pack_papers(papers, request_user):  # pylint: disable=unused-argument
             constants.COUNT: {
                 constants.REVIEWS: review_counts[paper_id] if paper_id in review_counts else 0,
                 constants.LIKES: like_counts[paper_id] if paper_id in like_counts else 0
-            }
+            },
         }
+
+        if source_to_id:
+            for source, paper_ids in source_to_id.items():
+                if paper_id in paper_ids:
+                    packed_paper[constants.SOURCE] = source
+                    break
+
+        packed.append(packed_paper)
+
+    return packed
+
+
+def __get_papers_ml(paper_ids, search_words):
+    """Get Papers By Query for ML(dummy data)"""
+    packed = []
+
+    for i, paper_id in enumerate(paper_ids):
+        if paper_id != -1:
+            # Paper
+            paper = Paper.objects.get(id=paper_id)
+
+            # Paper Keywords
+            keywords = __get_keywords_paper(Q(paper_id=paper_id))
+            packed_paper = {
+                constants.ID: paper.id,
+                constants.TITLE: paper.title,
+                constants.ABSTRACT: paper.abstract,
+                constants.KEYWORDS: keywords[paper.id] if paper.id in keywords else [],
+                constants.SEARCH_WORD: search_words[i]
+            }
+        else:
+            packed_paper = {
+                constants.ID: -1,
+                constants.TITLE: "",
+                constants.ABSTRACT: "",
+                constants.KEYWORDS: [],
+                constants.SEARCH_WORD: search_words[i]
+            }
 
         packed.append(packed_paper)
 
@@ -276,6 +473,21 @@ def __get_authors_paper(filter_query):
     result = {key: sorted(value, key=lambda element: element[constants.RANK]) for key, value in result.items()}
 
     return result
+
+
+def get_keywords_paper(filter_query):
+    """get keywords paper"""
+    return __get_keywords_paper(filter_query)
+
+
+def pack_keywords(keywords):
+    """pack keywords"""
+    return __pack_keywords(keywords)
+
+
+def get_paper_like_count(paper_ids, group_by_field):
+    """get paper like count"""
+    return __get_paper_like_count(paper_ids, group_by_field)
 
 
 def __get_keywords_paper(filter_query):
@@ -483,11 +695,13 @@ def __pack_publications(publications):
 
 def __get_publishers(filter_query):
     """Get Publishers By Query"""
-    queryset = Keyword.objects.filter(
+    queryset = Publisher.objects.filter(
         filter_query
     )
 
     publishers = get_results_from_queryset(queryset, None)
+
+    publishers = __pack_publisher(publishers)
 
     return publishers
 

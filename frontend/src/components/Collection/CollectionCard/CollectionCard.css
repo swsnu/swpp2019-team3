@@ -7,6 +7,10 @@
     text-align: left;
 }
 
+#headerCollectionSubscription {
+    background-color: rgb(234, 239, 255)
+}
+
 .collection .body {
     padding: 10%;
 }
@@ -19,26 +23,7 @@
     font-size: 130%;
 }
 
-.collection .like-button{
-    width: 17%;
-    display: flex;
-    justify-content: space-around;
-}
-
 .collection .footer {
     display: flex;
     justify-content: flex-start;
 }
-.collection .like-button .heart-image{
-margin-top: 2%;
-margin-right: 1%;
-}
-.collection .reply-button{
-    width: 17%;
-    display: flex;
-    justify-content: space-around;
-}
-
-.collection .reply-button .talk-image{
-    margin-top: 9%;
-}   

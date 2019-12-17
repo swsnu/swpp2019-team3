@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, Exists, OuterRef, Count
+from django.db.models import Q, Exists, OuterRef, Count, Case, When
 
 from papersfeed import constants
 from papersfeed.utils.base_utils import is_parameter_exists, get_results_from_queryset, ApiError
@@ -12,6 +12,8 @@ from papersfeed.models.reviews.review import Review
 from papersfeed.models.papers.paper import Paper
 from papersfeed.models.reviews.review_like import ReviewLike
 from papersfeed.models.replies.reply_review import ReplyReview
+from papersfeed.models.users.user_action import UserAction, USER_ACTION_TYPE
+from papersfeed.models.subscription.subscription import Subscription
 
 
 def select_review(args):
@@ -27,7 +29,7 @@ def select_review(args):
     request_user = args[constants.USER]
 
     # Reviews
-    reviews, _, _ = __get_reviews(Q(id=review_id), request_user, None)
+    reviews, _, _, _ = __get_reviews(Q(id=review_id), request_user, None)
 
     # Not Exists
     if not reviews:
@@ -56,6 +58,9 @@ def insert_review(args):
     # Text
     text = args[constants.TEXT]
 
+    # Anonymous
+    is_anonymous = False if constants.IS_ANONYMOUS not in args else args[constants.IS_ANONYMOUS]
+
     # Check Valid
     if not title or not text:
         raise ApiError(constants.PARAMETER_ERROR)
@@ -69,10 +74,46 @@ def insert_review(args):
         paper_id=paper_id,
         user_id=request_user.id,
         title=title,
-        text=text
+        text=text,
+        anonymous=is_anonymous
     )
 
-    reviews, _, _ = __get_reviews(Q(id=review.id), request_user, None)
+    # store an action for subscription feed
+    try:
+        subscription = Subscription.objects.get(
+            actor=request_user,
+            verb="wrote",
+            action_object_object_id=review.id,
+            target_object_id=paper_id
+        )
+        subscription.save() # for updating time
+    except Subscription.DoesNotExist:
+        paper = Paper.objects.get(id=paper_id)
+        Subscription.objects.create(
+            actor=request_user,
+            verb="wrote",
+            action_object=review,
+            target=paper,
+        )
+
+    # Create action for recommendation
+    try:
+        obj = UserAction.objects.get(
+            user_id=request_user.id,
+            paper_id=paper_id,
+            type=USER_ACTION_TYPE[2]
+        )
+        obj.count = obj.count + 1
+        obj.save()
+    except ObjectDoesNotExist:
+        UserAction.objects.create(
+            user_id=request_user.id,
+            paper_id=paper_id,
+            type=USER_ACTION_TYPE[2],
+            count=1,
+        )
+
+    reviews, _, _, _ = __get_reviews(Q(id=review.id), request_user, None)
 
     if not reviews:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -109,6 +150,9 @@ def update_review(args):
     # Text
     text = args[constants.TEXT] if constants.TEXT in args else None
 
+    # Anonymous
+    is_anonymous = args[constants.IS_ANONYMOUS] if constants.IS_ANONYMOUS in args else None
+
     # Update Title
     if title:
         review.title = title
@@ -117,9 +161,13 @@ def update_review(args):
     if text:
         review.text = text
 
+    # Update Anonymous
+    if is_anonymous:
+        review.anonymous = is_anonymous
+
     review.save()
 
-    reviews, _, _ = __get_reviews(Q(id=review.id), request_user, None)
+    reviews, _, _, _ = __get_reviews(Q(id=review.id), request_user, None)
 
     if not reviews:
         raise ApiError(constants.NOT_EXIST_OBJECT)
@@ -150,7 +198,17 @@ def remove_review(args):
     if review.user_id != request_user.id:
         raise ApiError(constants.AUTH_ERROR)
 
+    paper_id = review.paper_id
+
     review.delete()
+
+    obj = UserAction.objects.get(
+        user_id=request_user.id,
+        paper_id=paper_id,
+        type=USER_ACTION_TYPE[2]
+    )
+    obj.count = obj.count - 1
+    obj.save()
 
 
 def select_review_paper(args):
@@ -165,9 +223,15 @@ def select_review_paper(args):
     # Request Uer
     request_user = args[constants.USER]
 
-    reviews, _, _ = __get_reviews(Q(paper_id=paper_id), request_user, None)
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
-    return reviews
+    # Reviews Queryset
+    queryset = Q(paper_id=paper_id)
+
+    reviews, _, is_finished, _ = __get_reviews(queryset, request_user, 10, page_number=page_number)
+
+    return reviews, page_number, is_finished
 
 
 def select_review_user(args):
@@ -182,28 +246,84 @@ def select_review_user(args):
     # Request Uer
     request_user = args[constants.USER]
 
-    reviews, _, _ = __get_reviews(Q(user_id=user_id), request_user, None)
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
 
-    return reviews
+    # Reviews Queryset
+    if int(user_id) == int(request_user.id):
+        queryset = Q(user_id=user_id)
+    else:
+        queryset = Q(user_id=user_id) & Q(anonymous=False)
+
+    params = {
+        constants.TOTAL_COUNT: True # count whole reviews
+    }
+    reviews, _, is_finished, total_count = __get_reviews(queryset, request_user, 10, params=params,
+                                                         page_number=page_number)
+
+    return reviews, page_number, is_finished, total_count
 
 
-def __get_reviews(filter_query, request_user, count):
+def select_review_like(args):
+    """Select Review Like"""
+
+    # Request User
+    request_user = args[constants.USER]
+
+    # Page Number
+    page_number = 1 if constants.PAGE_NUMBER not in args else int(args[constants.PAGE_NUMBER])
+
+    # Review Ids
+    review_ids = ReviewLike.objects.filter(Q(user_id=request_user.id)).order_by(
+        '-creation_date').values_list('review_id', flat=True)
+
+    # need to maintain the order
+    preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(review_ids)])
+
+    # Reviews
+    params = {
+        constants.ORDER_BY: preserved
+    }
+    reviews, _, is_finished, _ = __get_reviews(Q(id__in=review_ids), request_user, 10, params=params,
+                                               page_number=page_number)
+
+    return reviews, page_number, is_finished
+
+
+def get_reviews(filter_query, request_user, count, page_number=1):
+    """Get Reviews"""
+    return __get_reviews(filter_query, request_user, count, page_number=page_number)
+
+
+def get_review_like_count(review_ids, group_by_field):
+    """Get Review like Count"""
+    return __get_review_like_count(review_ids, group_by_field)
+
+
+def __get_reviews(filter_query, request_user, count, params=None, page_number=1):
     """Get Reviews By Query"""
+    params = {} if params is None else params
+    order_by = '-pk' if constants.ORDER_BY not in params else params[constants.ORDER_BY]
+
     queryset = Review.objects.filter(
         filter_query
     ).annotate(
         is_liked=__is_review_liked('id', request_user)
-    )
+    ).order_by(order_by)
 
-    reviews = get_results_from_queryset(queryset, count)
+    total_count = queryset.count() if constants.TOTAL_COUNT in params else None
+
+    reviews = get_results_from_queryset(queryset, count, page_number)
+
+    is_finished = True
+    if count is not None:
+        is_finished = not reviews.has_next()
 
     pagination_value = reviews[len(reviews) - 1].id if reviews else 0
 
-    is_finished = len(reviews) < count if count and pagination_value != 0 else True
-
     reviews = __pack_reviews(reviews, request_user)
 
-    return reviews, pagination_value, is_finished
+    return reviews, pagination_value, is_finished, total_count
 
 
 # pylint: disable-msg=too-many-locals
@@ -224,7 +344,7 @@ def __pack_reviews(reviews, request_user):
 
     # Papers
     paper_ids = [review.paper_id for review in reviews]
-    papers, _, _ = papers_utils.get_papers(Q(id__in=paper_ids), request_user, None)
+    papers, _ = papers_utils.get_papers(Q(id__in=paper_ids), request_user, None)
 
     # {paper_id: paper}
     papers = {paper[constants.ID]: paper for paper in papers}
@@ -255,7 +375,10 @@ def __pack_reviews(reviews, request_user):
             constants.COUNT: {
                 constants.LIKES: like_counts[review_id] if review_id in like_counts else 0,
                 constants.REPLIES: reply_counts[review_id] if review_id in reply_counts else 0
-            }
+            },
+            constants.CREATION_DATE: review.creation_date,
+            constants.MODIFICATION_DATE: review.modification_date,
+            constants.IS_ANONYMOUS: review.anonymous
         }
 
         packed.append(packed_review)
