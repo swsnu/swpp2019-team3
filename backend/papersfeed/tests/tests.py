@@ -230,6 +230,13 @@ class ApiEntryTestCase(TestCase):
         self.assertEqual(int(json.loads(response.content.decode())[constants.PAGE_NUMBER]), 2)
     # pylint: enable=too-many-locals, too-many-statements
 
+    def test_get_token(self):
+        """Get Token"""
+        client = Client(enforce_csrf_checks=True)
+        response = client.get('/api/token')
+        self.assertEqual(response.status_code, 204)
+
+
 
 # TEST UTILS
 # pylint: disable=too-few-public-methods
