@@ -16,10 +16,10 @@ from . import apis
 from . import constants
 
 @ensure_csrf_cookie
-def token(request):		
-    """token"""		
-    if request.method == 'GET':		
-        return HttpResponse(status=204)		
+def token(request):
+    """token"""
+    if request.method == 'GET':
+        return HttpResponse(status=204)
 
     return HttpResponseNotAllowed(['GET'])
 

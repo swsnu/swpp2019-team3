@@ -403,13 +403,6 @@ def get_user_action(args):
 def post_user_recommendation(request):
     """Post User Recommendation"""
     args = request.POST
-    body = request.body.decode() if request.body else None
-    print()
-    print(body)
-    print()
-    if isinstance(body, dict):
-        args = body
-    args.reqeuset = request
     return recommendation_utils.insert_user_recommendation(args)
 
 

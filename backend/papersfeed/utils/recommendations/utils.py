@@ -68,7 +68,8 @@ def select_user_actions(_):
 def insert_user_recommendation(args):
     """Insert user recommendation"""
 
-    for data in json.loads(args['data']):
+    datas = json.loads(args['data'])
+    for data in datas:
         user_id = data['user']
         papers = data['papers']
 
