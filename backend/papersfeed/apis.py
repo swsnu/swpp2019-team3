@@ -399,8 +399,10 @@ def get_user_action(args):
 
 
 @csrf_exempt
-def post_user_recommendation(args):
+@view_exceptions_handler
+def post_user_recommendation(request):
     """Post User Recommendation"""
+    args = request.POST
     return recommendation_utils.insert_user_recommendation(args)
 
 

@@ -1,6 +1,6 @@
 """utils.py"""
 # -*- coding: utf-8 -*-
-
+import json
 from collections import OrderedDict
 from datetime import datetime, timedelta
 from django.db.models import OuterRef, Subquery, F, Q, Count
@@ -68,7 +68,8 @@ def select_user_actions(_):
 def insert_user_recommendation(args):
     """Insert user recommendation"""
 
-    for data in args['data']:
+    datas = json.loads(args['data'])
+    for data in datas:
         user_id = data['user']
         papers = data['papers']
 

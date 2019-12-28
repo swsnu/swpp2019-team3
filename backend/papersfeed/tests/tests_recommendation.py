@@ -229,12 +229,8 @@ class RecommnedationTestCase(TestCase):
                                    constants.ID: review_id,
                                }),
                                content_type='application/json')
-
-        response = client.post('/api/user/recommendation',
-                               json.dumps(
-                                   {"data": [{"user": user_id, "papers": [paper_id]}]}
-                               ),
-                               content_type='application/json')
+        response = self.client.post('/api/user/recommendation',
+                                    data=dict(data=json.dumps([{"user":user_id, "papers": [paper_id]}])))
         self.assertEqual(response.status_code, 201)
 
 
@@ -321,12 +317,8 @@ class RecommnedationTestCase(TestCase):
 
         paper_id = Paper.objects.filter(title='paper1').first().id
         user_id = User.objects.filter(email='swpp@snu.ac.kr').first().id
-
-        response = client.post('/api/user/recommendation',
-                               json.dumps(
-                                   {"data": [{"user": user_id, "papers": [paper_id]}]}
-                               ),
-                               content_type='application/json')
+        response = self.client.post('/api/user/recommendation',
+                                    data=dict(data=json.dumps([{"user":user_id, "papers": [paper_id]}])))
 
         self.assertEqual(response.status_code, 201)
 
